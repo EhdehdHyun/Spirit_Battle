@@ -1,41 +1,92 @@
-﻿using UnityEngine.InputSystem;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PhysicsCharacter))]
 public class PlayerInputController : MonoBehaviour
 {
-    private PhysicsCharacter _character;
+    public PlayerAnimation anime;
+    public ThirdPersonCamera cam;
+    public float faceTurnSpeed = 18f;
+
+    private PhysicsCharacter character;
+
+    private Vector2 moveRaw;
+    private Vector2 lookRaw;
+
+    private Vector3 moveWorld;
+    private Quaternion targetRot;
 
     private void Awake()
     {
-        _character = GetComponent<PhysicsCharacter>();
+        character = GetComponent<PhysicsCharacter>();
     }
 
-    public void OnMove(InputAction.CallbackContext context)
+    private void Update()
     {
+        if (cam != null)
+            cam.SetLookInput(lookRaw);
 
-    }
-
-    public void OnJump(InputAction.CallbackContext context)
-    {
-        if (context.performed)
+        if (cam != null)
         {
-            _character.RequestJump();
+            moveWorld =
+                cam.PlanarForward * moveRaw.y +
+                cam.PlanarRight * moveRaw.x;
+
+            character.SetMoveInput(new Vector2(moveWorld.x, moveWorld.z));
+
+            if (moveWorld.sqrMagnitude > 0.0001f)
+                targetRot = Quaternion.LookRotation(moveWorld, Vector3.up);
+        }
+        else
+        {
+            character.SetMoveInput(moveRaw);
+            moveWorld = Vector3.zero;
         }
     }
 
-    public void OnDash(InputAction.CallbackContext context)
+    private void FixedUpdate()
     {
-
+        if (moveWorld.sqrMagnitude > 0.0001f)
+        {
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRot,
+                faceTurnSpeed * Time.fixedDeltaTime
+            );
+        }
     }
 
-    public void OnRolling(InputAction.CallbackContext context)
+    public void OnMove(InputAction.CallbackContext ctx)
     {
-
+        moveRaw = ctx.ReadValue<Vector2>();
+        if (moveRaw.magnitude < 0.05f) moveRaw = Vector2.zero; // 입력 노이즈 컷
+        else if (moveRaw.sqrMagnitude > 1f) moveRaw.Normalize();
     }
 
-    public void OnInteract(InputAction.CallbackContext context)
+    public void OnLook(InputAction.CallbackContext ctx)
     {
+        lookRaw = ctx.ReadValue<Vector2>();
+    }
 
+    public void OnJump(InputAction.CallbackContext ctx)
+    {
+        if (ctx.performed)
+        {
+            character.RequestJump();
+
+            if(anime != null)
+                anime.PlayJump();
+        }
+    }
+
+    public void OnDash(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+
+        Vector3 dir = (cam != null && moveWorld.sqrMagnitude > 0.0001f)
+            ? moveWorld.normalized
+            : transform.forward;
+
+        character.TryDash(dir);
     }
 }

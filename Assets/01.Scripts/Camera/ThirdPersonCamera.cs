@@ -1,125 +1,74 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-/// <summary>
-/// 젤다 / 소울류 스타일 3인칭 액션 카메라
-/// - 플레이어를 기준으로 회전하는 오비트 카메라
-/// - 마우스로 자유 시점 회전
-/// - 스크롤로 줌
-/// - 벽 충돌 시 카메라를 앞으로 당김
-/// </summary>
-public class ThirdPersonActionCamera : MonoBehaviour
+public class ThirdPersonCamera : MonoBehaviour
 {
-    [Header("타겟 설정")]
-    public Transform target;           // 플레이어 Transform
-    public float pivotHeight = 1.6f;   // 타겟 기준 피벗 높이(대략 머리/목 정도)
+    public Transform target;
+    public Vector3 pivotOffset = new Vector3(0f, 1.6f, 0f);
 
-    [Header("거리")]
-    public float distance = 4.5f;      // 기본 거리
-    public float minDistance = 2f;     // 최소 줌
-    public float maxDistance = 6f;     // 최대 줌
+    public float distance = 3.5f;
+    public float minDistance = 0.6f;
+    public float collisionRadius = 0.18f;
+    public LayerMask collisionMask = ~0;
 
-    [Header("회전 설정")]
-    public float mouseSensitivityX = 200f;  // 좌우 회전 속도
-    public float mouseSensitivityY = 140f;  // 상하 회전 속도
-    public float minPitch = -30f;          // 카메라가 너무 위로 안 가게
-    public float maxPitch = 70f;           // 너무 아래로 안 가게
+    public float sensitivity = 0.12f;
+    public float minPitch = -35f;
+    public float maxPitch = 70f;
+    public float rotationLerp = 18f;
+    public float followLerp = 20f;
 
-    [Header("부드러움")]
-    public float followLerp = 20f;    // 위치/회전 보간 속도
-    public float zoomSpeed = 5f;      // 줌 속도
+    float yaw;
+    float pitch;
+    Vector2 lookInput;
 
-    [Header("카메라 충돌")]
-    public LayerMask collisionMask;   // 벽/지형 레이어
-    public float collisionRadius = 0.2f;
-    public float collisionOffset = 0.1f; // 벽에서 살짝 띄우기
+    public void SetLookInput(Vector2 look) => lookInput = look;
 
-    float _yaw;
-    float _pitch;
-    float _currentDistance;
-
-    void Start()
+    public Vector3 PlanarForward
     {
-        if (target == null)
+        get
         {
-            Debug.LogError("ThirdPersonActionCamera: target이 비어있음.");
-            enabled = false;
-            return;
+            Vector3 f = transform.forward;
+            f.y = 0f;
+            return f.sqrMagnitude < 0.0001f ? Vector3.forward : f.normalized;
         }
+    }
 
-        _currentDistance = distance;
-
-        // 초기 yaw/pitch 설정
-        Vector3 toCam = (transform.position - GetPivotPosition()).normalized;
-        _yaw = Mathf.Atan2(toCam.x, toCam.z) * Mathf.Rad2Deg;
-        _pitch = Mathf.Asin(toCam.y) * Mathf.Rad2Deg;
-
-        // 마우스 커서 잠그고 숨기기 (원하면 끄면 됨)
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+    public Vector3 PlanarRight
+    {
+        get
+        {
+            Vector3 r = transform.right;
+            r.y = 0f;
+            return r.sqrMagnitude < 0.0001f ? Vector3.right : r.normalized;
+        }
     }
 
     void LateUpdate()
     {
         if (target == null) return;
 
-        HandleRotationInput();
-        HandleZoomInput();
-        UpdateCameraPosition();
-    }
+        yaw += lookInput.x * sensitivity;
+        pitch -= lookInput.y * sensitivity;
+        pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
-    Vector3 GetPivotPosition()
-    {
-        return target.position + Vector3.up * pivotHeight;
-    }
+        Quaternion desiredRot = Quaternion.Euler(pitch, yaw, 0f);
+        Vector3 pivot = target.position + pivotOffset;
 
-    void HandleRotationInput()
-    {
-        float mouseX = Input.GetAxis("Mouse X");
-        float mouseY = Input.GetAxis("Mouse Y");
+        Vector3 idealPos = pivot + desiredRot * new Vector3(0, 0, -distance);
 
-        _yaw += mouseX * mouseSensitivityX * Time.deltaTime;
-        _pitch -= mouseY * mouseSensitivityY * Time.deltaTime;
-        _pitch = Mathf.Clamp(_pitch, minPitch, maxPitch);
-    }
+        float correctedDist = distance;
+        Vector3 dir = (idealPos - pivot).normalized;
 
-    void HandleZoomInput()
-    {
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-        if (Mathf.Abs(scroll) > 0.001f)
+        if (Physics.SphereCast(pivot, collisionRadius, dir, out RaycastHit hit,
+            distance, collisionMask, QueryTriggerInteraction.Ignore))
         {
-            distance -= scroll * zoomSpeed;
-            distance = Mathf.Clamp(distance, minDistance, maxDistance);
-        }
-    }
-
-    void UpdateCameraPosition()
-    {
-        Vector3 pivot = GetPivotPosition();
-
-        // yaw, pitch로 회전 만들기
-        Quaternion rot = Quaternion.Euler(_pitch, _yaw, 0f);
-
-        // 회전에 따른 카메라 로컬 오프셋 
-        Vector3 localOffset = new Vector3(0f, 0f, -distance);
-
-        // 원하는 카메라 위치
-        Vector3 desiredPos = pivot + rot * localOffset;
-
-        // 충돌 검사 (pivot -> desiredPos)
-        Vector3 dir = (desiredPos - pivot).normalized;
-        float targetDist = localOffset.magnitude;
-
-        if (Physics.SphereCast(pivot, collisionRadius, dir, out RaycastHit hit, targetDist, collisionMask, QueryTriggerInteraction.Ignore))
-        {
-            float adjustedDist = hit.distance - collisionOffset;
-            adjustedDist = Mathf.Max(adjustedDist, minDistance * 0.3f); // 완전 0까지 붙지 않게
-            Vector3 adjustedOffset = dir * adjustedDist;
-            desiredPos = pivot + adjustedOffset;
+            correctedDist = Mathf.Max(minDistance, hit.distance - 0.05f);
         }
 
-        // 부드럽게 이동/회전
+        Vector3 desiredPos = pivot + desiredRot * new Vector3(0, 0, -correctedDist);
+
         transform.position = Vector3.Lerp(transform.position, desiredPos, followLerp * Time.deltaTime);
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot, followLerp * Time.deltaTime);
+        transform.rotation = Quaternion.Slerp(transform.rotation, desiredRot, rotationLerp * Time.deltaTime);
     }
 }
-
