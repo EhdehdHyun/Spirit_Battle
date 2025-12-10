@@ -29,16 +29,16 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
         if (currentHp <= 0)
         {
             currentHp = 0;
-            OnDie();
+            OnDie(info);
         }
         else
         {
-            OnDamaged();
+            OnDamaged(info);
         }
     }
 
 
-    protected virtual void OnDamaged() { }
-    protected virtual void OnDie() { }
+    protected virtual void OnDamaged(DamageInfo info) { }
+    protected virtual void OnDie(DamageInfo info) { }
 
 }
