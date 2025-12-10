@@ -38,7 +38,6 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.18010826, g: 0.22550303, b: 0.30681458, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -4265,7 +4264,7 @@ PrefabInstance:
     - target: {fileID: 1774063992657606505, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
       propertyPath: serializeData2.initData.clothTransformRecord.transform
       value: 
-      objectReference: {fileID: 1147673278}
+      objectReference: {fileID: 0}
     - target: {fileID: 1774063992657606505, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
       propertyPath: serializeData2.initData.clothTransformRecord.position.x
       value: -6
@@ -4325,7 +4324,7 @@ PrefabInstance:
     - target: {fileID: 1774063992657606505, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
       propertyPath: serializeData2.initData.normalAdjustmentTransformRecord.transform
       value: 
-      objectReference: {fileID: 1147673278}
+      objectReference: {fileID: 0}
     - target: {fileID: 1774063992657606505, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
       propertyPath: serializeData2.initData.clothSetupDataList.Array.data[0].setupType
       value: 1
@@ -4669,7 +4668,7 @@ PrefabInstance:
     - target: {fileID: 1774063992657606505, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
       propertyPath: serializeData2.initData.clothSetupDataList.Array.data[0].transformArray.Array.data[6]
       value: 
-      objectReference: {fileID: 1147673278}
+      objectReference: {fileID: 0}
     - target: {fileID: 1774063992657606505, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
       propertyPath: serializeData2.initData.clothSetupDataList.Array.data[0].transformPositions.Array.size
       value: 7
@@ -13597,7 +13596,7 @@ PrefabInstance:
     - target: {fileID: 8691261110254769352, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
       propertyPath: serializeData2.initData.clothTransformRecord.transform
       value: 
-      objectReference: {fileID: 500504831}
+      objectReference: {fileID: 0}
     - target: {fileID: 8691261110254769352, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
       propertyPath: serializeData2.initData.clothTransformRecord.position.x
       value: -6
@@ -13653,7 +13652,7 @@ PrefabInstance:
     - target: {fileID: 8691261110254769352, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
       propertyPath: serializeData2.initData.normalAdjustmentTransformRecord.transform
       value: 
-      objectReference: {fileID: 500504831}
+      objectReference: {fileID: 0}
     - target: {fileID: 8691261110254769352, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
       propertyPath: serializeData2.initData.normalAdjustmentTransformRecord.position.x
       value: -6
@@ -15215,11 +15214,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 151fd3bb31ff4540b5e3d4719f7b93e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &500504831 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2219796651087895802, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
-  m_PrefabInstance: {fileID: 245086572}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &504041498 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2254543666416082588, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
@@ -15672,11 +15666,6 @@ CanvasRenderer:
 --- !u!4 &1137131216 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8584006874728365497, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
-  m_PrefabInstance: {fileID: 245086572}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1147673278 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1412941087138391828, guid: aa7e195a1faef46ac912fd7df16e3a91, type: 3}
   m_PrefabInstance: {fileID: 245086572}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1180508218
