@@ -550,8 +550,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Actions: {fileID: 0}
-  m_NotificationBehavior: 0
+  m_Actions: {fileID: -944628639613478452, guid: 457e1d2c930e2734fb21e5625e6d96c7, type: 3}
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -562,10 +562,30 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 63cb045c-50a2-40e8-bdfb-3d9904d8af86
+    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 583a1d1a-6ba4-4813-a178-e33009a18dce
+    m_ActionName: Player/Interaction[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0f5f7f33-2984-4c23-9dac-35beea184056
+    m_ActionName: Player/Run[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2f881145-d98d-45b0-bd81-b3e376f39433
+    m_ActionName: Player/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0f02e0ff-c67c-4f22-a457-9a7e474e7965
+    m_ActionName: Player/Rolling[/Keyboard/leftCtrl]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: 
+  m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!136 &1062441824
@@ -618,6 +638,11 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!4 &1062441826 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4578013503386199894, guid: d2dd2ddc3af840641b1ca0f5dc830b7b, type: 3}
+  m_PrefabInstance: {fileID: 102238717}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1818736353
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,6 +655,7 @@ GameObject:
   - component: {fileID: 1818736355}
   - component: {fileID: 1818736354}
   - component: {fileID: 1818736357}
+  - component: {fileID: 1818736358}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -704,7 +730,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1818736353}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
   m_LocalPosition: {x: 0, y: 1, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -755,11 +781,39 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1818736358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818736353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a923666a42a0c994ca6e61a475dcb55e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1062441826}
+  pivotHeight: 1.6
+  distance: 4.5
+  minDistance: 2
+  maxDistance: 6
+  mouseSensitivityX: 250
+  mouseSensitivityY: 200
+  minPitch: -30
+  maxPitch: 70
+  followLerp: 20
+  zoomSpeed: 5
+  collisionMask:
+    serializedVersion: 2
+    m_Bits: 0
+  collisionRadius: 0.2
+  collisionOffset: 0.1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1818736356}
   - {fileID: 677821090}
   - {fileID: 102238717}
   - {fileID: 240239578}
+  - {fileID: 1818736356}
