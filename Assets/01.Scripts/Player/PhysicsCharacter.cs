@@ -111,7 +111,7 @@ public class PhysicsCharacter : MonoBehaviour
     //    float v = Input.GetAxisRaw("Vertical");
     //    SetMoveInput(new Vector2(h, v));
 
-    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    if (Input.GetKeyDown(KeyCode.E))
     //        RequestJump();
 
     //    if (Input.GetKeyDown(KeyCode.LeftShift))
