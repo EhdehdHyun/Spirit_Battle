@@ -74,8 +74,11 @@ public class PlayerInputController : MonoBehaviour
         {
             character.RequestJump();
 
-            if(anime != null)
-                anime.PlayJump();
+            if (anime != null)
+            {
+                if (character.IsGrounded)
+                    anime.PlayJump();
+            }
         }
     }
 
@@ -89,4 +92,9 @@ public class PlayerInputController : MonoBehaviour
 
         character.TryDash(dir);
     }
+
+    public void OnAttackFire()
+    {
+
+    } 
 }
