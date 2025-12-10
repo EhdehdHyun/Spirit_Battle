@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba6c48b43aa38b94489c35963f07d15c, type: 3}
+  m_Name: Settings_Effect 2
+  m_EditorClassIdentifier: 
+  headerText: Settings_Effect 2
+  effectEnabled: 0
+  effectIndex: 0
+  effectPrefabList: {fileID: 11400000, guid: 90ddad7516d7e4949a5e9e05fca11545, type: 2}
+  inspectorEffectPrefabs:
+  - {fileID: 4494274044591306945, guid: dec02feda7b23074783630e740904306, type: 3}
+  - {fileID: 1894934020657214038, guid: 54125bfc3918981428ab975cda8b0e43, type: 3}
+  - {fileID: 1810049585536433277, guid: c6efd7b84d7968d4393368acc8db381e, type: 3}
+  - {fileID: 2256829384526754091, guid: 5569d3408d9e44b47bc618555c228e47, type: 3}
+  - {fileID: 1743998785598925135, guid: ebd1a36f8b72a2c42849dfdf030079f0, type: 3}
+  - {fileID: 594468443151319009, guid: 49a19577c06f74c48acc317722fb2117, type: 3}
