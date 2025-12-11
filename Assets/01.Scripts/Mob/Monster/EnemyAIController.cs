@@ -13,14 +13,18 @@ public class EnemyAIController : MonoBehaviour
     }
 
     [Header("AI 설정")]
-    public float idleUpdateInterval = 0.5f; //idle 상태에서 타겟 탐색 주기
-    public float chaseUpdateInterval = 0.1f; //chase 상태에서 목적지를 갱신하는 주기
+    [Tooltip("idle 상태에서 타겟 탐색 주기")]
+    public float idleUpdateInterval = 0.5f;
+    [Tooltip("chase 상태에서 목적지를 갱신하는 주기")]
+    public float chaseUpdateInterval = 0.1f;
+    [Tooltip("더 이상 안 쫓아오는 거리")]
     public float loseTargetDistance = 20f;
 
     private EnemyBase enemy; //몬스터 기본 스탯/상태
     private NavMeshAgent agent;
     private IEnemyAttack attack;
     private Transform target;
+    private MonsterAnimation monsterAnim;
 
     private AIState state = AIState.Idle;
     private float stateTimer = 0f; // 업데이트 간격 용
@@ -35,11 +39,17 @@ public class EnemyAIController : MonoBehaviour
 
         attack = GetComponent<IEnemyAttack>();
 
-        if (enemy = null)
+        if (enemy == null)
             Debug.LogError($"{name} : EnemyBase가 필요합니다");
 
         if (attack == null)
             Debug.LogWarning($"{name} : 컴포넌트가 없습니다.");
+
+        monsterAnim = GetComponent<MonsterAnimation>();
+        if (monsterAnim == null)
+        {
+            monsterAnim = GetComponentInChildren<MonsterAnimation>();
+        }
 
         if (target == null) //플레이어 자동 탐색
         {
@@ -78,6 +88,8 @@ public class EnemyAIController : MonoBehaviour
                 UpdateDead();
                 break;
         }
+
+        UpdateAnimation();
     }
 
     private void ChangeState(AIState newState)
@@ -90,16 +102,17 @@ public class EnemyAIController : MonoBehaviour
         switch (state)
         {
             case AIState.Idle:
-                agent.isStopped = true;   // 제자리 대기
+                agent.isStopped = true; // 제자리 대기
                 break;
             case AIState.Chase:
-                agent.isStopped = false;  // 추적 시작
+                agent.isStopped = false; // 추적 시작
                 break;
             case AIState.Attack:
-                agent.isStopped = true;   // 공격할 땐 제자리
+                agent.isStopped = true; // 공격할 땐 제자리
                 break;
             case AIState.Dead:
-                agent.isStopped = true;   // 죽으면 멈춤
+                agent.isStopped = true; // 죽으면 멈춤
+                monsterAnim?.PlayDie();
                 break;
         }
     }
@@ -148,7 +161,7 @@ public class EnemyAIController : MonoBehaviour
         }
 
         //공격 범위에 들어왔으면 Attack 상태로
-        float attackRange = attack != null ? attack.AttackRange : enemy.attackRange;
+        float attackRange = enemy.attackRange;
         if (dist <= attackRange)
         {
             ChangeState(AIState.Attack);
@@ -172,10 +185,12 @@ public class EnemyAIController : MonoBehaviour
         }
 
         float dist = DistanceToTarget();
-        float attackRange = attack != null ? attack.AttackRange : enemy.attackRange;
+        float attackRange = enemy.attackRange;
+
+        bool isAttacking = (attack != null && attack.IsAttacking);
 
         //너무 멀어졌으면 다시 추적 시작
-        if (dist > attackRange * 1.2f)
+        if (!isAttacking && dist > attackRange * 1.2f)
         {
             ChangeState(AIState.Chase);
             return;
@@ -202,6 +217,17 @@ public class EnemyAIController : MonoBehaviour
         }
     }
 
+    private void UpdateAnimation()
+    {
+        if (monsterAnim == null || agent == null) return;
+
+        float speed = agent.velocity.magnitude;
+        bool isChasing = (state == AIState.Chase);
+        bool isDead = enemy.IsDead;
+
+        monsterAnim.UpdateLocomotion(speed, isChasing, isDead);
+    }
+
     private void UpdateDead()
     {
         //사망 애니메이션 재생 후 Destory 실행
@@ -220,5 +246,44 @@ public class EnemyAIController : MonoBehaviour
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
             target = playerObj.transform;
+    }
+
+    //몬스터 감지, 공격 범위(사거리), 추적 포기 거리를 볼 수 있게 해주는 메써드
+    private void OnDrawGizmosSelected()
+    {
+        // EnemyBase, IEnemyAttack가 아직 할당 안 됐을 수 있으니까 안전하게 가져오기
+        if (enemy == null)
+            enemy = GetComponent<EnemyBase>();
+        if (attack == null)
+            attack = GetComponent<IEnemyAttack>();
+
+        // 기준 위치 (몬스터 발 밑)
+        Vector3 center = transform.position;
+
+        // 1) 감지 범위 - 노란색
+        if (enemy != null)
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(center, enemy.detectRange);
+        }
+
+        // 2) 공격 범위 - 빨간색
+        float attackRange = 0f;
+
+        if (enemy != null)
+            attackRange = enemy.attackRange;
+
+        if (attackRange > 0f)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(center, attackRange);
+        }
+
+        // 3) 타겟 포기 거리 - 파란색
+        if (loseTargetDistance > 0f)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(center, loseTargetDistance);
+        }
     }
 }
