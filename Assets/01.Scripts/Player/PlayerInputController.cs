@@ -4,11 +4,12 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PhysicsCharacter))]
 public class PlayerInputController : MonoBehaviour
 {
-    public PlayerAnimation anime;
     public ThirdPersonCamera cam;
+    private PhysicsCharacter character;
+    public PlayerAnimation anime;
+    public PlayerCombat combat;
     public float faceTurnSpeed = 18f;
 
-    private PhysicsCharacter character;
 
     private Vector2 moveRaw;
     private Vector2 lookRaw;
@@ -19,6 +20,8 @@ public class PlayerInputController : MonoBehaviour
     private void Awake()
     {
         character = GetComponent<PhysicsCharacter>();
+        anime = GetComponent<PlayerAnimation>();
+        combat = GetComponent<PlayerCombat>();
     }
 
     private void Update()
@@ -93,8 +96,15 @@ public class PlayerInputController : MonoBehaviour
         character.TryDash(dir);
     }
 
-    public void OnAttackFire()
+    public void OnAttack(InputAction.CallbackContext ctx)
     {
+        if (!ctx.started) return;
+        combat?.OnAttackInput();
+    }
 
-    } 
+    public void OnToggleWeapon(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.started) return;
+        combat?.OnToggleWeaponInput();
+    }
 }

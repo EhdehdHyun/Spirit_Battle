@@ -94,7 +94,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: Android
+    buildTarget: iPhone
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -107,7 +107,7 @@ TextureImporter:
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 0
   - serializedVersion: 3
-    buildTarget: iPhone
+    buildTarget: Android
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
@@ -167,50 +167,17 @@ TextureImporter:
         serializedVersion: 2
         x: 150
         y: 0
-        width: 272
+        width: 273
         height: 69
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
-      physicsShape:
-      - - {x: 122, y: -8.5}
-        - {x: 136, y: -2.5}
-        - {x: 136, y: 1.5}
-        - {x: 131, y: 9.5}
-        - {x: 95, y: 34.5}
-        - {x: -25, y: 34.5}
-        - {x: -134.4439, y: 34.058586}
-        - {x: -107, y: -0.5}
-        - {x: -136, y: -34.5}
-        - {x: 12, y: -34.5}
-        - {x: 98, y: -34.5}
-        - {x: 114, y: -15.5}
-        - {x: 114, y: -13.5}
-        - {x: 111, y: -9.5}
-      - - {x: 103, y: -4.5}
-        - {x: 103, y: -5.5}
-        - {x: 108, y: -0.5}
-        - {x: 108, y: 0.5}
-        - {x: 103, y: 5.5}
-        - {x: 102, y: 4.5}
-        - {x: 103, y: 3.5}
-        - {x: 105, y: 5.5}
-        - {x: 112, y: 0.5}
-        - {x: 111, y: -1.5}
-        - {x: 110, y: -1.5}
-        - {x: 105, y: -5.5}
-        - {x: 105, y: -4.5}
-      - - {x: 123, y: -0.5}
-        - {x: 126, y: 0.5}
-        - {x: 127, y: -0.5}
-        - {x: 127, y: 0.5}
-        - {x: 124, y: -0.5}
-        - {x: 123, y: 0.5}
+      physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2cf6a1c69b23c4b4eb87910f39cd7166
-      internalID: -27785482
+      spriteID: ab3bc9e75d312482b94cb28ce4e7260b
+      internalID: 1149534382
       vertices: []
       indices: 
       edges: []
@@ -218,7 +185,7 @@ TextureImporter:
     outline: []
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: a29d56f326c87447ba117c597208aede
     internalID: 0
     vertices: []
     indices: 
@@ -226,7 +193,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      brackets_A_0: -27785482
+      brackets_A_0: 1149534382
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

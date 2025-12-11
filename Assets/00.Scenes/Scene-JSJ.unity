@@ -440,9 +440,37 @@ MonoBehaviour:
     m_ActionId: 6d086afb-cc67-4744-942d-35a52041b602
     m_ActionName: Player/Look[/Mouse/delta]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1062441831}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: OnAttack
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: e590f46c-dc95-458b-956c-de35ddad99b1
     m_ActionName: Player/AttackFire[/Mouse/leftButton]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1062441831}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: OnToggleWeapon
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 76e680da-536c-44a4-96b9-71ae73bf5a6d
+    m_ActionName: Player/WeaponEquip[/Mouse/rightButton]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -539,8 +567,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 089e26efdf31871489953ee9c2e61ed1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anime: {fileID: 1062441832}
   cam: {fileID: 1818736358}
+  anime: {fileID: 1062441832}
+  combat: {fileID: 0}
   faceTurnSpeed: 15
 --- !u!114 &1062441832
 MonoBehaviour:
@@ -554,8 +583,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4c7ca55aaf06964ca83799473fcc8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  weaponHand: {fileID: 0}
+  weaponIn: {fileID: 0}
   rb: {fileID: 0}
   character: {fileID: 0}
+  combat: {fileID: 0}
+  weaponHitbox: {fileID: 9141504833507405084}
   runhold: 0.15
 --- !u!1 &1146147982
 GameObject:
@@ -4614,7 +4647,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &640002467278466639
 GameObject:
   m_ObjectHideFlags: 0
@@ -14820,6 +14853,7 @@ GameObject:
   - component: {fileID: 1062441830}
   - component: {fileID: 1062441831}
   - component: {fileID: 1062441832}
+  - component: {fileID: 4578013503287111340}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -19595,7 +19629,7 @@ Transform:
   m_GameObject: {fileID: 3172638082442433176}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.68, z: 0}
+  m_LocalPosition: {x: 0.004, y: 1.68, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19604,6 +19638,31 @@ Transform:
   - {fileID: 2913296121582184779}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4578013503287111340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172638082442433176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1145544f99454b4f935444c5ef6acdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAnim: {fileID: 1062441832}
+  physicsCharacter: {fileID: 1062441830}
+  maxCombo: 5
+  comboInputWindow: 0.4
+  forwardPowers:
+  - 2
+  - 2.5
+  - 3
+  backwardPowers:
+  - 1
+  - 1.2
+  - 1.5
+  weaponEquipped: 0
 --- !u!4 &4589803069817155275
 Transform:
   m_ObjectHideFlags: 0
