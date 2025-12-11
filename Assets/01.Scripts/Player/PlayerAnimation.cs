@@ -14,6 +14,7 @@ public class PlayerAnimation : MonoBehaviour
     private static readonly int RunHash = Animator.StringToHash("Run");
     private static readonly int JumpHash = Animator.StringToHash("Jump");
     private static readonly int GroundedHash = Animator.StringToHash("Grounded");
+    private static readonly int TestHash = Animator.StringToHash("test");
 
     private void Awake()
     {
@@ -35,10 +36,18 @@ public class PlayerAnimation : MonoBehaviour
 
         if (character != null)
             anim.SetBool(GroundedHash, character.IsGrounded);
+
+        if (Input.GetKeyDown(KeyCode.Q))
+            TestAnimation();
     }
 
     public void PlayJump()
     {
         anim.SetTrigger(JumpHash);
+    }
+
+    public void TestAnimation()
+    {
+        anim.SetTrigger(TestHash);
     }
 }

@@ -43,15 +43,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Rolling",
-                    "type": "Button",
-                    "id": "0f02e0ff-c67c-4f22-a457-9a7e474e7965",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Look",
                     "type": "Value",
                     "id": "6d086afb-cc67-4744-942d-35a52041b602",
@@ -59,6 +50,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "AttackFire",
+                    "type": "Button",
+                    "id": "e590f46c-dc95-458b-956c-de35ddad99b1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -152,23 +152,23 @@
                 },
                 {
                     "name": "",
-                    "id": "fbdcdead-1867-4f32-81b2-0a6c8226a3cc",
-                    "path": "<Keyboard>/leftCtrl",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Rolling",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "903df982-bc1a-4419-9e6c-a0bd1e7bc051",
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ed89e4d2-cdbb-4af1-9528-8d58e250c31f",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AttackFire",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

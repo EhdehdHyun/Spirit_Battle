@@ -5,8 +5,7 @@ using UnityEngine;
 
 public interface IEnemyAttack
 {
-    float AttackRange { get; }
-    float IsAttacking { get; }
+    bool IsAttacking { get; }
 
     void TryAttack(Transform target);
     //타겟을 향해 공격 시도
