@@ -16,7 +16,7 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
 
         try
         {
-            loader = new Data_tableLoader();
+            loader = new Data_tableLoader();   // "JSON/Data_table" 사용
             Debug.Log("[ItemPickupFromTable] Data_tableLoader 생성 완료");
         }
         catch (System.Exception e)
@@ -51,19 +51,26 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
 
         isCollected = true;
 
-        if (TempInventory.Instance != null)
+        // 2) ItemInstance 생성
+        ItemInstance instance = new ItemInstance(data, quantity);
+        Debug.Log($"[ItemPickupFromTable] ItemInstance 생성: {instance.data.ItemName} x{instance.quantity}");
+
+        // 3) 인벤토리 매니저에 추가 (ItemInstance 기반)
+        if (InventoryManager.Instance != null)
         {
-            TempInventory.Instance.AddItem(data, quantity);
+            Debug.Log("[ItemPickupFromTable] InventoryManager.AddItem 호출 시도");
+            InventoryManager.Instance.AddItem(instance);
         }
         else
         {
-            Debug.LogWarning("[ItemPickupFromTable] TempInventory.Instance 가 없음. 인벤토리에 저장되지 않음.");
+            Debug.LogWarning("[ItemPickupFromTable] InventoryManager.Instance 가 없습니다.");
         }
 
-        Debug.Log($"[ItemPickupFromTable] {data.ItemName} x{quantity} 획득 후 인벤토리에 추가");
+        Debug.Log($"[ItemPickupFromTable] {data.ItemName} x{quantity} 획득 후 인벤토리에 추가 시도");
 
         Destroy(gameObject);
     }
+
 
     public string GetInteractPrompt()
     {
