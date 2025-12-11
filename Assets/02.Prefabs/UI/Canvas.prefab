@@ -455,7 +455,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 7482667652216324306, guid: e1edbe536cd184f8181b3ccbc89f5d4e, type: 3}
+  m_Sprite: {fileID: 7482667652216324306, guid: 08bbd53cfa5684e639c348315f95f112, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1512,6 +1512,7 @@ GameObject:
   - component: {fileID: 5907151885251397290}
   - component: {fileID: 8990798990748149105}
   - component: {fileID: 8708142790217041181}
+  - component: {fileID: 5365485548443327268}
   m_Layer: 5
   m_Name: StatusPanel
   m_TagString: Untagged
@@ -1581,6 +1582,25 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5365485548443327268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6775404565065633420}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec980d643098421e928d73dddb1f085, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpBar: {fileID: 2321673146702170350}
+  staminaBar: {fileID: 5594273175625640685}
+  expBar: {fileID: 2321288894143698844}
+  hpText: {fileID: 5330038208005775534}
+  staminaText: {fileID: 3709599327658822907}
+  expText: {fileID: 572100813234064030}
+  levelText: {fileID: 239377785635096483}
 --- !u!1 &7209257188628066027
 GameObject:
   m_ObjectHideFlags: 0

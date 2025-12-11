@@ -14893,6 +14893,8 @@ GameObject:
   - component: {fileID: 567350756}
   - component: {fileID: 567350755}
   - component: {fileID: 567350760}
+  - component: {fileID: 567350761}
+  - component: {fileID: 567350762}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -15058,6 +15060,39 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 3, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &567350761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567350754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb7906dc5b9bb414a986e62d448b4165, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ui: {fileID: 1150486784}
+  level: 1
+  maxStamina: 100
+  currentStamina: 100
+  maxExp: 100
+  currentExp: 0
+--- !u!114 &567350762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567350754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91cfd1f68ceb24fa9b315d1e71c98bcf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHp: 100
+  currentHp: 0
+  moveSpeed: 3
 --- !u!1001 &568576706
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27595,6 +27630,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 17e7cbd9cc1261b4d8617c8eb5928264, type: 3}
+--- !u!114 &1150486784 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5365485548443327268, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
+  m_PrefabInstance: {fileID: 2727143508501900221}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aec980d643098421e928d73dddb1f085, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1154022009
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50891,10 +50937,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
-    - target: {fileID: 8930427300447448985, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -50976,6 +51018,10 @@ PrefabInstance:
     - target: {fileID: 5162218956942875922, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
       propertyPath: m_Name
       value: PageCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 5162218956942875922, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8803495900819559018, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
       propertyPath: m_Pivot.x
