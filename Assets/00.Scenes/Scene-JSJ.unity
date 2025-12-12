@@ -555,6 +555,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  movementLock: 0
 --- !u!114 &1062441831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,6 +572,7 @@ MonoBehaviour:
   anime: {fileID: 1062441832}
   combat: {fileID: 0}
   faceTurnSpeed: 15
+  isLocked: 0
 --- !u!114 &1062441832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,6 +642,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  movementLock: 0
 --- !u!54 &1146147984
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -19652,18 +19655,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerAnim: {fileID: 1062441832}
   physicsCharacter: {fileID: 1062441830}
+  playerInput: {fileID: 0}
   maxCombo: 5
   forwardPowers:
-  - 2
-  - 1
-  - 2
-  - 0
+  - 10
   - 6
+  - 10
+  - 0
+  - 26
   backwardPowers:
   - 0
   - 0
   - 0
-  - 5
+  - 22
   - 0
   weaponEquipped: 0
 --- !u!4 &4589803069817155275
