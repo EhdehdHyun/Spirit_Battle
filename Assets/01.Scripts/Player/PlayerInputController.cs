@@ -17,6 +17,8 @@ public class PlayerInputController : MonoBehaviour
     private Vector3 moveWorld;
     private Quaternion targetRot;
 
+
+    public bool isLocked = false;
     private void Awake()
     {
         character = GetComponent<PhysicsCharacter>();
@@ -26,6 +28,15 @@ public class PlayerInputController : MonoBehaviour
 
     private void Update()
     {
+        if (isLocked)
+        {
+            character.SetMoveInput(Vector2.zero);
+            if(cam != null )
+            {
+                cam.SetLookInput(Vector2.zero);
+            }
+            return;
+        }
         if (cam != null)
             cam.SetLookInput(lookRaw);
 
@@ -49,6 +60,12 @@ public class PlayerInputController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isLocked)
+            return;
+
+        if (character.movementLock)
+            return;
+
         if (moveWorld.sqrMagnitude > 0.0001f)
         {
             transform.rotation = Quaternion.Slerp(
@@ -61,6 +78,8 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext ctx)
     {
+        if(isLocked ) { moveRaw = Vector2.zero; return; }
+
         moveRaw = ctx.ReadValue<Vector2>();
         if (moveRaw.magnitude < 0.05f) moveRaw = Vector2.zero; // 입력 노이즈 컷
         else if (moveRaw.sqrMagnitude > 1f) moveRaw.Normalize();
@@ -68,11 +87,19 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnLook(InputAction.CallbackContext ctx)
     {
+        if(isLocked)
+        {
+            lookRaw = Vector2.zero;
+            return;
+        }
+
         lookRaw = ctx.ReadValue<Vector2>();
     }
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
+        if (isLocked || character.movementLock) return;
+
         if (ctx.performed)
         {
             character.RequestJump();
@@ -87,6 +114,8 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext ctx)
     {
+        if(isLocked) return;
+
         if (!ctx.performed) return;
 
         Vector3 dir = (cam != null && moveWorld.sqrMagnitude > 0.0001f)
@@ -94,17 +123,35 @@ public class PlayerInputController : MonoBehaviour
             : transform.forward;
 
         character.TryDash(dir);
+        anime.PlayDash();
     }
 
     public void OnAttack(InputAction.CallbackContext ctx)
     {
+        if (isLocked) return;
+
         if (!ctx.started) return;
         combat?.OnAttackInput();
     }
 
     public void OnToggleWeapon(InputAction.CallbackContext ctx)
     {
+        if (isLocked) return;
         if (!ctx.started) return;
         combat?.OnToggleWeaponInput();
+    }
+
+    public void Lock()
+    {
+        isLocked = true;
+        moveRaw = Vector2.zero;
+        lookRaw = Vector2.zero;
+        if(cam != null) 
+            cam.SetLookInput(Vector2.zero);
+    }
+
+    public void Unlock()
+    {
+        isLocked = false;
     }
 }
