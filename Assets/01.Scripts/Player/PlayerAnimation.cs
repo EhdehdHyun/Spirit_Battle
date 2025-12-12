@@ -19,6 +19,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private static readonly int RunHash = Animator.StringToHash("Run");
     private static readonly int JumpHash = Animator.StringToHash("Jump");
+    private static readonly int DashHash = Animator.StringToHash("Dash");
     private static readonly int GroundedHash = Animator.StringToHash("Grounded");
     private static readonly int TestHash = Animator.StringToHash("test");
 
@@ -58,6 +59,11 @@ public class PlayerAnimation : MonoBehaviour
         anim.SetTrigger(JumpHash);
     }
 
+    public void PlayDash()
+    {
+        anim.SetTrigger(DashHash);
+    }
+
     public void TestAnimation()
     {
         anim.SetTrigger(TestHash);
@@ -67,6 +73,11 @@ public class PlayerAnimation : MonoBehaviour
     {
         anim.SetInteger(ComboIndexHash, comboIndex);
         anim.SetTrigger(AttackHash);
+    }
+
+    public void PlayIdle()
+    {
+        anim.CrossFade("Idle_Anim", 0.1f);
     }
 
     public void SetIsAttacking(bool value)
@@ -92,6 +103,12 @@ public class PlayerAnimation : MonoBehaviour
     {
         if (combat != null)
             combat.OnAttackMoveForwardFromAnim();
+    }
+
+    public void EvAttackStepBack()
+    {
+        if (combat != null)
+            combat.OnAttackStepBackFromAnim();
     }
 
     public void EvAttackAnimationEnd()

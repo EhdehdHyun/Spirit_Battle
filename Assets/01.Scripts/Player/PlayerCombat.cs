@@ -5,16 +5,17 @@ public class PlayerCombat : MonoBehaviour
     [Header("참조")]
     [SerializeField] private PlayerAnimation playerAnim;
     [SerializeField] private PhysicsCharacter physicsCharacter;
+    [SerializeField] private PlayerInputController playerInput;
 
     [Header("콤보 설정")]
-    [SerializeField] private int maxCombo = 3;
-    [SerializeField] private float comboInputWindow = 0.4f;
+    [SerializeField] private int maxCombo = 5;
+    //[SerializeField] private float comboInputWindow = 0.4f;
 
     [Header("공격 전진 힘")]
-    [SerializeField] private float[] forwardPowers = { 2f, 2.5f, 3f };
+    [SerializeField] private float[] forwardPowers = { 1f, 0.5f, 1f, 0f, 3f };
 
     [Header("공격 후퇴 힘")]
-    [SerializeField] private float[] backwardPowers = { 1f, 1.2f, 1.5f };
+    [SerializeField] private float[] backwardPowers = { 0f, 0f, 0f, 2.5f, 0f };
 
     [Header("무기 상태")]
     [SerializeField] private bool weaponEquipped = false;
@@ -25,12 +26,16 @@ public class PlayerCombat : MonoBehaviour
     bool bufferedNextInput = false;
     float lastAttackTime = 0f;
 
+    //public bool attackMovingLock = false;
+
     void Awake()
     {
         if (playerAnim == null)
             playerAnim = GetComponentInChildren<PlayerAnimation>();
         if (physicsCharacter == null)
             physicsCharacter = GetComponent<PhysicsCharacter>();
+        if(playerInput == null)
+            playerInput = GetComponent<PlayerInputController>();  
     }
 
 
@@ -38,13 +43,17 @@ public class PlayerCombat : MonoBehaviour
     {
         if (!weaponEquipped) return;   // 무기 안 들면 공격 안됨
 
+        if(playerInput.isLocked) return;
+
         if (!isAttacking)
         {
             StartFirstAttack();
             return;
         }
 
-        if (Time.time - lastAttackTime <= comboInputWindow)
+        if (bufferedNextInput) return;
+
+        //if (Time.time - lastAttackTime <= comboInputWindow)
             bufferedNextInput = true;
     }
 
@@ -66,6 +75,9 @@ public class PlayerCombat : MonoBehaviour
         currentCombo = 1;
         lastAttackTime = Time.time;
 
+        //attackMovingLock = true;
+        physicsCharacter.SetMovementLocked(true);
+
         playerAnim?.Attack(currentCombo);
         playerAnim?.SetIsAttacking(true);
     }
@@ -82,6 +94,9 @@ public class PlayerCombat : MonoBehaviour
         bufferedNextInput = false;
         lastAttackTime = Time.time;
 
+        //attackMovingLock = true;
+        physicsCharacter.SetMovementLocked(true);
+
         playerAnim?.Attack(currentCombo);
     }
 
@@ -91,13 +106,17 @@ public class PlayerCombat : MonoBehaviour
         bufferedNextInput = false;
         currentCombo = 0;
 
+        //attackMovingLock = false;
+        physicsCharacter.SetMovementLocked(false);
+
         playerAnim?.SetIsAttacking(false);
+        playerAnim.PlayIdle();
+
     }
 
     void ForceStopAttack()
     {
         ResetCombo();
-        //여기서 Animator를 강제 Idle로 넘기는 것도 가능
     }
 
 
@@ -114,11 +133,17 @@ public class PlayerCombat : MonoBehaviour
 
     public void OnAttackMoveForwardFromAnim()
     {
-        if (physicsCharacter == null) return;
+        if (physicsCharacter == null)
+        {
+            return;
+        }
         if (currentCombo <= 0 || currentCombo > forwardPowers.Length) return;
 
         float power = forwardPowers[currentCombo - 1];
-        if (power <= 0f) return;
+        if (power <= 0f) 
+        {
+            return; 
+        }
 
         Vector3 dir = transform.forward;
         dir.y = 0f;
@@ -130,10 +155,17 @@ public class PlayerCombat : MonoBehaviour
     public void OnAttackStepBackFromAnim()
     {
         if (physicsCharacter == null) return;
-        if (currentCombo <= 0 || currentCombo > backwardPowers.Length) return;
+        if (currentCombo <= 0 || currentCombo > backwardPowers.Length)
+        {
+            return;
+        }
 
         float power = backwardPowers[currentCombo - 1];
-        if (power <= 0f) return;
+        if (power <= 0f) 
+        {
+
+            return;
+        } 
 
         Vector3 dir = -transform.forward;
         dir.y = 0f;

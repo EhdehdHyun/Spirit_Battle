@@ -60,6 +60,9 @@ public class PhysicsCharacter : MonoBehaviour
     [Tooltip("지면/벽으로 인식할 레이어 마스크")]
     public LayerMask groundMask;
 
+    [Header("이동 정지")]
+    public bool movementLock = false;
+
     // 외부 조회용 프로퍼티
     public Vector3 Velocity => _rb.velocity;
     public bool IsGrounded => _isGrounded;
@@ -137,6 +140,14 @@ public class PhysicsCharacter : MonoBehaviour
     }
 
     // ================== 외부 API ================== //
+
+    /// <summary>
+    /// 움직임 정지
+    /// </summary>
+    public void SetMovementLocked(bool locked)
+    {
+        movementLock = locked;
+    }
 
     /// <summary>
     /// 입력 방향 설정 (XZ 평면)
@@ -253,8 +264,16 @@ public class PhysicsCharacter : MonoBehaviour
     {
         Vector3 v = _rb.velocity;
         Vector3 horizontal = new Vector3(v.x, 0f, v.z);
+        if (movementLock)
+        {
+            //v.x = 0;
+            //v.z= 0;
+            //_rb.velocity = v;
+            //return;
 
-        if (_isDashing)
+            horizontal = Vector3.zero;
+        }
+        else if (_isDashing)
         {
             // 대쉬 중에는 입력 무시, 고정 속도
             horizontal = _dashDirection * dashSpeed;
@@ -294,6 +313,9 @@ public class PhysicsCharacter : MonoBehaviour
 
     void ApplyJumpIfRequested()
     {
+        if (movementLock)
+            return;
+
         if (!_jumpRequested)
             return;
 

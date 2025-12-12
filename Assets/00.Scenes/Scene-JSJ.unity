@@ -19653,15 +19653,18 @@ MonoBehaviour:
   playerAnim: {fileID: 1062441832}
   physicsCharacter: {fileID: 1062441830}
   maxCombo: 5
-  comboInputWindow: 0.4
   forwardPowers:
   - 2
-  - 2.5
-  - 3
-  backwardPowers:
   - 1
-  - 1.2
-  - 1.5
+  - 2
+  - 0
+  - 6
+  backwardPowers:
+  - 0
+  - 0
+  - 0
+  - 5
+  - 0
   weaponEquipped: 0
 --- !u!4 &4589803069817155275
 Transform:
