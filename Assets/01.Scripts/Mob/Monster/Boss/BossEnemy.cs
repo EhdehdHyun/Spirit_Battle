@@ -50,7 +50,7 @@ public class BossEnemy : EnemyBase
         //페이즈 전환 1 -> 2 
         if (CurrentPhase == 1 && maxPhase >= 2 && hpRatio <= phase2HpRatio)
         {
-
+            EnterPhase(2);
         }
         else if (CurrentPhase == 2 && maxPhase >= 3 && hpRatio <= phase3HpRatio)
         {

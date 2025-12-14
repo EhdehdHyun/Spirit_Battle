@@ -28,8 +28,7 @@ public class BossAIController : MonoBehaviour
     [Tooltip("보스 회전 속도")]
     public float rotateSpeed = 8f;
 
-    [Header("패턴 시스템 (추후 확장용)")]
-    [Tooltip("패턴 시스템인데 추후에 패턴 로직 넣을 때 사용 예정")]
+    [Header("패턴 시스템 ")]
     public BossPatternBase[] patterns;
 
     private BossPatternBase currentPattern;
@@ -204,7 +203,6 @@ public class BossAIController : MonoBehaviour
         basicAttack?.TryAttack(target);
     }
 
-    //패턴 상태 나중에 패턴 스크립트 작성 후 여기에 연결하면 됨
     private void UpdatePattern()
     {
         if (currentPattern != null && currentPattern.IsRunning)

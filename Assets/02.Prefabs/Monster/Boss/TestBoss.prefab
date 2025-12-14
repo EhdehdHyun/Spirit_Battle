@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1773482423822994340}
   - component: {fileID: 7530302362171347634}
   - component: {fileID: 1839061431560684383}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Core
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,7 +130,7 @@ GameObject:
   - component: {fileID: 3570489868006795090}
   - component: {fileID: 6896887877215465902}
   - component: {fileID: 9157745525901555214}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Flare_GlowdotPickbook_Add
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5028,7 +5028,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7373338612467144269}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Shoulder_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5060,7 +5060,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5064597906086499450}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Knee_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5094,7 +5094,7 @@ GameObject:
   - component: {fileID: 5657884867015440426}
   - component: {fileID: 3970072644579596418}
   - component: {fileID: 6343171059332680058}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: WindTornado_Noise
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9992,7 +9992,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 711436049314570175}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Knee_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10028,11 +10028,12 @@ GameObject:
   - component: {fileID: 5510159728944212933}
   - component: {fileID: 534001840759305288}
   - component: {fileID: 5116098533738671204}
+  - component: {fileID: 2669310880747356631}
   - component: {fileID: 6195351339223519092}
   - component: {fileID: 4515928226743125942}
   - component: {fileID: 4407726832678674381}
   - component: {fileID: 6946897576507010950}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TestBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10077,8 +10078,8 @@ MonoBehaviour:
   maxPhase: 2
   phase2HpRatio: 0.5
   phase3HpRatio: 0.2
-  phase2MoveSpeedMultiplier: 1.2
-  phase3MoveSpeedMultiplier: 1.4
+  phase2MoveSpeedMultiplier: 2
+  phase3MoveSpeedMultiplier: 3
   coreObject: {fileID: 850459025388662697}
 --- !u!114 &5510159728944212933
 MonoBehaviour:
@@ -10098,6 +10099,7 @@ MonoBehaviour:
   rotateSpeed: 8
   patterns:
   - {fileID: 6195351339223519092}
+  - {fileID: 2669310880747356631}
 --- !u!114 &534001840759305288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10111,9 +10113,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  attackCooldown: 1.5
+  attackCooldown: 4
   hitOrigin: {fileID: 1267480653314365648}
-  hitRadius: 4.15
+  hitRadius: 5.53
   hitMask:
     serializedVersion: 2
     m_Bits: 128
@@ -10135,6 +10137,36 @@ MonoBehaviour:
   moveSpeedParm: MoveSpeed
   isRunningParm: IsRunning
   dieTriggerParm: Die
+--- !u!114 &2669310880747356631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2366965492673321758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4dd0f6874daacd4396c9bb8ef9136e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patterName: Pattern
+  cooldown: 5
+  minUseDistance: 6
+  maxUseDistance: 12
+  minPhase: 2
+  maxPhase: 2
+  damage: 20
+  radius: 8
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 128
+  phase1WaveCount: 1
+  phase2WaveCount: 2
+  waveInterval: 0.4
+  slowRatio: 0.3
+  slowDuration: 3
+  telegraphObject: {fileID: 3991520190261120978}
+  slamTriggerName: SlamX2
 --- !u!114 &6195351339223519092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10148,7 +10180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   patterName: Slam
-  cooldown: 9
+  cooldown: 15
   minUseDistance: 6
   maxUseDistance: 12
   minPhase: 1
@@ -10234,7 +10266,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!1 &2441181751788210102
 GameObject:
@@ -10245,7 +10277,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8368539968717144984}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Spine_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10277,7 +10309,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1152363268100651780}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Spine_03
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10310,7 +10342,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3491199143126372293}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Hand_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10341,7 +10373,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4243496717936705645}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tigh_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10373,7 +10405,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8407483427757360464}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Tigh_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10407,7 +10439,7 @@ GameObject:
   - component: {fileID: 2924896188234916172}
   - component: {fileID: 3640966978998744944}
   - component: {fileID: 3183001238487918219}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: TornadosTornado_Wind_BuildUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15240,7 +15272,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3764969651106102494}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Toe_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15271,7 +15303,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5444175318594122259}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Toe_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15302,7 +15334,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6402049977476262539}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ankle_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15334,7 +15366,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1267480653314365648}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15350,7 +15382,7 @@ Transform:
   m_GameObject: {fileID: 4205012935547573799}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.54, z: 3.69}
+  m_LocalPosition: {x: 0, y: 3.54, z: 3.08}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15365,7 +15397,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8214814071119710898}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Hand_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15396,7 +15428,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5636710383446690980}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Giant_Bl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15430,7 +15462,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2004932087676674414}
   - component: {fileID: 4110737707762472430}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Giant_Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15534,7 +15566,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4049959899335250090}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ankle_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15566,7 +15598,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 146102461697066393}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Forearm_L
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15600,7 +15632,7 @@ GameObject:
   - component: {fileID: 4454575881953229851}
   - component: {fileID: 848487957582173632}
   - component: {fileID: 8694824739088100066}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: WindTornado_GroundNoise
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20462,7 +20494,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6727375596428276590}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Forearm_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20494,7 +20526,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7409041824721945456}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Shoulder_R
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20526,7 +20558,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4747567145388397021}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Root
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20558,7 +20590,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5906779977398724929}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20591,7 +20623,7 @@ GameObject:
   - component: {fileID: 5134374006779425389}
   - component: {fileID: 7249616128837523714}
   - component: {fileID: 4999614655293088913}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Smoke_Harsh_Alpha_Soft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25489,7 +25521,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1732081955745828934}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Spine_06
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25525,7 +25557,7 @@ GameObject:
   - component: {fileID: 7029299168876923083}
   - component: {fileID: 5675140575942138199}
   - component: {fileID: 1646412274752316669}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Wind_Blade_Pickbook_Add
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30387,7 +30419,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1584982578044499994}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Pelvis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
