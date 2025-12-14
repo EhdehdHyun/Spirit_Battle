@@ -64,6 +64,20 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.12737127
+        functionName: OnAttackHitStartFromAnim
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.7831979
+        functionName: OnAttackHitEndFromAnim
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 0.8648648
         functionName: EvAttackAnimationEnd
         data: 

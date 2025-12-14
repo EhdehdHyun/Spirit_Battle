@@ -6,10 +6,17 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private PlayerAnimation playerAnim;
     [SerializeField] private PhysicsCharacter physicsCharacter;
     [SerializeField] private PlayerInputController playerInput;
+    [SerializeField] private WeaponHitBox weaponHitBox;
 
     [Header("콤보 설정")]
     [SerializeField] private int maxCombo = 5;
     //[SerializeField] private float comboInputWindow = 0.4f;
+
+    [Header("기본 공격력 (스탯/무기 공격력")]
+    [SerializeField] private float baseDamage = 10f;
+
+    [Header("콤보별 데미지")]
+    [SerializeField] private float[] comboDamages = { 1.0f, 1.2f, 1.5f, 1.8f, 2.0f };
 
     [Header("공격 전진 힘")]
     [SerializeField] private float[] forwardPowers = { 1f, 0.5f, 1f, 0f, 3f };
@@ -36,6 +43,8 @@ public class PlayerCombat : MonoBehaviour
             physicsCharacter = GetComponent<PhysicsCharacter>();
         if(playerInput == null)
             playerInput = GetComponent<PlayerInputController>();  
+        if(weaponHitBox == null)
+            weaponHitBox = GetComponentInChildren<WeaponHitBox>();
     }
 
 
@@ -172,5 +181,24 @@ public class PlayerCombat : MonoBehaviour
         dir.Normalize();
 
         physicsCharacter.AddImpulse(dir * power);
+    }
+
+    public void OnAttackHitStartFromAnim()
+    {
+        if (weaponHitBox == null) return;
+        if (currentCombo <= 0 ) return;
+
+        int idx = Mathf.Clamp(currentCombo - 1, 0, comboDamages.Length - 1);
+
+        float multiplier = comboDamages[idx];
+        float finalDamage = baseDamage * multiplier;
+
+        weaponHitBox.Activate(finalDamage);
+    }
+
+    public void OnAttackHitEndFromAnim()
+    {
+        if(weaponHitBox == null) return;
+        weaponHitBox.DeActivate();
     }
 }
