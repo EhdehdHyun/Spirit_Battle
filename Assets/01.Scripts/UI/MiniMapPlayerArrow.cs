@@ -8,11 +8,13 @@ public class MiniMapPlayerArrow : MonoBehaviour
     private void Update()
     {
         if (player == null || arrowRect == null) return;
+        
+        Vector3 dir = player.right; 
 
-        // 플레이어의 Y축 회전만 가져오기
-        float rotationY = player.eulerAngles.y;
+        // 북쪽(+Z) 기준 각도 계산
+        float angle = Mathf.Atan2(dir.x, dir.z) * Mathf.Rad2Deg;
 
-        // UI 화살표는 Z축 회전을 사용함
-        arrowRect.localRotation = Quaternion.Euler(0, 0, -rotationY);
+        // UI는 Z축 회전
+        arrowRect.localRotation = Quaternion.Euler(0f, 0f, -angle);
     }
 }

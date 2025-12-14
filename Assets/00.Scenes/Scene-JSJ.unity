@@ -551,10 +551,11 @@ MonoBehaviour:
   dashDuration: 0.2
   dashCooldown: 0.5
   knockbackDrag: 10
-  groundCheckDistance: 0.3
+  groundCheckDistance: 0.15
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  movementLock: 0
 --- !u!114 &1062441831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -571,6 +572,7 @@ MonoBehaviour:
   anime: {fileID: 1062441832}
   combat: {fileID: 0}
   faceTurnSpeed: 15
+  isLocked: 0
 --- !u!114 &1062441832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -640,6 +642,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 64
+  movementLock: 0
 --- !u!54 &1146147984
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -19652,16 +19655,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerAnim: {fileID: 1062441832}
   physicsCharacter: {fileID: 1062441830}
+  playerInput: {fileID: 0}
+  weaponHitBox: {fileID: 0}
   maxCombo: 5
-  comboInputWindow: 0.4
-  forwardPowers:
-  - 2
-  - 2.5
-  - 3
-  backwardPowers:
+  baseDamage: 10
+  comboDamages:
   - 1
   - 1.2
   - 1.5
+  - 1.8
+  - 2
+  forwardPowers:
+  - 10
+  - 6
+  - 10
+  - 0
+  - 26
+  backwardPowers:
+  - 0
+  - 0
+  - 0
+  - 22
+  - 0
   weaponEquipped: 0
 --- !u!4 &4589803069817155275
 Transform:
@@ -37939,6 +37954,8 @@ GameObject:
   - component: {fileID: 2720931988479448063}
   - component: {fileID: 2752797286005199357}
   - component: {fileID: 4908058034307727153}
+  - component: {fileID: 9141504833507405085}
+  - component: {fileID: 9141504833507405086}
   m_Layer: 7
   m_Name: Sword_001
   m_TagString: Untagged
@@ -37946,6 +37963,42 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!65 &9141504833507405085
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9141504833507405084}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.10082771, y: 0.7516413, z: 0.033671606}
+  m_Center: {x: -0.0030320422, y: -0.23783198, z: 0.0005106839}
+--- !u!114 &9141504833507405086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9141504833507405084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d535b6f2d0b145458484c52e05a68d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetLayers:
+    serializedVersion: 2
+    m_Bits: 768
 --- !u!4 &9161387892111312856
 Transform:
   m_ObjectHideFlags: 0
