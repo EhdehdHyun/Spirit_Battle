@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class BossEnemy : EnemyBase
@@ -5,24 +7,89 @@ public class BossEnemy : EnemyBase
     [Header("보스 페이즈 설정")]
     [Tooltip("보스의 최대 페이즈 수 (ex. 1, 2, 3)")]
     public int maxPhase = 1;
-    [Tooltip("다음 페이즈로 넘어가는 HP 비율 (0~1 ex.0.5 = 체력 절반 이하에서 2페이즈")]
+
+    [Tooltip("2 페이즈로 넘어가는 HP 비율 (0~1 ex.0.5 = 체력 절반 이하에서 2페이즈")]
     public float phase2HpRatio = 0.5f;
 
+    [Tooltip("HP 비율이 이 값 이하가 되면 3페이즈 진입 (예: 0.2 = 20%)")]
+    public float phase3HpRatio = 0.2f;
+
+    [Header("페이즈별 이동 속도 배율")]
+    [Tooltip("1페이즈 기준 이동 속도 (CharacterBase.moveSpeed 원본 값)")]
+    private float baseMoveSpeed;
+
+    [Tooltip("2페이즈 이동 속도 배율 (예: 1.2 = 20% 증가)")]
+    public float phase2MoveSpeedMultiplier = 1.2f;
+
+    [Tooltip("3페이즈 이동 속도 배율 (예: 1.4 = 40% 증가)")]
+    public float phase3MoveSpeedMultiplier = 1.4f;
+
+    [Header("코어 오브젝트 설정")]
+    [Tooltip("가슴 쪽 오염 코어 오브젝트")]
+    [SerializeField] private GameObject coreObject;
+
     public int CurrentPhase { get; private set; } = 1;
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        baseMoveSpeed = moveSpeed;
+
+        if (coreObject != null)
+            coreObject.SetActive(false);
+    }
 
     protected override void OnDamaged(DamageInfo info)
     {
         base.OnDamaged(info);
+        if (IsDead) return;
+
+        float hpRatio = currentHp / maxHp;
 
         //페이즈 전환 1 -> 2 
-        if (maxPhase >= 2 && CurrentPhase == 1)
+        if (CurrentPhase == 1 && maxPhase >= 2 && hpRatio <= phase2HpRatio)
         {
-            float hpRatio = currentHp / maxHp;
-            if (CurrentPhase <= phase2HpRatio)
-            {
-                CurrentPhase = 2;
-                OnPhaseChanged(CurrentPhase);
-            }
+
+        }
+        else if (CurrentPhase == 2 && maxPhase >= 3 && hpRatio <= phase3HpRatio)
+        {
+
+        }
+    }
+
+    private void EnterPhase(int newPhase)
+    {
+        if (newPhase <= CurrentPhase) return;
+
+        CurrentPhase = Mathf.Clamp(newPhase, 1, maxPhase);
+        ApplyPhaseStats();
+
+        if (CurrentPhase >= 2 && coreObject != null)
+        {
+            coreObject.SetActive(true);
+        }
+
+        Debug.Log("{CurrentPhase} 페이즈 진입");
+    }
+
+    //페이즈에 따라 스탯 적용
+    private void ApplyPhaseStats()
+    {
+        switch (CurrentPhase)
+        {
+            case 1:
+                moveSpeed = baseMoveSpeed;
+                break;
+            case 2:
+                moveSpeed = baseMoveSpeed * phase2MoveSpeedMultiplier;
+                break;
+            case 3:
+                moveSpeed = baseMoveSpeed * phase3MoveSpeedMultiplier;
+                break;
+            default:
+                moveSpeed = baseMoveSpeed;
+                break;
         }
     }
 
@@ -34,5 +101,9 @@ public class BossEnemy : EnemyBase
     protected override void OnDie(DamageInfo info)
     {
         base.OnDie(info);
+
+        // 죽으면 코어 비활성
+        if (coreObject != null)
+            coreObject.SetActive(false);
     }
 }

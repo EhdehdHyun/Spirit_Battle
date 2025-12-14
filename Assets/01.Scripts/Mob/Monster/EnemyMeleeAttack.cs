@@ -13,6 +13,10 @@ public class EnemyMeleeAttack : MonoBehaviour, IEnemyAttack
     public float hitRadius = 1f; // 공격 판정 반지름
     public LayerMask hitMask; //플레이어 판정 레이어
 
+    [Header("Phase2 독 상태이상 (추후 구현 예정)")]
+    public float posionDamagePerSecond = 5f;
+    public float posionDuration = 3f;
+
     private EnemyBase enemy;
     private Animator animator;
     private float lastAttackTime = -999f;
@@ -39,16 +43,14 @@ public class EnemyMeleeAttack : MonoBehaviour, IEnemyAttack
     {
         if (target == null) return;
 
-        //if (isAttacking) return; //만약 이미 공격 중이면 새로운 공격 시작 못 하게
-
         //쿨타임 체크
         if (Time.time - lastAttackTime < attackCooldown) return;
 
         //거리 체크
-        float dist = Vector3.Distance(transform.position, target.position);
-        float range = enemy != null ? enemy.attackRange : 2f;
-        if (dist > range) return;
+        Vector3 center = hitOrigin != null ? hitOrigin.position : transform.position;
+        float dist = Vector3.Distance(center, target.position);
 
+        if (dist > hitRadius) return;
 
         //공격 시작
         lastAttackTime = Time.time;
@@ -81,6 +83,11 @@ public class EnemyMeleeAttack : MonoBehaviour, IEnemyAttack
 
                 DamageInfo info = new DamageInfo(damage, hitPoint, hitNormal);
                 damageable.TakeDamage(info);
+
+                if (enemy is BossEnemy bossEnemy && bossEnemy.CurrentPhase >= 2)
+                {
+                    // 플레이어 상태이상 시스템 구현 후 사용
+                }
             }
         }
     }

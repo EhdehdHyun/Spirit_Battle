@@ -10,6 +10,7 @@ public class BossAIController : MonoBehaviour
         Chase,
         BasicAttack,
         Pattern,
+        Down,
         Dead
     }
 
@@ -29,12 +30,17 @@ public class BossAIController : MonoBehaviour
 
     [Header("패턴 시스템 (추후 확장용)")]
     [Tooltip("패턴 시스템인데 추후에 패턴 로직 넣을 때 사용 예정")]
-    public BossPatteernBase[] patterns;
+    public BossPatternBase[] patterns;
 
+    private BossPatternBase currentPattern;
     private BossEnemy boss; //보스 스탯/상태
+    private BossCore bossCore;
     private Transform target; //플레이어
     private IEnemyAttack basicAttack; //기본 공격
     private MonsterAnimation monsterAnim;
+
+    // 이동 잠금 여부
+    private bool canMove = true;
 
     private BossState state = BossState.Idle;
     private float stateTimer = 0f;
@@ -46,6 +52,7 @@ public class BossAIController : MonoBehaviour
         boss = GetComponent<BossEnemy>();
         basicAttack = GetComponent<IEnemyAttack>();
         monsterAnim = GetComponent<MonsterAnimation>() ?? GetComponentInChildren<MonsterAnimation>();
+        bossCore = GetComponentInChildren<BossCore>();
 
         if (boss == null)
             Debug.LogError("BossEnemy 컴포넌트가 필요합니다");
@@ -54,7 +61,7 @@ public class BossAIController : MonoBehaviour
 
         if (target == null)
         {
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Play");
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
                 target = playerObj.transform;
         }
@@ -83,6 +90,9 @@ public class BossAIController : MonoBehaviour
             case BossState.Pattern:
                 UpdatePattern();
                 break;
+            case BossState.Down:
+                //UpdateDown();
+                break;
             case BossState.Dead:
                 UpdateDead();
                 break;
@@ -101,15 +111,18 @@ public class BossAIController : MonoBehaviour
         switch (state)
         {
             case BossState.Idle:
-                break;
-            case BossState.Chase:
-                break;
             case BossState.BasicAttack:
+                SetCanMove(false);
                 break;
+
+            case BossState.Chase:
+                SetCanMove(true);
+                break;
+
             case BossState.Pattern:
-                //패턴 코루틴 시작 관련은 여기나 UpdatePattern에서 처리 
-                break;
+            case BossState.Down:
             case BossState.Dead:
+                SetCanMove(false);
                 monsterAnim?.PlayDie();
                 break;
         }
@@ -148,6 +161,9 @@ public class BossAIController : MonoBehaviour
             return;
         }
 
+        //패턴 먼저 시도
+        if (TryUsePattern()) return;
+
         float attackRange = boss.attackRange;
         if (dist <= attackRange)
         {
@@ -182,16 +198,84 @@ public class BossAIController : MonoBehaviour
         // 제자리에서 플레이어를 계속 바라보게
         LookAtTarget();
 
+        if (!isAttacking && TryUsePattern()) return;
+
         // 기본 공격 시도 (쿨타임/거리 체크는 EnemyMeleeAttack 안에서 처리)
         basicAttack?.TryAttack(target);
-
-        // 나중에 여기에서 일정 조건/쿨타임마다 패턴으로 전환하도록 예정
     }
 
     //패턴 상태 나중에 패턴 스크립트 작성 후 여기에 연결하면 됨
     private void UpdatePattern()
     {
-        ChangeState(BossState.Chase);
+        if (currentPattern != null && currentPattern.IsRunning)
+        {
+            LookAtTarget();
+            return;
+        }
+
+        currentPattern = null;
+        if (!HasTarget)
+        {
+            ChangeState(BossState.Idle);
+            return;
+        }
+
+        float dist = DistanceToTarget();
+        if (dist <= boss.attackRange)
+            ChangeState(BossState.BasicAttack);
+        else
+            ChangeState(BossState.Chase);
+    }
+
+    private bool TryUsePattern()
+    {
+        if (patterns == null || patterns.Length == 0) return false;
+        if (!HasTarget) return false;
+
+        foreach (var p in patterns)
+        {
+            if (p == null) continue;
+            if (!p.CanExecute(target)) continue;
+
+            currentPattern = p;
+            StartCoroutine(currentPattern.Excute(target));
+            ChangeState(BossState.Pattern);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void HandleCoreBroken()
+    {
+        StartCoroutine(DownRoutine());
+    }
+
+    private IEnumerator DownRoutine()
+    {
+        ChangeState(BossState.Down);
+
+        // TODO: 다운 전용 애니메이션 트리거 추가 후 여기서 호출
+        // 예: monsterAnim.PlayDown();
+
+        float downDuration = 5f; // 임시 값 
+        float timer = 0f;
+        while (timer < downDuration)
+        {
+            timer += Time.deltaTime;
+            yield return null;
+        }
+
+        if (!HasTarget)
+            ChangeState(BossState.Idle);
+        else
+        {
+            float dist = DistanceToTarget();
+            if (dist <= boss.attackRange)
+                ChangeState(BossState.BasicAttack);
+            else
+                ChangeState(BossState.Chase);
+        }
     }
 
     private void UpdateDead()
@@ -208,6 +292,7 @@ public class BossAIController : MonoBehaviour
     private void MoveTowardsTarget(float stopDistance)
     {
         if (!HasTarget) return;
+        if (!canMove) return;
 
         Vector3 toTarget = target.position - transform.position;
         toTarget.y = 0f;
@@ -222,7 +307,8 @@ public class BossAIController : MonoBehaviour
         if (dir.sqrMagnitude > 0.001f)
         {
             Quaternion lookRot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, rotateSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation, lookRot, rotateSpeed * Time.deltaTime);
         }
     }
 
@@ -268,5 +354,10 @@ public class BossAIController : MonoBehaviour
 
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, loseTargetDistance);
+    }
+
+    public void SetCanMove(bool value)
+    {
+        canMove = value;
     }
 }
