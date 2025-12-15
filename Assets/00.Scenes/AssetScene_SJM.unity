@@ -35326,14 +35326,14 @@ PrefabInstance:
     - target: {fileID: 2270739906378223633, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1631913535}
+      objectReference: {fileID: 1631913529}
     - target: {fileID: 2270739906378223633, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2270739906378223633, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnClickDropOne
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2270739906378223633, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
