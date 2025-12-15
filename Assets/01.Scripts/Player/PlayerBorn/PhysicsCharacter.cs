@@ -264,6 +264,12 @@ public class PhysicsCharacter : MonoBehaviour
     {
         Vector3 v = _rb.velocity;
         Vector3 horizontal = new Vector3(v.x, 0f, v.z);
+        if (_isDashing)
+        {
+            // 대쉬 중에는 입력 무시, 고정 속도
+            horizontal = _dashDirection * dashSpeed;
+        }
+
         if (movementLock)
         {
             //v.x = 0;
@@ -272,11 +278,6 @@ public class PhysicsCharacter : MonoBehaviour
             //return;
 
             horizontal = Vector3.zero;
-        }
-        else if (_isDashing)
-        {
-            // 대쉬 중에는 입력 무시, 고정 속도
-            horizontal = _dashDirection * dashSpeed;
         }
         else
         {
