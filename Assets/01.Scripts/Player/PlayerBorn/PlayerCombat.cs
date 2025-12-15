@@ -9,7 +9,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private WeaponHitBox weaponHitBox;
 
     [Header("콤보 설정")]
-    [SerializeField] private int maxCombo = 5;
+    [SerializeField] private int maxCombo = 3;
     //[SerializeField] private float comboInputWindow = 0.4f;
 
     [Header("기본 공격력 (스탯/무기 공격력")]
@@ -19,10 +19,10 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float[] comboDamages = { 1.0f, 1.2f, 1.5f, 1.8f, 2.0f };
 
     [Header("공격 전진 힘")]
-    [SerializeField] private float[] forwardPowers = { 1f, 0.5f, 1f, 0f, 3f };
+    [SerializeField] private float[] forwardPowers = { 1f, 0.5f, 1f };
 
     [Header("공격 후퇴 힘")]
-    [SerializeField] private float[] backwardPowers = { 0f, 0f, 0f, 2.5f, 0f };
+    [SerializeField] private float[] backwardPowers = { 0f, 0f, 0f, 0f, 0f };
 
     [Header("무기 상태")]
     [SerializeField] private bool weaponEquipped = false;
