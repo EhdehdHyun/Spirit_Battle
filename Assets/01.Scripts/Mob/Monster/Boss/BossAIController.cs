@@ -194,9 +194,6 @@ public class BossAIController : MonoBehaviour
             return;
         }
 
-        // 제자리에서 플레이어를 계속 바라보게
-        LookAtTarget();
-
         if (!isAttacking && TryUsePattern()) return;
 
         // 기본 공격 시도 (쿨타임/거리 체크는 EnemyMeleeAttack 안에서 처리)
