@@ -2,11 +2,11 @@
   "Items": [
     {
       "key": 1001,
-      "ItemName": "HP Potion",
+      "ItemName": "체력 포션",
       "ItemType": 0,
       "Rarity": 0,
       "HealAmount": 30,
-      "MaxStack": 99,
+      "MaxStack": 999,
       "IsConsumable": true,
       "Icon": "hp_potion_icon",
       "ItemTypes": [
@@ -25,11 +25,11 @@
     },
     {
       "key": 2001,
-      "ItemName": "Red Flower",
+      "ItemName": "붉은 꽃",
       "ItemType": 1,
       "Rarity": 0,
       "HealAmount": 0,
-      "MaxStack": 99,
+      "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "red_flower_icon",
       "ItemTypes": [
@@ -48,13 +48,151 @@
     },
     {
       "key": 2002,
-      "ItemName": "Mushroom",
+      "ItemName": "버섯",
       "ItemType": 1,
       "Rarity": 0,
       "HealAmount": 0,
-      "MaxStack": 99,
+      "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "Mushroom_icon",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2003,
+      "ItemName": "썩은 이빨",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "decayed_teeth_icon",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2004,
+      "ItemName": "점액",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2005,
+      "ItemName": "철광석",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2006,
+      "ItemName": "구리",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2007,
+      "ItemName": "늑대 가죽",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2008,
+      "ItemName": "낡은 뼈조각",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "",
       "ItemTypes": [
         0,
         1,
