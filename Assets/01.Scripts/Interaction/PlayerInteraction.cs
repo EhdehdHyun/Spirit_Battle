@@ -1,85 +1,109 @@
 ﻿using UnityEngine;
-using TMPro;
 
+/// <summary>
+/// 화면 중앙에서 Ray를 쏴서 IInteractable을 찾는 상호작용 스크립트
+/// </summary>
 public class PlayerInteraction : MonoBehaviour
 {
-    [Header("상호작용 탐지")]
-    public float interactRadius = 2f;
-    public LayerMask interactableLayer;
+    [Header("Raycast 설정")]
+    [Tooltip("상호작용 기준이 될 카메라 (보통 플레이어 카메라)")]
+    public Camera playerCamera;
 
-    [Header("UI")]
-    public TextMeshProUGUI interactText;
+    [Tooltip("상호작용 가능한 최대 거리")]
+    public float interactDistance = 20f;
 
-    private IInteractable currentTarget;
+    public LayerMask dropLayerMask;
+    public float defaultDropDistance = 3f;
+    private void Awake()
+    {
+        if (playerCamera == null)
+        {
+            playerCamera = Camera.main;
+            if (playerCamera == null)
+            {
+                Debug.LogWarning("[PlayerInteraction] playerCamera 를 찾지 못했습니다.");
+            }
+        }
+    }
 
     private void Update()
     {
-        FindInteractable();
-
-        // 🔵 옛날 Input 시스템으로 F키 감지
         if (Input.GetKeyDown(KeyCode.F))
         {
-            Debug.Log("[PlayerInteraction] F 키 입력 감지 (Old Input)!");
-
-            if (currentTarget != null)
-            {
-                var mb = currentTarget as MonoBehaviour;
-                string name = mb != null ? mb.gameObject.name : "알 수 없는 오브젝트";
-                Debug.Log($"[PlayerInteraction] {name} 에 상호작용 시도");
-                currentTarget.Interact();
-            }
-            else
-            {
-                Debug.Log("[PlayerInteraction] F 눌렀지만 currentTarget이 없음");
-            }
+            Debug.Log("[PlayerInteraction] F 키 입력 감지 (Raycast 버전)");
+            TryInteract();
         }
     }
 
-    private void FindInteractable()
+    private void TryInteract()
     {
-        Collider[] hits = Physics.OverlapSphere(
-            transform.position,
-            interactRadius,
-            interactableLayer
-        );
-
-        if (hits.Length == 0)
+        if (playerCamera == null)
         {
-            currentTarget = null;
-            if (interactText != null)
-                interactText.gameObject.SetActive(false);
+            Debug.LogWarning("[PlayerInteraction] playerCamera 가 없습니다. 상호작용 실패");
             return;
         }
 
-        Collider closest = hits[0];
-        float closestDist = Vector3.Distance(transform.position, closest.transform.position);
+        // ★ 화면 정중앙 픽셀 기준으로 Ray 생성
+        Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+        Ray ray = playerCamera.ScreenPointToRay(screenCenter);
 
-        for (int i = 1; i < hits.Length; i++)
+        RaycastHit hit;
+
+        // 레이어 마스크, 트리거 이런 거 다 빼고 제일 단순하게
+        bool hitSomething = Physics.Raycast(ray, out hit, interactDistance);
+
+        // Scene 뷰에서 레이 확인용
+        Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red, 0.5f);
+
+        if (!hitSomething)
         {
-            float dist = Vector3.Distance(transform.position, hits[i].transform.position);
-            if (dist < closestDist)
-            {
-                closest = hits[i];
-                closestDist = dist;
-            }
+            Debug.Log("[PlayerInteraction] Raycast: 아무것도 맞지 않음 (ScreenPointToRay)");
+            return;
         }
 
-        currentTarget = closest.GetComponent<IInteractable>();
+        Debug.Log($"[PlayerInteraction] Raycast hit: {hit.collider.name} (Layer: {LayerMask.LayerToName(hit.collider.gameObject.layer)})");
 
-        if (currentTarget != null && interactText != null)
+        // 맞은 오브젝트에서 IInteractable 찾기
+        IInteractable interactable = hit.collider.GetComponent<IInteractable>()
+                               ?? hit.collider.GetComponentInParent<IInteractable>();
+
+        if (interactable != null)
         {
-            interactText.text = currentTarget.GetInteractPrompt();
-            interactText.gameObject.SetActive(true);
+            Debug.Log($"[PlayerInteraction] {hit.collider.name} 에 상호작용 Interact() 호출");
+            interactable.Interact();
         }
-        else if (interactText != null)
+        else
         {
-            interactText.gameObject.SetActive(false);
+            Debug.Log($"[PlayerInteraction] hit 되었지만 IInteractable 이 없음: {hit.collider.name}");
         }
     }
 
+    public Vector3 GetDropPoint()
+    {
+        if (playerCamera == null)
+            return transform.position + transform.forward * defaultDropDistance;
+
+        Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+        Ray ray = playerCamera.ScreenPointToRay(screenCenter);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, defaultDropDistance * 3f, dropLayerMask))
+        {
+            return hit.point + Vector3.up * 0.1f;
+        }
+        return ray.origin + ray.direction * defaultDropDistance;
+    }
+
+#if UNITY_EDITOR
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactRadius);
+        if (playerCamera == null) return;
+
+        Vector3 screenCenter = new Vector3(Screen.width / 2f, Screen.height / 2f, 0f);
+        Ray ray = playerCamera.ScreenPointToRay(screenCenter);
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawRay(ray.origin, ray.direction * interactDistance);
     }
+#endif
 }

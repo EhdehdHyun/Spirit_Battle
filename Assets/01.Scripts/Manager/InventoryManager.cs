@@ -1,6 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public class DropPrefabEntry
+{
+    public int itemKey;
+    public GameObject prefab;
+}
 
 public class InventoryManager : MonoBehaviour
 {
@@ -10,12 +17,20 @@ public class InventoryManager : MonoBehaviour
     public int rows = 5;
     public int columns = 5;
 
-    [Tooltip("rows * columns ��ŭ �ڵ� ������")]
+    [Tooltip("인벤토리 슬롯 리스트 (rows * columns 개)")]
     public List<InventorySlot> slots = new List<InventorySlot>();
 
-    public int SlotCount => rows * columns;
+    [Header("참조")]
+    [Tooltip("플레이어 상호작용 스크립트 (플레이어 위치/방향 얻기용)")]
+    public PlayerInteraction playerInteraction;
 
-    // UI�� �����ϴ� �̺�Ʈ
+    [Header("드랍 프리팹 매핑")]
+    public List<DropPrefabEntry> dropPrefabs = new List<DropPrefabEntry>();
+    public GameObject defaultDropPrefab;
+
+    /// <summary>
+    /// 인벤토리가 바뀔 때마다 UI가 구독하는 이벤트
+    /// </summary>
     public event Action OnInventoryChanged;
 
     private void Awake()
@@ -25,130 +40,197 @@ public class InventoryManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         InitSlots();
-        Debug.Log("[InventoryManager] Awake ȣ���, ���� ����: " + SlotCount);
+        Debug.Log("[InventoryManager] Awake: slot count = " + slots.Count);
     }
-
 
     private void InitSlots()
     {
-        slots = new List<InventorySlot>(SlotCount);
-        for (int i = 0; i < SlotCount; i++)
-        {
+        int total = rows * columns;
+
+        if (slots == null)
+            slots = new List<InventorySlot>(total);
+
+        while (slots.Count < total)
             slots.Add(new InventorySlot());
-        }
-    }
-    public bool AddItem(ItemInstance newItem)
-    {
-        if (newItem == null || newItem.data == null || newItem.quantity <= 0)
-        {
-            Debug.LogWarning("[InventoryManager] AddItem ���ڰ� �̻���");
-            return false;
-        }
 
-        Debug.Log($"[InventoryManager] AddItem ȣ��: {newItem.data.ItemName} x{newItem.quantity}");
-
-        int remaining = newItem.quantity;
-        var data = newItem.data;
-        int maxStack = data.MaxStack;
-
-        // 1) ���� ���� ä���
-        for (int i = 0; i < slots.Count && remaining > 0; i++)
-        {
-            var slot = slots[i];
-            if (!slot.CanStack(newItem))
-                continue;
-
-            int space = slot.GetStackSpace();
-            int add = Mathf.Min(space, remaining);
-
-            slot.item.quantity += add;
-            remaining -= add;
-        }
-
-        // 2) �� ���Կ� �� ���� �����
-        for (int i = 0; i < slots.Count && remaining > 0; i++)
-        {
-            var slot = slots[i];
-            if (!slot.IsEmpty)
-                continue;
-
-            int add = maxStack > 0 ? Mathf.Min(maxStack, remaining) : remaining;
-
-            // �� �ν��Ͻ��� ����� ���Կ� ����
-            slot.Set(new ItemInstance(data, add));
-            remaining -= add;
-        }
-
-        if (remaining > 0)
-        {
-            Debug.LogWarning($"[InventoryManager] �κ��丮�� �� ���� {remaining} ���� �� ����");
-        }
-
-        NotifyChanged();
-        return remaining == 0;
+        if (slots.Count > total)
+            slots.RemoveRange(total, slots.Count - total);
     }
 
-    public bool AddItem(Data_table data, int amount)
-    {
-        if (data == null || amount <= 0)
-            return false;
-
-        var inst = new ItemInstance(data, amount);
-        return AddItem(inst);
-    }
-
-    public void RemoveAt(int slotIndex, int amount)
-    {
-        if (slotIndex < 0 || slotIndex >= slots.Count) return;
-
-        var slot = slots[slotIndex];
-        if (slot.IsEmpty) return;
-
-        slot.item.quantity -= amount;
-        if (slot.item.quantity <= 0)
-            slot.Clear();
-
-        NotifyChanged();
-    }
-
+    /// <summary>
+    /// 인덱스로 슬롯 가져오기
+    /// </summary>
     public InventorySlot GetSlot(int index)
     {
-        if (index < 0 || index >= slots.Count) return null;
+        if (slots == null || index < 0 || index >= slots.Count)
+            return null;
         return slots[index];
     }
 
-    public void ClearAll()
+    /// <summary>
+    /// Data_table + 수량으로 바로 추가
+    /// </summary>
+    public void AddItem(Data_table data, int quantity)
     {
-        foreach (var slot in slots)
-            slot.Clear();
+        if (data == null || quantity <= 0)
+        {
+            Debug.LogWarning("[InventoryManager] AddItem(Data_table): 잘못된 인자");
+            return;
+        }
 
-        NotifyChanged();
+        AddItem(new ItemInstance(data, quantity));
     }
 
-    private void NotifyChanged()
+    /// <summary>
+    /// ItemInstance 단위로 추가 (스택 처리 포함)
+    /// </summary>
+    public void AddItem(ItemInstance newItem)
     {
-        Debug.Log("[InventoryManager] OnInventoryChanged ȣ��");
-        OnInventoryChanged?.Invoke();
-    }
+        if (newItem == null || newItem.data == null || newItem.quantity <= 0)
+        {
+            Debug.LogWarning("[InventoryManager] AddItem(ItemInstance): 잘못된 아이템");
+            return;
+        }
 
+        Data_table data = newItem.data;
 
-    [ContextMenu("Debug Print Contents")]
-    private void DebugPrintContents()
-    {
-        Debug.Log("===== Inventory =====");
+        // 1) 같은 아이템 스택 채우기
         for (int i = 0; i < slots.Count; i++)
         {
-            var s = slots[i];
-            if (s.IsEmpty)
-                Debug.Log($"{i}: (empty)");
-            else
-                Debug.Log($"{i}: {s.item.data.ItemName} x{s.item.quantity} (key {s.item.data.key})");
+            InventorySlot slot = slots[i];
+            if (slot == null || slot.IsEmpty)
+                continue;
+
+            if (slot.item.data.key != data.key)
+                continue;
+
+            int maxStack = data.MaxStack;
+            if (slot.item.quantity >= maxStack)
+                continue;
+
+            int space = maxStack - slot.item.quantity;
+            int move = Mathf.Min(space, newItem.quantity);
+
+            slot.item.quantity += move;
+            newItem.quantity -= move;
+
+            if (newItem.quantity <= 0)
+            {
+                Debug.Log($"[InventoryManager] AddItem: {data.ItemName} 스택에 추가 (slot {i})");
+                OnInventoryChanged?.Invoke();
+                return;
+            }
         }
-        Debug.Log("=====================");
+
+        // 2) 빈 슬롯 찾기
+        for (int i = 0; i < slots.Count; i++)
+        {
+            InventorySlot slot = slots[i];
+            if (slot == null)
+                continue;
+
+            if (slot.IsEmpty)
+            {
+                slot.item = new ItemInstance(data, newItem.quantity);
+                newItem.quantity = 0;
+                Debug.Log($"[InventoryManager] AddItem: {data.ItemName} x{slot.item.quantity} 새 슬롯 {i}에 추가");
+                OnInventoryChanged?.Invoke();
+                return;
+            }
+        }
+
+        Debug.LogWarning("[InventoryManager] AddItem: 인벤토리가 가득 찼습니다.");
     }
 
+    /// <summary>
+    /// 인벤토리 슬롯에서 amount개를 버리고
+    /// 플레이어 앞에 드랍 프리팹을 생성한다.
+    /// </summary>
+    public void DropItemFromSlot(int slotIndex, int amount = 1)
+    {
+        Debug.Log($"[InventoryManager] DropItemFromSlot 호출됨. slotIndex={slotIndex}, amount={amount}");
+
+        var slot = GetSlot(slotIndex);
+        if (slot == null || slot.IsEmpty)
+        {
+            Debug.Log($"[InventoryManager] DropItemFromSlot: 비어 있는 슬롯 {slotIndex}");
+            return;
+        }
+
+        var itemInstance = slot.item;
+        var data = itemInstance.data;
+        if (data == null)
+        {
+            Debug.LogWarning($"[InventoryManager] DropItemFromSlot: 슬롯 {slotIndex} 의 data 가 없습니다.");
+            return;
+        }
+
+        int dropAmount = Mathf.Clamp(amount, 1, itemInstance.quantity);
+
+        // 1) 어떤 프리팹을 쓸지 결정 (itemKey → prefab 매핑)
+        GameObject prefabToUse = null;
+
+        if (dropPrefabs != null)
+        {
+            foreach (var entry in dropPrefabs)
+            {
+                if (entry == null) continue;
+                if (entry.itemKey == data.key)
+                {
+                    prefabToUse = entry.prefab;
+                    break;
+                }
+            }
+        }
+
+        if (prefabToUse == null)
+            prefabToUse = defaultDropPrefab;
+
+        if (prefabToUse != null)
+        {
+            // 2) 플레이어 앞에 드랍
+            Vector3 spawnPos;
+
+            if (playerInteraction != null)
+            {
+                Transform t = playerInteraction.transform;
+                spawnPos = t.position + t.forward * 1.2f + Vector3.up * 0.3f;
+            }
+            else
+            {
+                Transform t = transform;
+                spawnPos = t.position + t.forward * 2f + Vector3.up * 0.3f;
+                Debug.LogWarning("[InventoryManager] playerInteraction 이 설정되지 않아 InventoryManager 기준으로 드랍합니다.");
+            }
+
+            GameObject worldObj = Instantiate(prefabToUse, spawnPos, Quaternion.identity);
+            Debug.Log($"[InventoryManager] 드랍 프리팹 생성: {worldObj.name} at {spawnPos}");
+
+            var pickup = worldObj.GetComponent<ItemPickupFromTable>();
+            if (pickup != null)
+            {
+                pickup.itemKey = data.key;
+                pickup.quantity = dropAmount;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("[InventoryManager] DropItemFromSlot: 사용할 드랍 프리팹이 없습니다.");
+        }
+
+        // 3) 인벤에서 수량 감소
+        itemInstance.quantity -= dropAmount;
+        if (itemInstance.quantity <= 0)
+        {
+            slot.item = null;
+        }
+
+        OnInventoryChanged?.Invoke();
+        Debug.Log($"[InventoryManager] DropItemFromSlot: {data.ItemName} x{dropAmount} 버림 (slot {slotIndex})");
+    }
 }
