@@ -574,8 +574,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1818736358}
   anime: {fileID: 1062441832}
+  playerInput: {fileID: 0}
   combat: {fileID: 0}
-  faceTurnSpeed: 15
+  faceTurnSpeed: 30
   isLocked: 0
 --- !u!114 &1062441832
 MonoBehaviour:
@@ -19761,6 +19762,7 @@ MonoBehaviour:
   - 0
   - 0
   weaponEquipped: 0
+  isAttacking: 0
 --- !u!4 &4589803069817155275
 Transform:
   m_ObjectHideFlags: 0

@@ -7,9 +7,12 @@ public class PlayerInputController : MonoBehaviour
     public ThirdPersonCamera cam;
     private PhysicsCharacter character;
     public PlayerAnimation anime;
+    public PlayerInput playerInput;
     public PlayerCombat combat;
     public float faceTurnSpeed = 18f;
 
+    private InputAction moveAction;
+    private InputAction lookAction;
 
     private Vector2 moveRaw;
     private Vector2 lookRaw;
@@ -24,6 +27,10 @@ public class PlayerInputController : MonoBehaviour
         character = GetComponent<PhysicsCharacter>();
         anime = GetComponent<PlayerAnimation>();
         combat = GetComponent<PlayerCombat>();
+        playerInput = GetComponent<PlayerInput>();
+
+        moveAction = playerInput.actions["Move"];
+        lookAction = playerInput.actions["Look"];
     }
 
     private void Update()
@@ -37,6 +44,15 @@ public class PlayerInputController : MonoBehaviour
             }
             return;
         }
+
+        // 매 프레임 현재 입력 상태를 다시 읽음 (대쉬 후 입력 다시 누를 필요 없어짐)
+        moveRaw = moveAction.ReadValue<Vector2>();
+        lookRaw = lookAction.ReadValue<Vector2>();
+
+        // 노이즈 컷
+        if (moveRaw.magnitude < 0.05f) moveRaw = Vector2.zero;
+        else if (moveRaw.sqrMagnitude > 1f) moveRaw.Normalize();
+
         if (cam != null)
             cam.SetLookInput(lookRaw);
 
@@ -60,11 +76,9 @@ public class PlayerInputController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isLocked)
-            return;
+        if (isLocked) return;
 
-        if (character.movementLock)
-            return;
+        if (character.movementLock) return;
 
         if (moveWorld.sqrMagnitude > 0.0001f)
         {
@@ -76,25 +90,25 @@ public class PlayerInputController : MonoBehaviour
         }
     }
 
-    public void OnMove(InputAction.CallbackContext ctx)
-    {
-        if(isLocked ) { moveRaw = Vector2.zero; return; }
+    //public void OnMove(InputAction.CallbackContext ctx)
+    //{
+    //    if(isLocked ) { moveRaw = Vector2.zero; return; }
 
-        moveRaw = ctx.ReadValue<Vector2>();
-        if (moveRaw.magnitude < 0.05f) moveRaw = Vector2.zero; // 입력 노이즈 컷
-        else if (moveRaw.sqrMagnitude > 1f) moveRaw.Normalize();
-    }
+    //    moveRaw = ctx.ReadValue<Vector2>();
+    //    if (moveRaw.magnitude < 0.05f) moveRaw = Vector2.zero; // 입력 노이즈 컷
+    //    else if (moveRaw.sqrMagnitude > 1f) moveRaw.Normalize();
+    //}
 
-    public void OnLook(InputAction.CallbackContext ctx)
-    {
-        if(isLocked)
-        {
-            lookRaw = Vector2.zero;
-            return;
-        }
+    //public void OnLook(InputAction.CallbackContext ctx)
+    //{
+    //    if(isLocked)
+    //    {
+    //        lookRaw = Vector2.zero;
+    //        return;
+    //    }
 
-        lookRaw = ctx.ReadValue<Vector2>();
-    }
+    //    lookRaw = ctx.ReadValue<Vector2>();
+    //}
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
@@ -122,6 +136,8 @@ public class PlayerInputController : MonoBehaviour
             ? moveWorld.normalized
             : transform.forward;
 
+        if (combat.TryDash(dir)) return;
+
         character.TryDash(dir);
         anime.PlayDash();
     }
@@ -144,8 +160,6 @@ public class PlayerInputController : MonoBehaviour
     public void Lock()
     {
         isLocked = true;
-        moveRaw = Vector2.zero;
-        lookRaw = Vector2.zero;
         if(cam != null) 
             cam.SetLookInput(Vector2.zero);
     }

@@ -66,6 +66,7 @@ public class PhysicsCharacter : MonoBehaviour
     // 외부 조회용 프로퍼티
     public Vector3 Velocity => _rb.velocity;
     public bool IsGrounded => _isGrounded;
+    public bool IsDashing => _isDashing;
     public bool IsFalling { get; private set; }
 
     // 내부 필드
@@ -177,6 +178,9 @@ public class PhysicsCharacter : MonoBehaviour
         if (_isDashing)
             return;
 
+        if (!IsGrounded)
+            return;
+
         if (_dashCooldownTimer > 0f)
             return;
 
@@ -264,20 +268,15 @@ public class PhysicsCharacter : MonoBehaviour
     {
         Vector3 v = _rb.velocity;
         Vector3 horizontal = new Vector3(v.x, 0f, v.z);
+        if (movementLock)
+        {
+            horizontal = Vector3.zero;
+        }
+
         if (_isDashing)
         {
             // 대쉬 중에는 입력 무시, 고정 속도
             horizontal = _dashDirection * dashSpeed;
-        }
-
-        if (movementLock)
-        {
-            //v.x = 0;
-            //v.z= 0;
-            //_rb.velocity = v;
-            //return;
-
-            horizontal = Vector3.zero;
         }
         else
         {
