@@ -33384,6 +33384,7 @@ MonoBehaviour:
   - 1.2
   - 1.5
   weaponEquipped: 0
+  isAttacking: 0
 --- !u!114 &787294105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33417,6 +33418,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1985997633}
   anime: {fileID: 787294105}
+  playerInput: {fileID: 0}
   combat: {fileID: 0}
   faceTurnSpeed: 15
   isLocked: 0
@@ -88620,12 +88622,19 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 787294112}
+    - target: {fileID: 6340761819578012877, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
+      propertyPath: m_ShowMaskGraphic
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8930427300447448985, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedComponents:
+    - {fileID: 3348104445152076895, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
+    - {fileID: 8865328968419942797, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 8327942283247683987, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
