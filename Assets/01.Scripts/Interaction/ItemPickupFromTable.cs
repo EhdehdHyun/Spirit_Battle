@@ -31,7 +31,7 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
         EnsureLoader();
     }
 
-    public void Interact()
+    public void Interact(PlayerInteraction player)
     {
         if (isCollected) return;
 
@@ -77,12 +77,12 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
         EnsureLoader();
 
         if (loader == null)
-            return "F : 아이템 줍기";
+            return "Press [F]";
 
         Data_table data = loader.GetByKey(itemKey);
         if (data == null)
-            return "F : 알 수 없는 아이템";
+            return "Press [F]";
 
-        return $"F : {data.ItemName} 줍기";
+        return $"Press [F]";
     }
 }

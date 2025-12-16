@@ -18,6 +18,7 @@ public class PlayerAnimation : MonoBehaviour
     private Animator anim;
 
     private static readonly int RunHash = Animator.StringToHash("Run");
+    private static readonly int WalkHash = Animator.StringToHash("Walk");
     private static readonly int JumpHash = Animator.StringToHash("Jump");
     private static readonly int DashHash = Animator.StringToHash("Dash");
     private static readonly int GroundedHash = Animator.StringToHash("Grounded");
@@ -40,12 +41,20 @@ public class PlayerAnimation : MonoBehaviour
     {
         if (rb == null) return;
 
+        if (character.IsDashing)
+        {
+            anim.SetBool(WalkHash, false);
+            anim.SetBool(RunHash, false);
+        }
+
         Vector3 v = rb.velocity;
         v.y = 0f;
 
         // 수평 속도가 일정 이상이면 달리기
-        bool isRunning = v.magnitude > runhold;
-        anim.SetBool(RunHash, isRunning);
+        bool moving = v.magnitude > runhold;
+        bool running = (character != null && character.IsRunning);
+        anim.SetBool(RunHash, running);
+        anim.SetBool(WalkHash, moving && !running);
 
         if (character != null)
             anim.SetBool(GroundedHash, character.IsGrounded);
