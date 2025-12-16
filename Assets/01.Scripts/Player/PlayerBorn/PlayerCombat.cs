@@ -83,6 +83,8 @@ public class PlayerCombat : MonoBehaviour
         weaponEquipped = !weaponEquipped;
         playerAnim?.SetWeaponEquipped(weaponEquipped);
 
+        physicsCharacter.SetWeaponEquipped(weaponEquipped);
+
         if (!weaponEquipped && isAttacking)
             ForceStopAttack();
     }
@@ -147,6 +149,12 @@ public class PlayerCombat : MonoBehaviour
 
         physicsCharacter.SetMovementLocked(false);
         playerAnim?.SetIsAttacking(false);
+    }
+
+    public void CancelAttackForDash()
+    {
+        if (!isAttacking) return;
+        CancelAttackCommon();
     }
 
     //======== 애니메이션 이벤트 ========
