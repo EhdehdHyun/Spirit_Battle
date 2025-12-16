@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PhysicsCharacter))]
@@ -20,8 +21,11 @@ public class PlayerInputController : MonoBehaviour
     private Vector3 moveWorld;
     private Quaternion targetRot;
 
-
+    //완전 행동 정지
     public bool isLocked = false;
+    //대쉬 전용 정지
+    public bool dashLocked = false;
+    public Coroutine dashLockCo;
     private void Awake()
     {
         character = GetComponent<PhysicsCharacter>();
@@ -35,6 +39,14 @@ public class PlayerInputController : MonoBehaviour
 
     private void Update()
     {
+        // 매 프레임 현재 입력 상태를 다시 읽음 (대쉬 후 입력 다시 누를 필요 없어짐)
+        moveRaw = moveAction.ReadValue<Vector2>();
+        lookRaw = lookAction.ReadValue<Vector2>();
+
+        // 노이즈 컷
+        if (moveRaw.magnitude < 0.05f) moveRaw = Vector2.zero;
+        else if (moveRaw.sqrMagnitude > 1f) moveRaw.Normalize();
+
         if (isLocked)
         {
             character.SetMoveInput(Vector2.zero);
@@ -44,15 +56,6 @@ public class PlayerInputController : MonoBehaviour
             }
             return;
         }
-
-        // 매 프레임 현재 입력 상태를 다시 읽음 (대쉬 후 입력 다시 누를 필요 없어짐)
-        moveRaw = moveAction.ReadValue<Vector2>();
-        lookRaw = lookAction.ReadValue<Vector2>();
-
-        // 노이즈 컷
-        if (moveRaw.magnitude < 0.05f) moveRaw = Vector2.zero;
-        else if (moveRaw.sqrMagnitude > 1f) moveRaw.Normalize();
-
         if (cam != null)
             cam.SetLookInput(lookRaw);
 
@@ -80,6 +83,8 @@ public class PlayerInputController : MonoBehaviour
 
         if (character.movementLock) return;
 
+        if (dashLocked || character.IsDashing) return;
+
         if (moveWorld.sqrMagnitude > 0.0001f)
         {
             transform.rotation = Quaternion.Slerp(
@@ -89,26 +94,6 @@ public class PlayerInputController : MonoBehaviour
             );
         }
     }
-
-    //public void OnMove(InputAction.CallbackContext ctx)
-    //{
-    //    if(isLocked ) { moveRaw = Vector2.zero; return; }
-
-    //    moveRaw = ctx.ReadValue<Vector2>();
-    //    if (moveRaw.magnitude < 0.05f) moveRaw = Vector2.zero; // 입력 노이즈 컷
-    //    else if (moveRaw.sqrMagnitude > 1f) moveRaw.Normalize();
-    //}
-
-    //public void OnLook(InputAction.CallbackContext ctx)
-    //{
-    //    if(isLocked)
-    //    {
-    //        lookRaw = Vector2.zero;
-    //        return;
-    //    }
-
-    //    lookRaw = ctx.ReadValue<Vector2>();
-    //}
 
     public void OnJump(InputAction.CallbackContext ctx)
     {
@@ -130,16 +115,22 @@ public class PlayerInputController : MonoBehaviour
     {
         if(isLocked) return;
 
+        if (!character.IsGrounded) return;
+        
+
         if (!ctx.performed) return;
 
         Vector3 dir = (cam != null && moveWorld.sqrMagnitude > 0.0001f)
             ? moveWorld.normalized
             : transform.forward;
 
-        if (combat.TryDash(dir)) return;
+        //if (combat.TryDash(dir)) return;
+        combat?.CancelAttackForDash();
 
         character.TryDash(dir);
         anime.PlayDash();
+
+        SetDashLock(character.dashDuration);
     }
 
     public void OnAttack(InputAction.CallbackContext ctx)
@@ -167,5 +158,19 @@ public class PlayerInputController : MonoBehaviour
     public void Unlock()
     {
         isLocked = false;
+    }
+
+    public void SetDashLock(float duration)
+    {
+        dashLocked = true;
+        if (dashLockCo != null) StopCoroutine(dashLockCo);
+        dashLockCo = StartCoroutine(DashLockRoutine(duration));
+    }
+
+    private IEnumerator DashLockRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        dashLocked = false;
+        dashLockCo = null;
     }
 }

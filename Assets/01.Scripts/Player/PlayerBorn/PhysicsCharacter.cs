@@ -9,8 +9,11 @@
 public class PhysicsCharacter : MonoBehaviour
 {
     [Header("이동 설정")]
-    [Tooltip("목표 수평 이동 속도")]
-    public float moveSpeed = 8f;
+    [Tooltip("달리기 목표 수평 이동 속도")]
+    public float runSpeed = 8f;
+
+    [Tooltip("걷기 목표 수평 이동 속도")]
+    public float walkSpeed = 4f;
 
     [Tooltip("목표 속도까지 가속하는 정도")]
     public float acceleration = 40f;
@@ -68,6 +71,11 @@ public class PhysicsCharacter : MonoBehaviour
     public bool IsGrounded => _isGrounded;
     public bool IsDashing => _isDashing;
     public bool IsFalling { get; private set; }
+    public bool IsRunning =>
+        !_isDashing &&
+        !movementLock &&
+        _moveInput.sqrMagnitude > 0.001f &&
+        (_weaponEquipped || _runAfterDash);
 
     // 내부 필드
     Rigidbody _rb;
@@ -79,6 +87,10 @@ public class PhysicsCharacter : MonoBehaviour
     bool _isGrounded;
     bool _wasGrounded;
     float _lastGroundedTime;
+
+    //달리기 상태
+    bool _runAfterDash;
+    bool _weaponEquipped;
 
     // 대쉬 상태
     bool _isDashing;
@@ -105,32 +117,12 @@ public class PhysicsCharacter : MonoBehaviour
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
 
-    // 입력은 보통 외부 컨트롤러에서 넘겨받지만,
-    // 단독 테스트용으로 여기서 직접 처리할 수도 있다.
-    // 실제 프로젝트에서는 PlayerInputController에서 SetMoveInput/RequestJump/TryDash 호출.
-    //void Update()
-    //{
-    //    // 필요 없으면 이 블록을 제거하고 외부 입력 스크립트만 사용
-    //    float h = Input.GetAxisRaw("Horizontal");
-    //    float v = Input.GetAxisRaw("Vertical");
-    //    SetMoveInput(new Vector2(h, v));
-
-    //    if (Input.GetKeyDown(KeyCode.E))
-    //        RequestJump();
-
-    //    if (Input.GetKeyDown(KeyCode.LeftShift))
-    //        TryDash(transform.forward);
-
-    //    if (Input.GetKeyDown(KeyCode.K))
-    //    {
-    //        // 테스트용 넉백
-    //        AddImpulse((-transform.forward + Vector3.up) * 10f);
-    //    }
-    //}
-
     void FixedUpdate()
     {
         float dt = Time.fixedDeltaTime;
+
+        if (_runAfterDash && !_isDashing &&_moveInput.sqrMagnitude <= 0.001f)
+            _runAfterDash = false;
 
         UpdateGroundCheck();
         UpdateDashTimers(dt);
@@ -148,6 +140,14 @@ public class PhysicsCharacter : MonoBehaviour
     public void SetMovementLocked(bool locked)
     {
         movementLock = locked;
+    }
+
+    /// <summary>
+    /// 달리기
+    /// </summary>
+    public void SetWeaponEquipped(bool equipped)
+    {
+        _weaponEquipped = equipped;
     }
 
     /// <summary>
@@ -194,6 +194,8 @@ public class PhysicsCharacter : MonoBehaviour
         _dashTimer = dashDuration;
         _dashCooldownTimer = dashCooldown;
         _dashDirection = direction;
+
+        _runAfterDash = true;
     }
 
     /// <summary>
@@ -263,7 +265,7 @@ public class PhysicsCharacter : MonoBehaviour
                 _isDashing = false;
         }
     }
-
+    //Walk적용
     void UpdateHorizontalVelocity(float dt)
     {
         Vector3 v = _rb.velocity;
@@ -280,7 +282,11 @@ public class PhysicsCharacter : MonoBehaviour
         }
         else
         {
-            Vector3 desired = new Vector3(_moveInput.x, 0f, _moveInput.y) * moveSpeed;
+            float targetSpeed = (_weaponEquipped || _runAfterDash) ? runSpeed : walkSpeed;
+
+            Vector3 desired = new Vector3(_moveInput.x, 0f, _moveInput.y) * targetSpeed;
+
+            //Vector3 desired = inputDir * targetSpeed;
 
             if (_moveInput.sqrMagnitude > 0f)
             {
