@@ -30,7 +30,7 @@ public class BossEnemy : EnemyBase
     [SerializeField] private GameObject coreObject;
 
     [Header("피격 연출")]
-    [SerializeField] private BossDamageFeedback damageFeedback;
+    [SerializeField] private DamageFeedback damageFeedback;
 
     [Header("UI 참조")]
     [SerializeField] private BossUIStatus bossUI;
@@ -70,7 +70,7 @@ public class BossEnemy : EnemyBase
         ai = GetComponent<BossAIController>();
 
         if (damageFeedback == null)
-            damageFeedback = GetComponentInChildren<BossDamageFeedback>(true);
+            damageFeedback = GetComponentInChildren<DamageFeedback>(true);
 
         if (bossUI == null)
             bossUI = FindObjectOfType<BossUIStatus>();

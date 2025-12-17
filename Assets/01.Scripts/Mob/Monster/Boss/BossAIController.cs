@@ -281,9 +281,6 @@ public class BossAIController : MonoBehaviour
     {
         ChangeState(BossState.Down);
 
-        // TODO: 다운 전용 애니메이션 트리거 추가 후 여기서 호출
-        // 예: monsterAnim.PlayDown();
-
         float downDuration = 5f; // 임시 값 
         float timer = 0f;
         while (timer < downDuration)
@@ -302,6 +299,22 @@ public class BossAIController : MonoBehaviour
             else
                 ChangeState(BossState.Chase);
         }
+    }
+
+    public bool IsDownState => state == BossState.Dead;
+    public void EnterParryGroggy(float duration, string triggerName)
+    {
+        StopAllCoroutines();
+        ChangeState(BossState.Down);
+
+        var anim = GetComponentInChildren<Animator>();
+        if (anim != null && !string.IsNullOrEmpty(triggerName))
+        {
+            anim.ResetTrigger(triggerName); // 트리거 씹힘 방지
+            anim.SetTrigger(triggerName);
+        }
+
+        downCo = StartCoroutine(DownTimer(duration));
     }
 
     private void UpdateDead()

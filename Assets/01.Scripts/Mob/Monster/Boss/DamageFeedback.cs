@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class BossDamageFeedback : MonoBehaviour
+public class DamageFeedback : MonoBehaviour
 {
     [Header("흔들 대상(비주얼 루트)")]
     [SerializeField] private Transform visualRoot;
