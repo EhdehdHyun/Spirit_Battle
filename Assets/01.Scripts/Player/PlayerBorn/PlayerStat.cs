@@ -30,6 +30,24 @@ public class PlayerStat : MonoBehaviour
         UpdateAllUI();
     }
 
+    private void OnEnable()
+    {
+        if (character != null)
+            character.OnHpChanged += HandleHpChanged;
+    }
+
+    private void OnDisable()
+    {
+        if (character != null)
+            character.OnHpChanged -= HandleHpChanged;
+    }
+
+    private void HandleHpChanged(float current, float max)
+    {
+        if (ui != null)
+            ui.UpdateHp(current, max);
+    }
+
     // =======================
     // 레벨 데이터 적용
     // =======================
@@ -41,7 +59,7 @@ public class PlayerStat : MonoBehaviour
             Debug.LogWarning($"Level data not found : {level}");
             return;
         }
-        
+
         Debug.Log($"[PlayerStat] Apply Level {level} | HP:{data.MaxHP} | Stamina:{data.Stamina}");
 
         // HP

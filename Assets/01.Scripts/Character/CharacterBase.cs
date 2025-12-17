@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -10,6 +11,8 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
     public float maxHp = 100f;
     public float currentHp;
     public float moveSpeed = 3f;
+
+    public event Action<float, float> OnHpChanged;
 
 
     public bool IsAlive => currentHp > 0f;
@@ -29,14 +32,15 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
         if (currentHp <= 0)
         {
             currentHp = 0;
+            OnHpChanged?.Invoke(currentHp, maxHp);
             OnDie(info);
         }
         else
         {
+            OnHpChanged?.Invoke(currentHp, maxHp);
             OnDamaged(info);
         }
     }
-
 
     protected virtual void OnDamaged(DamageInfo info) { }
     protected virtual void OnDie(DamageInfo info) { }

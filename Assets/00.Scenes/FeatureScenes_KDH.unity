@@ -1342,6 +1342,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 534001840759305288, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: damage
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 534001840759305288, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
       propertyPath: hitRadius
       value: 3.58
       objectReference: {fileID: 0}
@@ -15177,7 +15181,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &875258241
 RectTransform:
   m_ObjectHideFlags: 0
@@ -15205,7 +15209,7 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 875258240}
-  m_CullTransparentMesh: 1
+  m_CullTransparentMesh: 0
 --- !u!114 &875258243
 MonoBehaviour:
   m_ObjectHideFlags: 0
