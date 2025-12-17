@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerStat : MonoBehaviour
 {
@@ -13,6 +13,15 @@ public class PlayerStat : MonoBehaviour
     public float maxStamina;
     public float currentStamina;
 
+    [Header("Dash Count")]
+    public int maxDashCount = 2;
+    public int curDashCount;
+
+    [Header("Dash Charge Count")]
+    public float dashRechargeTime = 1f;
+
+    private float dashRechargeAcc = 0f;
+
     public float maxExp; // 다음 레벨 필요 경험치
 
     private CharacterBase character;
@@ -22,12 +31,15 @@ public class PlayerStat : MonoBehaviour
     {
         character = GetComponent<CharacterBase>();
         levelTable = new Level_Data_Loader();
+        curDashCount = maxDashCount;
     }
 
     private void Start()
     {
         ApplyLevelData();
         UpdateAllUI();
+
+        dashRechargeAcc = 0f;
     }
 
     private void OnEnable()
@@ -48,6 +60,37 @@ public class PlayerStat : MonoBehaviour
             ui.UpdateHp(current, max);
     }
 
+    private void Update()
+    {
+        RechargeDashCount();
+    }
+
+    public bool TryConsumeDash()
+    {
+        if(curDashCount <= 0) return false;
+
+        curDashCount--;
+        
+        return true;
+    }
+
+    private void RechargeDashCount()
+    {
+        if(curDashCount >= maxDashCount) return;
+
+        dashRechargeAcc += Time.deltaTime;
+
+        while (dashRechargeAcc >= dashRechargeTime && curDashCount < maxDashCount)
+        {
+            dashRechargeAcc -= dashRechargeTime;
+            curDashCount++;
+
+            // ui.UpdateDash(curDashCount, maxDashCount);
+        }
+
+        if (curDashCount >= maxDashCount)
+            dashRechargeAcc = 0f;
+    }
     // =======================
     // 레벨 데이터 적용
     // =======================

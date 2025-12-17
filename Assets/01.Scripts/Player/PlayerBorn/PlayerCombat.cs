@@ -93,7 +93,7 @@ public class PlayerCombat : MonoBehaviour
         bufferedNextInput = true;
     }
 
-    // ✅ 패링 자세 시작(애니/락만 담당). 타이밍 판정은 PlayerParry가 함.
+    //  패링 자세 시작(애니/락만 담당). 타이밍 판정은 PlayerParry가 함.
     public void TryStartParryStance()
     {
         if (IsAttacking) return;
@@ -109,7 +109,7 @@ public class PlayerCombat : MonoBehaviour
         playerAnim?.PlayParry();
     }
 
-    // ✅ 패링 성공 시 호출(입력 쪽에서 호출해도 되고, PlayerParry에서 호출해도 됨)
+    //  패링 성공 시 호출(입력 쪽에서 호출해도 되고, PlayerParry에서 호출해도 됨)
     public void OnParrySuccess()
     {
         // 이펙트/사운드/카메라 흔들림 등 여기서
