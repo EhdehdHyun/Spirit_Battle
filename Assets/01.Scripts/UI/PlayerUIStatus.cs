@@ -20,7 +20,6 @@ public class PlayerUIStatus : MonoBehaviour
         hpBar.fillAmount = current / max;
         if (hpText != null)
         {
-            Debug.Log("Test");
             hpText.text = $"{Mathf.FloorToInt(current)} / {Mathf.FloorToInt(max)}";
         }
     }

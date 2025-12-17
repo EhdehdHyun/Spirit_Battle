@@ -28,6 +28,9 @@ public class BossEnemy : EnemyBase
     [Tooltip("가슴 쪽 오염 코어 오브젝트")]
     [SerializeField] private GameObject coreObject;
 
+    [Header("피격 연출")]
+    [SerializeField] private BossDamageFeedback damageFeedback;
+
     [Header("UI 참조")]
     [SerializeField] private BossUIStatus bossUI;
 
@@ -38,6 +41,9 @@ public class BossEnemy : EnemyBase
         base.Awake();
 
         baseMoveSpeed = moveSpeed;
+
+        if (damageFeedback == null)
+            damageFeedback = GetComponentInChildren<BossDamageFeedback>(true);
 
         if (bossUI == null)
             bossUI = FindObjectOfType<BossUIStatus>();
@@ -60,6 +66,8 @@ public class BossEnemy : EnemyBase
         {
             bossUI.UpdateHp(currentHp, maxHp);
         }
+
+        damageFeedback?.Play();
 
         //페이즈 전환 1 -> 2 
         if (CurrentPhase == 1 && maxPhase >= 2 && hpRatio <= phase2HpRatio)
