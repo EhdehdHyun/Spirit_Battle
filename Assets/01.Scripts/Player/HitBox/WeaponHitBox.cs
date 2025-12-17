@@ -7,17 +7,23 @@ public class WeaponHitBox : MonoBehaviour
     [Header("대상 레이어")]
     [SerializeField] private LayerMask targetLayers;
 
+    [Header("패링 스턴시간")]
+    [SerializeField] private float _parryStunTime = 1.5f;
+
     private Collider _col;
     private bool _active = false;
     private float _currentDamage;
     private HashSet<IDamageable> _alreadyHit = new HashSet<IDamageable>();
     private Transform _ownerRoot;
 
+    // 외부 조회용 프로퍼티
+    public Transform OwnerRoot => _ownerRoot;
+    public float ParryStunTime => _parryStunTime;
+
     private void Awake()
     {
         _col = GetComponent<Collider>();
         _col.isTrigger = true;
-        //공격 타이밍에만 켜기
         _col.enabled = false;
         _ownerRoot = transform.root;
     }
@@ -46,6 +52,10 @@ public class WeaponHitBox : MonoBehaviour
         if ((targetLayers.value & (1 << other.gameObject.layer)) == 0)
             return;
         
+        Vector3 hitPoint = other.ClosestPoint(transform.position);
+
+        IParryReceiver parryReceiver = other.GetComponent<IParryReceiver>();
+
         if(!other.TryGetComponent<IDamageable>(out var damageable))
         {
             damageable = other.GetComponentInParent<IDamageable>();
@@ -55,7 +65,6 @@ public class WeaponHitBox : MonoBehaviour
         if(!damageable.IsAlive) return;
         if (_alreadyHit.Contains(damageable)) return;
 
-        Vector3 hitPoint = other.ClosestPoint(transform.position);
         Vector3 dir = (other.bounds.center - transform.position).normalized;
         Vector3 hitNormal = dir;
 
