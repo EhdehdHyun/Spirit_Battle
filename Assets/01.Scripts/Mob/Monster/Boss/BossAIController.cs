@@ -40,6 +40,7 @@ public class BossAIController : MonoBehaviour
     private float stateTimer = 0f;
 
     public bool HasTarget => target != null && !boss.IsDead;
+    private Coroutine downCo;
 
     private void Awake()
     {
@@ -248,12 +249,37 @@ public class BossAIController : MonoBehaviour
         StartCoroutine(DownRoutine());
     }
 
+    public void EnterBreakGroggy(float duration, string triggerName)
+    {
+
+        StopAllCoroutines();
+
+        ChangeState(BossState.Down);
+
+        var anim = GetComponentInChildren<Animator>();
+        if (anim != null && !string.IsNullOrEmpty(triggerName))
+            anim.SetTrigger(triggerName);
+
+        downCo = StartCoroutine(DownTimer(duration));
+    }
+
+    private IEnumerator DownTimer(float duration)
+    {
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        // 다운 끝나면 다시 전투 재개
+        if (!HasTarget) ChangeState(BossState.Idle);
+        else ChangeState(BossState.Chase);
+    }
+
     private IEnumerator DownRoutine()
     {
         ChangeState(BossState.Down);
-
-        // TODO: 다운 전용 애니메이션 트리거 추가 후 여기서 호출
-        // 예: monsterAnim.PlayDown();
 
         float downDuration = 5f; // 임시 값 
         float timer = 0f;
@@ -273,6 +299,22 @@ public class BossAIController : MonoBehaviour
             else
                 ChangeState(BossState.Chase);
         }
+    }
+
+    public bool IsDownState => state == BossState.Dead;
+    public void EnterParryGroggy(float duration, string triggerName)
+    {
+        StopAllCoroutines();
+        ChangeState(BossState.Down);
+
+        var anim = GetComponentInChildren<Animator>();
+        if (anim != null && !string.IsNullOrEmpty(triggerName))
+        {
+            anim.ResetTrigger(triggerName); // 트리거 씹힘 방지
+            anim.SetTrigger(triggerName);
+        }
+
+        downCo = StartCoroutine(DownTimer(duration));
     }
 
     private void UpdateDead()

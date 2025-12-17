@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -29,10 +30,35 @@ public class BossEnemy : EnemyBase
     [SerializeField] private GameObject coreObject;
 
     [Header("피격 연출")]
-    [SerializeField] private BossDamageFeedback damageFeedback;
+    [SerializeField] private DamageFeedback damageFeedback;
 
     [Header("UI 참조")]
     [SerializeField] private BossUIStatus bossUI;
+
+    [Header("브레이크 시스템")]
+    [Tooltip("이 페이즈 이상부터 브레이크 시스템 활성화(기본 2페이즈 부터)")]
+    public int breakEnableFromPhase = 2;
+    [Tooltip("브레이크 발동까지 필요한 피격 횟수")]
+    //기본 10회
+    public int breakHitThreshold = 10;
+
+    [Tooltip("브레이크 그로기 지속 시간")]
+    public float breakGroggyDuration = 5f;
+
+    [Tooltip("그로기 중 추가 피해 비율 (0.2 = 20% 더 받음)")]
+    [Range(0f, 5f)]
+    public float groggyExtraDamageRatio = 0.2f;
+
+    [Tooltip("그로기 애니메이션 트리거 이름")]
+    public string breakGroggyTriggerName = "BreakGroggy";
+
+    public event Action<int, int> OnBreakHitChanged;
+    public event Action<bool> OnGroggyChanged;
+
+    private int breakHitCount = 0;
+    private bool isGroggy = false;
+
+    private BossAIController ai;
 
     public int CurrentPhase { get; private set; } = 1;
 
@@ -41,9 +67,10 @@ public class BossEnemy : EnemyBase
         base.Awake();
 
         baseMoveSpeed = moveSpeed;
+        ai = GetComponent<BossAIController>();
 
         if (damageFeedback == null)
-            damageFeedback = GetComponentInChildren<BossDamageFeedback>(true);
+            damageFeedback = GetComponentInChildren<DamageFeedback>(true);
 
         if (bossUI == null)
             bossUI = FindObjectOfType<BossUIStatus>();
@@ -55,6 +82,17 @@ public class BossEnemy : EnemyBase
             coreObject.SetActive(false);
     }
 
+    //그로기 중 받는 피해 증가 적용
+    protected override float GetIncomingDamageMultiplier(DamageInfo info)
+    {
+        float mul = 1f;
+
+        if (isGroggy)
+            mul *= (1f + groggyExtraDamageRatio);
+
+        return mul;
+    }
+
     protected override void OnDamaged(DamageInfo info)
     {
         base.OnDamaged(info);
@@ -62,12 +100,10 @@ public class BossEnemy : EnemyBase
 
         float hpRatio = currentHp / maxHp;
 
-        if (bossUI != null)
-        {
-            bossUI.UpdateHp(currentHp, maxHp);
-        }
-
+        bossUI?.UpdateHp(currentHp, maxHp);
         damageFeedback?.Play();
+
+        TryAccumulateBreak();
 
         //페이즈 전환 1 -> 2 
         if (CurrentPhase == 1 && maxPhase >= 2 && hpRatio <= phase2HpRatio)
@@ -91,6 +127,9 @@ public class BossEnemy : EnemyBase
         {
             coreObject.SetActive(true);
         }
+
+        if (bossUI != null)
+            bossUI.SetBreakVisible(CurrentPhase >= breakEnableFromPhase);
 
         Debug.Log("{CurrentPhase} 페이즈 진입");
     }
@@ -125,6 +164,54 @@ public class BossEnemy : EnemyBase
         }
 
         // 필요하면 여기서: 페이즈 전환 연출, 패턴 배열 교체, 코어 HP 리셋 등등 추가로 처리 가능
+    }
+
+    private void TryAccumulateBreak()
+    {
+        if (isGroggy) return; // 그로기 중엔 누적 X
+        if (CurrentPhase < breakEnableFromPhase) return;
+        if (breakHitThreshold <= 0) return;
+
+        breakHitCount++;
+        OnBreakHitChanged?.Invoke(breakHitCount, breakHitThreshold);
+
+        bossUI?.UpdateBreak(breakHitCount, breakHitThreshold);
+
+        if (breakHitCount >= breakHitThreshold)
+        {
+            StartCoroutine(BreakGroggyRoutine());
+        }
+    }
+
+    private IEnumerator BreakGroggyRoutine()
+    {
+        if (isGroggy) yield break;
+
+        isGroggy = true;
+        OnGroggyChanged?.Invoke(true);
+
+        bossUI?.SetGroggy(true);
+
+        // AI를 Down(그로기)로 넣고, 애니 트리거도 여기서 처리
+        if (ai != null)
+            ai.EnterBreakGroggy(breakGroggyDuration, breakGroggyTriggerName);
+
+        yield return new WaitForSeconds(breakGroggyDuration);
+
+        // 그로기 끝나면 리셋
+        breakHitCount = 0;
+        OnBreakHitChanged?.Invoke(breakHitCount, breakHitThreshold);
+        bossUI?.UpdateBreak(breakHitCount, breakHitThreshold);
+
+        isGroggy = false;
+        OnGroggyChanged?.Invoke(false);
+
+        bossUI?.SetGroggy(false);
+    }
+
+    public void EnterParryGroggy(/* 나중에 파라미터 */)
+    {
+        // TODO: 패링 그로기 구현 시 여기에
     }
 
     protected override void OnDie(DamageInfo info)

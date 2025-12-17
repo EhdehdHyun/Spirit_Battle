@@ -1413,6 +1413,22 @@ PrefabInstance:
       propertyPath: damage
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 3372987676212822727, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: maxHp
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3372987676212822727, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: bossUI
+      value: 
+      objectReference: {fileID: 875258243}
+    - target: {fileID: 3372987676212822727, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: damageFeedback
+      value: 
+      objectReference: {fileID: 226004592}
+    - target: {fileID: 3372987676212822727, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: breakHitThreshold
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 5510159728944212933, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
       propertyPath: rotateSpeed
       value: 4
@@ -1425,6 +1441,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2366965492673321758, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      insertIndex: 7
+      addedObject: {fileID: 1204488556}
     - targetCorrespondingSourceObject: {fileID: 4959621108292081982, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
       insertIndex: -1
       addedObject: {fileID: 226004591}
@@ -3323,6 +3342,17 @@ MonoBehaviour:
   rotationAmplitude: 2
   frequency: 40
   useUnscaledTime: 0
+--- !u!114 &226004592 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3699730551239642758, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+  m_PrefabInstance: {fileID: 105964411}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226004589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a52babf8f70433d49921ebff79118900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &227654951
 GameObject:
   m_ObjectHideFlags: 0
@@ -13321,12 +13351,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4c7ca55aaf06964ca83799473fcc8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponHand: {fileID: 0}
-  weaponIn: {fileID: 0}
   rb: {fileID: 0}
   character: {fileID: 0}
   combat: {fileID: 0}
   weaponHitbox: {fileID: 1636130274}
+  weaponHand: {fileID: 0}
+  weaponIn: {fileID: 0}
   runhold: 0.15
 --- !u!114 &748106374
 MonoBehaviour:
@@ -15214,7 +15244,7 @@ GameObject:
   - component: {fileID: 875258242}
   - component: {fileID: 875258243}
   m_Layer: 5
-  m_Name: BossHPBar
+  m_Name: BossStatus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15264,6 +15294,8 @@ MonoBehaviour:
   hpText: {fileID: 26673470}
   bossNameText: {fileID: 0}
   phaseText: {fileID: 0}
+  breakBar: {fileID: 1355638136}
+  breakSmoothSpeed: 1.5
 --- !u!1 &877147819
 GameObject:
   m_ObjectHideFlags: 0
@@ -21880,6 +21912,27 @@ Transform:
   - {fileID: 1852766273}
   m_Father: {fileID: 1009100119}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1204488545 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2366965492673321758, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+  m_PrefabInstance: {fileID: 105964411}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1204488556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1204488545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 214c843dc80a366448031157c4fb62ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parryWindowOpen: 0
+  defaultParryGroggyDuration: 2
+  parryGroggyTriggerName: ParryGroggy
+  ignoreParryWhileBreakGroggy: 1
 --- !u!1 &1210195914
 GameObject:
   m_ObjectHideFlags: 0
@@ -24188,6 +24241,81 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 83ade66dcd1cd45ed82abb3e15d3d0ae, type: 3}
+--- !u!1 &1355638134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1355638135}
+  - component: {fileID: 1355638137}
+  - component: {fileID: 1355638136}
+  m_Layer: 5
+  m_Name: BreakBar
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1355638135
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355638134}
+  m_LocalRotation: {x: 1, y: 0, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1.3, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2049024351}
+  m_LocalEulerAnglesHint: {x: 180, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -11.4, y: -19}
+  m_SizeDelta: {x: 510, y: 11.81}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1355638136
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355638134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.9622642, g: 0.9622642, b: 0.9622642, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 467720bdca8c54d4daff44f6fe158270, type: 3}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 0
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1355638137
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1355638134}
+  m_CullTransparentMesh: 1
 --- !u!1 &1356193469
 GameObject:
   m_ObjectHideFlags: 0
@@ -38045,7 +38173,7 @@ GameObject:
   - component: {fileID: 2026491217}
   - component: {fileID: 2026491216}
   m_Layer: 5
-  m_Name: HPBar (1)
+  m_Name: HPBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38068,7 +38196,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -2, y: 1}
+  m_AnchoredPosition: {x: -2, y: 12}
   m_SizeDelta: {x: 568.3, y: 21.8}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2026491216
@@ -38517,7 +38645,7 @@ GameObject:
   - component: {fileID: 2049024353}
   - component: {fileID: 2049024352}
   m_Layer: 5
-  m_Name: ItemSlot
+  m_Name: BossStatusSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38536,6 +38664,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2026491215}
+  - {fileID: 1355638135}
   m_Father: {fileID: 875258241}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
