@@ -30,4 +30,6 @@ public abstract class EnemyBase : CharacterBase
     {
         base.OnDie(info);
     }
+
+    protected virtual void OnPhaseChanged(int newPhase) { }
 }

@@ -1,8 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.GameCenter;
 
 public class BossPatternShockwave : BossPatternBase
 {
+    [Header("충격파 중심 설정")]
+    [Tooltip("충격파의 기준 위치(비워두면 보스 본체 위치 사용)")]
+    public Transform centerOverride;
+
     [Header("충격파 기본 설정")]
     public float damage = 20f;
     public float radius = 8f;
@@ -18,7 +23,7 @@ public class BossPatternShockwave : BossPatternBase
     public float slowDuration = 3f;
 
     [Header("비주얼")]
-    public GameObject telegraphObject;     // 바닥 이펙트
+    public GameObject telegraphObject; // 바닥 이펙트
     public string slamTriggerName = "Slam";
 
     private Animator animator;
@@ -52,27 +57,27 @@ public class BossPatternShockwave : BossPatternBase
         {
             currentWaveFinished = false;
 
-            // 1) 애니메이션 시작 (팔 들어올리기 시작)
+            // 애니메이션 시작 (팔 들어올리기 시작)
             if (animator != null && slamTriggerHash != 0)
                 animator.SetTrigger(slamTriggerHash);
 
-            // 2) 이 이후의 타이밍은 전부 "애니메이션 이벤트"가 담당
-            //    아래 while은 "이번 웨이브 끝" 이벤트가 올 때까지 기다리는 역할
+            // 이 이후의 타이밍은 전부 "애니메이션 이벤트"가 담당
+            // 아래 while은 "이번 웨이브 끝" 이벤트가 올 때까지 기다리는 역할
             while (!currentWaveFinished)
                 yield return null;
 
-            // 3) 다음 웨이브까지 대기
+            // 다음 웨이브까지 대기
             if (i < waveCount - 1 && waveInterval > 0f)
                 yield return new WaitForSeconds(waveInterval);
         }
     }
 
-    // ====== 여기부터는 애니메이션 이벤트에서 호출할 함수들 ======
-
-    /// <summary>애니메이션 중 **텔레그래프를 켜고 싶은 프레임**에 넣을 이벤트</summary>
+    //  애니메이션 중 텔레그래프를 켜고 싶은 프레임에 넣을 이벤트
     public void Anim_ShowTelegraph()
     {
         if (telegraphObject == null || boss == null) return;
+
+        Vector3 center = GetCenterPosotion();
 
         telegraphObject.SetActive(true);
         telegraphObject.transform.position = boss.transform.position;
@@ -80,14 +85,14 @@ public class BossPatternShockwave : BossPatternBase
             new Vector3(radius * 2f, 1f, radius * 2f);
     }
 
-    /// <summary>텔레그래프를 끄고 싶은 프레임에 넣을 이벤트</summary>
+    //텔레그래프를 끄고 싶은 프레임에 넣을 이벤트
     public void Anim_HideTelegraph()
     {
         if (telegraphObject == null) return;
         telegraphObject.SetActive(false);
     }
 
-    /// <summary>실제 충격파 데미지가 들어가는 프레임에 넣을 이벤트</summary>
+    //실제 충격파 데미지가 들어가는 프레임에 넣을 이벤트
     public void Anim_DoShockwave()
     {
         if (boss == null) return;
@@ -113,5 +118,28 @@ public class BossPatternShockwave : BossPatternBase
     public void Anim_EndWave()
     {
         currentWaveFinished = true;
+    }
+
+    private Vector3 GetCenterPosotion()
+    {
+        if (centerOverride != null)
+            return centerOverride.position;
+
+        if (boss != null)
+            return boss.transform.position;
+
+        return transform.position;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (boss == null)
+            boss = GetComponent<BossEnemy>();
+
+        Vector3 center = GetCenterPosotion();
+
+        Gizmos.color = new Color(1f, 0f, 0f, 0.3f);
+
+        Gizmos.DrawWireSphere(center, radius);
     }
 }
