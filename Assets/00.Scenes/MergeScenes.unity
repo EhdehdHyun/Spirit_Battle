@@ -13080,6 +13080,7 @@ GameObject:
   - component: {fileID: 748106380}
   - component: {fileID: 748106381}
   - component: {fileID: 748106382}
+  - component: {fileID: 748106383}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -13179,6 +13180,7 @@ MonoBehaviour:
   anime: {fileID: 748106373}
   playerInput: {fileID: 0}
   combat: {fileID: 0}
+  stat: {fileID: 0}
   faceTurnSpeed: 15
   isLocked: 0
   dashLocked: 0
@@ -13451,6 +13453,9 @@ MonoBehaviour:
   currentExp: 0
   maxStamina: 100
   currentStamina: 100
+  maxDashCount: 2
+  curDashCount: 0
+  dashRechargeTime: 1
   maxExp: 100
 --- !u!114 &748106381
 MonoBehaviour:
@@ -13488,6 +13493,28 @@ MonoBehaviour:
   crosshairNormalColor: {r: 1, g: 1, b: 1, a: 1}
   crosshairInteractColor: {r: 1, g: 0, b: 0, a: 1}
   interactText: {fileID: 0}
+--- !u!114 &748106383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748106370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32881ca650b852646aa92ef9a8efbe5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isParryStance: 0
+  combat: {fileID: 0}
+  myHitBox: {fileID: 0}
+  origin: {fileID: 0}
+  parryableMask:
+    serializedVersion: 2
+    m_Bits: 768
+  range: 2
+  angle: 120
+  maxHits: 16
 --- !u!1 &748747897
 GameObject:
   m_ObjectHideFlags: 0

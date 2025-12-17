@@ -593,6 +593,7 @@ MonoBehaviour:
   anime: {fileID: 1062441832}
   playerInput: {fileID: 0}
   combat: {fileID: 0}
+  stat: {fileID: 0}
   faceTurnSpeed: 30
   isLocked: 0
   dashLocked: 0
@@ -14966,6 +14967,8 @@ GameObject:
   - component: {fileID: 1062441831}
   - component: {fileID: 1062441832}
   - component: {fileID: 4578013503287111340}
+  - component: {fileID: 4578013503287111341}
+  - component: {fileID: 4578013503287111342}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -19782,6 +19785,50 @@ MonoBehaviour:
   - 0
   weaponEquipped: 0
   isAttacking: 0
+  dashInvincibleExtra: 0.05
+--- !u!114 &4578013503287111341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172638082442433176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb7906dc5b9bb414a986e62d448b4165, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ui: {fileID: 0}
+  level: 1
+  currentExp: 0
+  maxStamina: 0
+  currentStamina: 0
+  maxDashCount: 2
+  curDashCount: 0
+  dashRechargeTime: 5
+  maxExp: 0
+--- !u!114 &4578013503287111342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3172638082442433176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32881ca650b852646aa92ef9a8efbe5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isParryStance: 0
+  combat: {fileID: 0}
+  myHitBox: {fileID: 0}
+  origin: {fileID: 0}
+  parryableMask:
+    serializedVersion: 2
+    m_Bits: 0
+  range: 2
+  angle: 120
+  maxHits: 16
 --- !u!4 &4589803069817155275
 Transform:
   m_ObjectHideFlags: 0

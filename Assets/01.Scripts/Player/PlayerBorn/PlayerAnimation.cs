@@ -136,13 +136,7 @@ public class PlayerAnimation : MonoBehaviour
         if (weaponHitbox != null)
             weaponHitbox.SetActive(true);
     }
-
-    public void EvParryEnd()
-    {
-        combat.EvParryEnd();
-    }
-
-    }
+}
 
 
 

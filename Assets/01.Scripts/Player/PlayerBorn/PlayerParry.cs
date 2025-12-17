@@ -1,85 +1,124 @@
 ﻿using UnityEngine;
 
-public enum ParryTelegraphType { SlowYellow, FastRed }
-
 public class PlayerParry : MonoBehaviour
 {
-    [Header("State")]
-    public bool isParryStance;     // 패링 자세 중인지
-    public bool windowOpen;
-    public float windowEndTime;
-    private float _successUntil;
+    [Header("상태(Combat이 제어)")]
+    public bool isParryStance = false;
 
-    [Header("Facing")]
-    [Range(-1f, 1f)] public float minFacingDot = 0.3f; // 정면 판정
+    [Header("참조")]
+    [SerializeField] private PlayerCombat combat;
+    [SerializeField] private WeaponHitBox myHitBox; // MonsterParryHandler.TryParry에 넘길 hitBox(없으면 null도 가능)
+    [SerializeField] private Transform origin;      // 탐지 기준점(가슴/무기/카메라 앞)
 
-    [Header("UI")]
-    [SerializeField] private ParryTelegraphUI ui;
+    [Header("탐지")]
+    [SerializeField] private LayerMask parryableMask; // 몬스터 레이어
+    [SerializeField] private float range = 2.0f;
+    [SerializeField] private float angle = 120f;
+    [SerializeField] private int maxHits = 16;
 
-    private Transform _attacker;
-    private float _stunTime;
+    private Collider[] hits;
+    private bool consumedThisStance;
 
-    public bool IsWindowOpen => windowOpen && Time.time <= windowEndTime;
-    public bool HasParrySuccess => Time.time <= _successUntil;
+    private Transform lastAttacker;
+    private Vector3 lastHitPoint;
+
+    public Transform GetLastAttacker() => lastAttacker;
+    public Vector3 GetLastHitPoint() => lastHitPoint;
 
     private void Awake()
     {
-        if (!ui) ui = GetComponentInChildren<ParryTelegraphUI>(true);
+        if (!combat) combat = GetComponent<PlayerCombat>();
+        if (!origin) origin = transform;
+        if (!myHitBox) myHitBox = GetComponentInChildren<WeaponHitBox>();
+        hits = new Collider[Mathf.Max(1, maxHits)];
     }
 
-    // 보스/몬스터가 "곧 공격 들어간다"면서 열어주는 창
-    public void OpenWindow(Transform attacker, float duration, ParryTelegraphType type, float stunTime)
+    public void EnterStance()
     {
-        if (duration <= 0f) return;
-
-        _attacker = attacker;
-        _stunTime = stunTime;
-
-        windowOpen = true;
-        windowEndTime = Time.time + duration;
-
-        ui?.Show(type, duration);
-        // Debug.Log($"[Parry] Window OPEN type={type} dur={duration}");
+        isParryStance = true;
+        consumedThisStance = false;
+        lastAttacker = null;
+        lastHitPoint = Vector3.zero;
     }
 
-    public void CloseWindow()
+    public void ExitStance()
     {
-        windowOpen = false;
-        _attacker = null;
-        ui?.Hide();
-        // Debug.Log("[Parry] Window CLOSE");
+        isParryStance = false;
+        consumedThisStance = false;
     }
 
-    // 입력 시도 (패링 버튼 눌렀을 때)
-    public bool TryConsumeInput()
+    public void Anim_TryParryNow()
     {
-        if (!IsWindowOpen) return false;
+        if (!isParryStance) return;
+        if (combat == null) return;
 
-        // 패링 자세가 아니라도 "타이밍만"으로 성공시키고 싶으면 이 줄 삭제
-        if (!isParryStance) return false;
+        if (!combat.WeaponEquipped) return;
+        if (combat.IsAttacking) return;
+        if (combat.IsDashing) return;
 
-        // 정면 판정
-        if (_attacker != null)
+        var target = FindBestParryable(out Vector3 hitPoint, out Transform attackerTr);
+        if (target == null) return;
+
+        consumedThisStance = true;
+
+        bool success = target.TryParry(myHitBox, hitPoint);
+        if (!success) return;
+
+        lastAttacker = attackerTr;
+        lastHitPoint = hitPoint;
+
+        combat.OnParrySuccess(lastAttacker, lastHitPoint);
+    }
+
+    private IParryReceiver FindBestParryable(out Vector3 bestPoint, out Transform bestTransform)
+    {
+        bestPoint = origin.position;
+        bestTransform = null;
+
+        int count = Physics.OverlapSphereNonAlloc(origin.position, range, hits, parryableMask, QueryTriggerInteraction.Collide);
+        if (count <= 0) return null;
+
+        IParryReceiver best = null;
+        float bestScore = float.NegativeInfinity;
+
+        Vector3 fwd = transform.forward;
+        fwd.y = 0f;
+        if (fwd.sqrMagnitude < 0.0001f) fwd = Vector3.forward;
+        fwd.Normalize();
+
+        float half = angle * 0.5f;
+
+        for (int i = 0; i < count; i++)
         {
-            Vector3 to = _attacker.position - transform.position;
-            to.y = 0f;
-            Vector3 fwd = transform.forward; fwd.y = 0f;
+            var col = hits[i];
+            if (!col) continue;
 
-            if (to.sqrMagnitude > 0.0001f)
+            var receiver = col.GetComponentInParent<IParryReceiver>();
+            if (receiver == null) continue;
+
+            Vector3 p = col.ClosestPoint(origin.position);
+
+            Vector3 to = p - transform.position;
+            to.y = 0f;
+            float dist = Mathf.Max(0.0001f, to.magnitude);
+
+            float a = Vector3.Angle(fwd, to / dist);
+            if (a > half) continue;
+
+            float score = -(a * 2f) - dist;
+            if (score > bestScore)
             {
-                to.Normalize(); fwd.Normalize();
-                float dot = Vector3.Dot(fwd, to);
-                if (dot < minFacingDot) return false;
+                bestScore = score;
+                best = receiver;
+                bestPoint = p;
+
+                // ✅ 여기만 안전하게 바꿔
+                if (receiver is Component comp)
+                    bestTransform = comp.transform;
             }
         }
 
-        // 성공: 공격 프레임이 약간 뒤여도 인정하도록 버퍼
-        _successUntil = Time.time + 0.25f;
-
-        CloseWindow();
-        return true;
+        return best;
     }
 
-    public float GetStunTime() => _stunTime;
-    public Transform GetAttacker() => _attacker;
 }

@@ -157,15 +157,9 @@ public class PlayerInputController : MonoBehaviour
         if (!ctx.performed) return;
         if (isLocked) return;
 
+        // 입력 순간엔 "자세 시작"만.
+        // 실제 패링 판정은 PlayerParry.Anim_TryParryNow() (애니 이벤트)에서 함.
         combat?.TryStartParryStance();
-
-        var parry = GetComponent<PlayerParry>();
-        if (parry != null)
-        {
-            bool success = parry.TryConsumeInput();
-            if (success)
-                combat?.OnParrySuccess();
-        }
     }
 
 

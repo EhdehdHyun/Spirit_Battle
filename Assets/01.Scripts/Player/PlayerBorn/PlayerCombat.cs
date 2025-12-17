@@ -31,10 +31,11 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private bool isAttacking = false;
     public bool IsAttacking => isAttacking;
 
+    public bool IsDashing => physicsCharacter != null && physicsCharacter.IsDashing;
+
     [Header("대쉬 무적 시간")]
     [SerializeField] private float dashInvincibleExtra = 0.05f;
 
-    // ✅ 패링은 분리 컴포넌트가 관리
     private PlayerParry parry;
 
     int currentCombo = 0;
@@ -65,9 +66,7 @@ public class PlayerCombat : MonoBehaviour
 
         var character = GetComponent<CharacterBase>();
         if (character != null)
-        {
             character.StartInvincible(physicsCharacter.dashDuration + dashInvincibleExtra);
-        }
 
         playerAnim?.PlayDash();
         return true;
@@ -76,10 +75,9 @@ public class PlayerCombat : MonoBehaviour
     public void OnAttackInput()
     {
         if (!weaponEquipped) return;
-        if (playerInput.isLocked) return;
-        if (physicsCharacter.IsDashing) return;
+        if (playerInput != null && playerInput.isLocked) return;
+        if (IsDashing) return;
 
-        // ✅ 패링 자세 중이면 공격 금지 (원하면 허용 가능)
         if (parry != null && parry.isParryStance) return;
 
         if (!isAttacking)
@@ -89,50 +87,41 @@ public class PlayerCombat : MonoBehaviour
         }
 
         if (bufferedNextInput) return;
-
         bufferedNextInput = true;
     }
 
-    //  패링 자세 시작(애니/락만 담당). 타이밍 판정은 PlayerParry가 함.
+    // ✅ 패링 입력 들어오면 “자세/락/애니”만
     public void TryStartParryStance()
     {
         if (IsAttacking) return;
         if (!weaponEquipped) return;
-        if (physicsCharacter.IsDashing) return;
+        if (IsDashing) return;
+        if (parry != null && parry.isParryStance) return;
 
-        if (parry != null)
-            parry.isParryStance = true;
+        parry?.EnterStance();
 
         physicsCharacter?.SetMovementLocked(true);
         ClearAttackBuffer();
 
-        playerAnim?.PlayParry();
+        playerAnim?.PlayParry(); // 패링 애니 재생
     }
 
-    //  패링 성공 시 호출(입력 쪽에서 호출해도 되고, PlayerParry에서 호출해도 됨)
-    public void OnParrySuccess()
+    // ✅ 성공 연출만 (몬스터 OnParried는 절대 건드리지 마)
+    public void OnParrySuccess(Transform attacker, Vector3 hitPoint)
     {
-        // 이펙트/사운드/카메라 흔들림 등 여기서
-        // Debug.Log("[Parry] SUCCESS", this);
+        // 여기서 성공 이펙트/사운드/카메라/짧은 무적 등만 처리
+        // Debug.Log("[Parry] SUCCESS");
 
-        if (parry == null) return;
+        // 예시) 잠깐 무적
+        var character = GetComponent<CharacterBase>();
+        if (character != null)
+            character.StartInvincible(0.15f);
 
-        Transform attacker = parry.GetAttacker();
-        if (attacker == null) return;
-
-        var parryable = attacker.GetComponentInChildren<IParryable>();
-        parryable?.OnParried(new ParryInfo
-        {
-            defender = gameObject,
-            point = transform.position,
-            stunTime = parry.GetStunTime()
-        });
+        // 예시) 성공 애니가 따로 있으면
+        // playerAnim?.PlayParrySuccess();
     }
 
-    void ClearAttackBuffer()
-    {
-        bufferedNextInput = false;
-    }
+    void ClearAttackBuffer() => bufferedNextInput = false;
 
     public void OnToggleWeaponInput()
     {
@@ -187,10 +176,7 @@ public class PlayerCombat : MonoBehaviour
         playerAnim?.PlayIdle();
     }
 
-    void ForceStopAttack()
-    {
-        ResetCombo();
-    }
+    void ForceStopAttack() => ResetCombo();
 
     void CancelAttackCommon()
     {
@@ -218,7 +204,6 @@ public class PlayerCombat : MonoBehaviour
             StartNextAttack();
             return;
         }
-
         ResetCombo();
     }
 
@@ -273,9 +258,7 @@ public class PlayerCombat : MonoBehaviour
     // ✅ 패링 모션 끝 이벤트(자세 해제 + 락 해제)
     public void EvParryEnd()
     {
-        if (parry != null)
-            parry.isParryStance = false;
-
+        parry?.ExitStance();
         physicsCharacter?.SetMovementLocked(false);
     }
 }
