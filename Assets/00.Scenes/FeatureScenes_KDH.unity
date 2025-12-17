@@ -1401,6 +1401,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestBoss
       objectReference: {fileID: 0}
+    - target: {fileID: 5510159728944212933, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: rotateSpeed
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -13262,6 +13266,7 @@ MonoBehaviour:
   - 0
   - 0
   weaponEquipped: 0
+  isAttacking: 0
 --- !u!114 &748106373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13295,9 +13300,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 431575902}
   anime: {fileID: 748106373}
+  playerInput: {fileID: 0}
   combat: {fileID: 0}
   faceTurnSpeed: 15
   isLocked: 0
+  dashLocked: 0
 --- !u!114 &748106375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13310,7 +13317,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 957ae59d9840d0443a3d25049cbe3b78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 8
+  runSpeed: 8
+  walkSpeed: 4
   acceleration: 40
   deceleration: 30
   jumpPower: 10
@@ -13547,10 +13555,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ui: {fileID: 683637767}
   level: 1
+  currentExp: 0
   maxStamina: 100
   currentStamina: 100
   maxExp: 100
-  currentExp: 0
 --- !u!114 &748106381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13580,10 +13588,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 431575905}
   interactDistance: 5
-  dropLayerMask:
+  interactLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
-  defaultDropDistance: 3
+    m_Bits: 0
+  crosshairImage: {fileID: 0}
+  crosshairNormalColor: {r: 1, g: 1, b: 1, a: 1}
+  crosshairInteractColor: {r: 1, g: 0, b: 0, a: 1}
+  interactText: {fileID: 0}
 --- !u!1 &748747897
 GameObject:
   m_ObjectHideFlags: 0

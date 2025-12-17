@@ -18,6 +18,12 @@ public class BossPatternShockwave : BossPatternBase
     public int phase2WaveCount = 2;   // 2페이즈 이상 웨이브 수
     public float waveInterval = 0.4f; // 웨이브 사이 딜레이
 
+    [Header("랜덤 쿨타임")]
+    public float cooldownMin = 3f;
+    public float cooldownMax = 6f;
+
+    private float nextReadyTime = 0f;
+
     [Header("상태이상 (슬로우) - 추후 구현")]
     public float slowRatio = 0.3f;
     public float slowDuration = 3f;
@@ -35,6 +41,8 @@ public class BossPatternShockwave : BossPatternBase
     protected override void Awake()
     {
         base.Awake();
+
+        nextReadyTime = Time.time + Random.Range(cooldownMin, cooldownMax);
 
         animator = GetComponentInChildren<Animator>();
 
@@ -70,6 +78,13 @@ public class BossPatternShockwave : BossPatternBase
             if (i < waveCount - 1 && waveInterval > 0f)
                 yield return new WaitForSeconds(waveInterval);
         }
+        nextReadyTime = Time.time + Random.Range(cooldownMin, cooldownMax);
+    }
+
+    public override bool CanExecute(Transform target)
+    {
+        if (Time.time < nextReadyTime) return false;
+        return base.CanExecute(target);
     }
 
     //  애니메이션 중 텔레그래프를 켜고 싶은 프레임에 넣을 이벤트
@@ -80,7 +95,7 @@ public class BossPatternShockwave : BossPatternBase
         Vector3 center = GetCenterPosotion();
 
         telegraphObject.SetActive(true);
-        telegraphObject.transform.position = boss.transform.position;
+        telegraphObject.transform.position = center;
         telegraphObject.transform.localScale =
             new Vector3(radius * 2f, 1f, radius * 2f);
     }
@@ -97,11 +112,20 @@ public class BossPatternShockwave : BossPatternBase
     {
         if (boss == null) return;
 
-        Vector3 center = boss.transform.position;
-        Collider[] cols = Physics.OverlapSphere(center, radius, hitMask);
+        Vector3 center = GetCenterPosotion();
+        Collider[] cols = Physics.OverlapSphere(center, radius, hitMask, QueryTriggerInteraction.Collide);
 
         foreach (Collider col in cols)
         {
+            PhysicsCharacter pc = col.GetComponentInParent<PhysicsCharacter>();
+
+            // 공중 회피 "진짜 공중"일 때만 스킵 (그라운드 체크가 순간 튀는 프레임 방지)
+            if (pc != null)
+            {
+                bool airborne = !pc.IsGrounded && (pc.IsFalling || pc.Velocity.y > 0.1f);
+                if (airborne) continue;
+            }
+
             IDamageable damageable = col.GetComponentInParent<IDamageable>();
             if (damageable == null) continue;
 
@@ -111,7 +135,7 @@ public class BossPatternShockwave : BossPatternBase
             DamageInfo info = new DamageInfo(damage, hitPoint, hitNormal);
             damageable.TakeDamage(info);
 
-            // TODO: 여기서 슬로우 상태이상 적용
+            // TODO: 슬로우 적용
         }
     }
 
