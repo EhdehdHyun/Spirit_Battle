@@ -28,6 +28,9 @@ public class BossEnemy : EnemyBase
     [Tooltip("가슴 쪽 오염 코어 오브젝트")]
     [SerializeField] private GameObject coreObject;
 
+    [Header("UI 참조")]
+    [SerializeField] private BossUIStatus bossUI;
+
     public int CurrentPhase { get; private set; } = 1;
 
     protected override void Awake()
@@ -35,6 +38,12 @@ public class BossEnemy : EnemyBase
         base.Awake();
 
         baseMoveSpeed = moveSpeed;
+
+        if (bossUI == null)
+            bossUI = FindObjectOfType<BossUIStatus>();
+
+        if (bossUI != null)
+            bossUI.SetBoss(this);
 
         if (coreObject != null)
             coreObject.SetActive(false);
@@ -47,6 +56,11 @@ public class BossEnemy : EnemyBase
 
         float hpRatio = currentHp / maxHp;
 
+        if (bossUI != null)
+        {
+            bossUI.UpdateHp(currentHp, maxHp);
+        }
+
         //페이즈 전환 1 -> 2 
         if (CurrentPhase == 1 && maxPhase >= 2 && hpRatio <= phase2HpRatio)
         {
@@ -54,7 +68,7 @@ public class BossEnemy : EnemyBase
         }
         else if (CurrentPhase == 2 && maxPhase >= 3 && hpRatio <= phase3HpRatio)
         {
-
+            EnterPhase(3);
         }
     }
 
@@ -93,9 +107,16 @@ public class BossEnemy : EnemyBase
         }
     }
 
-    protected virtual void OnPhaseChanged(int newPhase)
+    protected override void OnPhaseChanged(int newPhase)
     {
-        //페이즈 전환 연출, 스탯 변경, 새로운 패턴 개방 등등 들어갈 메써드
+        base.OnPhaseChanged(newPhase);
+
+        if (bossUI != null)
+        {
+            bossUI.UpdatePhase(newPhase);
+        }
+
+        // 필요하면 여기서: 페이즈 전환 연출, 패턴 배열 교체, 코어 HP 리셋 등등 추가로 처리 가능
     }
 
     protected override void OnDie(DamageInfo info)
@@ -105,5 +126,10 @@ public class BossEnemy : EnemyBase
         // 죽으면 코어 비활성
         if (coreObject != null)
             coreObject.SetActive(false);
+
+        if (bossUI != null)
+        {
+            bossUI.SetVisible(false);
+        }
     }
 }

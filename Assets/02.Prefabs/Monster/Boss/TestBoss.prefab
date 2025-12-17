@@ -19,7 +19,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4407882077847830888
 Transform:
   m_ObjectHideFlags: 0
@@ -10051,7 +10051,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.74295, y: 0.12, z: 24.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5636710383446690980}
   - {fileID: 1267480653314365648}
@@ -10073,14 +10073,15 @@ MonoBehaviour:
   maxHp: 100
   currentHp: 0
   moveSpeed: 3
-  detectRange: 10
+  detectRange: 16.9
   attackRange: 4
   maxPhase: 2
   phase2HpRatio: 0.5
   phase3HpRatio: 0.2
-  phase2MoveSpeedMultiplier: 2
+  phase2MoveSpeedMultiplier: 1.2
   phase3MoveSpeedMultiplier: 3
   coreObject: {fileID: 850459025388662697}
+  bossUI: {fileID: 0}
 --- !u!114 &5510159728944212933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10093,8 +10094,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 308ab46248488dd4586d543f54823c8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  engageRange: 15
-  loseTargetDistance: 40
   stopDistance: 3
   rotateSpeed: 8
   patterns:
@@ -10113,9 +10112,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
-  attackCooldown: 4
+  attackCooldown: 2
   hitOrigin: {fileID: 1267480653314365648}
-  hitRadius: 5.53
+  hitRadius: 3.58
   hitMask:
     serializedVersion: 2
     m_Bits: 128
@@ -10149,14 +10148,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4dd0f6874daacd4396c9bb8ef9136e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  patterName: Pattern
-  cooldown: 5
+  patterName: SlamX2
+  cooldown: 15
   minUseDistance: 6
   maxUseDistance: 12
   minPhase: 2
   maxPhase: 2
+  centerOverride: {fileID: 0}
   damage: 20
-  radius: 8
+  radius: 25
   hitMask:
     serializedVersion: 2
     m_Bits: 128
@@ -10185,8 +10185,9 @@ MonoBehaviour:
   maxUseDistance: 12
   minPhase: 1
   maxPhase: 1
+  centerOverride: {fileID: 0}
   damage: 20
-  radius: 8
+  radius: 25
   hitMask:
     serializedVersion: 2
     m_Bits: 128
@@ -10237,10 +10238,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
-  m_Height: 1
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Radius: 2.54
+  m_Height: 1.82
+  m_Direction: 0
+  m_Center: {x: 0, y: 3.39, z: 0}
 --- !u!54 &6946897576507010950
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -10264,7 +10265,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -10440,7 +10441,7 @@ GameObject:
   - component: {fileID: 3640966978998744944}
   - component: {fileID: 3183001238487918219}
   m_Layer: 9
-  m_Name: TornadosTornado_Wind_BuildUp
+  m_Name: Effects
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15367,7 +15368,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1267480653314365648}
   m_Layer: 9
-  m_Name: GameObject
+  m_Name: NormalAttackRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -15382,7 +15383,7 @@ Transform:
   m_GameObject: {fileID: 4205012935547573799}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.54, z: 3.08}
+  m_LocalPosition: {x: 0, y: 2.87, z: 2.31}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15429,7 +15430,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5636710383446690980}
   m_Layer: 9
-  m_Name: Giant_Bl
+  m_Name: modles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

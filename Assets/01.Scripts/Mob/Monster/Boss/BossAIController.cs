@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BossAIController : MonoBehaviour
@@ -13,13 +12,6 @@ public class BossAIController : MonoBehaviour
         Down,
         Dead
     }
-
-    [Header("타겟/전투 범위 설정")]
-    [Tooltip("보스가 플레이어를 인식하고 전투를 시작하는 거리")]
-    public float engageRange = 15f;
-
-    [Tooltip("이 거리보다 멀어지면 타겟")]
-    public float loseTargetDistance = 40f;
 
     [Header("이동 설정")]
     [Tooltip("플레이어에게 이 거리까지는 접근, 그 안에서는 멈춤")]
@@ -40,6 +32,9 @@ public class BossAIController : MonoBehaviour
 
     // 이동 잠금 여부
     private bool canMove = true;
+
+    //UI 한 번만 연결하기 위한 플래그
+    private bool uiLinked = false;
 
     private BossState state = BossState.Idle;
     private float stateTimer = 0f;
@@ -64,6 +59,10 @@ public class BossAIController : MonoBehaviour
             if (playerObj != null)
                 target = playerObj.transform;
         }
+
+        //어차피 보스전에서는 무조건 플레이를 쫓아오게 되어있으니까
+        if (HasTarget)
+            ChangeState(BossState.Chase);
     }
 
     private void Update()
@@ -107,9 +106,22 @@ public class BossAIController : MonoBehaviour
         state = newState;
         stateTimer = 0f;
 
+        if (state == BossState.Chase && !uiLinked)
+        {
+            var ui = BossUIStatus.Instance;
+            if (ui != null && boss != null)
+            {
+                ui.SetBoss(boss);
+                uiLinked = true;
+            }
+        }
+
         switch (state)
         {
             case BossState.Idle:
+                SetCanMove(false);
+                break;
+
             case BossState.BasicAttack:
                 SetCanMove(false);
                 break;
@@ -119,7 +131,11 @@ public class BossAIController : MonoBehaviour
                 break;
 
             case BossState.Pattern:
+                SetCanMove(false);
+                break;
             case BossState.Down:
+                SetCanMove(false);
+                break;
             case BossState.Dead:
                 SetCanMove(false);
                 monsterAnim?.PlayDie();
@@ -129,14 +145,7 @@ public class BossAIController : MonoBehaviour
 
     private void UpdateIdle()
     {
-        stateTimer += Time.deltaTime;
-
-        if (!HasTarget) return;
-
-        float dist = DistanceToTarget();
-
-        //사거리 안에 들어오면 추적 시작(시작 연출 필요하면 넣으면 될 거 같음)
-        if (dist <= engageRange)
+        if (HasTarget)
         {
             ChangeState(BossState.Chase);
         }
@@ -153,12 +162,6 @@ public class BossAIController : MonoBehaviour
         stateTimer += Time.deltaTime;
 
         float dist = DistanceToTarget();
-
-        if (dist > loseTargetDistance) //너무 멀어지면 어떻게 할 지
-        {
-            ChangeState(BossState.Idle);
-            return;
-        }
 
         //패턴 먼저 시도
         if (TryUsePattern()) return;
@@ -204,7 +207,6 @@ public class BossAIController : MonoBehaviour
     {
         if (currentPattern != null && currentPattern.IsRunning)
         {
-            LookAtTarget();
             return;
         }
 
@@ -307,27 +309,13 @@ public class BossAIController : MonoBehaviour
         }
     }
 
-    private void LookAtTarget()
-    {
-        if (!HasTarget) return;
-
-        Vector3 dir = target.position - transform.position;
-        dir.y = 0f;
-
-        if (dir.sqrMagnitude > 0.001f)
-        {
-            Quaternion lookRot = Quaternion.LookRotation(dir.normalized);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, rotateSpeed * Time.deltaTime);
-        }
-    }
-
     private void UpdateAnimation()
     {
         if (monsterAnim == null) return;
 
         float speed = 0f;
 
-        if (state == BossState.Chase)
+        if (state == BossState.Chase && canMove)
         {
             speed = boss.moveSpeed;
         }
@@ -340,15 +328,13 @@ public class BossAIController : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireSphere(transform.position, engageRange);
+        if (boss == null)
+            boss = GetComponent<BossEnemy>();
 
+        // 공격 범위 정도만 참고용으로 표시
         Gizmos.color = Color.red;
         if (boss != null)
             Gizmos.DrawWireSphere(transform.position, boss.attackRange);
-
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, loseTargetDistance);
     }
 
     public void SetCanMove(bool value)
