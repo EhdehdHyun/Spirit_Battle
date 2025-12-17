@@ -18,8 +18,10 @@ public abstract class EnemyBase : CharacterBase
 
     public bool IsDead => !IsAlive;
 
-    protected Transform target;
     // 이동/상태머신 담당
+    protected Transform target;
+
+
 
     protected override void Awake()
     {

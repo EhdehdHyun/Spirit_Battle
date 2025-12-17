@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Rendering;
 
 // 플레이어/몬스터 공통 사용 기본 클래스
@@ -22,10 +23,15 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
         currentHp = maxHp;
     }
 
+    protected virtual float GetIncomingDamageMultiplier(DamageInfo info) => 1f;
+
     //데미지 받았을 때 호출
     public void TakeDamage(DamageInfo info)
     {
         if (!IsAlive) return;
+
+        float multiplier = Mathf.Max(0f, GetIncomingDamageMultiplier(info));
+        float finalDamage = info.amount * multiplier;
 
         currentHp -= info.amount;
 

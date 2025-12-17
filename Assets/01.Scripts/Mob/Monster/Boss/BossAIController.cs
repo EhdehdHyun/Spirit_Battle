@@ -40,6 +40,7 @@ public class BossAIController : MonoBehaviour
     private float stateTimer = 0f;
 
     public bool HasTarget => target != null && !boss.IsDead;
+    private Coroutine downCo;
 
     private void Awake()
     {
@@ -246,6 +247,34 @@ public class BossAIController : MonoBehaviour
     public void HandleCoreBroken()
     {
         StartCoroutine(DownRoutine());
+    }
+
+    public void EnterBreakGroggy(float duration, string triggerName)
+    {
+
+        StopAllCoroutines();
+
+        ChangeState(BossState.Down);
+
+        var anim = GetComponentInChildren<Animator>();
+        if (anim != null && !string.IsNullOrEmpty(triggerName))
+            anim.SetTrigger(triggerName);
+
+        downCo = StartCoroutine(DownTimer(duration));
+    }
+
+    private IEnumerator DownTimer(float duration)
+    {
+        float t = 0f;
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        // 다운 끝나면 다시 전투 재개
+        if (!HasTarget) ChangeState(BossState.Idle);
+        else ChangeState(BossState.Chase);
     }
 
     private IEnumerator DownRoutine()
