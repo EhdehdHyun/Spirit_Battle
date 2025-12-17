@@ -475,6 +475,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 912c8c43-10ff-4fb9-a267-4969f43d481e
     m_ActionName: Player/Inventory[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1062441831}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: OnParry
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b105d503-0362-4a8f-a53c-59658d912413
+    m_ActionName: Player/Parry[/Keyboard/q]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -579,6 +595,7 @@ MonoBehaviour:
   combat: {fileID: 0}
   faceTurnSpeed: 30
   isLocked: 0
+  dashLocked: 0
 --- !u!114 &1062441832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -591,12 +608,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4c7ca55aaf06964ca83799473fcc8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponHand: {fileID: 0}
-  weaponIn: {fileID: 0}
   rb: {fileID: 0}
   character: {fileID: 0}
   combat: {fileID: 0}
   weaponHitbox: {fileID: 9141504833507405084}
+  weaponHand: {fileID: 0}
+  weaponIn: {fileID: 0}
   runhold: 0.15
 --- !u!1 &1146147982
 GameObject:
@@ -38086,6 +38103,7 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 768
+  _parryStunTime: 1.5
 --- !u!4 &9161387892111312856
 Transform:
   m_ObjectHideFlags: 0

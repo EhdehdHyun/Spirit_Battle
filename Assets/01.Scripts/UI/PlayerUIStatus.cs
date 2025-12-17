@@ -14,12 +14,14 @@ public class PlayerUIStatus : MonoBehaviour
     public TMP_Text staminaText;
     public TMP_Text expText;
     public TMP_Text levelText;
-    
+
     public void UpdateHp(float current, float max)
     {
         hpBar.fillAmount = current / max;
         if (hpText != null)
+        {
             hpText.text = $"{Mathf.FloorToInt(current)} / {Mathf.FloorToInt(max)}";
+        }
     }
     // 스태미나 갱신
     public void UpdateStamina(float current, float max)

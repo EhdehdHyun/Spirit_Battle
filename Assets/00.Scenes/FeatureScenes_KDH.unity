@@ -1342,6 +1342,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 534001840759305288, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: damage
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 534001840759305288, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
       propertyPath: hitRadius
       value: 3.58
       objectReference: {fileID: 0}
@@ -1401,10 +1405,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestBoss
       objectReference: {fileID: 0}
+    - target: {fileID: 2366965492673321758, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669310880747356631, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: damage
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5510159728944212933, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: rotateSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6195351339223519092, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: damage
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4959621108292081982, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 226004591}
   m_SourcePrefab: {fileID: 100100000, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
 --- !u!114 &107404276 stripped
 MonoBehaviour:
@@ -3277,6 +3300,29 @@ Transform:
   - {fileID: 1660131541}
   m_Father: {fileID: 503787263}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &226004589 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4959621108292081982, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+  m_PrefabInstance: {fileID: 105964411}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &226004591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 226004589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a52babf8f70433d49921ebff79118900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualRoot: {fileID: 907373088}
+  duration: 0.2
+  positionAmplitude: 0.2
+  rotationAmplitude: 2
+  frequency: 40
+  useUnscaledTime: 0
 --- !u!1 &227654951
 GameObject:
   m_ObjectHideFlags: 0
@@ -13262,6 +13308,7 @@ MonoBehaviour:
   - 0
   - 0
   weaponEquipped: 0
+  isAttacking: 0
 --- !u!114 &748106373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13295,9 +13342,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 431575902}
   anime: {fileID: 748106373}
+  playerInput: {fileID: 0}
   combat: {fileID: 0}
   faceTurnSpeed: 15
   isLocked: 0
+  dashLocked: 0
 --- !u!114 &748106375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13310,7 +13359,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 957ae59d9840d0443a3d25049cbe3b78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 8
+  runSpeed: 8
+  walkSpeed: 4
   acceleration: 40
   deceleration: 30
   jumpPower: 10
@@ -13547,10 +13597,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ui: {fileID: 683637767}
   level: 1
+  currentExp: 0
   maxStamina: 100
   currentStamina: 100
   maxExp: 100
-  currentExp: 0
 --- !u!114 &748106381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13580,10 +13630,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 431575905}
   interactDistance: 5
-  dropLayerMask:
+  interactLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
-  defaultDropDistance: 3
+    m_Bits: 0
+  crosshairImage: {fileID: 0}
+  crosshairNormalColor: {r: 1, g: 1, b: 1, a: 1}
+  crosshairInteractColor: {r: 1, g: 0, b: 0, a: 1}
+  interactText: {fileID: 0}
 --- !u!1 &748747897
 GameObject:
   m_ObjectHideFlags: 0
@@ -15489,6 +15542,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 882115209}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &907373088 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4747567145388397021, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+  m_PrefabInstance: {fileID: 105964411}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &910045994
 GameObject:
   m_ObjectHideFlags: 0
@@ -30766,6 +30824,7 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 768
+  _parryStunTime: 1.5
 --- !u!65 &1636130277
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -10081,6 +10081,7 @@ MonoBehaviour:
   phase2MoveSpeedMultiplier: 1.2
   phase3MoveSpeedMultiplier: 3
   coreObject: {fileID: 850459025388662697}
+  damageFeedback: {fileID: 0}
   bossUI: {fileID: 0}
 --- !u!114 &5510159728944212933
 MonoBehaviour:
@@ -10095,7 +10096,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopDistance: 3
-  rotateSpeed: 8
+  rotateSpeed: 4
   patterns:
   - {fileID: 6195351339223519092}
   - {fileID: 2669310880747356631}
@@ -10111,7 +10112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fdea22fc79e7fc4f8fdda9e65a75ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 30
   attackCooldown: 2
   hitOrigin: {fileID: 1267480653314365648}
   hitRadius: 3.58
@@ -10155,7 +10156,7 @@ MonoBehaviour:
   minPhase: 2
   maxPhase: 2
   centerOverride: {fileID: 0}
-  damage: 20
+  damage: 30
   radius: 25
   hitMask:
     serializedVersion: 2
@@ -10163,6 +10164,8 @@ MonoBehaviour:
   phase1WaveCount: 1
   phase2WaveCount: 2
   waveInterval: 0.4
+  cooldownMin: 3
+  cooldownMax: 6
   slowRatio: 0.3
   slowDuration: 3
   telegraphObject: {fileID: 3991520190261120978}
@@ -10186,7 +10189,7 @@ MonoBehaviour:
   minPhase: 1
   maxPhase: 1
   centerOverride: {fileID: 0}
-  damage: 20
+  damage: 10
   radius: 25
   hitMask:
     serializedVersion: 2
@@ -10194,6 +10197,8 @@ MonoBehaviour:
   phase1WaveCount: 1
   phase2WaveCount: 2
   waveInterval: 0.4
+  cooldownMin: 3
+  cooldownMax: 6
   slowRatio: 0.3
   slowDuration: 3
   telegraphObject: {fileID: 3991520190261120978}
@@ -15429,6 +15434,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5636710383446690980}
+  - component: {fileID: 3699730551239642758}
   m_Layer: 9
   m_Name: modles
   m_TagString: Untagged
@@ -15453,6 +15459,24 @@ Transform:
   - {fileID: 4747567145388397021}
   m_Father: {fileID: 1026357426712680895}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3699730551239642758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4959621108292081982}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a52babf8f70433d49921ebff79118900, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualRoot: {fileID: 4747567145388397021}
+  duration: 0.2
+  positionAmplitude: 0.2
+  rotationAmplitude: 2
+  frequency: 40
+  useUnscaledTime: 0
 --- !u!1 &5746672515277153883
 GameObject:
   m_ObjectHideFlags: 0
