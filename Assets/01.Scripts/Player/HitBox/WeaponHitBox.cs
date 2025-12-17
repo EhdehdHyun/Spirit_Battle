@@ -55,6 +55,29 @@ public class WeaponHitBox : MonoBehaviour
         Vector3 hitPoint = other.ClosestPoint(transform.position);
 
         IParryReceiver parryReceiver = other.GetComponent<IParryReceiver>();
+        if (parryReceiver == null) parryReceiver = other.GetComponentInParent<IParryReceiver>();
+
+        if(parryReceiver != null)
+        {
+            if (parryReceiver.TryParry(this, hitPoint))
+            {
+                if(_ownerRoot != null)
+                {
+                    var parryable = _ownerRoot.GetComponentInChildren<IParryable>();
+                    if(parryable != null)
+                    {
+                        parryable.OnParried(new ParryInfo
+                        {
+                            defender = other.gameObject,
+                            point = hitPoint,
+                            stunTime = _parryStunTime
+                        });
+                    }
+                }
+                DeActivate();
+                return;
+            }
+        }
 
         if(!other.TryGetComponent<IDamageable>(out var damageable))
         {
