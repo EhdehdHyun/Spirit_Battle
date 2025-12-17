@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerCombat : MonoBehaviour
+public class PlayerCombat : MonoBehaviour, IParryReceiver
 {
     [Header("참조")]
     [SerializeField] private PlayerAnimation playerAnim;
@@ -32,6 +32,9 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] bool isAttacking = false;
     public bool IsAttacking => isAttacking;
 
+    public bool IsParrying { get; private set; }
+    public bool ParryWindowOpen {  get; private set; }
+
     int currentCombo = 0;
     bool bufferedNextInput = false;
     float lastAttackTime = 0f;
@@ -62,6 +65,8 @@ public class PlayerCombat : MonoBehaviour
     {
         if (!weaponEquipped) return;   // 무기 안 들면 공격 안됨
 
+        if(IsParrying) return;
+
         if(playerInput.isLocked) return;
 
         if (physicsCharacter.IsDashing) return;
@@ -77,6 +82,61 @@ public class PlayerCombat : MonoBehaviour
         //if (Time.time - lastAttackTime <= comboInputWindow)
             bufferedNextInput = true;
     }
+
+    public void TryStartParry()
+    {
+        if (IsAttacking) return;          // 공격 중 패링 금지(원하면 캔슬로 바꿀 수 있음)
+        if (!weaponEquipped) return;
+        if (physicsCharacter.IsDashing) return;
+        if (IsParrying) return;
+
+        IsParrying = true;
+        physicsCharacter?.SetMovementLocked(true);
+        ClearAttackBuffer();              // 패링 중 좌클릭이 남지 않게
+
+        playerAnim.PlayParry();
+    }
+
+    // WeaponHitBox가 호출
+    public bool TryParry(WeaponHitBox hitBox, Vector3 hitPoint)
+    {
+        if (!IsParrying || !ParryWindowOpen) return false;
+
+        // 공격자 방향(몬스터)이 없으면 그냥 패링 허용/거부 중 하나
+        Transform attacker = hitBox != null ? hitBox.OwnerRoot : null;
+        if (attacker == null) return false; // 보수적으로: 공격자 없으면 패링 실패
+
+        //  정면 판정: 내 forward 기준으로 공격자가 앞쪽에 있어야 함
+        Vector3 toAttacker = attacker.position - transform.position;
+        toAttacker.y = 0f;
+
+        Vector3 fwd = transform.forward;
+        fwd.y = 0f;
+
+        if (toAttacker.sqrMagnitude < 0.0001f) return true; // 거의 겹치면 일단 성공 처리
+
+        toAttacker.Normalize();
+        fwd.Normalize();
+
+        // dot: 1이면 정면, 0이면 옆, -1이면 뒤
+        float dot = Vector3.Dot(fwd, toAttacker);
+
+        // 0.5  = 약 60도 안쪽만 허용
+        // 0.2  = 약 78도 안쪽 허용
+        const float MIN_FACING_DOT = 0.3f; // 너 게임 느낌대로 0.2~0.5에서 조절
+
+        if (dot < MIN_FACING_DOT)
+            return false; // 옆/뒤에서 들어온 공격은 패링 실패
+        // 성공
+        ParryWindowOpen = false; // 한 번 성공하면 닫기(연타 무료 방지)
+        return true;
+    }
+
+    void ClearAttackBuffer()
+    {
+        bufferedNextInput = false;
+    }
+
 
     public void OnToggleWeaponInput()
     {
@@ -229,5 +289,22 @@ public class PlayerCombat : MonoBehaviour
     {
         if(weaponHitBox == null) return;
         weaponHitBox.DeActivate();
+    }
+
+    public void EvParryWindowOpen()
+    {
+        ParryWindowOpen = true;
+    }
+
+    public void EvParryWindowClose()
+    {
+        ParryWindowOpen = false;
+    }
+
+    public void EvParryEnd()
+    {
+        ParryWindowOpen = false;
+        IsParrying = false;
+        physicsCharacter?.SetMovementLocked(false);
     }
 }

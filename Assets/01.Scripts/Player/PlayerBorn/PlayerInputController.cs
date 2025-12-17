@@ -10,6 +10,7 @@ public class PlayerInputController : MonoBehaviour
     public PlayerAnimation anime;
     public PlayerInput playerInput;
     public PlayerCombat combat;
+
     public float faceTurnSpeed = 18f;
 
     private InputAction moveAction;
@@ -139,6 +140,13 @@ public class PlayerInputController : MonoBehaviour
 
         if (!ctx.started) return;
         combat?.OnAttackInput();
+    }
+
+    public void OnParry(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+        if (isLocked) return;
+        combat?.TryStartParry();
     }
 
     public void OnToggleWeapon(InputAction.CallbackContext ctx)
