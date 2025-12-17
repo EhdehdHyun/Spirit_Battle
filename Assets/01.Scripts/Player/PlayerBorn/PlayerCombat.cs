@@ -28,12 +28,14 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private bool weaponEquipped = false;
     public bool WeaponEquipped => weaponEquipped;
 
+    [Header("공격 상태")]
+    [SerializeField] bool isAttacking = false;
+    public bool IsAttacking => isAttacking;
+
     int currentCombo = 0;
-    bool isAttacking = false;
     bool bufferedNextInput = false;
     float lastAttackTime = 0f;
 
-    //public bool attackMovingLock = false;
 
     void Awake()
     {
@@ -47,12 +49,22 @@ public class PlayerCombat : MonoBehaviour
             weaponHitBox = GetComponentInChildren<WeaponHitBox>();
     }
 
+    public bool TryDash(Vector3 dir)
+    {
+        if (isAttacking)
+            CancelAttackCommon();
 
+        physicsCharacter.TryDash(dir);
+        playerAnim?.PlayDash();
+        return true;
+    }
     public void OnAttackInput()
     {
         if (!weaponEquipped) return;   // 무기 안 들면 공격 안됨
 
         if(playerInput.isLocked) return;
+
+        if (physicsCharacter.IsDashing) return;
 
         if (!isAttacking)
         {
@@ -71,6 +83,8 @@ public class PlayerCombat : MonoBehaviour
         weaponEquipped = !weaponEquipped;
         playerAnim?.SetWeaponEquipped(weaponEquipped);
 
+        physicsCharacter.SetWeaponEquipped(weaponEquipped);
+
         if (!weaponEquipped && isAttacking)
             ForceStopAttack();
     }
@@ -84,7 +98,6 @@ public class PlayerCombat : MonoBehaviour
         currentCombo = 1;
         lastAttackTime = Time.time;
 
-        //attackMovingLock = true;
         physicsCharacter.SetMovementLocked(true);
 
         playerAnim?.Attack(currentCombo);
@@ -103,7 +116,6 @@ public class PlayerCombat : MonoBehaviour
         bufferedNextInput = false;
         lastAttackTime = Time.time;
 
-        //attackMovingLock = true;
         physicsCharacter.SetMovementLocked(true);
 
         playerAnim?.Attack(currentCombo);
@@ -115,7 +127,6 @@ public class PlayerCombat : MonoBehaviour
         bufferedNextInput = false;
         currentCombo = 0;
 
-        //attackMovingLock = false;
         physicsCharacter.SetMovementLocked(false);
 
         playerAnim?.SetIsAttacking(false);
@@ -128,7 +139,25 @@ public class PlayerCombat : MonoBehaviour
         ResetCombo();
     }
 
+    void CancelAttackCommon()   //대쉬 중 공격 관한것들 캔슬
+    {
+        weaponHitBox?.DeActivate();
 
+        isAttacking = false;
+        bufferedNextInput = false;
+        currentCombo = 0;
+
+        physicsCharacter.SetMovementLocked(false);
+        playerAnim?.SetIsAttacking(false);
+    }
+
+    public void CancelAttackForDash()
+    {
+        if (!isAttacking) return;
+        CancelAttackCommon();
+    }
+
+    //======== 애니메이션 이벤트 ========
     public void OnAttackAnimationEndFromAnim()
     {
         if (weaponEquipped && bufferedNextInput && currentCombo < maxCombo)

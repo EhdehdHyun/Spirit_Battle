@@ -1,0 +1,25 @@
+{
+  "Items": [
+    {
+      "level": 1,
+      "MaxHP": 100,
+      "Attack": 10,
+      "Stamina": 100,
+      "RequiredExp": 0
+    },
+    {
+      "level": 2,
+      "MaxHP": 110,
+      "Attack": 12,
+      "Stamina": 110,
+      "RequiredExp": 50
+    },
+    {
+      "level": 3,
+      "MaxHP": 125,
+      "Attack": 15,
+      "Stamina": 120,
+      "RequiredExp": 80
+    }
+  ]
+}

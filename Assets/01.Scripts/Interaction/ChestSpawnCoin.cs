@@ -36,7 +36,7 @@ public class ChestSpawnCoin : MonoBehaviour, IInteractable
         EnsureLoader();
     }
 
-    public void Interact()
+    public void Interact(PlayerInteraction player)
     {
         if (isOpened) return;
         isOpened = true;

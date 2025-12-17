@@ -542,7 +542,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 957ae59d9840d0443a3d25049cbe3b78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 8
+  runSpeed: 8
+  walkSpeed: 4
   acceleration: 40
   deceleration: 30
   jumpPower: 10
@@ -551,7 +552,7 @@ MonoBehaviour:
   terminalVelocity: -40
   groundFriction: 2
   airHorizontalDrag: 1
-  dashSpeed: 18
+  dashSpeed: 15
   dashDuration: 0.2
   dashCooldown: 0.5
   knockbackDrag: 10
@@ -574,8 +575,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1818736358}
   anime: {fileID: 1062441832}
+  playerInput: {fileID: 0}
   combat: {fileID: 0}
-  faceTurnSpeed: 15
+  faceTurnSpeed: 30
   isLocked: 0
 --- !u!114 &1062441832
 MonoBehaviour:
@@ -629,7 +631,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 957ae59d9840d0443a3d25049cbe3b78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 8
+  runSpeed: 8
+  walkSpeed: 4
   acceleration: 40
   deceleration: 30
   jumpPower: 10
@@ -19761,6 +19764,7 @@ MonoBehaviour:
   - 0
   - 0
   weaponEquipped: 0
+  isAttacking: 0
 --- !u!4 &4589803069817155275
 Transform:
   m_ObjectHideFlags: 0
