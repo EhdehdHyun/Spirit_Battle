@@ -1731,7 +1731,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: -0.00018260824, y: 0.00014820445, z: 0}
-  m_RotationOffset: {x: -0.0040069795, y: 0.0046910625, z: -13.442997}
+  m_RotationOffset: {x: -0.0039958055, y: 0.0046983426, z: -13.442988}
   m_AffectRotationX: 0
   m_AffectRotationY: 1
   m_AffectRotationZ: 0
@@ -13142,6 +13142,8 @@ MonoBehaviour:
   - 22
   - 0
   weaponEquipped: 0
+  isAttacking: 0
+  dashInvincibleExtra: 0.05
 --- !u!114 &748106373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13154,12 +13156,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4c7ca55aaf06964ca83799473fcc8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponHand: {fileID: 0}
-  weaponIn: {fileID: 0}
   rb: {fileID: 0}
   character: {fileID: 0}
   combat: {fileID: 0}
   weaponHitbox: {fileID: 1636130274}
+  weaponHand: {fileID: 0}
+  weaponIn: {fileID: 0}
   runhold: 0.15
 --- !u!114 &748106374
 MonoBehaviour:
@@ -13175,9 +13177,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 431575902}
   anime: {fileID: 748106373}
+  playerInput: {fileID: 0}
   combat: {fileID: 0}
   faceTurnSpeed: 15
   isLocked: 0
+  dashLocked: 0
 --- !u!114 &748106375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13190,7 +13194,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 957ae59d9840d0443a3d25049cbe3b78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 8
+  runSpeed: 8
+  walkSpeed: 4
   acceleration: 40
   deceleration: 30
   jumpPower: 10
@@ -13387,6 +13392,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 912c8c43-10ff-4fb9-a267-4969f43d481e
     m_ActionName: Player/Inventory[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 748106374}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: OnParry
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b105d503-0362-4a8f-a53c-59658d912413
+    m_ActionName: Player/Parry[/Keyboard/q]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -13427,10 +13448,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ui: {fileID: 683637767}
   level: 1
+  currentExp: 0
   maxStamina: 100
   currentStamina: 100
   maxExp: 100
-  currentExp: 0
 --- !u!114 &748106381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13460,10 +13481,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 431575905}
   interactDistance: 5
-  dropLayerMask:
+  interactLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
-  defaultDropDistance: 3
+    m_Bits: 0
+  crosshairImage: {fileID: 0}
+  crosshairNormalColor: {r: 1, g: 1, b: 1, a: 1}
+  crosshairInteractColor: {r: 1, g: 0, b: 0, a: 1}
+  interactText: {fileID: 0}
 --- !u!1 &748747897
 GameObject:
   m_ObjectHideFlags: 0
@@ -30584,6 +30608,7 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 768
+  _parryStunTime: 1.5
 --- !u!65 &1636130277
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33452,7 +33477,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1766674625}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.018223014, y: -0.028977584, z: -0.24002261, w: 0.97016364}
+  m_LocalRotation: {x: 0.018223014, y: -0.028977586, z: -0.2400226, w: 0.97016364}
   m_LocalPosition: {x: 0.12699975, y: 1.3616039, z: -0.13720965}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

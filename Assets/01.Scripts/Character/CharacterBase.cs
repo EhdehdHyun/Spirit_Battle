@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -14,6 +14,16 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
 
     public event Action<float, float> OnHpChanged;
 
+    //무적
+    private float _invincibleUntil = -1f;
+    public bool IsInvincible => Time.time < _invincibleUntil;
+
+
+    public void StartInvincible(float duration)
+    {
+        if (duration <= 0f) return;
+        _invincibleUntil = Mathf.Max(_invincibleUntil, Time.time + duration);
+    }
 
     public bool IsAlive => currentHp > 0f;
 
@@ -24,8 +34,13 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
 
     //데미지 받았을 때 호출
     public void TakeDamage(DamageInfo info)
-    {
+    { 
         if (!IsAlive) return;
+
+        if (IsInvincible)
+        {
+            return;
+        }
 
         currentHp -= info.amount;
 

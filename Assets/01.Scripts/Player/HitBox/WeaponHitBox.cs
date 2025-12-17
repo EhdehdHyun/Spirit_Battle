@@ -44,56 +44,26 @@ public class WeaponHitBox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(!_active) return;
+        if (!_active) return;
 
         if (_ownerRoot != null && other.transform.root == _ownerRoot)
             return;
-        // 레이어 저장을 효율적으로 하기위해 비트로 변경 O(1)
+
         if ((targetLayers.value & (1 << other.gameObject.layer)) == 0)
             return;
-        
-        Vector3 hitPoint = other.ClosestPoint(transform.position);
 
-        IParryReceiver parryReceiver = other.GetComponent<IParryReceiver>();
-        if (parryReceiver == null) parryReceiver = other.GetComponentInParent<IParryReceiver>();
+        var damageable = other.GetComponentInParent<IDamageable>();
+        if (damageable == null) return;
 
-        if(parryReceiver != null)
-        {
-            if (parryReceiver.TryParry(this, hitPoint))
-            {
-                if(_ownerRoot != null)
-                {
-                    var parryable = _ownerRoot.GetComponentInChildren<IParryable>();
-                    if(parryable != null)
-                    {
-                        parryable.OnParried(new ParryInfo
-                        {
-                            defender = other.gameObject,
-                            point = hitPoint,
-                            stunTime = _parryStunTime
-                        });
-                    }
-                }
-                DeActivate();
-                return;
-            }
-        }
-
-        if(!other.TryGetComponent<IDamageable>(out var damageable))
-        {
-            damageable = other.GetComponentInParent<IDamageable>();
-            if (damageable == null) return;
-        }
-
-        if(!damageable.IsAlive) return;
+        if (!damageable.IsAlive) return;
         if (_alreadyHit.Contains(damageable)) return;
 
-        Vector3 dir = (other.bounds.center - transform.position).normalized;
-        Vector3 hitNormal = dir;
+        Vector3 hitPoint = other.ClosestPoint(transform.position);
+        Vector3 hitNormal = (other.bounds.center - transform.position).normalized;
 
-        DamageInfo info = new DamageInfo(_currentDamage, hitPoint, hitNormal);
-        damageable.TakeDamage(info);
-
+        damageable.TakeDamage(new DamageInfo(_currentDamage, hitPoint, hitNormal));
         _alreadyHit.Add(damageable);
     }
+
+
 }

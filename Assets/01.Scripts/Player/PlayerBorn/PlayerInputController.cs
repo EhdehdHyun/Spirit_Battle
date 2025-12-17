@@ -128,8 +128,9 @@ public class PlayerInputController : MonoBehaviour
         //if (combat.TryDash(dir)) return;
         combat?.CancelAttackForDash();
 
-        character.TryDash(dir);
-        anime.PlayDash();
+        //character.TryDash(dir);
+        //anime.PlayDash();
+        combat.TryDash(dir);
 
         SetDashLock(character.dashDuration);
     }
@@ -146,8 +147,18 @@ public class PlayerInputController : MonoBehaviour
     {
         if (!ctx.performed) return;
         if (isLocked) return;
-        combat?.TryStartParry();
+
+        combat?.TryStartParryStance();
+
+        var parry = GetComponent<PlayerParry>();
+        if (parry != null)
+        {
+            bool success = parry.TryConsumeInput();
+            if (success)
+                combat?.OnParrySuccess();
+        }
     }
+
 
     public void OnToggleWeapon(InputAction.CallbackContext ctx)
     {
