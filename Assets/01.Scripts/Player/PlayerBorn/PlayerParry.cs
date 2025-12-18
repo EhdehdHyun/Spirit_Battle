@@ -19,6 +19,8 @@ public class PlayerParry : MonoBehaviour
     private Collider[] hits;
     private bool consumedThisStance;
 
+    private bool tryWindowOpen;
+
     private Transform lastAttacker;
     private Vector3 lastHitPoint;
 
@@ -31,6 +33,41 @@ public class PlayerParry : MonoBehaviour
         if (!origin) origin = transform;
         if (!myHitBox) myHitBox = GetComponentInChildren<WeaponHitBox>();
         hits = new Collider[Mathf.Max(1, maxHits)];
+    }
+
+    private void Update()
+    {
+        if (!isParryStance) return;
+        if (!tryWindowOpen) return;
+        if (consumedThisStance) return;
+        if (combat == null) return;
+
+        if (!combat.WeaponEquipped) return;
+        if (combat.IsAttacking) return;
+        if (combat.IsDashing) return;
+
+        var target = FindBestParryable(out Vector3 hitPoint, out Transform attackerTr);
+        if (target == null) return;
+
+        bool success = target.TryParry(myHitBox, hitPoint);
+        if (!success) return;
+
+        consumedThisStance = true;
+        lastAttacker = attackerTr;
+        lastHitPoint = hitPoint;
+
+        combat.OnParrySuccess(lastAttacker, lastHitPoint);
+    }
+
+    public void Anim_ParryTryWindowOn()
+    {
+        tryWindowOpen = true;
+        consumedThisStance = false; // 윈도우 시작마다 리셋
+    }
+
+    public void Anim_ParryTryWindowOff()
+    {
+        tryWindowOpen = false;
     }
 
     public void EnterStance()
@@ -46,7 +83,7 @@ public class PlayerParry : MonoBehaviour
         isParryStance = false;
         consumedThisStance = false;
     }
-
+    //나중에 삭제예정
     public void Anim_TryParryNow()
     {
         if (!isParryStance) return;
@@ -76,6 +113,7 @@ public class PlayerParry : MonoBehaviour
         bestTransform = null;
 
         int count = Physics.OverlapSphereNonAlloc(origin.position, range, hits, parryableMask, QueryTriggerInteraction.Collide);
+        Debug.Log($"[PLY] Overlap count = {count}", this);
         if (count <= 0) return null;
 
         IParryReceiver best = null;
@@ -95,6 +133,10 @@ public class PlayerParry : MonoBehaviour
 
             var receiver = col.GetComponentInParent<IParryReceiver>();
             if (receiver == null) continue;
+            if (receiver is Component compp)
+            {
+                Debug.Log($"[PLY] Candidate: {compp.name} (col={col.name})", this);
+            }
 
             Vector3 p = col.ClosestPoint(origin.position);
 
@@ -114,10 +156,13 @@ public class PlayerParry : MonoBehaviour
 
                 // ✅ 여기만 안전하게 바꿔
                 if (receiver is Component comp)
+                {
                     bestTransform = comp.transform;
+                    Debug.Log($"[PLY] BEST -> {bestTransform.name}  dist={dist:F2}  angle={a:F1}  score={score:F2}", this);
+                }
             }
         }
-
+        Debug.Log($"[PLY] Final BEST = {(bestTransform ? bestTransform.name : "null")}", this);
         return best;
     }
 

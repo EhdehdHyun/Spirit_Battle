@@ -1278,7 +1278,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2366965492673321758, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 706205001}
   m_SourcePrefab: {fileID: 100100000, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
 --- !u!114 &107404276 stripped
 MonoBehaviour:
@@ -12041,6 +12044,27 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0.8, z: 0}
     m_Extent: {x: 0.5, y: 0.8, z: 0.5}
   m_DirtyAABB: 0
+--- !u!1 &706204990 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2366965492673321758, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+  m_PrefabInstance: {fileID: 105964411}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &706205001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706204990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 214c843dc80a366448031157c4fb62ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parryWindowOpen: 0
+  defaultParryGroggyDuration: 2
+  parryGroggyTriggerName: ParryGroggy
+  ignoreParryWhileBreakGroggy: 1
 --- !u!1 &707048670
 GameObject:
   m_ObjectHideFlags: 0
@@ -13508,7 +13532,7 @@ MonoBehaviour:
   isParryStance: 0
   combat: {fileID: 0}
   myHitBox: {fileID: 0}
-  origin: {fileID: 0}
+  origin: {fileID: 1184172346}
   parryableMask:
     serializedVersion: 2
     m_Bits: 768
