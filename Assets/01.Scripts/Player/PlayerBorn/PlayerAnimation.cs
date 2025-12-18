@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.TextCore.Text;
 
 public class PlayerAnimation : MonoBehaviour
@@ -11,10 +12,12 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField] private PlayerCombat combat;   
     [SerializeField] private GameObject weaponHitbox; 
 
-    [Header("칼 활성화/비활성화")]
-    [SerializeField] private GameObject weaponHand; //손에 칼
-    [SerializeField] private GameObject weaponIn;   //집어넣은 칼
+    [Header("무기")]
+    [SerializeField] private ParentConstraint weaponParent; 
+    [SerializeField] private int handSourceIndex = 0;   //손에 칼
+    [SerializeField] private int sideSourceIndex = 1;   //옆에 칼
 
+    [Header("걷기 기준")]
     public float runhold = 0.15f;
 
     private Animator anim;
@@ -98,19 +101,20 @@ public class PlayerAnimation : MonoBehaviour
     {
         anim.SetBool(IsAttackingHash, value);
     }
+
     public void SetWeaponEquipped(bool equipped)
     {
         anim.SetBool(WeaponEquippedHash, equipped);
+    }
 
-        if (weaponHand != null)
-        {
-            weaponHand.SetActive(equipped);
-        }
+    private void SetSourceWeight(ParentConstraint pc, int index, float w)
+    {
+        if (!pc) return;
+        if (index < 0 || index >= pc.sourceCount) return;
 
-        if (weaponIn != null)
-        {
-            weaponIn.SetActive(equipped);
-        }
+        var src = pc.GetSource(index);  //ConstraintSource
+        src.weight = Mathf.Clamp01(w);
+        pc.SetSource(index, src);
     }
     //===== 애니메이션 이벤트 =====
     public void EvAttackMoveForward()   //앞으로 전진
@@ -141,6 +145,27 @@ public class PlayerAnimation : MonoBehaviour
     {
         if (weaponHitbox != null)
             weaponHitbox.SetActive(true);
+    }
+    public void EvWeaponToHand()
+    {
+        if (!weaponParent) return;
+
+        weaponParent.constraintActive = true;
+        weaponParent.weight = 1f;
+
+        SetSourceWeight(weaponParent, handSourceIndex, 1f);
+        SetSourceWeight(weaponParent, sideSourceIndex, 0f);
+    }
+
+    public void EvWeaponToSide()
+    {
+        if (!weaponParent) return;
+
+        weaponParent.constraintActive = true;
+        weaponParent.weight = 1f;
+
+        SetSourceWeight(weaponParent, handSourceIndex, 0f);
+        SetSourceWeight(weaponParent, sideSourceIndex, 1f);
     }
 }
 
