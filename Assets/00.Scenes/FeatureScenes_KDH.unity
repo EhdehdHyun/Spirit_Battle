@@ -1413,6 +1413,14 @@ PrefabInstance:
       propertyPath: damage
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 2669310880747356631, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: cooldownMax
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 2669310880747356631, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: cooldownMin
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 3372987676212822727, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
       propertyPath: maxHp
       value: 100
@@ -1429,6 +1437,10 @@ PrefabInstance:
       propertyPath: breakHitThreshold
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 3372987676212822727, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: groggyExtraDamageRatio
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 5510159728944212933, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
       propertyPath: rotateSpeed
       value: 4
@@ -1436,6 +1448,14 @@ PrefabInstance:
     - target: {fileID: 6195351339223519092, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
       propertyPath: damage
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6195351339223519092, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: cooldownMax
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 6195351339223519092, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: cooldownMin
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -209,11 +209,6 @@ public class BossEnemy : EnemyBase
         bossUI?.SetGroggy(false);
     }
 
-    public void EnterParryGroggy(/* 나중에 파라미터 */)
-    {
-        // TODO: 패링 그로기 구현 시 여기에
-    }
-
     protected override void OnDie(DamageInfo info)
     {
         base.OnDie(info);
