@@ -1,0 +1,20 @@
+{
+  "Dialogues": [
+    {
+      "DialogueID": "DLG_1001",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "Hi Player",
+      "NextID": "DLG_1002",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1002",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": " I Find u in the storm.",
+      "NextID": "",
+      "IsChoice": false
+    }
+  ]
+}
