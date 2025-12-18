@@ -13442,6 +13442,12 @@ MonoBehaviour:
   maxHp: 100
   currentHp: 0
   moveSpeed: 3
+  input: {fileID: 0}
+  physicsChar: {fileID: 0}
+  anim: {fileID: 0}
+  combat: {fileID: 0}
+  parry: {fileID: 0}
+  weaponHitBox: {fileID: 0}
 --- !u!114 &748106382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29849,7 +29855,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1583430779
 Transform:
   m_ObjectHideFlags: 0
