@@ -37,7 +37,9 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
 
     //데미지 받았을 때 호출
     public void TakeDamage(DamageInfo info)
-    { 
+    {
+        Debug.Log($"[DMG] TakeDamage called amount={info.amount} inv={IsInvincible}", this);
+
         if (!IsAlive) return;
 
         if (IsInvincible)
@@ -48,7 +50,8 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
         float multiplier = Mathf.Max(0f, GetIncomingDamageMultiplier(info));
         float finalDamage = info.amount * multiplier;
 
-        currentHp -= info.amount;
+        //currentHp -= info.amount;
+        currentHp -= finalDamage;
 
         if (currentHp <= 0)
         {

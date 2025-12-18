@@ -16,6 +16,8 @@ public class PlayerParry : MonoBehaviour
     [SerializeField] private float angle = 120f;
     [SerializeField] private int maxHits = 16;
 
+    public bool IsParryGuardActive => isParryStance && tryWindowOpen;
+
     private Collider[] hits;
     private bool consumedThisStance;
 
