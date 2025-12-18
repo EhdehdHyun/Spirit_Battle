@@ -34,6 +34,12 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
+            if (DialogueManager.Instance != null &&
+                DialogueManager.Instance.IsDialogueActive)
+            {
+                DialogueManager.Instance.Next();
+                return;
+            }
             Debug.Log("[PlayerInteraction] F 키 입력 감지 (Raycast 버전)");
             TryInteract();
         }
