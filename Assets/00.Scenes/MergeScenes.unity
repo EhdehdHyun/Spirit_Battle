@@ -13135,6 +13135,7 @@ MonoBehaviour:
   weaponParent: {fileID: 1766674627}
   handSourceIndex: 0
   sideSourceIndex: 1
+  swordVisual: {fileID: 1636130275}
   runhold: 0.15
 --- !u!114 &748106374
 MonoBehaviour:

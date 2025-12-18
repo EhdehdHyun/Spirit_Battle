@@ -67,8 +67,22 @@ ModelImporter:
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
+      - time: 0.11137618
+        functionName: EvSwordAngle_Sheathe7Frames
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       - time: 0.5019084
         functionName: EvWeaponToSide
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.5083612
+        functionName: EvSwordAngle_Default3Frames
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

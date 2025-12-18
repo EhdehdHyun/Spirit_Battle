@@ -616,6 +616,7 @@ MonoBehaviour:
   weaponParent: {fileID: 6485885622436730386}
   handSourceIndex: 0
   sideSourceIndex: 1
+  swordVisual: {fileID: 2720931988479448063}
   runhold: 0.15
 --- !u!1 &1146147982
 GameObject:
