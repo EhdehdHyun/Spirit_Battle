@@ -89,12 +89,6 @@ public class BossAIController : MonoBehaviour
             case BossState.Pattern:
                 UpdatePattern();
                 break;
-            case BossState.Down:
-                //UpdateDown();
-                break;
-            case BossState.Dead:
-                UpdateDead();
-                break;
         }
 
         UpdateAnimation();
@@ -136,10 +130,6 @@ public class BossAIController : MonoBehaviour
                 break;
             case BossState.Down:
                 SetCanMove(false);
-                break;
-            case BossState.Dead:
-                SetCanMove(false);
-                monsterAnim?.PlayDie();
                 break;
         }
     }
@@ -315,11 +305,6 @@ public class BossAIController : MonoBehaviour
         }
 
         downCo = StartCoroutine(DownTimer(duration));
-    }
-
-    private void UpdateDead()
-    {
-        //사망 상태 : 사망 애니메이션 넣을 예정
     }
 
     private float DistanceToTarget()

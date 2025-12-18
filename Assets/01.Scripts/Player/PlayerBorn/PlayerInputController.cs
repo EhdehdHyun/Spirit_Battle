@@ -11,6 +11,7 @@ public class PlayerInputController : MonoBehaviour
     public PlayerInput playerInput;
     public PlayerCombat combat;
     public PlayerStat stat;
+    private PlayerParry parry;
 
     public float faceTurnSpeed = 18f;
 
@@ -35,6 +36,7 @@ public class PlayerInputController : MonoBehaviour
         combat = GetComponent<PlayerCombat>();
         playerInput = GetComponent<PlayerInput>();
         stat = GetComponent<PlayerStat>();
+        parry = GetComponent<PlayerParry>();
 
         moveAction = playerInput.actions["Move"];
         lookAction = playerInput.actions["Look"];
@@ -102,6 +104,8 @@ public class PlayerInputController : MonoBehaviour
     {
         if (isLocked || character.movementLock) return;
 
+        if(IsParrying()) return;
+
         if (ctx.performed)
         {
             character.RequestJump();
@@ -119,6 +123,7 @@ public class PlayerInputController : MonoBehaviour
         if (!ctx.performed) return;
         if (isLocked) return;
         if (!character.IsGrounded) return;
+        if(IsParrying()) return;
 
         // 0이면 아예 대쉬 시작 못하게 막기
         if (stat == null || stat.curDashCount <= 0)
@@ -156,6 +161,7 @@ public class PlayerInputController : MonoBehaviour
     {
         if (!ctx.performed) return;
         if (isLocked) return;
+        if (IsParrying()) return;
 
         // 입력 순간엔 "자세 시작"만.
         // 실제 패링 판정은 PlayerParry.Anim_TryParryNow() (애니 이벤트)에서 함.
@@ -166,6 +172,7 @@ public class PlayerInputController : MonoBehaviour
     public void OnToggleWeapon(InputAction.CallbackContext ctx)
     {
         if (isLocked) return;
+        if (IsParrying()) return;
         if (!ctx.started) return;
         combat?.OnToggleWeaponInput();
     }
@@ -195,4 +202,9 @@ public class PlayerInputController : MonoBehaviour
         dashLocked = false;
         dashLockCo = null;
     }
+    private bool IsParrying()
+    {
+        return parry != null && parry.isParryStance;
+    }
+
 }

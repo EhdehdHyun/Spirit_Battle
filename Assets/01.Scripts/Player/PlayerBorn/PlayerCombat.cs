@@ -90,7 +90,7 @@ public class PlayerCombat : MonoBehaviour
         bufferedNextInput = true;
     }
 
-    // ✅ 패링 입력 들어오면 “자세/락/애니”만
+    //  패링 입력 들어오면 “자세/락/애니”만
     public void TryStartParryStance()
     {
         if (IsAttacking) return;
@@ -106,7 +106,7 @@ public class PlayerCombat : MonoBehaviour
         playerAnim?.PlayParry(); // 패링 애니 재생
     }
 
-    // ✅ 성공 연출만 (몬스터 OnParried는 절대 건드리지 마)
+    //  성공 연출만 (몬스터 OnParried는 절대 건드리지 마)
     public void OnParrySuccess(Transform attacker, Vector3 hitPoint)
     {
         // 여기서 성공 이펙트/사운드/카메라/짧은 무적 등만 처리
@@ -117,7 +117,7 @@ public class PlayerCombat : MonoBehaviour
         if (character != null)
             character.StartInvincible(0.15f);
 
-        // 예시) 성공 애니가 따로 있으면
+        // 성공 애니가 따로 있으면
         // playerAnim?.PlayParrySuccess();
     }
 
@@ -255,7 +255,7 @@ public class PlayerCombat : MonoBehaviour
         weaponHitBox.DeActivate();
     }
 
-    // ✅ 패링 모션 끝 이벤트(자세 해제 + 락 해제)
+    //  패링 모션 끝 이벤트(자세 해제 + 락 해제)
     public void EvParryEnd()
     {
         parry?.ExitStance();

@@ -24,6 +24,7 @@ public class PlayerAnimation : MonoBehaviour
     private static readonly int JumpHash = Animator.StringToHash("Jump");
     private static readonly int DashHash = Animator.StringToHash("Dash");
     private static readonly int ParryHash = Animator.StringToHash("Parry");
+    private static readonly int DeadHash = Animator.StringToHash("Dead");
     private static readonly int GroundedHash = Animator.StringToHash("Grounded");
 
     private static readonly int WeaponEquippedHash = Animator.StringToHash("WeaponEquipped");
@@ -86,6 +87,11 @@ public class PlayerAnimation : MonoBehaviour
     public void PlayIdle()
     {
         anim.CrossFade("Idle_Anim", 0.1f);
+    }
+
+    public void PlayDie()
+    {
+        anim.SetTrigger(DeadHash);
     }
 
     public void SetIsAttacking(bool value)

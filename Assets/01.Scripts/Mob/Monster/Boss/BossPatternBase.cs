@@ -31,22 +31,25 @@ public abstract class BossPatternBase : MonoBehaviour
     {
         bossAI = GetComponentInChildren<BossAIController>();
         boss = GetComponentInParent<BossEnemy>();
-
-        // if (bossAI != null)
-        //     target = bossAI.transform;
     }
 
+    //거리, 페이즈, 실행 중 등 같은 공통 조건
     public virtual bool CanExecute(Transform currentTarget)
     {
-        if (isRunning) return false;
-        if (Time.time - lastUseTime < cooldown) return false;
-        if (boss == null) return false;
+        if (!CanExecuteCommon(currentTarget)) return false;
+        if (!CooldownReady()) return false;
+        return true;
+    }
 
-        if (boss is BossEnemy be)
-        {
-            if (be.CurrentPhase < minPhase || be.CurrentPhase > maxPhase)
-                return false;
-        }
+    // 공통 조건만 검사
+    protected bool CanExecuteCommon(Transform currentTarget)
+    {
+        if (isRunning) return false;
+        if (boss == null) return false;
+        if (currentTarget == null) return false;
+
+        if (boss.CurrentPhase < minPhase || boss.CurrentPhase > maxPhase)
+            return false;
 
         float dist = Vector3.Distance(boss.transform.position, currentTarget.position);
 
@@ -54,6 +57,13 @@ public abstract class BossPatternBase : MonoBehaviour
         if (maxUseDistance > 0f && dist > maxUseDistance) return false;
 
         return true;
+    }
+
+    //기본 쿨타임 체크
+    protected virtual bool CooldownReady()
+    {
+        if (cooldown <= 0f) return true;
+        return (Time.time - lastUseTime) >= cooldown;
     }
 
     //패턴 실행용 코루틴 

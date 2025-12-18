@@ -13,11 +13,6 @@ public class BossPatternShockwave : BossPatternBase
     public float radius = 8f;
     public LayerMask hitMask;
 
-    [Header("멀티 웨이브 설정")]
-    public int phase1WaveCount = 1;   // 1페이즈 웨이브 수
-    public int phase2WaveCount = 2;   // 2페이즈 이상 웨이브 수
-    public float waveInterval = 0.4f; // 웨이브 사이 딜레이
-
     [Header("랜덤 쿨타임")]
     public float cooldownMin = 3f;
     public float cooldownMax = 6f;
@@ -57,34 +52,38 @@ public class BossPatternShockwave : BossPatternBase
     {
         if (boss == null) yield break;
 
-        int waveCount = phase1WaveCount;
-        if (boss is BossEnemy be && be.CurrentPhase >= 2)
-            waveCount = phase2WaveCount;
+        currentWaveFinished = false;
 
-        for (int i = 0; i < waveCount; i++)
-        {
-            currentWaveFinished = false;
+        // 애니메이션 시작
+        if (animator != null && slamTriggerHash != 0)
+            animator.SetTrigger(slamTriggerHash);
 
-            // 애니메이션 시작 (팔 들어올리기 시작)
-            if (animator != null && slamTriggerHash != 0)
-                animator.SetTrigger(slamTriggerHash);
+        // 애니 마지막 프레임(또는 종료 시점)에 Anim_EndWave() 이벤트를 넣어서 끝내기
+        while (!currentWaveFinished)
+            yield return null;
 
-            // 이 이후의 타이밍은 전부 "애니메이션 이벤트"가 담당
-            // 아래 while은 "이번 웨이브 끝" 이벤트가 올 때까지 기다리는 역할
-            while (!currentWaveFinished)
-                yield return null;
-
-            // 다음 웨이브까지 대기
-            if (i < waveCount - 1 && waveInterval > 0f)
-                yield return new WaitForSeconds(waveInterval);
-        }
+        // 다음 랜덤 쿨타임 예약
         nextReadyTime = Time.time + Random.Range(cooldownMin, cooldownMax);
     }
 
     public override bool CanExecute(Transform target)
     {
+        // 랜덤 쿨타임 체크
         if (Time.time < nextReadyTime) return false;
-        return base.CanExecute(target);
+
+        // 페이즈 조건
+        if (boss is BossEnemy be)
+        {
+            if (be.CurrentPhase < minPhase || be.CurrentPhase > maxPhase)
+                return false;
+        }
+
+        // 거리 조건
+        float dist = Vector3.Distance(boss.transform.position, target.position);
+        if (minUseDistance > 0f && dist < minUseDistance) return false;
+        if (maxUseDistance > 0f && dist > maxUseDistance) return false;
+
+        return true;
     }
 
     //  애니메이션 중 텔레그래프를 켜고 싶은 프레임에 넣을 이벤트
@@ -146,11 +145,9 @@ public class BossPatternShockwave : BossPatternBase
 
     private Vector3 GetCenterPosotion()
     {
-        if (centerOverride != null)
-            return centerOverride.position;
+        if (centerOverride != null) return centerOverride.position;
 
-        if (boss != null)
-            return boss.transform.position;
+        if (boss != null) return boss.transform.position;
 
         return transform.position;
     }
