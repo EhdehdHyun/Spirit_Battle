@@ -17,6 +17,11 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField] private int handSourceIndex = 0;   //손에 칼
     [SerializeField] private int sideSourceIndex = 1;   //옆에 칼
 
+    [Header("칼")]
+    [SerializeField] private Transform swordVisual;
+
+    private Coroutine swordRotCo;
+
     [Header("걷기 기준")]
     public float runhold = 0.15f;
 
@@ -166,6 +171,35 @@ public class PlayerAnimation : MonoBehaviour
 
         SetSourceWeight(weaponParent, handSourceIndex, 0f);
         SetSourceWeight(weaponParent, sideSourceIndex, 1f);
+    }
+    public void EvSwordAngle_Sheathe7Frames()
+    {
+        if (!swordVisual) return;
+        StartSwordRotateFrames(Quaternion.Euler(7.304f, -76.863f, 151.421f), 7);
+    }
+
+    public void EvSwordAngle_Default3Frames()
+    {
+        if (!swordVisual) return;
+        StartSwordRotateFrames(Quaternion.identity, 3);
+    }
+
+    private void StartSwordRotateFrames(Quaternion target, int frames)
+    {
+        if (swordRotCo != null) StopCoroutine(swordRotCo);
+        swordRotCo = StartCoroutine(CoRotateFrames(target, Mathf.Max(1, frames)));
+    }
+
+    private System.Collections.IEnumerator CoRotateFrames(Quaternion target, int frames)
+    {
+        Quaternion start = swordVisual.localRotation;
+        for (int i = 1; i <= frames; i++)
+        {
+            float t = (float)i / frames;
+            swordVisual.localRotation = Quaternion.Slerp(start, target, t);
+            yield return null; // 다음 프레임
+        }
+        swordVisual.localRotation = target;
     }
 }
 
