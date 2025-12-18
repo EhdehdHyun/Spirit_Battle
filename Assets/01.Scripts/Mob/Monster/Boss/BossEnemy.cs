@@ -59,6 +59,7 @@ public class BossEnemy : EnemyBase
     private bool isGroggy = false;
 
     private BossAIController ai;
+    private MonsterAnimation monsterAnim;
 
     public int CurrentPhase { get; private set; } = 1;
 
@@ -68,6 +69,7 @@ public class BossEnemy : EnemyBase
 
         baseMoveSpeed = moveSpeed;
         ai = GetComponent<BossAIController>();
+        monsterAnim = GetComponent<MonsterAnimation>();
 
         if (damageFeedback == null)
             damageFeedback = GetComponentInChildren<DamageFeedback>(true);
@@ -130,8 +132,6 @@ public class BossEnemy : EnemyBase
 
         if (bossUI != null)
             bossUI.SetBreakVisible(CurrentPhase >= breakEnableFromPhase);
-
-        Debug.Log("{CurrentPhase} 페이즈 진입");
     }
 
     //페이즈에 따라 스탯 적용
@@ -162,6 +162,8 @@ public class BossEnemy : EnemyBase
         {
             bossUI.UpdatePhase(newPhase);
         }
+
+        Debug.Log("페이지 변경");
 
         // 필요하면 여기서: 페이즈 전환 연출, 패턴 배열 교체, 코어 HP 리셋 등등 추가로 처리 가능
     }
@@ -221,5 +223,12 @@ public class BossEnemy : EnemyBase
         {
             bossUI.SetVisible(false);
         }
+
+        monsterAnim?.PlayDie();
+    }
+
+    public void Anim_DestroySelf()
+    {
+        Destroy(gameObject);
     }
 }

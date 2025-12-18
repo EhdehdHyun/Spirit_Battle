@@ -1255,6 +1255,10 @@ PrefabInstance:
       propertyPath: bossUI
       value: 
       objectReference: {fileID: 875258243}
+    - target: {fileID: 4407726832678674381, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
