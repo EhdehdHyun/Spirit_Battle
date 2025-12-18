@@ -1278,7 +1278,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2366965492673321758, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 706205001}
   m_SourcePrefab: {fileID: 100100000, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
 --- !u!114 &107404276 stripped
 MonoBehaviour:
@@ -1731,7 +1734,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: -0.00018260824, y: 0.00014820445, z: 0}
-  m_RotationOffset: {x: -0.0040069795, y: 0.0046910625, z: -13.442997}
+  m_RotationOffset: {x: -0.0039958055, y: 0.0046983426, z: -13.442988}
   m_AffectRotationX: 0
   m_AffectRotationY: 1
   m_AffectRotationZ: 0
@@ -12041,6 +12044,27 @@ SkinnedMeshRenderer:
     m_Center: {x: 0, y: 0.8, z: 0}
     m_Extent: {x: 0.5, y: 0.8, z: 0.5}
   m_DirtyAABB: 0
+--- !u!1 &706204990 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2366965492673321758, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+  m_PrefabInstance: {fileID: 105964411}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &706205001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706204990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 214c843dc80a366448031157c4fb62ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  parryWindowOpen: 0
+  defaultParryGroggyDuration: 2
+  parryGroggyTriggerName: ParryGroggy
+  ignoreParryWhileBreakGroggy: 1
 --- !u!1 &707048670
 GameObject:
   m_ObjectHideFlags: 0
@@ -13080,6 +13104,7 @@ GameObject:
   - component: {fileID: 748106380}
   - component: {fileID: 748106381}
   - component: {fileID: 748106382}
+  - component: {fileID: 748106383}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -13142,6 +13167,8 @@ MonoBehaviour:
   - 22
   - 0
   weaponEquipped: 0
+  isAttacking: 0
+  dashInvincibleExtra: 0.05
 --- !u!114 &748106373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13154,12 +13181,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4c7ca55aaf06964ca83799473fcc8ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponHand: {fileID: 0}
-  weaponIn: {fileID: 0}
   rb: {fileID: 0}
   character: {fileID: 0}
   combat: {fileID: 0}
   weaponHitbox: {fileID: 1636130274}
+  weaponHand: {fileID: 0}
+  weaponIn: {fileID: 0}
   runhold: 0.15
 --- !u!114 &748106374
 MonoBehaviour:
@@ -13175,9 +13202,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 431575902}
   anime: {fileID: 748106373}
+  playerInput: {fileID: 0}
   combat: {fileID: 0}
+  stat: {fileID: 0}
   faceTurnSpeed: 15
   isLocked: 0
+  dashLocked: 0
 --- !u!114 &748106375
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13190,7 +13220,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 957ae59d9840d0443a3d25049cbe3b78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 8
+  runSpeed: 8
+  walkSpeed: 4
   acceleration: 40
   deceleration: 30
   jumpPower: 10
@@ -13387,6 +13418,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 912c8c43-10ff-4fb9-a267-4969f43d481e
     m_ActionName: Player/Inventory[/Keyboard/tab]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 748106374}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: OnParry
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: b105d503-0362-4a8f-a53c-59658d912413
+    m_ActionName: Player/Parry[/Keyboard/q]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -13427,10 +13474,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ui: {fileID: 683637767}
   level: 1
+  currentExp: 0
   maxStamina: 100
   currentStamina: 100
+  maxDashCount: 2
+  curDashCount: 0
+  dashRechargeTime: 1
   maxExp: 100
-  currentExp: 0
 --- !u!114 &748106381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13460,10 +13510,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCamera: {fileID: 431575905}
   interactDistance: 5
-  dropLayerMask:
+  interactLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
-  defaultDropDistance: 3
+    m_Bits: 0
+  crosshairImage: {fileID: 0}
+  crosshairNormalColor: {r: 1, g: 1, b: 1, a: 1}
+  crosshairInteractColor: {r: 1, g: 0, b: 0, a: 1}
+  interactText: {fileID: 0}
+--- !u!114 &748106383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748106370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32881ca650b852646aa92ef9a8efbe5e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isParryStance: 0
+  combat: {fileID: 0}
+  myHitBox: {fileID: 0}
+  origin: {fileID: 1184172346}
+  parryableMask:
+    serializedVersion: 2
+    m_Bits: 768
+  range: 2
+  angle: 120
+  maxHits: 16
 --- !u!1 &748747897
 GameObject:
   m_ObjectHideFlags: 0
@@ -30584,6 +30659,7 @@ MonoBehaviour:
   targetLayers:
     serializedVersion: 2
     m_Bits: 768
+  _parryStunTime: 1.5
 --- !u!65 &1636130277
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -33452,7 +33528,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1766674625}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.018223014, y: -0.028977584, z: -0.24002261, w: 0.97016364}
+  m_LocalRotation: {x: 0.018223014, y: -0.028977586, z: -0.2400226, w: 0.97016364}
   m_LocalPosition: {x: 0.12699975, y: 1.3616039, z: -0.13720965}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

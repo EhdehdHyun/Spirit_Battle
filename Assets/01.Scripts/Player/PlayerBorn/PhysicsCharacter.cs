@@ -173,20 +173,20 @@ public class PhysicsCharacter : MonoBehaviour
     /// 대쉬 요청
     /// direction은 보통 캐릭터 forward 또는 입력 방향
     /// </summary>
-    public void TryDash(Vector3 direction)
+    public bool TryDash(Vector3 direction)
     {
         if (_isDashing)
-            return;
+            return false;
 
         if (!IsGrounded)
-            return;
+            return false;
 
         if (_dashCooldownTimer > 0f)
-            return;
+            return false;
 
         direction.y = 0f;
         if (direction.sqrMagnitude < 0.0001f)
-            return;
+            return false;
 
         direction.Normalize();
 
@@ -196,6 +196,7 @@ public class PhysicsCharacter : MonoBehaviour
         _dashDirection = direction;
 
         _runAfterDash = true;
+        return true;
     }
 
     /// <summary>

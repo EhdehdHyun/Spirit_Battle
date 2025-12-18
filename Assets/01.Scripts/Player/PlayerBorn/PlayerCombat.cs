@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class PlayerCombat : MonoBehaviour, IParryReceiver
+public class PlayerCombat : MonoBehaviour
 {
     [Header("참조")]
     [SerializeField] private PlayerAnimation playerAnim;
@@ -10,7 +10,6 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
 
     [Header("콤보 설정")]
     [SerializeField] private int maxCombo = 3;
-    //[SerializeField] private float comboInputWindow = 0.4f;
 
     [Header("기본 공격력 (스탯/무기 공격력")]
     [SerializeField] private float baseDamage = 10f;
@@ -29,16 +28,19 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
     public bool WeaponEquipped => weaponEquipped;
 
     [Header("공격 상태")]
-    [SerializeField] bool isAttacking = false;
+    [SerializeField] private bool isAttacking = false;
     public bool IsAttacking => isAttacking;
 
-    public bool IsParrying { get; private set; }
-    public bool ParryWindowOpen {  get; private set; }
+    public bool IsDashing => physicsCharacter != null && physicsCharacter.IsDashing;
+
+    [Header("대쉬 무적 시간")]
+    [SerializeField] private float dashInvincibleExtra = 0.05f;
+
+    private PlayerParry parry;
 
     int currentCombo = 0;
     bool bufferedNextInput = false;
     float lastAttackTime = 0f;
-
 
     void Awake()
     {
@@ -46,10 +48,12 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
             playerAnim = GetComponentInChildren<PlayerAnimation>();
         if (physicsCharacter == null)
             physicsCharacter = GetComponent<PhysicsCharacter>();
-        if(playerInput == null)
-            playerInput = GetComponent<PlayerInputController>();  
-        if(weaponHitBox == null)
+        if (playerInput == null)
+            playerInput = GetComponent<PlayerInputController>();
+        if (weaponHitBox == null)
             weaponHitBox = GetComponentInChildren<WeaponHitBox>();
+
+        parry = GetComponent<PlayerParry>();
     }
 
     public bool TryDash(Vector3 dir)
@@ -57,19 +61,24 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
         if (isAttacking)
             CancelAttackCommon();
 
-        physicsCharacter.TryDash(dir);
+        bool started = physicsCharacter.TryDash(dir);
+        if (!started) return false;
+
+        var character = GetComponent<CharacterBase>();
+        if (character != null)
+            character.StartInvincible(physicsCharacter.dashDuration + dashInvincibleExtra);
+
         playerAnim?.PlayDash();
         return true;
     }
+
     public void OnAttackInput()
     {
-        if (!weaponEquipped) return;   // 무기 안 들면 공격 안됨
+        if (!weaponEquipped) return;
+        if (playerInput != null && playerInput.isLocked) return;
+        if (IsDashing) return;
 
-        if(IsParrying) return;
-
-        if(playerInput.isLocked) return;
-
-        if (physicsCharacter.IsDashing) return;
+        if (parry != null && parry.isParryStance) return;
 
         if (!isAttacking)
         {
@@ -78,65 +87,41 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
         }
 
         if (bufferedNextInput) return;
-
-        //if (Time.time - lastAttackTime <= comboInputWindow)
-            bufferedNextInput = true;
+        bufferedNextInput = true;
     }
 
-    public void TryStartParry()
+    //  패링 입력 들어오면 “자세/락/애니”만
+    public void TryStartParryStance()
     {
-        if (IsAttacking) return;          // 공격 중 패링 금지(원하면 캔슬로 바꿀 수 있음)
+        if (IsAttacking) return;
         if (!weaponEquipped) return;
-        if (physicsCharacter.IsDashing) return;
-        if (IsParrying) return;
+        if (IsDashing) return;
+        if (parry != null && parry.isParryStance) return;
 
-        IsParrying = true;
+        parry?.EnterStance();
+
         physicsCharacter?.SetMovementLocked(true);
-        ClearAttackBuffer();              // 패링 중 좌클릭이 남지 않게
+        ClearAttackBuffer();
 
-        playerAnim.PlayParry();
+        playerAnim?.PlayParry(); // 패링 애니 재생
     }
 
-    // WeaponHitBox가 호출
-    public bool TryParry(WeaponHitBox hitBox, Vector3 hitPoint)
+    //  성공 연출만 (몬스터 OnParried는 절대 건드리지 마)
+    public void OnParrySuccess(Transform attacker, Vector3 hitPoint)
     {
-        if (!IsParrying || !ParryWindowOpen) return false;
+        // 여기서 성공 이펙트/사운드/카메라/짧은 무적 등만 처리
+        // Debug.Log("[Parry] SUCCESS");
 
-        // 공격자 방향(몬스터)이 없으면 그냥 패링 허용/거부 중 하나
-        Transform attacker = hitBox != null ? hitBox.OwnerRoot : null;
-        if (attacker == null) return false; // 보수적으로: 공격자 없으면 패링 실패
+        // 예시) 잠깐 무적
+        var character = GetComponent<CharacterBase>();
+        if (character != null)
+            character.StartInvincible(0.15f);
 
-        //  정면 판정: 내 forward 기준으로 공격자가 앞쪽에 있어야 함
-        Vector3 toAttacker = attacker.position - transform.position;
-        toAttacker.y = 0f;
-
-        Vector3 fwd = transform.forward;
-        fwd.y = 0f;
-
-        if (toAttacker.sqrMagnitude < 0.0001f) return true; // 거의 겹치면 일단 성공 처리
-
-        toAttacker.Normalize();
-        fwd.Normalize();
-
-        // dot: 1이면 정면, 0이면 옆, -1이면 뒤
-        float dot = Vector3.Dot(fwd, toAttacker);
-
-        // 0.5  = 약 60도 안쪽만 허용
-        // 0.2  = 약 78도 안쪽 허용
-        const float MIN_FACING_DOT = 0.3f; // 너 게임 느낌대로 0.2~0.5에서 조절
-
-        if (dot < MIN_FACING_DOT)
-            return false; // 옆/뒤에서 들어온 공격은 패링 실패
-        // 성공
-        ParryWindowOpen = false; // 한 번 성공하면 닫기(연타 무료 방지)
-        return true;
+        // 성공 애니가 따로 있으면
+        // playerAnim?.PlayParrySuccess();
     }
 
-    void ClearAttackBuffer()
-    {
-        bufferedNextInput = false;
-    }
-
+    void ClearAttackBuffer() => bufferedNextInput = false;
 
     public void OnToggleWeaponInput()
     {
@@ -148,7 +133,6 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
         if (!weaponEquipped && isAttacking)
             ForceStopAttack();
     }
-
 
     void StartFirstAttack()
     {
@@ -177,7 +161,6 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
         lastAttackTime = Time.time;
 
         physicsCharacter.SetMovementLocked(true);
-
         playerAnim?.Attack(currentCombo);
     }
 
@@ -190,16 +173,12 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
         physicsCharacter.SetMovementLocked(false);
 
         playerAnim?.SetIsAttacking(false);
-        playerAnim.PlayIdle();
-
+        playerAnim?.PlayIdle();
     }
 
-    void ForceStopAttack()
-    {
-        ResetCombo();
-    }
+    void ForceStopAttack() => ResetCombo();
 
-    void CancelAttackCommon()   //대쉬 중 공격 관한것들 캔슬
+    void CancelAttackCommon()
     {
         weaponHitBox?.DeActivate();
 
@@ -225,23 +204,16 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
             StartNextAttack();
             return;
         }
-
         ResetCombo();
     }
 
     public void OnAttackMoveForwardFromAnim()
     {
-        if (physicsCharacter == null)
-        {
-            return;
-        }
+        if (physicsCharacter == null) return;
         if (currentCombo <= 0 || currentCombo > forwardPowers.Length) return;
 
         float power = forwardPowers[currentCombo - 1];
-        if (power <= 0f) 
-        {
-            return; 
-        }
+        if (power <= 0f) return;
 
         Vector3 dir = transform.forward;
         dir.y = 0f;
@@ -253,17 +225,10 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
     public void OnAttackStepBackFromAnim()
     {
         if (physicsCharacter == null) return;
-        if (currentCombo <= 0 || currentCombo > backwardPowers.Length)
-        {
-            return;
-        }
+        if (currentCombo <= 0 || currentCombo > backwardPowers.Length) return;
 
         float power = backwardPowers[currentCombo - 1];
-        if (power <= 0f) 
-        {
-
-            return;
-        } 
+        if (power <= 0f) return;
 
         Vector3 dir = -transform.forward;
         dir.y = 0f;
@@ -275,10 +240,9 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
     public void OnAttackHitStartFromAnim()
     {
         if (weaponHitBox == null) return;
-        if (currentCombo <= 0 ) return;
+        if (currentCombo <= 0) return;
 
         int idx = Mathf.Clamp(currentCombo - 1, 0, comboDamages.Length - 1);
-
         float multiplier = comboDamages[idx];
         float finalDamage = baseDamage * multiplier;
 
@@ -287,24 +251,14 @@ public class PlayerCombat : MonoBehaviour, IParryReceiver
 
     public void OnAttackHitEndFromAnim()
     {
-        if(weaponHitBox == null) return;
+        if (weaponHitBox == null) return;
         weaponHitBox.DeActivate();
     }
 
-    public void EvParryWindowOpen()
-    {
-        ParryWindowOpen = true;
-    }
-
-    public void EvParryWindowClose()
-    {
-        ParryWindowOpen = false;
-    }
-
+    //  패링 모션 끝 이벤트(자세 해제 + 락 해제)
     public void EvParryEnd()
     {
-        ParryWindowOpen = false;
-        IsParrying = false;
+        parry?.ExitStance();
         physicsCharacter?.SetMovementLocked(false);
     }
 }

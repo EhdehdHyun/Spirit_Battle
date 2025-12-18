@@ -10,6 +10,7 @@ public class PlayerInputController : MonoBehaviour
     public PlayerAnimation anime;
     public PlayerInput playerInput;
     public PlayerCombat combat;
+    public PlayerStat stat;
 
     public float faceTurnSpeed = 18f;
 
@@ -33,6 +34,7 @@ public class PlayerInputController : MonoBehaviour
         anime = GetComponent<PlayerAnimation>();
         combat = GetComponent<PlayerCombat>();
         playerInput = GetComponent<PlayerInput>();
+        stat = GetComponent<PlayerStat>();
 
         moveAction = playerInput.actions["Move"];
         lookAction = playerInput.actions["Look"];
@@ -114,25 +116,33 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext ctx)
     {
-        if(isLocked) return;
-
-        if (!character.IsGrounded) return;
-        
-
         if (!ctx.performed) return;
+        if (isLocked) return;
+        if (!character.IsGrounded) return;
+
+        // 0이면 아예 대쉬 시작 못하게 막기
+        if (stat == null || stat.curDashCount <= 0)
+        {
+            Debug.Log("대쉬카운트 없음");
+            return;
+        }
 
         Vector3 dir = (cam != null && moveWorld.sqrMagnitude > 0.0001f)
             ? moveWorld.normalized
             : transform.forward;
 
-        //if (combat.TryDash(dir)) return;
         combat?.CancelAttackForDash();
 
-        character.TryDash(dir);
-        anime.PlayDash();
+        bool dashStarted = (combat != null) && combat.TryDash(dir);
+        if (!dashStarted) return;
+
+        // 여기까지 왔으면 무조건 1개 소비
+        stat.TryConsumeDash();
 
         SetDashLock(character.dashDuration);
     }
+
+
 
     public void OnAttack(InputAction.CallbackContext ctx)
     {
@@ -146,8 +156,12 @@ public class PlayerInputController : MonoBehaviour
     {
         if (!ctx.performed) return;
         if (isLocked) return;
-        combat?.TryStartParry();
+
+        // 입력 순간엔 "자세 시작"만.
+        // 실제 패링 판정은 PlayerParry.Anim_TryParryNow() (애니 이벤트)에서 함.
+        combat?.TryStartParryStance();
     }
+
 
     public void OnToggleWeapon(InputAction.CallbackContext ctx)
     {

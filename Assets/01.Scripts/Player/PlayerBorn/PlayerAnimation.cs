@@ -136,23 +136,7 @@ public class PlayerAnimation : MonoBehaviour
         if (weaponHitbox != null)
             weaponHitbox.SetActive(true);
     }
-
-    public void EvParryWindowOpen()
-    {
-        combat?.EvParryWindowOpen();
-    }
-
-    public void EvParryWindowClose()
-    {
-        combat.EvParryWindowClose();
-    }
-
-    public void EvParryEnd()
-    {
-        combat.EvParryEnd();
-    }
-
-    }
+}
 
 
 
