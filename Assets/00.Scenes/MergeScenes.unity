@@ -13146,25 +13146,19 @@ MonoBehaviour:
   physicsCharacter: {fileID: 748106375}
   playerInput: {fileID: 0}
   weaponHitBox: {fileID: 0}
-  maxCombo: 5
+  maxCombo: 3
   baseDamage: 10
   comboDamages:
   - 1
   - 1.2
   - 1.5
-  - 1.8
-  - 2
   forwardPowers:
   - 10
   - 6
   - 10
-  - 0
-  - 26
   backwardPowers:
   - 0
   - 0
-  - 0
-  - 22
   - 0
   weaponEquipped: 0
   isAttacking: 0
@@ -13496,6 +13490,12 @@ MonoBehaviour:
   maxHp: 100
   currentHp: 0
   moveSpeed: 3
+  input: {fileID: 0}
+  physicsChar: {fileID: 0}
+  anim: {fileID: 0}
+  combat: {fileID: 0}
+  parry: {fileID: 0}
+  weaponHitBox: {fileID: 0}
 --- !u!114 &748106382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29903,7 +29903,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1583430779
 Transform:
   m_ObjectHideFlags: 0
