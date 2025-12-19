@@ -12,7 +12,55 @@
       "DialogueID": "DLG_1002",
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
-      "Text": " I Find u in the storm.",
+      "Text": "I Find u in the storm.",
+      "NextID": "DLG_1003",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1003",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "And i feel the clean spirit",
+      "NextID": "DLG_1004",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1004",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "You r not human",
+      "NextID": "DLG_1005",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1005",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "Maybe iland wanted you",
+      "NextID": "DLG_1006",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1006",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "Help, we are iland",
+      "NextID": "DLG_1007",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1007",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "Very Scared",
+      "NextID": "DLG_1008",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1008",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "Investment u",
       "NextID": "",
       "IsChoice": false
     }

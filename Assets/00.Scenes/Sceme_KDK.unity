@@ -21442,11 +21442,11 @@ RectTransform:
   - {fileID: 839161733}
   m_Father: {fileID: 163767287}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 50}
+  m_SizeDelta: {x: 1800, y: 300}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &464243052
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35035,6 +35035,12 @@ MonoBehaviour:
   maxHp: 100
   currentHp: 0
   moveSpeed: 3
+  input: {fileID: 0}
+  physicsChar: {fileID: 0}
+  anim: {fileID: 0}
+  combat: {fileID: 0}
+  parry: {fileID: 0}
+  weaponHitBox: {fileID: 0}
 --- !u!114 &787294103
 MonoBehaviour:
   m_ObjectHideFlags: 0
