@@ -1251,7 +1251,32 @@ PrefabInstance:
       propertyPath: m_Name
       value: TestBoss
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 3372987676212822727, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: maxHp
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 3372987676212822727, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: groggyExtraDamageRatio
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3699730551239642758, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: rendererRoot
+      value: 
+      objectReference: {fileID: 150663906}
+    - target: {fileID: 4407726832678674381, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626370065440100188, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: rendererRoot
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4626370065440100188, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+      propertyPath: flashHoldTime
+      value: 0.2
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 3699730551239642758, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -1895,6 +1920,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1101207728}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &150663906 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4747567145388397021, guid: 2a8a729de2d69fb47b75ae9cd57e3bfc, type: 3}
+  m_PrefabInstance: {fileID: 105964411}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &151764918
 GameObject:
   m_ObjectHideFlags: 0

@@ -10,9 +10,18 @@ public class MonsterAnimation : MonoBehaviour
     [SerializeField] private string isRunningParm = "IsRunning"; //bool
     [SerializeField] private string dieTriggerParm = "Die"; //triger
 
+    [Header("피격 트리거(일반/엘리트용)")]
+    [SerializeField] private string hitTriggerParm = "Hit";
+
+    [Header("상태 태그")]
+    [SerializeField] private int layerIndex = 0;
+    [SerializeField] private string attackTag = "Attack";
+    [SerializeField] private string hitTag = "Hit";
+
     private int moveSpeedHash;
     private int isRunningHash;
     private int dieTriggerHash;
+    private int hitTriggerHash;
 
     private void Awake()
     {
@@ -28,6 +37,41 @@ public class MonsterAnimation : MonoBehaviour
         moveSpeedHash = Animator.StringToHash(moveSpeedParm);
         isRunningHash = Animator.StringToHash(isRunningParm);
         dieTriggerHash = Animator.StringToHash(dieTriggerParm);
+        hitTriggerHash = Animator.StringToHash(hitTriggerParm);
+    }
+
+    private bool IsTagPlaying(string tag)
+    {
+        if (animator == null) return false;
+
+        var cur = animator.GetCurrentAnimatorStateInfo(layerIndex);
+        bool inTrans = animator.IsInTransition(layerIndex);
+        if (!inTrans) return cur.IsTag(tag);
+
+        var next = animator.GetNextAnimatorStateInfo(layerIndex);
+        return cur.IsTag(tag) || next.IsTag(tag);
+
+    }
+
+    public bool IsInAttack => IsTagPlaying(attackTag);
+    public bool IsInHit => IsTagPlaying(hitTag);
+
+    public bool CanPlayHit()
+    {
+        if (IsInAttack) return false;
+        if (IsInHit) return false;
+
+        return true;
+    }
+
+    public bool TryPlayHit()
+    {
+        if (animator == null) return false;
+        if (!CanPlayHit()) return false;
+
+        animator.ResetTrigger(hitTriggerHash);
+        animator.SetTrigger(hitTriggerHash);
+        return true;
     }
 
     //이동 관련 애니메이션 업데이트
