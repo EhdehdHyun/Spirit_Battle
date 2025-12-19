@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionBounces: 1
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
-  m_Sun: {fileID: 0}
+  m_Sun: {fileID: 449713770}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -14996,6 +14996,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4849867975826163776, guid: 2af931b84714f9a468a5f2be79304847, type: 3}
+      propertyPath: m_Color.b
+      value: 0.5471698
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849867975826163776, guid: 2af931b84714f9a468a5f2be79304847, type: 3}
+      propertyPath: m_Color.g
+      value: 0.5471698
+      objectReference: {fileID: 0}
+    - target: {fileID: 4849867975826163776, guid: 2af931b84714f9a468a5f2be79304847, type: 3}
+      propertyPath: m_Color.r
+      value: 0.5471698
+      objectReference: {fileID: 0}
     - target: {fileID: 6478891684755480350, guid: 2af931b84714f9a468a5f2be79304847, type: 3}
       propertyPath: m_Name
       value: P_Sky
@@ -15005,6 +15017,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2af931b84714f9a468a5f2be79304847, type: 3}
+--- !u!108 &449713770 stripped
+Light:
+  m_CorrespondingSourceObject: {fileID: 4849867975826163776, guid: 2af931b84714f9a468a5f2be79304847, type: 3}
+  m_PrefabInstance: {fileID: 449713769}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &455783161
 GameObject:
   m_ObjectHideFlags: 0

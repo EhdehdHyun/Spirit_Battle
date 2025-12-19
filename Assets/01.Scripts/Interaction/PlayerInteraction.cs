@@ -5,7 +5,7 @@ using TMPro;
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("Raycast 설정")]
-    [SerializeField] private Camera playerCamera;
+    [SerializeField] public Camera playerCamera;
     [SerializeField] private float interactDistance = 5f;
     [SerializeField] private LayerMask interactLayerMask;
 
@@ -34,6 +34,12 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
+            if (DialogueManager.Instance != null &&
+                DialogueManager.Instance.IsDialogueActive)
+            {
+                DialogueManager.Instance.Next();
+                return;
+            }
             Debug.Log("[PlayerInteraction] F 키 입력 감지 (Raycast 버전)");
             TryInteract();
         }
