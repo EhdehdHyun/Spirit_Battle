@@ -78189,6 +78189,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueCanvas: {fileID: 163767283}
   dialogueText: {fileID: 839161731}
+  dialogueCamera: {fileID: 1985997638}
+  playerMovement: {fileID: 787294110}
+  thirdPersonCamera: {fileID: 1985997633}
 --- !u!4 &1808531778
 Transform:
   m_ObjectHideFlags: 0
@@ -85287,6 +85290,7 @@ GameObject:
   - component: {fileID: 1985997634}
   - component: {fileID: 1985997633}
   - component: {fileID: 1985997632}
+  - component: {fileID: 1985997638}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -85449,6 +85453,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1985997638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985997631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d31c6de2a1264b10a816d4cfab47dec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 1985997636}
+  zoomInFOV: 45
+  zoomSpeed: 5
+  lookSpeed: 5
+  thirdPersonCamera: {fileID: 1985997633}
 --- !u!1001 &1987896484
 PrefabInstance:
   m_ObjectHideFlags: 0

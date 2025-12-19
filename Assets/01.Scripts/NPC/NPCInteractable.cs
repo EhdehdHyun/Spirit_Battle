@@ -25,7 +25,8 @@ public class NPCInteractable : MonoBehaviour, IInteractable
 
         DialogueManager.Instance.StartDialogue(
             startDialogueID,
-            OnDialogueEnd
+            OnDialogueEnd,
+        transform   // NPC Transform 전달
         );
     }
 
