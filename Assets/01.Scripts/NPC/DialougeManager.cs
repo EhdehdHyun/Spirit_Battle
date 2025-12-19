@@ -18,6 +18,8 @@ public class DialogueManager : MonoBehaviour
     
     [Header("Lock Targets")]
     [SerializeField] private MonoBehaviour playerMovement;
+    [SerializeField] private NPCFaceController npcFaceController;
+    [SerializeField] private Transform playerTransform;
 
     private string currentDialogueID;
     private Action onDialogueEnd;
@@ -58,6 +60,10 @@ public class DialogueManager : MonoBehaviour
         dialogueCanvas.SetActive(true);
         
         dialogueCamera.StartDialogueCamera(npcTransform);
+        
+        npcFaceController = npcTransform.GetComponent<NPCFaceController>();
+        if (npcFaceController != null)
+            npcFaceController.LookAtTarget(playerTransform);
 
         ShowCurrent();
     }
@@ -105,6 +111,9 @@ public class DialogueManager : MonoBehaviour
         
         if (dialogueCamera != null)
             dialogueCamera.EndDialogueCamera();
+        
+        if (npcFaceController != null)
+            npcFaceController.StopLook();        
 
         onDialogueEnd?.Invoke();
         onDialogueEnd = null;

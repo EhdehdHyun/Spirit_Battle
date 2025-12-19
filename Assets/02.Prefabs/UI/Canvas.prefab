@@ -2113,8 +2113,8 @@ MonoBehaviour:
   mapImage: {fileID: 2367637359634319752}
   playerIcon: {fileID: 5455887715698068666}
   player: {fileID: 0}
-  worldMin: {x: -1100, y: -700}
-  worldMax: {x: 1100, y: 700}
+  worldMin: {x: -1050, y: -500}
+  worldMax: {x: 1050, y: 500}
 --- !u!1 &6645554772344446340
 GameObject:
   m_ObjectHideFlags: 0
@@ -2651,7 +2651,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8533182910938947640
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3092,7 +3092,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1455084524263614418
 RectTransform:
   m_ObjectHideFlags: 0
