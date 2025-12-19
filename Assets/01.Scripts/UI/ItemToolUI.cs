@@ -1,24 +1,20 @@
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class ItemTooltipUI : MonoBehaviour
 {
     public static ItemTooltipUI Instance { get; private set; }
 
-    [Header("Tooltip UI Root")]
-    [Tooltip("툴팁 전체 패널 (비활성/활성 토글용)")]
-    public GameObject root;
+    [Header("루트 패널 (툴팁 전체)")]
+    [SerializeField] private GameObject root;   // 비워두면 this.gameObject 사용
 
-    [Header("Text References")]
-    public TextMeshProUGUI titleText;  // 아이템 이름
-    public TextMeshProUGUI bodyText;   // 설명/세부정보
+    [Header("UI 참조")]
+    [SerializeField] private Image iconImage;
+    [SerializeField] private TextMeshProUGUI nameText;
+    [SerializeField] private TextMeshProUGUI quantityText;
 
-    [Header("Position")]
-    [Tooltip("마우스 기준 오프셋")]
-    public Vector2 offset = new Vector2(16f, -16f);
-
-    private RectTransform _rectTransform;
-    private Canvas _canvas;
+    private CanvasGroup canvasGroup;
 
     private void Awake()
     {
@@ -30,68 +26,88 @@ public class ItemTooltipUI : MonoBehaviour
 
         Instance = this;
 
-        _canvas = GetComponentInParent<Canvas>();
+        if (root == null)
+            root = this.gameObject;
 
-        if (root != null)
-            _rectTransform = root.GetComponent<RectTransform>();
-        else
-            _rectTransform = GetComponent<RectTransform>();
+        canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup != null)
+        {
+            // 툴팁이 마우스 클릭을 막지 않도록
+            canvasGroup.blocksRaycasts = false;
+        }
 
+        Debug.Log("[ItemTooltipUI] Awake 호출, Instance 설정 완료");
         Hide();
     }
 
-    public void Show(ItemInstance itemInstance, Vector2 screenPosition)
+    public void Show(Data_table data, int quantity)
     {
-        if (itemInstance == null || itemInstance.data == null || root == null)
+        if (data == null)
             return;
 
-        var data = itemInstance.data;
+        Debug.Log($"[ItemTooltipUI] Show: {data.ItemName}, x{quantity}");
 
-        if (titleText != null)
-            titleText.text = data.ItemName;
+        if (root != null && !root.activeSelf)
+            root.SetActive(true);
 
-        if (bodyText != null)
+        // 아이콘
+        if (iconImage != null)
         {
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-
-            sb.AppendLine($"종류 : {data.ItemType}");
-            sb.AppendLine($"등급 : {data.Rarity}");
-
-            if (data.IsConsumable)
+            Sprite iconSprite = null;
+            if (!string.IsNullOrEmpty(data.Icon))
             {
-                if (data.HealAmount > 0)
-                    sb.AppendLine($"사용 시 HP {data.HealAmount} 회복");
-                else
-                    sb.AppendLine("사용 가능한 소모품");
+                iconSprite = Resources.Load<Sprite>($"ItemIcons/{data.Icon}");
+            }
+
+            if (iconSprite != null)
+            {
+                iconImage.sprite = iconSprite;
+                iconImage.enabled = true;
+                iconImage.color = Color.white;
             }
             else
             {
-                sb.AppendLine("소모되지 않는 아이템");
+                iconImage.enabled = false;
             }
-
-            sb.AppendLine($"최대 스택 : {data.MaxStack}");
-
-
-            bodyText.text = sb.ToString();
         }
 
-        UpdatePosition(screenPosition);
-        root.SetActive(true);
+        // 이름
+        if (nameText != null)
+            nameText.text = data.ItemName;
+
+        // 수량
+        if (quantityText != null)
+        {
+            if (quantity > 1)
+            {
+                quantityText.text = $"x{quantity}";
+                quantityText.enabled = true;
+            }
+            else
+            {
+                quantityText.text = "";
+                quantityText.enabled = false;
+            }
+        }
+
+        // (선택) 마우스 근처로 위치 이동
+        RectTransform rt = root.GetComponent<RectTransform>();
+        if (rt != null && rt.parent is RectTransform parentRt)
+        {
+            Vector2 localPos;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                parentRt,
+                Input.mousePosition,
+                null,
+                out localPos
+            );
+            rt.anchoredPosition = localPos + new Vector2(10f, 10f);
+        }
     }
 
     public void Hide()
     {
-        if (root != null)
+        if (root != null && root.activeSelf)
             root.SetActive(false);
-    }
-
-    public void UpdatePosition(Vector2 screenPosition)
-    {
-        if (_rectTransform == null)
-            return;
-
-        Vector2 pos = screenPosition + offset;
-
-        _rectTransform.position = pos;
     }
 }

@@ -5,7 +5,7 @@ using TMPro;
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("Raycast 설정")]
-    [SerializeField] private Camera playerCamera;
+    [SerializeField] public Camera playerCamera;
     [SerializeField] private float interactDistance = 5f;
     [SerializeField] private LayerMask interactLayerMask;
 

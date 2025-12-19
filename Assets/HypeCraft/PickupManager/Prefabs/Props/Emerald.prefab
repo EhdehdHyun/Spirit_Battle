@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 7890522780378623616}
   - component: {fileID: -2620682830427326706}
   - component: {fileID: -6675890615536510927}
-  m_Layer: 0
+  - component: {fileID: -1062142825948592300}
+  m_Layer: 12
   m_Name: Emerald
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -119,3 +120,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canBeCollected: 1
+--- !u!114 &-1062142825948592300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2136707441161788966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342d160145065a14d98a38ba7578d44e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemKey: 2003
+  quantity: 1
