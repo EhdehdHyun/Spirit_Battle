@@ -90,7 +90,6 @@ public class ItemTooltipUI : MonoBehaviour
             }
         }
 
-        // (선택) 마우스 근처로 위치 이동
         RectTransform rt = root.GetComponent<RectTransform>();
         if (rt != null && rt.parent is RectTransform parentRt)
         {

@@ -3,36 +3,43 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
 
+/// <summary>
+/// 인벤토리 한 칸(슬롯)의 UI를 담당하는 스크립트.
+/// - 아이콘 / 수량 표시
+/// - 좌클릭 시 아이템 액션 팝업 표시
+/// </summary>
 public class InventorySlotUI : MonoBehaviour,
     IPointerClickHandler,
     IPointerEnterHandler,
     IPointerExitHandler
 {
     [Header("UI 참조")]
-    [SerializeField] private Image iconImage;
-    [SerializeField] private TextMeshProUGUI quantityText;
+    public Image iconImage;                  // 슬롯 안의 아이템 아이콘
+    public TextMeshProUGUI quantityText;     // 수량 텍스트
 
     [Header("슬롯 인덱스")]
-    [SerializeField] private int slotIndex;
+    public int slotIndex;                    // InventoryManager.slots 에서의 인덱스
 
+    /// <summary>InventoryUIController 같은 곳에서 인덱스 세팅할 때 사용</summary>
     public void SetIndex(int index)
     {
         slotIndex = index;
         Refresh();
     }
 
+    /// <summary>
+    /// 인벤토리 데이터를 읽어서 이 슬롯의 아이콘/수량 UI를 갱신한다.
+    /// </summary>
     public void Refresh()
     {
         var inv = InventoryManager.Instance;
         if (inv == null)
-        {
-            Debug.LogWarning("[InventorySlotUI] InventoryManager.Instance 가 없습니다.");
             return;
-        }
 
         var slot = inv.GetSlot(slotIndex);
         if (slot == null || slot.IsEmpty || slot.item == null || slot.item.data == null)
         {
+            // 비어있는 슬롯
             if (iconImage != null)
             {
                 iconImage.enabled = false;
@@ -44,6 +51,7 @@ public class InventorySlotUI : MonoBehaviour,
                 quantityText.text = "";
                 quantityText.enabled = false;
             }
+
             return;
         }
 
@@ -53,21 +61,23 @@ public class InventorySlotUI : MonoBehaviour,
         // 아이콘
         if (iconImage != null)
         {
-            iconImage.enabled = true;
             Sprite iconSprite = null;
-
             if (!string.IsNullOrEmpty(data.Icon))
+            {
+                // Resources/ItemIcons/아이콘이름.png
                 iconSprite = Resources.Load<Sprite>($"ItemIcons/{data.Icon}");
+            }
 
             if (iconSprite != null)
             {
+                iconImage.enabled = true;
                 iconImage.sprite = iconSprite;
                 iconImage.color = Color.white;
             }
             else
             {
-                Debug.LogWarning($"[InventorySlotUI] 아이콘 스프라이트를 찾지 못했습니다. Icon={data.Icon}, slotIndex={slotIndex}");
                 iconImage.enabled = false;
+                iconImage.sprite = null;
             }
         }
 
@@ -77,18 +87,20 @@ public class InventorySlotUI : MonoBehaviour,
             int q = itemInstance.quantity;
             if (q > 1)
             {
-                quantityText.text = q.ToString();
                 quantityText.enabled = true;
+                quantityText.text = q.ToString();
             }
             else
             {
-                quantityText.text = "";
                 quantityText.enabled = false;
+                quantityText.text = "";
             }
         }
     }
 
-    // ▼ 아이템 버리기 클릭
+    // ─────────────────────────────
+    //  마우스 클릭 → 팝업 표시
+    // ─────────────────────────────
     public void OnPointerClick(PointerEventData eventData)
     {
         var inv = InventoryManager.Instance;
@@ -96,48 +108,21 @@ public class InventorySlotUI : MonoBehaviour,
             return;
 
         var slot = inv.GetSlot(slotIndex);
-        if (slot == null || slot.IsEmpty)
+        if (slot == null || slot.IsEmpty || slot.item == null)
             return;
 
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            Debug.Log($"[InventorySlotUI] 슬롯 {slotIndex} 좌클릭 → DropItemFromSlot 호출");
-            inv.DropItemFromSlot(slotIndex, 1);
+            Debug.Log($"[InventorySlotUI] 슬롯 {slotIndex} 좌클릭 → 팝업 요청");
+            if (ItemActionPopupUI.Instance != null)
+            {
+                ItemActionPopupUI.Instance.Show(slotIndex, slot.item);
+            }
         }
     }
 
-    // ▼ 마우스 올렸을 때 툴팁
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        var inv = InventoryManager.Instance;
-        if (inv == null)
-            return;
+    // 지금은 "마우스 올려둘 때 아무 것도 안 보이게"라서 비워둠
+    public void OnPointerEnter(PointerEventData eventData) { }
 
-        var slot = inv.GetSlot(slotIndex);
-        if (slot == null || slot.IsEmpty || slot.item == null || slot.item.data == null)
-            return;
-
-        var itemInstance = slot.item;
-        var data = itemInstance.data;
-
-        Debug.Log($"[InventorySlotUI] OnPointerEnter slot {slotIndex}, item={data.ItemName}");
-
-        if (ItemTooltipUI.Instance != null)
-        {
-            Debug.Log("[InventorySlotUI] ItemTooltipUI.Instance.Show 호출");
-            ItemTooltipUI.Instance.Show(data, itemInstance.quantity);
-        }
-        else
-        {
-            Debug.LogWarning("[InventorySlotUI] ItemTooltipUI.Instance 가 null 입니다.");
-        }
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        if (ItemTooltipUI.Instance != null)
-        {
-            ItemTooltipUI.Instance.Hide();
-        }
-    }
+    public void OnPointerExit(PointerEventData eventData) { }
 }
