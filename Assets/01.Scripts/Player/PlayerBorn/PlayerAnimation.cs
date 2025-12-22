@@ -10,7 +10,8 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PhysicsCharacter character;
     [SerializeField] private PlayerCombat combat;   
-    [SerializeField] private GameObject weaponHitbox; 
+    [SerializeField] private GameObject weaponHitbox;
+    [SerializeField] private PlayerVFXController vfx;
 
     [Header("무기")]
     [SerializeField] private ParentConstraint weaponParent; 
@@ -46,6 +47,7 @@ public class PlayerAnimation : MonoBehaviour
         if (rb == null) rb = GetComponent<Rigidbody>();
         if (character == null) character = GetComponent<PhysicsCharacter>();
         if (combat == null) combat = GetComponent<PlayerCombat>();
+        if (vfx == null) vfx = GetComponent<PlayerVFXController>();
     }
 
     private void Update()
@@ -200,6 +202,11 @@ public class PlayerAnimation : MonoBehaviour
             yield return null; // 다음 프레임
         }
         swordVisual.localRotation = target;
+    }
+
+    public void EvSlash(int comboIndex)
+    {
+        vfx?.PlaySlash(comboIndex);
     }
 }
 
