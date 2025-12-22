@@ -13,6 +13,13 @@ public class DialogueManager : MonoBehaviour
 
     [Header("Data")]
     [SerializeField] private DataManager dataManager;
+    
+    [SerializeField] private DialogueCameraController dialogueCamera;
+    
+    [Header("Lock Targets")]
+    [SerializeField] private MonoBehaviour playerMovement;
+    [SerializeField] private NPCFaceController npcFaceController;
+    [SerializeField] private Transform playerTransform;
 
     private string currentDialogueID;
     private Action onDialogueEnd;
@@ -37,7 +44,7 @@ public class DialogueManager : MonoBehaviour
             dialogueCanvas.SetActive(false);
     }
 
-    public void StartDialogue(string startID, Action onEnd = null)
+    public void StartDialogue(string startID, Action onEnd, Transform npcTransform)
     {
         Debug.Log($"[DialogueManager] StartDialogue : {startID}");
         
@@ -45,8 +52,18 @@ public class DialogueManager : MonoBehaviour
 
         currentDialogueID = startID;
         onDialogueEnd = onEnd;
+        
+        // 🔒 입력 잠금
+        if (playerMovement != null)
+            playerMovement.enabled = false;
 
         dialogueCanvas.SetActive(true);
+        
+        dialogueCamera.StartDialogueCamera(npcTransform);
+        
+        npcFaceController = npcTransform.GetComponent<NPCFaceController>();
+        if (npcFaceController != null)
+            npcFaceController.LookAtTarget(playerTransform);
 
         ShowCurrent();
     }
@@ -83,13 +100,20 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
-        Debug.Log("[DialogueManager] EndDialogue");
-
         IsDialogueActive = false;
 
         dialogueText.text = "";
         dialogueText.gameObject.SetActive(false);
         dialogueCanvas.SetActive(false);
+        
+        if (playerMovement != null)
+            playerMovement.enabled = true;
+        
+        if (dialogueCamera != null)
+            dialogueCamera.EndDialogueCamera();
+        
+        if (npcFaceController != null)
+            npcFaceController.StopLook();        
 
         onDialogueEnd?.Invoke();
         onDialogueEnd = null;
