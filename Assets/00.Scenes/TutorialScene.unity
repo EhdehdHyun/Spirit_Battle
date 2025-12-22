@@ -30724,14 +30724,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 089e26efdf31871489953ee9c2e61ed1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 0}
+  cam: {fileID: 1423360866}
   anime: {fileID: 680367624}
   playerInput: {fileID: 0}
   combat: {fileID: 0}
   stat: {fileID: 0}
   faceTurnSpeed: 15
   isLocked: 0
-  dashLocked: 0
+  dashLocked: 1
 --- !u!114 &680367626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39356,7 +39356,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: -0.00018260824, y: 0.00014820445, z: 0}
-  m_RotationOffset: {x: -0.0040069795, y: 0.0046910625, z: -13.442997}
+  m_RotationOffset: {x: -0.0039958055, y: 0.0046983426, z: -13.442988}
   m_AffectRotationX: 0
   m_AffectRotationY: 1
   m_AffectRotationZ: 0
