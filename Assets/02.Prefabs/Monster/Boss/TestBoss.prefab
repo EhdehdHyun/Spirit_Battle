@@ -10143,6 +10143,10 @@ MonoBehaviour:
   moveSpeedParm: MoveSpeed
   isRunningParm: IsRunning
   dieTriggerParm: Die
+  hitTriggerParm: Hit
+  layerIndex: 0
+  attackTag: Attack
+  hitTag: Hit
 --- !u!114 &2669310880747356631
 MonoBehaviour:
   m_ObjectHideFlags: 0
