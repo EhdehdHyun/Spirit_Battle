@@ -76,6 +76,7 @@ public class PlayerVFXController : MonoBehaviour
     {
         if (!slashSocket) return;
         if (slashes == null || slashes.Count == 0) return;
+        Debug.Log($"PlaySlash called: comboIndex={comboIndex}");
 
         int idx = Mathf.Clamp(comboIndex - 1, 0, slashes.Count - 1);
         var cfg = slashes[idx];
