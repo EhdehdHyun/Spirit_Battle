@@ -25,7 +25,7 @@ public class EyeBlinkController : MonoBehaviour
     {
         // 첫 눈 깜빡임 
         SetAlpha(1f);
-        dialogueText.text = "Fuck... What happened?";
+        dialogueText.text = "으으.. 무슨일이 있던거지?";
         yield return new WaitForSeconds(3f);
 
         yield return Blink();
@@ -34,14 +34,14 @@ public class EyeBlinkController : MonoBehaviour
         //왼쪽 회전 + 눈 감기 
         yield return RotateCamera(cameraTransform.rotation, leftRotation, 1f);
 
-        dialogueText.text = "I remember to...…";
+        dialogueText.text = "...";
         yield return Fade(0f, 1f, 0.5f);
         yield return new WaitForSeconds(1f);
 
         //오른쪽 회전 + 눈 뜸 
         yield return RotateCamera(leftRotation, rightRotation, 1.5f);
 
-        dialogueText.text = "what's that?";
+        dialogueText.text = "배를 탔던 기억은 있었는데.. 저건 뭐지..?";
         yield return Fade(1f, 0f, 1.5f);
 
         yield return new WaitForSeconds(2f);
