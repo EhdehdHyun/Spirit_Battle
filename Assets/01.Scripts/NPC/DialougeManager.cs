@@ -53,7 +53,7 @@ public class DialogueManager : MonoBehaviour
         currentDialogueID = startID;
         onDialogueEnd = onEnd;
         
-        // 🔒 입력 잠금
+        // 입력 잠금
         if (playerMovement != null)
             playerMovement.enabled = false;
 
@@ -100,6 +100,7 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
+        Debug.Log("EndDialogue CALLED");
         IsDialogueActive = false;
 
         dialogueText.text = "";
@@ -118,7 +119,7 @@ public class DialogueManager : MonoBehaviour
         onDialogueEnd?.Invoke();
         onDialogueEnd = null;
         
-       // if (TutorialManager.Instance != null)
-           // TutorialManager.Instance.StartTutorial();
+        if (TutorialManager.Instance != null)
+            TutorialManager.Instance.StartTutorialDelayed();
     }
 }
