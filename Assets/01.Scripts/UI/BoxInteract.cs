@@ -3,6 +3,8 @@ using UnityEngine;
 public class BoxInteract : MonoBehaviour
 {
     public bool canInteract = false;
+    [Header("Tutorial")]
+    [SerializeField] private GameObject guideText;
 
     private void Update()
     {
@@ -18,5 +20,7 @@ public class BoxInteract : MonoBehaviour
     {
         Debug.Log("상자 상호작용!");
         // 상자 열기 / 아이템 지급 등
+        if (guideText != null)
+            guideText.SetActive(false);
     }
 }
