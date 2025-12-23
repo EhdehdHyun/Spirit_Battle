@@ -36070,6 +36070,8 @@ MonoBehaviour:
   playerInput: {fileID: 0}
   combat: {fileID: 0}
   stat: {fileID: 0}
+  parry: {fileID: 0}
+  Stat: {fileID: 0}
   faceTurnSpeed: 15
   isLocked: 0
   dashLocked: 0
@@ -36086,7 +36088,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runSpeed: 8
-  walkSpeed: 4
+  walkSpeed: 5.5
   acceleration: 40
   deceleration: 30
   jumpPower: 10
@@ -36370,7 +36372,7 @@ MonoBehaviour:
   - prefab: {fileID: 2022577389}
     lifeTime: 0.35
     localPos: {x: 0, y: 0, z: 0}
-    localEuler: {x: 0, y: 0, z: 0}
+    localEuler: {x: 90, y: 0, z: 0}
     prewarm: 0
 --- !u!1001 &680747224
 PrefabInstance:

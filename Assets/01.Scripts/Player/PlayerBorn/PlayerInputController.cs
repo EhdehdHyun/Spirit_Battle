@@ -11,7 +11,9 @@ public class PlayerInputController : MonoBehaviour
     public PlayerInput playerInput;
     public PlayerCombat combat;
     public PlayerStat stat;
-    private PlayerParry parry;
+    public PlayerParry parry;
+    public PlayerStat Stat;
+
 
     public float faceTurnSpeed = 18f;
 

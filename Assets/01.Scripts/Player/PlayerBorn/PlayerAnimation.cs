@@ -34,6 +34,7 @@ public class PlayerAnimation : MonoBehaviour
     private static readonly int DashHash = Animator.StringToHash("Dash");
     private static readonly int ParryHash = Animator.StringToHash("Parry");
     private static readonly int DeadHash = Animator.StringToHash("Dead");
+    private static readonly int skill1Hash = Animator.StringToHash("Skill1");
     private static readonly int GroundedHash = Animator.StringToHash("Grounded");
 
     private static readonly int WeaponEquippedHash = Animator.StringToHash("WeaponEquipped");
@@ -102,6 +103,11 @@ public class PlayerAnimation : MonoBehaviour
     public void PlayDie()
     {
         anim.SetTrigger(DeadHash);
+    }
+
+    public void PlaySkill1()
+    {
+        anim.SetTrigger(skill1Hash);
     }
 
     public void SetIsAttacking(bool value)
