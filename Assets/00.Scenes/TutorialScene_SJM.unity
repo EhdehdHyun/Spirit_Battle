@@ -35718,6 +35718,7 @@ MonoBehaviour:
   physicsCharacter: {fileID: 680367626}
   playerInput: {fileID: 0}
   weaponHitBox: {fileID: 0}
+  inventoryManager: {fileID: 0}
   maxCombo: 3
   baseDamage: 10
   comboDamages:
@@ -35751,6 +35752,7 @@ MonoBehaviour:
   character: {fileID: 0}
   combat: {fileID: 0}
   weaponHitbox: {fileID: 50551004}
+  vfx: {fileID: 0}
   weaponParent: {fileID: 787444772}
   handSourceIndex: 0
   sideSourceIndex: 1
@@ -40399,6 +40401,34 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1015670345743952189, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1015670345743952189, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1015670345743952189, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1015905158}
+    - target: {fileID: 1015670345743952189, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1015670345743952189, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowWeaponTab
+      objectReference: {fileID: 0}
+    - target: {fileID: 1015670345743952189, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: InventoryTabController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1015670345743952189, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 3065529689730384199, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
       propertyPath: statusCanvas
       value: 
@@ -40411,6 +40441,10 @@ PrefabInstance:
       propertyPath: weaponTabButtonImage
       value: 
       objectReference: {fileID: 325108211}
+    - target: {fileID: 4091154378368462496, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4808145063019815163, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -40433,7 +40467,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5162218956942875922, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5295173511351010514, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5295173511351010514, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5295173511351010514, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1015905158}
+    - target: {fileID: 5295173511351010514, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5295173511351010514, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ShowItemTab
+      objectReference: {fileID: 0}
+    - target: {fileID: 5295173511351010514, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: InventoryTabController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5295173511351010514, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8661319493802746052, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
       propertyPath: m_Sprite
@@ -54596,6 +54658,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7116866406003026940, guid: a2c96d6e747624a4d97b85e1f00aea1d, type: 3}
   m_PrefabInstance: {fileID: 1013616002}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1015905158 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3065529689730384199, guid: f540e4a62654d43ddbcbb7de03f1e5bf, type: 3}
+  m_PrefabInstance: {fileID: 768486681}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 586ed7892e2764682981d616a4eba18b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1016444729
 GameObject:
   m_ObjectHideFlags: 0
