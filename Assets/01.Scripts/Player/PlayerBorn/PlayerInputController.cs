@@ -11,7 +11,10 @@ public class PlayerInputController : MonoBehaviour
     public PlayerInput playerInput;
     public PlayerCombat combat;
     public PlayerStat stat;
-    private PlayerParry parry;
+    public PlayerParry parry;
+    public PlayerStat Stat;
+    public PlayerAbility ability;
+
 
     public float faceTurnSpeed = 18f;
 
@@ -37,6 +40,7 @@ public class PlayerInputController : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         stat = GetComponent<PlayerStat>();
         parry = GetComponent<PlayerParry>();
+        ability = GetComponent<PlayerAbility>();
 
         moveAction = playerInput.actions["Move"];
         lookAction = playerInput.actions["Look"];
@@ -122,8 +126,11 @@ public class PlayerInputController : MonoBehaviour
     {
         if (!ctx.performed) return;
         if (isLocked) return;
-        if (!character.IsGrounded) return;
         if(IsParrying()) return;
+
+        bool airDashAllowed = (ability != null && ability.Has(AbilityId.AirDash));
+
+        if (!character.IsGrounded && !airDashAllowed) return;
 
         // 0이면 아예 대쉬 시작 못하게 막기
         if (stat == null || stat.curDashCount <= 0)
@@ -138,7 +145,7 @@ public class PlayerInputController : MonoBehaviour
 
         combat?.CancelAttackForDash();
 
-        bool dashStarted = (combat != null) && combat.TryDash(dir);
+        bool dashStarted = (combat != null) && combat.TryDash(dir, airDashAllowed);
         if (!dashStarted) return;
 
         // 여기까지 왔으면 무조건 1개 소비
@@ -205,6 +212,15 @@ public class PlayerInputController : MonoBehaviour
     private bool IsParrying()
     {
         return parry != null && parry.isParryStance;
+    }
+
+    public void OnSkill1(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+        if (isLocked) return;
+        if (IsParrying()) return;
+
+        combat?.OnSkill1Input();
     }
 
 }
