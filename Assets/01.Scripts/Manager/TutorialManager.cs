@@ -20,6 +20,7 @@ public class TutorialManager : MonoBehaviour
 
     private void Awake()
     {
+        Debug.Log("🟢 TutorialManager Awake");
        if (Instance == null)
            Instance = this;
         else

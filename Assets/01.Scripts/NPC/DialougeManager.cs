@@ -100,6 +100,7 @@ public class DialogueManager : MonoBehaviour
 
     private void EndDialogue()
     {
+        Debug.Log("🟥 EndDialogue CALLED");
         IsDialogueActive = false;
 
         dialogueText.text = "";
@@ -118,7 +119,7 @@ public class DialogueManager : MonoBehaviour
         onDialogueEnd?.Invoke();
         onDialogueEnd = null;
         
-       // if (TutorialManager.Instance != null)
-           // TutorialManager.Instance.StartTutorial();
+        if (TutorialManager.Instance != null)
+            TutorialManager.Instance.StartTutorial();
     }
 }

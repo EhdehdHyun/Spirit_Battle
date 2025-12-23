@@ -1950,7 +1950,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6731987838672667042, guid: 52e5988eb53982e4787d3ed34907e489, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -20.95
+      value: -21.54
       objectReference: {fileID: 0}
     - target: {fileID: 6731987838672667042, guid: 52e5988eb53982e4787d3ed34907e489, type: 3}
       propertyPath: m_LocalPosition.z
@@ -9737,7 +9737,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7649978159454475192, guid: 7c54db72bbfd31f4e90f9f271dc124a5, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -20.85
+      value: -21.36
       objectReference: {fileID: 0}
     - target: {fileID: 7649978159454475192, guid: 7c54db72bbfd31f4e90f9f271dc124a5, type: 3}
       propertyPath: m_LocalPosition.z
@@ -23248,13 +23248,14 @@ GameObject:
   - component: {fileID: 506575306}
   - component: {fileID: 506575305}
   - component: {fileID: 506575304}
+  - component: {fileID: 506575308}
   m_Layer: 5
   m_Name: TutorialCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &506575304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23338,6 +23339,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &506575308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 506575303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1c187f2a954a4b238e00dc35c234cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tutorialUI: {fileID: 765968700}
+  tutorialText: {fileID: 841015077}
 --- !u!1 &508978234
 GameObject:
   m_ObjectHideFlags: 0
@@ -34086,7 +34101,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &765968701
 RectTransform:
   m_ObjectHideFlags: 0
@@ -34102,10 +34117,10 @@ RectTransform:
   - {fileID: 841015076}
   m_Father: {fileID: 506575307}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 1280, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &765968702
 MonoBehaviour:
@@ -35010,6 +35025,7 @@ MonoBehaviour:
   character: {fileID: 0}
   combat: {fileID: 0}
   weaponHitbox: {fileID: 541924670}
+  vfx: {fileID: 0}
   weaponParent: {fileID: 0}
   handSourceIndex: 0
   sideSourceIndex: 1
@@ -37777,7 +37793,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 500, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &841015077
 MonoBehaviour:
@@ -37808,8 +37824,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -37832,7 +37848,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -76538,7 +76554,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3225348180716397811, guid: aee821ce97ce54a409d60916304c8311, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -20.32
+      value: -21.32
       objectReference: {fileID: 0}
     - target: {fileID: 3225348180716397811, guid: aee821ce97ce54a409d60916304c8311, type: 3}
       propertyPath: m_LocalPosition.z
