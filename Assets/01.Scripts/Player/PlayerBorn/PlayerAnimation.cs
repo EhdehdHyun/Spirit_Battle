@@ -215,6 +215,16 @@ public class PlayerAnimation : MonoBehaviour
         comboIndex = anim.GetInteger(ComboIndexHash);
         vfx?.PlaySlash(comboIndex);
     }
+
+    public void EvSkill1_Fire()
+    {
+        combat?.OnSkill1FireFromAnim();
+    }
+
+    public void EvSkill1_End()
+    {
+        combat?.OnSkill1EndFromAnim();
+    }
 }
 
 

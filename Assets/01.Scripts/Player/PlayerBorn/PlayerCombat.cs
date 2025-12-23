@@ -36,6 +36,15 @@ public class PlayerCombat : MonoBehaviour
     [Header("대쉬 무적 시간")]
     [SerializeField] private float dashInvincibleExtra = 0.05f;
 
+    [Header("Skill1 (GroundSlash)")]
+    [SerializeField] private GroundSlash groundSlashPrefab;
+    [SerializeField] private Transform groundSlashSpawn; // 없으면 null 가능
+    [SerializeField] private float skill1Cooldown = 10f;
+    [SerializeField] private float skill1DamageMultiplier = 1.5f;
+
+
+    private float _nextSkill1Time = 0f;
+
     private PlayerParry parry;
 
     int currentCombo = 0;
@@ -56,12 +65,12 @@ public class PlayerCombat : MonoBehaviour
         parry = GetComponent<PlayerParry>();
     }
 
-    public bool TryDash(Vector3 dir)
+    public bool TryDash(Vector3 dir, bool allowAirDash)
     {
         if (isAttacking)
             CancelAttackCommon();
 
-        bool started = physicsCharacter.TryDash(dir);
+        bool started = physicsCharacter.TryDash(dir, allowAirDash);
         if (!started) return false;
 
         var character = GetComponent<CharacterBase>();
@@ -196,6 +205,27 @@ public class PlayerCombat : MonoBehaviour
         CancelAttackCommon();
     }
 
+    public void OnSkill1Input()
+    {
+        var ability = GetComponent<PlayerAbility>();
+        if (ability == null || !ability.Has(AbilityId.Skill1)) return;
+
+        if (playerInput != null && playerInput.isLocked) return;
+        if (IsDashing) return;
+        if (IsAttacking) return;
+        if (parry != null && parry.isParryStance) return;
+
+        if (!weaponEquipped) return;
+
+        if (Time.time < _nextSkill1Time) return;
+        _nextSkill1Time = Time.time + skill1Cooldown;
+
+        physicsCharacter?.SetMovementLocked(true);
+        ClearAttackBuffer(); 
+
+        playerAnim?.PlaySkill1(); // Skill1 트리거:contentReference[oaicite:5]{index=5}
+    }
+
     //======== 애니메이션 이벤트 ========
     public void OnAttackAnimationEndFromAnim()
     {
@@ -259,6 +289,28 @@ public class PlayerCombat : MonoBehaviour
     public void EvParryEnd()
     {
         parry?.ExitStance();
+        physicsCharacter?.SetMovementLocked(false);
+    }
+
+    public void OnSkill1FireFromAnim()
+    {
+        if (!groundSlashPrefab) return;
+
+        Vector3 d = transform.forward;
+        d.y = 0f;
+        if (d.sqrMagnitude > 0.0001f) d.Normalize();
+
+        Vector3 pos = groundSlashSpawn ? groundSlashSpawn.position : (transform.position + d * 0.8f);
+        Quaternion rot = Quaternion.LookRotation(d, Vector3.up);
+
+        var slash = Instantiate(groundSlashPrefab, pos, rot);
+
+        float dmg = baseDamage * skill1DamageMultiplier; // baseDamage * 1.5
+        slash.Fire(transform, d, dmg);
+    }
+
+    public void OnSkill1EndFromAnim()
+    {
         physicsCharacter?.SetMovementLocked(false);
     }
 }
