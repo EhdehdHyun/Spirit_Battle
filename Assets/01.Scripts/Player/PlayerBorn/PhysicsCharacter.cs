@@ -97,6 +97,7 @@ public class PhysicsCharacter : MonoBehaviour
     float _dashTimer;
     float _dashCooldownTimer;
     Vector3 _dashDirection;
+    bool _airDashUsed;
 
     // 점프 입력 버퍼
     bool _jumpRequested;
@@ -173,13 +174,20 @@ public class PhysicsCharacter : MonoBehaviour
     /// 대쉬 요청
     /// direction은 보통 캐릭터 forward 또는 입력 방향
     /// </summary>
-    public bool TryDash(Vector3 direction)
+    public bool TryDash(Vector3 direction, bool allowAirDash)
     {
         if (_isDashing)
             return false;
 
-        if (!IsGrounded)
+        if (!IsGrounded && !allowAirDash)
             return false;
+
+        if (!IsGrounded)
+        {
+            if (!allowAirDash) return false;
+            if (_airDashUsed) return false;
+            _airDashUsed = true;
+        }
 
         if (_dashCooldownTimer > 0f)
             return false;
@@ -252,6 +260,8 @@ public class PhysicsCharacter : MonoBehaviour
                 IsFalling = true;
             }
         }
+        if (_isGrounded)
+            _airDashUsed = true;
     }
 
     void UpdateDashTimers(float dt)
