@@ -189,7 +189,7 @@
       "ItemName": "낡은 검",
       "ItemType": 1,
       "Rarity": 0,
-      "HealAmount": 0,
+      "HealAmount": 0,  
       "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "Old_IronSword_icon",

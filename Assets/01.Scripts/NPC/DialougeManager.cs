@@ -118,7 +118,7 @@ public class DialogueManager : MonoBehaviour
         onDialogueEnd?.Invoke();
         onDialogueEnd = null;
         
-        //if (TutorialManager.Instance != null)
-            //TutorialManager.Instance.StartTutorial();
+       // if (TutorialManager.Instance != null)
+           // TutorialManager.Instance.StartTutorial();
     }
 }

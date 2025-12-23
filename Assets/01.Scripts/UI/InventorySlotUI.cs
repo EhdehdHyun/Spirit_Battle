@@ -19,7 +19,7 @@ public class InventorySlotUI : MonoBehaviour,
 
     [Header("슬롯 인덱스")]
     public int slotIndex;                    // InventoryManager.slots 에서의 인덱스
-
+    public int SlotIndex => slotIndex;
     /// <summary>InventoryUIController 같은 곳에서 인덱스 세팅할 때 사용</summary>
     public void SetIndex(int index)
     {
