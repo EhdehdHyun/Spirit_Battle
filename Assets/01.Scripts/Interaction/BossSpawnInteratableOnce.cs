@@ -12,6 +12,12 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
     [Header("등장 연출 시간")]
     [SerializeField] private float spawnDelay = 0f;
+    [Header("플레이어 텔레포트")]
+    [SerializeField] private bool teleportPlayerOnUse = true;
+    [SerializeField] private Transform teleportTarget;
+
+    [Tooltip("텔레포트 후 플레이어 회전도 맞출지")]
+    [SerializeField] private bool matchRotation = true;
 
     [Header("옵션")]
     [SerializeField] private bool linkBossUIOnSpawn = true;
@@ -45,6 +51,9 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         if (disableColliderOnUse && col != null)
             col.enabled = false;
 
+        if (teleportPlayerOnUse && player != null && teleportTarget != null)
+            TeleportPlayer(player.transform, teleportTarget.position, teleportTarget.rotation);
+
         co = StartCoroutine(SpawnRoutine());
     }
 
@@ -65,5 +74,35 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
             BossUIStatus.Instance.SetBoss(boss);
 
         co = null;
+    }
+
+    private void TeleportPlayer(Transform playerTf, Vector3 pos, Quaternion rot)
+    {
+        // 1) CharacterController 쓰는 경우: disable 했다가 위치 변경 후 enable
+        var cc = playerTf.GetComponent<CharacterController>();
+        if (cc != null)
+        {
+            cc.enabled = false;
+            playerTf.position = pos;
+            if (matchRotation) playerTf.rotation = rot;
+            cc.enabled = true;
+            return;
+        }
+
+        // 2) Rigidbody 쓰는 경우: MovePosition/velocity 초기화
+        var rb = playerTf.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            rb.position = pos;
+            if (matchRotation) rb.rotation = rot;
+            return;
+        }
+
+        // 3) 그 외: 그냥 Transform 이동
+        playerTf.position = pos;
+        if (matchRotation) playerTf.rotation = rot;
     }
 }
