@@ -3,50 +3,55 @@ using UnityEngine.UI;
 
 public class InventoryTabController : MonoBehaviour
 {
-    [Header("인벤토리 오픈시 상태창 x")]
-    [SerializeField] private GameObject statusCanvas; //항상 켜져 있던 Canvas
-    
-    [Header("탭 버튼 (아이콘)")]
-    [SerializeField] private Button weaponTabButton; // 검 아이콘 버튼
-    [SerializeField] private Button itemTabButton;   // 빨간 아이콘 버튼
+    [Header("탭 패널들")]
+    [SerializeField] private GameObject weaponPanel; // 장비 인벤토리 패널
+    [SerializeField] private GameObject itemPanel;   // 재료/소비 인벤토리 패널
 
-    [Header("패널")]
-    [SerializeField] private GameObject weaponPanel; 
-    [SerializeField] private GameObject itemPanel;
+    [Header("탭 버튼 (선택 색 변경용, 옵션)")]
+    [SerializeField] private Image weaponTabButtonImage; // Icon_1 의 Image
+    [SerializeField] private Image itemTabButtonImage;   // Icon_2 의 Image
+    [SerializeField] private Color selectedColor = Color.white;
+    [SerializeField] private Color normalColor = Color.gray;
 
-    private void Start()
+    private void Awake()
     {
-        // 버튼 클릭 이벤트 연결
-        weaponTabButton.onClick.AddListener(ShowWeaponPanel);
-        itemTabButton.onClick.AddListener(ShowItemPanel);
-
-        // 처음엔 무기 패널만 보이게
-        ShowWeaponPanel();
-    }
-    
-    
-
-    private void ShowWeaponPanel()
-    {
-        weaponPanel.SetActive(true);
-        itemPanel.SetActive(false);
+        // 시작할 때 장비 탭이 기본으로 열리게
+        ShowWeaponTab();
     }
 
-    private void ShowItemPanel()
+    public void ShowWeaponTab()
     {
-        weaponPanel.SetActive(false);
-        itemPanel.SetActive(true);
+        Debug.Log("[InventoryTabController] ShowWeaponTab");
+
+        SetActiveSafe(weaponPanel, true);
+        SetActiveSafe(itemPanel, false);
+
+        UpdateTabColors(isWeaponTab: true);
     }
-    
-    public void OpenInventory()
+
+    public void ShowItemTab()
     {
-        this.gameObject.SetActive(true);   // PageCanvas 켜기
-        statusCanvas.SetActive(false);     // 상태창 끄기
+        Debug.Log("[InventoryTabController] ShowItemTab");
+
+        SetActiveSafe(weaponPanel, false);
+        SetActiveSafe(itemPanel, true);
+
+        UpdateTabColors(isWeaponTab: false);
     }
-    public void CloseInventory()
+
+    private void SetActiveSafe(GameObject go, bool active)
     {
-        this.gameObject.SetActive(false);
-        // PageCanvas 비활성화
-        transform.parent.parent.gameObject.SetActive(false);
+        if (go == null) return;
+        if (go.activeSelf == active) return;
+        go.SetActive(active);
+    }
+
+    private void UpdateTabColors(bool isWeaponTab)
+    {
+        if (weaponTabButtonImage != null)
+            weaponTabButtonImage.color = isWeaponTab ? selectedColor : normalColor;
+
+        if (itemTabButtonImage != null)
+            itemTabButtonImage.color = isWeaponTab ? normalColor : selectedColor;
     }
 }

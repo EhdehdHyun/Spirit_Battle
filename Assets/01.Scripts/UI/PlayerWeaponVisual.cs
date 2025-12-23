@@ -1,89 +1,54 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-[Serializable]
-public class WeaponVisualEntry
-{
-    [Tooltip("ÀÌ ¹«±â¿Í ¿¬°áµÉ ¾ÆÀÌÅÛ Å° (Data_table.key)")]
-    public int itemKey;          // ¿¹: 3000, 3001 ...
-
-    [Tooltip("ÇÃ·¹ÀÌ¾î ¼Õ¿¡ ºÙ¾îÀÖ´Â ¹«±â ¿ÀºêÁ§Æ® (Sword_001 °°Àº °Í)")]
-    public GameObject weaponObj; // ¿¹: Player/root/Hips/.../Weapon_Target_H/Sword_001
-}
+ï»¿using UnityEngine;
 
 public class PlayerWeaponVisual : MonoBehaviour
 {
-    [Header("ÀÎº¥Åä¸® ¸Å´ÏÀú (ºóÄ­ÀÌ¸é ÀÚµ¿À¸·Î Instance »ç¿ë)")]
-    public InventoryManager inventoryManager;
+    [Header("ì°¸ì¡°")]
+    [SerializeField] private InventoryManager inventoryManager;
+    [SerializeField] private GameObject swordObject;
 
-    [Header("¾ÆÀÌÅÛ Å° ¡ê ¹«±â ¿ÀºêÁ§Æ® ¸ÅÇÎ")]
-    public List<WeaponVisualEntry> weaponVisuals = new List<WeaponVisualEntry>();
+    [Header("ì¥ë¹„ ìŠ¬ë¡¯ ì¸ë±ìŠ¤ (InventoryManager ê¸°ì¤€)")]
+    [SerializeField] private int weaponSlotIndex = 0;   // ë¬´ê¸° ì¥ë¹„ì¹¸ = 0ë²ˆ
 
     private void Awake()
     {
-        if (inventoryManager == null)
-            inventoryManager = InventoryManager.Instance;
+        // ì‹œì‘í•  ë•ŒëŠ” í•­ìƒ ë¬´ê¸° ë¹„í™œì„±í™”
+        if (swordObject != null)
+            swordObject.SetActive(false);
     }
 
     private void OnEnable()
     {
-        if (inventoryManager != null)
-        {
-            inventoryManager.OnEquipmentChanged += Refresh;
-        }
+        if (inventoryManager == null)
+            inventoryManager = InventoryManager.Instance;
 
-        // Ã³À½ Ä×À» ¶§µµ ÇöÀç ÀåÂø »óÅÂ¿¡ ¸ÂÃç¼­ ÇÑ ¹ø µ¿±âÈ­
-        Refresh();
+        if (inventoryManager != null)
+            inventoryManager.OnInventoryChanged += RefreshWeaponVisual;
+
+        RefreshWeaponVisual();
     }
 
     private void OnDisable()
     {
         if (inventoryManager != null)
-        {
-            inventoryManager.OnEquipmentChanged -= Refresh;
-        }
+            inventoryManager.OnInventoryChanged -= RefreshWeaponVisual;
     }
 
-    /// <summary>
-    /// ÇöÀç EquippedWeapon µ¥ÀÌÅÍ¸¦ º¸°í
-    /// ÇØ´çÇÏ´Â ¹«±â ¿ÀºêÁ§Æ®¸¸ È°¼ºÈ­, ³ª¸ÓÁö´Â ºñÈ°¼ºÈ­
-    /// </summary>
-    public void Refresh()
+    public void RefreshWeaponVisual()
     {
-        // 1) ÀÏ´Ü ¸ğµç ¹«±â ¿ÀºêÁ§Æ® ²ô±â (¸Ç¼Õ »óÅÂ)
-        foreach (var entry in weaponVisuals)
-        {
-            if (entry != null && entry.weaponObj != null)
-            {
-                entry.weaponObj.SetActive(false);
-            }
-        }
-
-        if (inventoryManager == null ||
-            inventoryManager.EquippedWeapon == null ||
-            inventoryManager.EquippedWeapon.data == null)
-        {
-            // Àåºñ°¡ ¾øÀ¸¸é ±×³É ¸Ç¼Õ À¯Áö
+        if (inventoryManager == null || swordObject == null)
             return;
-        }
 
-        int equippedKey = inventoryManager.EquippedWeapon.data.key;
+        var slot = inventoryManager.GetSlot(weaponSlotIndex);
 
-        // 2) ÀåÂøµÈ ¾ÆÀÌÅÛ key¿Í °°Àº ¹«±â ¿ÀºêÁ§Æ® Ã£¾Æ¼­ ÄÑ±â
-        foreach (var entry in weaponVisuals)
-        {
-            if (entry == null || entry.weaponObj == null)
-                continue;
+        bool hasWeapon =
+            slot != null &&
+            !slot.IsEmpty &&
+            slot.item != null &&
+            slot.item.data != null &&
+            inventoryManager.IsEquipItem(slot.item.data);
 
-            if (entry.itemKey == equippedKey)
-            {
-                entry.weaponObj.SetActive(true);
-                Debug.Log($"[PlayerWeaponVisual] key={equippedKey} ¹«±â ¿ÀºêÁ§Æ® È°¼ºÈ­: {entry.weaponObj.name}");
-                return;
-            }
-        }
+        Debug.Log($"[PlayerWeaponVisual] RefreshWeaponVisual: idx={weaponSlotIndex}, hasWeapon={hasWeapon}");
 
-        Debug.Log($"[PlayerWeaponVisual] key={equippedKey} ¿¡ ÇØ´çÇÏ´Â ¹«±â ¿ÀºêÁ§Æ® ¸ÅÇÎÀÌ ¾ø½À´Ï´Ù.");
+        swordObject.SetActive(hasWeapon);
     }
 }

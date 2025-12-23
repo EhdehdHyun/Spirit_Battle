@@ -206,6 +206,7 @@ public class PlayerAnimation : MonoBehaviour
 
     public void EvSlash(int comboIndex)
     {
+        comboIndex = anim.GetInteger(ComboIndexHash);
         vfx?.PlaySlash(comboIndex);
     }
 }
