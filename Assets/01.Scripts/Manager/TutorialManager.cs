@@ -61,7 +61,7 @@ public class TutorialManager : MonoBehaviour
                 break;
 
             case TutorialStep.OpenMap:
-                tutorialText.text = "M 키를 눌러 지도를 열어보세요";
+                tutorialText.text = "M 키를 눌러 지도를 열 수 있습니다";
                 break;
 
             case TutorialStep.End:
