@@ -101,4 +101,47 @@ public class DialogueCameraController : MonoBehaviour
         if (thirdPersonCamera != null)
             thirdPersonCamera.enabled = true;
     }
+    public void FocusOnce(Transform target, float focusTime = 1.2f)
+    {
+        if (camRoutine != null)
+            StopCoroutine(camRoutine);
+
+        camRoutine = StartCoroutine(FocusOnceRoutine(target, focusTime));
+    }
+    IEnumerator FocusOnceRoutine(Transform target, float holdTime)
+    {
+        // 3인칭 카메라 잠금
+        if (thirdPersonCamera != null)
+            thirdPersonCamera.enabled = false;
+
+        originalRotation = mainCamera.transform.rotation;
+        originalFOV = mainCamera.fieldOfView;
+
+        // ▶ 포커스
+        float t = 0f;
+        while (t < 1f)
+        {
+            t += Time.deltaTime * lookSpeed;
+
+            Vector3 targetPos = target.position;
+            targetPos.y = mainCamera.transform.position.y;
+
+            Vector3 dir = (targetPos - mainCamera.transform.position).normalized;
+            Quaternion lookRot = Quaternion.LookRotation(dir);
+
+            mainCamera.transform.rotation =
+                Quaternion.Slerp(mainCamera.transform.rotation, lookRot, Time.deltaTime * lookSpeed);
+
+            mainCamera.fieldOfView =
+                Mathf.Lerp(mainCamera.fieldOfView, zoomInFOV, Time.deltaTime * zoomSpeed);
+
+            yield return null;
+        }
+
+        // ▶ 잠깐 유지
+        yield return new WaitForSeconds(holdTime);
+
+        // ▶ 원래 시점으로 복귀
+        yield return StartCoroutine(ResetCamRoutine());
+    }
 }
