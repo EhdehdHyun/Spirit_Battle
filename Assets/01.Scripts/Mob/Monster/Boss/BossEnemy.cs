@@ -46,8 +46,7 @@ public class BossEnemy : EnemyBase
     public float breakGroggyDuration = 5f;
 
     [Tooltip("그로기 중 추가 피해 비율 (0.2 = 20% 더 받음)")]
-    [Range(0f, 5f)]
-    public float groggyExtraDamageRatio = 0.2f;
+    [Range(0f, 5f)] public float groggyExtraDamageRatio = 0.2f;
 
     [Tooltip("그로기 애니메이션 트리거 이름")]
     public string breakGroggyTriggerName = "BreakGroggy";
@@ -62,6 +61,18 @@ public class BossEnemy : EnemyBase
     private MonsterAnimation monsterAnim;
 
     public int CurrentPhase { get; private set; } = 1;
+
+    [Header("3페이즈 특수 연출(튜토보스용)")]
+    [Tooltip("체크하면 3페이즈 진입 시 전용 연출 + 플레이어 HP 1로")]
+    [SerializeField] private bool usePhase3TutorialSequence = false;
+
+    [Tooltip("3페이즈 진입 연출 트리거 이름(추천: Phase3Finale)")]
+    [SerializeField] private string phase3TutorialTriggerName = "Phase3Finale";
+
+    [Tooltip("트리거 후 HP를 1로 만드는 딜레이(연출 타이밍 맞추기용)")]
+    [SerializeField] private float phase3SetHpDelay = 0.2f;
+
+    private bool phase3SequencePlayed = false;
 
     protected override void Awake()
     {
@@ -132,6 +143,47 @@ public class BossEnemy : EnemyBase
 
         if (bossUI != null)
             bossUI.SetBreakVisible(CurrentPhase >= breakEnableFromPhase);
+
+        //튜토리얼 보스 용 특수 연출
+        if (CurrentPhase == 3 && usePhase3TutorialSequence && !phase3SequencePlayed)
+        {
+            phase3SequencePlayed = true;
+            StartCoroutine(Phase3TutorialRoutine());
+        }
+    }
+
+    private IEnumerator Phase3TutorialRoutine()
+    {
+        // 애니메이션 트리거 발동
+        var anim = GetComponentInChildren<Animator>();
+        if (anim != null && !string.IsNullOrEmpty(phase3TutorialTriggerName))
+        {
+            anim.ResetTrigger(phase3TutorialTriggerName);
+            anim.SetTrigger(phase3TutorialTriggerName);
+        }
+
+        // 연출 타이밍 맞추고 싶으면 딜레이
+        if (phase3SetHpDelay > 0f)
+            yield return new WaitForSeconds(phase3SetHpDelay);
+
+        // 플레이어 HP를 1만 남기기 (TakeDamage로 처리해서 UI 이벤트도 같이 타게 함)
+        var playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj == null) yield break;
+
+        var playerChar = playerObj.GetComponentInParent<CharacterBase>();
+        if (playerChar == null)
+        {
+            Debug.LogWarning("[BossEnemy] Player에 CharacterBase가 없어서 HP=1 처리를 못 했음");
+            yield break;
+        }
+
+        if (playerChar.currentHp > 1f)
+        {
+            float dmg = playerChar.currentHp - 1f;
+            // hitPoint/hitNormal은 임시값
+            DamageInfo finisher = new DamageInfo(dmg, playerChar.transform.position, Vector3.up);
+            playerChar.TakeDamage(finisher);
+        }
     }
 
     //페이즈에 따라 스탯 적용
@@ -152,20 +204,6 @@ public class BossEnemy : EnemyBase
                 moveSpeed = baseMoveSpeed;
                 break;
         }
-    }
-
-    protected override void OnPhaseChanged(int newPhase)
-    {
-        base.OnPhaseChanged(newPhase);
-
-        if (bossUI != null)
-        {
-            bossUI.UpdatePhase(newPhase);
-        }
-
-        Debug.Log("페이지 변경");
-
-        // 필요하면 여기서: 페이즈 전환 연출, 패턴 배열 교체, 코어 HP 리셋 등등 추가로 처리 가능
     }
 
     private void TryAccumulateBreak()
