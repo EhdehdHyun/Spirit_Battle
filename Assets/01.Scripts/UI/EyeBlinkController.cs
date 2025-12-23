@@ -87,4 +87,12 @@ public class EyeBlinkController : MonoBehaviour
             yield return null;
         }
     }
+    void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+    void OnDestroy()
+    {
+        StopAllCoroutines();
+    }
 }
