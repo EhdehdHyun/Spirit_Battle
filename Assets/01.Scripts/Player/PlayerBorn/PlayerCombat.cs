@@ -7,6 +7,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private PhysicsCharacter physicsCharacter;
     [SerializeField] private PlayerInputController playerInput;
     [SerializeField] private WeaponHitBox weaponHitBox;
+    [SerializeField] private InventoryManager inventoryManager;
 
     [Header("콤보 설정")]
     [SerializeField] private int maxCombo = 3;
@@ -52,6 +53,8 @@ public class PlayerCombat : MonoBehaviour
             playerInput = GetComponent<PlayerInputController>();
         if (weaponHitBox == null)
             weaponHitBox = GetComponentInChildren<WeaponHitBox>();
+        if (inventoryManager == null)
+            inventoryManager = InventoryManager.Instance;
 
         parry = GetComponent<PlayerParry>();
     }
@@ -125,6 +128,18 @@ public class PlayerCombat : MonoBehaviour
 
     public void OnToggleWeaponInput()
     {
+        if (inventoryManager == null)
+        {
+            Debug.LogWarning("[PlayerCombat] inventoryManager 가 없습니다.");
+            return;
+        }
+
+        var equippedWeapon = inventoryManager.GetEquippedWeapon();
+        if (equippedWeapon == null)
+        {
+            Debug.Log("[PlayerCombat] 장착된 무기가 없어 무기를 꺼낼 수 없습니다.");
+            return;
+        }
         weaponEquipped = !weaponEquipped;
         playerAnim?.SetWeaponEquipped(weaponEquipped);
 
@@ -133,6 +148,7 @@ public class PlayerCombat : MonoBehaviour
         if (!weaponEquipped && isAttacking)
             ForceStopAttack();
     }
+
 
     void StartFirstAttack()
     {
