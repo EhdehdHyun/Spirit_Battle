@@ -154,7 +154,7 @@ public class BossEnemy : EnemyBase
 
     private IEnumerator Phase3TutorialRoutine()
     {
-        // 애니메이션 트리거 발동
+        // 1) 보스 연출 트리거
         var anim = GetComponentInChildren<Animator>();
         if (anim != null && !string.IsNullOrEmpty(phase3TutorialTriggerName))
         {
@@ -162,27 +162,33 @@ public class BossEnemy : EnemyBase
             anim.SetTrigger(phase3TutorialTriggerName);
         }
 
-        // 연출 타이밍 맞추고 싶으면 딜레이
         if (phase3SetHpDelay > 0f)
             yield return new WaitForSeconds(phase3SetHpDelay);
 
-        // 플레이어 HP를 1만 남기기 (TakeDamage로 처리해서 UI 이벤트도 같이 타게 함)
+        // 2) 플레이어 찾기
         var playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj == null) yield break;
 
-        var playerChar = playerObj.GetComponentInParent<CharacterBase>();
-        if (playerChar == null)
+        // ✅ 여기! (죽이기/HP 조정 전에 “튜토 사망 연출” 예약)
+        var playerChar = playerObj.GetComponentInParent<PlayerCharacter>();
+        if (playerChar != null)
         {
-            Debug.LogWarning("[BossEnemy] Player에 CharacterBase가 없어서 HP=1 처리를 못 했음");
-            yield break;
+            playerChar.PrepareTutorialDeath(new[]
+            {
+            "아직 힘을 잃지마요.",
+            "이 힘을 받아요."
+        });
         }
 
-        if (playerChar.currentHp > 1f)
+        // 3) 이제 HP를 1로 만들거나(원하면 0으로) 처리
+        var baseChar = playerObj.GetComponentInParent<CharacterBase>();
+        if (baseChar == null) yield break;
+
+        if (baseChar.currentHp > 1f)
         {
-            float dmg = playerChar.currentHp - 1f;
-            // hitPoint/hitNormal은 임시값
-            DamageInfo finisher = new DamageInfo(dmg, playerChar.transform.position, Vector3.up);
-            playerChar.TakeDamage(finisher);
+            float dmg = baseChar.currentHp - 1f;
+            DamageInfo finisher = new DamageInfo(dmg, baseChar.transform.position, Vector3.up);
+            baseChar.TakeDamage(finisher);
         }
     }
 
