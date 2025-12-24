@@ -46,8 +46,6 @@ public class ItemActionPopupUI : MonoBehaviour
         if (root != null)
         {
             root.SetActive(true);
-
-            // ✅ 같은 Canvas 안에서 맨 위로 올리기
             root.transform.SetAsLastSibling();
         }
 
@@ -130,9 +128,6 @@ public class ItemActionPopupUI : MonoBehaviour
         Hide();
     }
 
-    // ===============
-    // Exit 버튼 (버리기)
-    // ===============
     public void OnClickExit()
     {
         var inv = InventoryManager.Instance;
