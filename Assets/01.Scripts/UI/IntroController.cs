@@ -1,27 +1,25 @@
-using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class IntroController : MonoBehaviour
 {
     public AudioSource stormAudio;
-    public ParticleSystem stormRain;
+    [SerializeField] private float introDuration = 15f;
+    [SerializeField] private string nextSceneName = "TutorialScene";
 
     void Start()
     {
         if (stormAudio != null)
             stormAudio.Play();
-        StartCoroutine(StopStormAfterTime(20f));
+
+        StartCoroutine(IntroSequence());
     }
 
-    IEnumerator StopStormAfterTime(float delay)
+    private IEnumerator IntroSequence()
     {
-        yield return new WaitForSeconds(delay);
+        yield return new WaitForSeconds(introDuration);
 
-        if (stormRain != null)
-            stormRain.Stop();     // 비 멈춤
-
-        if (stormAudio != null)
-            stormAudio.Stop();   // 소리 멈춤
+        SceneManager.LoadScene(nextSceneName);
     }
-
 }

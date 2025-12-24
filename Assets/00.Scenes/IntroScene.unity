@@ -8339,7 +8339,7 @@ Transform:
   m_GameObject: {fileID: 361717933}
   serializedVersion: 2
   m_LocalRotation: {x: 0.25783423, y: 0.9622502, z: -0.084186025, w: 0.02255758}
-  m_LocalPosition: {x: 373.57, y: 6.24, z: 340.69}
+  m_LocalPosition: {x: 373.552, y: 6.335, z: 340.914}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -17477,7 +17477,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stormAudio: {fileID: 555550506}
-  stormRain: {fileID: 424822712}
+  introDuration: 20
+  nextSceneName: TutorialScene
 --- !u!1 &556918025
 GameObject:
   m_ObjectHideFlags: 0

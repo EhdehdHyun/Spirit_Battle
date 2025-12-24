@@ -37,7 +37,7 @@ public class BoxTutorialTrigger : MonoBehaviour
         boxInteract.canInteract = false;
 
         //  카메라 포커스
-        cameraController.FocusOnce(boxCameraPoint, 0.8f);
+        cameraController.FocusOnce(boxCameraPoint, 1.3f);
 
         // 카메라 연출 대기
         yield return new WaitForSeconds(2f);
