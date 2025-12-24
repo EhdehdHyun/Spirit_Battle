@@ -1,104 +1,66 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
-/// <summary>
-/// ÀÎº¥Åä¸® ÆĞ³Î(WeaponPanel / ItemPanel °¢°¢)¿¡ ºÙ´Â ÄÁÆ®·Ñ·¯.
-/// - ÀÌ ÆĞ³ÎÀÌ ´ã´çÇÒ InventorySlotUIµéÀ» ¹­¾î¼­
-///   InventoryManager.slotsÀÇ Æ¯Á¤ ±¸°£(startIndex ~)°ú ¿¬°áÇØ ÁØ´Ù.
-/// - InventoryManager.OnInventoryChanged ÀÌº¥Æ®¸¦ ±¸µ¶ÇØ¼­
-///   ÀÎº¥Åä¸®°¡ ¹Ù²ğ ¶§¸¶´Ù ½½·Ô UI¸¦ »õ·Î ±×·ÁÁØ´Ù.
-/// </summary>
 public class InventoryUIController : MonoBehaviour
 {
-    [Header("ÂüÁ¶")]
-    [Tooltip("ÀÎº¥Åä¸® µ¥ÀÌÅÍ ¸Å´ÏÀú (ºñ¿ì¸é ÀÚµ¿À¸·Î InventoryManager.Instance¸¦ »ç¿ë)")]
-    [SerializeField] private InventoryManager inventoryManager;
-
-    [Header("ÀÌ ÆĞ³ÎÀÌ °ü¸®ÇÒ ½½·Ô UIµé")]
-    [Tooltip("ÀÌ ÆĞ³Î ¾Æ·¡¿¡ ÀÖ´Â InventorySlotUIµéÀ» ¸ğµÎ ³Ö¾îÁÖ¼¼¿ä (¼ø¼­ Áß¿ä).")]
+    [Header("ìŠ¬ë¡¯ UI ëª©ë¡ (ìì‹ Slotë“¤ì— ë¶™ì€ InventorySlotUI)")]
     [SerializeField] private InventorySlotUI[] slotUIs;
 
-    [Header("InventoryManager.slots ½ÃÀÛ ÀÎµ¦½º")]
-    [Tooltip("ÀÌ ÆĞ³ÎÀÌ º¸¿©ÁÙ Ã¹ ½½·Ô ÀÎµ¦½º (¿¹: ÀåºñÃ¢Àº 0, Àç·áÃ¢Àº equipSlotCount).")]
+    [Header("ì´ íŒ¨ë„ì´ ë³´ì—¬ì¤„ InventoryManager ìŠ¬ë¡¯ ë²”ìœ„")]
     [SerializeField] private int startIndex = 0;
-
-    private bool _initialized = false;
+    [SerializeField] private int slotCount = 25;
 
     private void Awake()
     {
-        // inventoryManager¸¦ ÁöÁ¤ ¾È ÇØ³ùÀ¸¸é Instance ÀÚµ¿ ÂüÁ¶
-        if (inventoryManager == null)
-            inventoryManager = InventoryManager.Instance;
+        // ì¸ìŠ¤í™í„°ì— ì•ˆ ë„£ì—ˆìœ¼ë©´ ìì‹ì—ì„œ ìë™ ìˆ˜ì§‘
+        if (slotUIs == null || slotUIs.Length == 0)
+            slotUIs = GetComponentsInChildren<InventorySlotUI>(true);
     }
 
     private void OnEnable()
     {
-        TryInitialize();
-        RefreshAll();
-    }
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.OnInventoryChanged += RefreshAll;
+        }
 
-    private void Start()
-    {
-        // È¤½Ã OnEnable Àü¿¡ Start°¡ ¸ÕÀú µµ´Â °æ¿ì ´ëºñ
-        TryInitialize();
         RefreshAll();
     }
 
     private void OnDisable()
     {
-        // ÀÌº¥Æ® ±¸µ¶ ÇØÁ¦
-        if (inventoryManager != null)
-            inventoryManager.OnInventoryChanged -= RefreshAll;
+        if (InventoryManager.Instance != null)
+        {
+            InventoryManager.Instance.OnInventoryChanged -= RefreshAll;
+        }
     }
 
-    /// <summary>
-    /// InventoryManager ÀÌº¥Æ® ±¸µ¶ ¹× ½½·Ô ÀÎµ¦½º ¼³Á¤
-    /// </summary>
-    private void TryInitialize()
-    {
-        if (_initialized)
-            return;
-
-        if (inventoryManager == null)
-        {
-            inventoryManager = InventoryManager.Instance;
-            if (inventoryManager == null)
-            {
-                Debug.LogWarning("[InventoryUIController] InventoryManager.Instance ¸¦ Ã£Áö ¸øÇß½À´Ï´Ù.");
-                return;
-            }
-        }
-
-        if (slotUIs == null || slotUIs.Length == 0)
-        {
-            Debug.LogWarning("[InventoryUIController] slotUIs °¡ ¼³Á¤µÇ¾î ÀÖÁö ¾Ê½À´Ï´Ù.");
-            return;
-        }
-
-        // ½½·Ô UIµé¿¡°Ô ÀÚ±â ±Û·Î¹ú ÀÎµ¦½º¸¦ ¼¼ÆÃ
-        for (int i = 0; i < slotUIs.Length; i++)
-        {
-            if (slotUIs[i] == null) continue;
-            slotUIs[i].SetIndex(startIndex + i);
-        }
-
-        // ÀÎº¥Åä¸® º¯°æ ÀÌº¥Æ® ±¸µ¶
-        inventoryManager.OnInventoryChanged -= RefreshAll;
-        inventoryManager.OnInventoryChanged += RefreshAll;
-
-        _initialized = true;
-    }
-
-    /// <summary>
-    /// ÀÌ ÆĞ³ÎÀÌ °ü¸®ÇÏ´Â ¸ğµç ½½·Ô UI¸¦ »õ·Î °íÄ§
-    /// </summary>
     public void RefreshAll()
     {
+        var inv = InventoryManager.Instance;
+        if (inv == null)
+        {
+            Debug.LogWarning("[InventoryUIController] InventoryManager.Instanceê°€ ì—†ìŠµë‹ˆë‹¤.");
+            return;
+        }
+
         if (slotUIs == null) return;
 
-        foreach (var ui in slotUIs)
+        // ì´ íŒ¨ë„ì— ë°°ì¹˜ëœ UI ìŠ¬ë¡¯ ìˆ˜ì™€ slotCountê°€ ë‹¤ë¥´ë©´,
+        // ìš°ì„  UI ìŠ¬ë¡¯ ê°œìˆ˜ë¥¼ ê¸°ì¤€ìœ¼ë¡œ ì•ˆì „í•˜ê²Œ ì²˜ë¦¬
+        int count = Mathf.Min(slotCount, slotUIs.Length);
+
+        for (int i = 0; i < count; i++)
         {
-            if (ui != null)
-                ui.Refresh();
+            int inventoryIndex = startIndex + i;
+            slotUIs[i].SetIndex(inventoryIndex);
+            // SetIndex ë‚´ë¶€ì—ì„œ Refresh()ê°€ í˜¸ì¶œë˜ê²Œ í•´ë‘” ìƒíƒœë©´ ì¶”ê°€ í˜¸ì¶œ í•„ìš” ì—†ìŒ
+            // ë§Œì•½ SetIndexê°€ ì¸ë±ìŠ¤ë§Œ ë„£ëŠ”ë‹¤ë©´, slotUIs[i].Refresh(); í˜¸ì¶œ ì¶”ê°€
+        }
+
+        // UI ìŠ¬ë¡¯ì´ ë” ë§ì€ ê²½ìš°, ë‚¨ëŠ” ìŠ¬ë¡¯ë“¤ì€ ë¹„ì›Œì£¼ê¸°
+        for (int i = count; i < slotUIs.Length; i++)
+        {
+            slotUIs[i].SetIndex(-1); // -1ì´ë©´ ë¹ˆ ìŠ¬ë¡¯ ì²˜ë¦¬í•˜ë„ë¡ InventorySlotUIì—ì„œ ì²˜ë¦¬
         }
     }
 }

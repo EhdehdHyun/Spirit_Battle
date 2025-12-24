@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class DropPrefabEntry
 {
-    public int itemKey;      // Data_table.key
+    public int itemKey;
     public GameObject prefab;
 }
 
@@ -13,32 +13,28 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance { get; private set; }
 
-    [Header("인벤토리 그리드 (오른쪽 패널)")]
-    [SerializeField] private int rows = 5;
-    [SerializeField] private int columns = 5;
+    [Header("Grid Size (Rows x Columns)")]
+    public int rows = 5;
+    public int columns = 5;
 
-    // 0번은 무기 장비칸, 1 ~ (1 + rows*columns - 1) 은 일반 인벤 칸
-    [Header("슬롯 인덱스 설정")]
-    [SerializeField] private int weaponEquipSlotIndex = 0;   // 무기 장비 슬롯 (왼쪽 큰 칸)
-    [SerializeField] private int itemSlotStartIndex = 1;     // 일반 인벤 시작 인덱스 (1 고정)
-
-    public int ItemSlotCount => rows * columns;              // 일반 인벤 칸 수
-    public int ItemSlotEndExclusive => itemSlotStartIndex + ItemSlotCount;
-
-    [Header("슬롯 데이터")]
+    [Tooltip("인벤토리 슬롯 리스트 (rows * columns 개)")]
     public List<InventorySlot> slots = new List<InventorySlot>();
 
-    [Header("드랍 관련")]
-    [SerializeField] private PlayerInteraction playerInteraction;
-    [SerializeField] private List<DropPrefabEntry> dropPrefabs = new List<DropPrefabEntry>();
-    [SerializeField] private GameObject defaultDropPrefab;
+    [Header("참조")]
+    [Tooltip("플레이어 상호작용 스크립트 (플레이어 위치/방향 얻기용)")]
+    public PlayerInteraction playerInteraction;
 
-    /// <summary>
-    /// 인벤토리 데이터가 바뀔 때마다 호출되는 이벤트 (UI가 구독)
-    /// </summary>
+    [Header("드랍 프리팹 매핑")]
+    public List<DropPrefabEntry> dropPrefabs = new List<DropPrefabEntry>();
+    public GameObject defaultDropPrefab;
+
+    // ===== 장착 슬롯 인덱스(기준) =====
+    // 어제 기준: 무기 장착칸은 0번을 사용한다고 했던 흐름을 유지
+    // (너희 프로젝트에서 장착칸을 별도 인덱스로 쓰고 있다면 이 값만 바꾸면 됨)
+    public int WeaponEquipStartIndex = 0;
+
+    /// <summary>인벤토리가 바뀔 때마다 UI가 구독하는 이벤트</summary>
     public event Action OnInventoryChanged;
-
-    #region Singleton & 초기화
 
     private void Awake()
     {
@@ -47,18 +43,16 @@ public class InventoryManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
         InitSlots();
-        Debug.Log($"[InventoryManager] Awake: slotCount={slots.Count} (equip=0, items={ItemSlotCount})");
+        Debug.Log("[InventoryManager] Awake: slot count = " + slots.Count);
     }
 
     private void InitSlots()
     {
-        // 0 : 장비칸, 1~ : 인벤 칸
-        int total = itemSlotStartIndex + ItemSlotCount; // 예: 1 + 25 = 26
+        int total = rows * columns;
 
         if (slots == null)
             slots = new List<InventorySlot>(total);
@@ -70,29 +64,33 @@ public class InventoryManager : MonoBehaviour
             slots.RemoveRange(total, slots.Count - total);
     }
 
-    #endregion
-
-    #region Slot 접근
-
     public InventorySlot GetSlot(int index)
     {
         if (slots == null || index < 0 || index >= slots.Count)
             return null;
-
         return slots[index];
     }
 
-    public int GetWeaponEquipSlotIndex() => weaponEquipSlotIndex;
-    public int GetItemSlotStartIndex() => itemSlotStartIndex;
-    public int GetItemSlotEndExclusive() => ItemSlotEndExclusive;
+    // =========================
+    // 아이템 분류
+    // =========================
+    public bool IsEquipItem(Data_table data)
+    {
+        if (data == null) return false;
+        // 3000번대 = 장비
+        return data.key >= 3000 && data.key < 4000;
+    }
 
-    #endregion
+    public bool IsConsumableItem(Data_table data)
+    {
+        if (data == null) return false;
+        // 2000번대 = 아이템(재료/소비)
+        return data.key >= 2000 && data.key < 3000;
+    }
 
-    #region 아이템 추가
-
-    /// <summary>
-    /// Data_table 과 수량으로 바로 추가하는 편의 함수
-    /// </summary>
+    // =========================
+    // AddItem
+    // =========================
     public void AddItem(Data_table data, int quantity)
     {
         if (data == null || quantity <= 0)
@@ -100,14 +98,9 @@ public class InventoryManager : MonoBehaviour
             Debug.LogWarning("[InventoryManager] AddItem(Data_table): 잘못된 인자");
             return;
         }
-
         AddItem(new ItemInstance(data, quantity));
     }
 
-    /// <summary>
-    /// ItemInstance 단위로 인벤토리에 추가
-    /// (스택 처리, 빈칸 탐색 포함 / 1~N 범위만 사용)
-    /// </summary>
     public void AddItem(ItemInstance newItem)
     {
         if (newItem == null || newItem.data == null || newItem.quantity <= 0)
@@ -117,43 +110,17 @@ public class InventoryManager : MonoBehaviour
         }
 
         Data_table data = newItem.data;
-        int originalQty = newItem.quantity;
 
-        int slotIndex = AddItemToItemRange(newItem);
-
-        if (slotIndex < 0)
+        // 1) 같은 아이템 스택 채우기
+        for (int i = 0; i < slots.Count; i++)
         {
-            Debug.LogWarning("[InventoryManager] AddItem: 인벤토리가 가득 찼습니다.");
-            return;
-        }
+            InventorySlot slot = slots[i];
+            if (slot == null || slot.IsEmpty) continue;
 
-        Debug.Log($"[InventoryManager] AddItem: {data.ItemName} x{originalQty} → slot {slotIndex}");
-        OnInventoryChanged?.Invoke();
-    }
+            if (slot.item.data.key != data.key) continue;
 
-    /// <summary>
-    /// 일반 인벤 구간 [itemSlotStartIndex ~ ItemSlotEndExclusive) 에
-    /// ItemInstance 를 추가하고, 실제 들어간 인덱스를 반환. 실패 시 -1.
-    /// newItem.quantity 는 남은 수량 (성공 시 0) 으로 갱신됨.
-    /// </summary>
-    private int AddItemToItemRange(ItemInstance newItem)
-    {
-        int start = itemSlotStartIndex;
-        int end = ItemSlotEndExclusive;
-
-        // 1) 같은 아이템 스택 먼저 채우기
-        for (int i = start; i < end; i++)
-        {
-            var slot = GetSlot(i);
-            if (slot == null || slot.IsEmpty || slot.item == null || slot.item.data == null)
-                continue;
-
-            if (slot.item.data.key != newItem.data.key)
-                continue;
-
-            int maxStack = newItem.data.MaxStack;
-            if (slot.item.quantity >= maxStack)
-                continue;
+            int maxStack = data.MaxStack;
+            if (slot.item.quantity >= maxStack) continue;
 
             int space = maxStack - slot.item.quantity;
             int move = Mathf.Min(space, newItem.quantity);
@@ -162,165 +129,48 @@ public class InventoryManager : MonoBehaviour
             newItem.quantity -= move;
 
             if (newItem.quantity <= 0)
-                return i;
+            {
+                OnInventoryChanged?.Invoke();
+                return;
+            }
         }
 
-        // 2) 비어 있는 슬롯 찾기
-        for (int i = start; i < end; i++)
+        // 2) 빈 슬롯 찾기
+        for (int i = 0; i < slots.Count; i++)
         {
-            var slot = GetSlot(i);
+            InventorySlot slot = slots[i];
             if (slot == null) continue;
 
             if (slot.IsEmpty)
             {
-                slot.item = new ItemInstance(newItem.data, newItem.quantity);
+                slot.item = new ItemInstance(data, newItem.quantity);
                 newItem.quantity = 0;
-                return i;
-            }
-        }
-
-        // 자리가 없음
-        return -1;
-    }
-
-    #endregion
-
-    #region 장비 / 해제 / 조회
-
-    /// <summary>
-    /// 이 Data_table 이 "장비 아이템" 인지 판별
-    /// (무기 타입 + 3000번대 키)
-    /// </summary>
-    public bool IsEquipItem(Data_table data)
-    {
-        if (data == null) return false;
-
-        if (data.ItemType == DesignEnums.ItemTypes.Weapon)
-            return true;
-
-        // 3000번대는 전부 장비 취급
-        if (data.key >= 3000 && data.key < 4000)
-            return true;
-
-        return false;
-    }
-
-    /// <summary>
-    /// 일반 인벤 슬롯(fromIndex)의 아이템을 무기 장비 슬롯(0번) 으로 이동
-    /// </summary>
-    public void EquipFromInventory(int fromIndex)
-    {
-        var fromSlot = GetSlot(fromIndex);
-        if (fromSlot == null || fromSlot.IsEmpty || fromSlot.item == null || fromSlot.item.data == null)
-        {
-            Debug.LogWarning($"[InventoryManager] EquipFromInventory: 잘못된 슬롯 index={fromIndex}");
-            return;
-        }
-
-        var item = fromSlot.item;
-        var data = item.data;
-
-        if (!IsEquipItem(data))
-        {
-            Debug.Log($"[InventoryManager] EquipFromInventory: 장비 아이템이 아님 ({data.ItemName})");
-            return;
-        }
-
-        int equipIndex = weaponEquipSlotIndex;
-        var equipSlot = GetSlot(equipIndex);
-        if (equipSlot == null)
-        {
-            Debug.LogWarning("[InventoryManager] EquipFromInventory: 장비 슬롯을 찾을 수 없습니다.");
-            return;
-        }
-
-        // 1) 기존에 장착된 무기가 있으면 → 일반 인벤 구간으로 되돌리기
-        if (!equipSlot.IsEmpty && equipSlot.item != null)
-        {
-            int movedIndex = AddItemToItemRange(equipSlot.item);
-            if (movedIndex < 0)
-            {
-                Debug.LogWarning("[InventoryManager] EquipFromInventory: 인벤이 가득 차서 기존 무기를 되돌릴 수 없습니다.");
+                OnInventoryChanged?.Invoke();
                 return;
             }
-            equipSlot.item = null;
         }
 
-        // 2) 선택한 슬롯 아이템을 장비 슬롯으로 이동
-        equipSlot.item = item;
-        fromSlot.item = null;
-
-        Debug.Log($"[InventoryManager] {data.ItemName} 장착 완료 (from {fromIndex} → equip {equipIndex})");
-
-        OnInventoryChanged?.Invoke();
+        Debug.LogWarning("[InventoryManager] AddItem: 인벤토리가 가득 찼습니다.");
     }
 
-    /// <summary>
-    /// 무기 장비 슬롯(0번)에서 해제 → 일반 인벤으로 되돌리기
-    /// </summary>
-    public void UnequipWeapon()
+    // =========================
+    // 드랍(버리기)
+    // =========================
+    public bool DropItemFromSlot(int slotIndex, int amount = 1)
     {
-        int equipIndex = weaponEquipSlotIndex;
-        var equipSlot = GetSlot(equipIndex);
-        if (equipSlot == null || equipSlot.IsEmpty || equipSlot.item == null)
-            return;
+        Debug.Log($"[InventoryManager] DropItemFromSlot slotIndex={slotIndex}, amount={amount}");
 
-        var item = equipSlot.item;
-
-        int movedIndex = AddItemToItemRange(item);
-        if (movedIndex < 0)
-        {
-            Debug.LogWarning("[InventoryManager] UnequipWeapon: 인벤이 가득 차서 장비 해제가 안됩니다.");
-            return;
-        }
-
-        equipSlot.item = null;
-
-        Debug.Log($"[InventoryManager] 무기 해제 완료 (equip {equipIndex} → slot {movedIndex})");
-
-        OnInventoryChanged?.Invoke();
-    }
-
-    /// <summary>
-    /// 현재 장착된 무기 ItemInstance 반환 (없으면 null)
-    /// </summary>
-    public ItemInstance GetEquippedWeapon()
-    {
-        int equipIndex = weaponEquipSlotIndex;
-        var slot = GetSlot(equipIndex);
-        if (slot != null && !slot.IsEmpty && slot.item != null && slot.item.data != null && IsEquipItem(slot.item.data))
-        {
-            return slot.item;
-        }
-
-        Debug.Log("[GetEquippedWeapon] 장착된 무기를 찾지 못했습니다.");
-        return null;
-    }
-
-    #endregion
-
-    #region 아이템 드랍
-
-    /// <summary>
-    /// 인벤토리 슬롯에서 amount 개를 버리고, 플레이어 앞에 프리팹을 생성
-    /// </summary>
-    public void DropItemFromSlot(int slotIndex, int amount = 1)
-    {
         var slot = GetSlot(slotIndex);
         if (slot == null || slot.IsEmpty || slot.item == null || slot.item.data == null)
-        {
-            Debug.Log($"[InventoryManager] DropItemFromSlot: 비어 있는 슬롯 {slotIndex}");
-            return;
-        }
+            return false;
 
         var itemInstance = slot.item;
         var data = itemInstance.data;
 
         int dropAmount = Mathf.Clamp(amount, 1, itemInstance.quantity);
 
-        // 1) 어떤 프리팹을 쓸지 결정 (itemKey → prefab 매핑)
+        // 1) 프리팹 결정
         GameObject prefabToUse = null;
-
         if (dropPrefabs != null)
         {
             foreach (var entry in dropPrefabs)
@@ -333,38 +183,30 @@ public class InventoryManager : MonoBehaviour
                 }
             }
         }
+        if (prefabToUse == null) prefabToUse = defaultDropPrefab;
 
-        if (prefabToUse == null)
-            prefabToUse = defaultDropPrefab;
-
-        // 2) 실제 월드에 생성
+        // 2) 생성 위치(플레이어 기준)
         if (prefabToUse != null)
         {
-            Vector3 spawnPos;
-            Vector3 dropDir = Vector3.forward;
+            Vector3 spawnPos = Vector3.zero;
+            Vector3 dir = Vector3.forward;
 
-            if (playerInteraction != null && playerInteraction.playerCamera != null)
+            if (playerInteraction != null)
             {
-                var cam = playerInteraction.playerCamera;
-                dropDir = cam.transform.forward;
-                dropDir.y = 0f;
-
-                if (dropDir.sqrMagnitude < 0.0001f)
-                    dropDir = playerInteraction.transform.forward;
-
-                dropDir = dropDir.normalized;
-
-                spawnPos = playerInteraction.transform.position + dropDir * 1.5f + Vector3.up * 0.3f;
+                // playerInteraction에 public getter가 없다면, transform 기준으로라도 떨어지게
+                Transform t = playerInteraction.transform;
+                dir = t.forward;
+                spawnPos = t.position + dir * 1.2f + Vector3.up * 0.3f;
             }
             else
             {
-                // 혹시 참조가 안 되어 있으면 매니저 위치 기준
-                spawnPos = transform.position + Vector3.forward * 2f + Vector3.up * 0.3f;
+                Transform t = transform;
+                dir = t.forward;
+                spawnPos = t.position + dir * 2.0f + Vector3.up * 0.3f;
             }
 
-            Debug.Log($"[InventoryManager] Drop dir = {dropDir}, spawnPos = {spawnPos}");
-
             GameObject worldObj = Instantiate(prefabToUse, spawnPos, Quaternion.identity);
+            Debug.Log($"[InventoryManager] Dropped: {worldObj.name} at {spawnPos}");
 
             var pickup = worldObj.GetComponent<ItemPickupFromTable>();
             if (pickup != null)
@@ -373,21 +215,124 @@ public class InventoryManager : MonoBehaviour
                 pickup.quantity = dropAmount;
             }
         }
-        else
-        {
-            Debug.LogWarning("[InventoryManager] DropItemFromSlot: 사용할 드랍 프리팹이 없습니다.");
-        }
 
-        // 3) 인벤에서 수량 감소 / 비우기
+        // 3) 수량 감소
         itemInstance.quantity -= dropAmount;
         if (itemInstance.quantity <= 0)
-        {
             slot.item = null;
-        }
 
         OnInventoryChanged?.Invoke();
-        Debug.Log($"[InventoryManager] DropItemFromSlot: {data.ItemName} x{dropAmount} 버림 (slot {slotIndex})");
+        return true;
     }
 
-    #endregion
+    // =========================
+    // Use (소비 아이템) - 지금은 자리만
+    // =========================
+    public bool UseItemFromSlot(int slotIndex, int amount = 1)
+    {
+        var slot = GetSlot(slotIndex);
+        if (slot == null || slot.IsEmpty || slot.item == null || slot.item.data == null)
+            return false;
+
+        var data = slot.item.data;
+
+        // 소비 아이템만 사용
+        if (!IsConsumableItem(data))
+            return false;
+
+        // TODO: apple 같은 회복 로직은 여기서 구현 예정
+        // 지금은 "사용 성공" 흐름만 만들고, 수량만 감소시키거나 안 건드릴지 선택
+        int useAmount = Mathf.Clamp(amount, 1, slot.item.quantity);
+        slot.item.quantity -= useAmount;
+        if (slot.item.quantity <= 0) slot.item = null;
+
+        OnInventoryChanged?.Invoke();
+        return true;
+    }
+
+    // =========================
+    // 장비 장착/해제
+    // =========================
+    public bool EquipFromInventory(int slotIndex)
+    {
+        var from = GetSlot(slotIndex);
+        if (from == null || from.IsEmpty || from.item == null || from.item.data == null)
+            return false;
+
+        var data = from.item.data;
+        if (!IsEquipItem(data))
+        {
+            Debug.LogWarning($"[InventoryManager] EquipFromInventory: 장비 아이템이 아님 key={data.key}");
+            return false;
+        }
+
+        int equipIdx = WeaponEquipStartIndex; // 무기 장착칸
+        var equipSlot = GetSlot(equipIdx);
+
+        // 이미 장착 중이면 먼저 해제
+        if (equipSlot != null && !equipSlot.IsEmpty && equipSlot.item != null)
+        {
+            UnequipWeapon();
+        }
+
+        // 인벤 슬롯에서 1개만 꺼내 장착
+        ItemInstance toEquip;
+
+        if (from.item.quantity > 1)
+        {
+            from.item.quantity -= 1;
+            toEquip = new ItemInstance(data, 1);
+        }
+        else
+        {
+            toEquip = from.item;
+            from.item = null;
+        }
+
+        toEquip.equipped = true;
+
+        if (equipSlot != null)
+            equipSlot.item = toEquip;
+
+        Debug.Log($"[InventoryManager] EquipFromInventory: {data.ItemName} 장착 (equipSlot={equipIdx})");
+        OnInventoryChanged?.Invoke();
+        return true;
+    }
+
+    public bool UnequipWeapon()
+    {
+        int equipIdx = WeaponEquipStartIndex;
+        var equipSlot = GetSlot(equipIdx);
+
+        if (equipSlot == null || equipSlot.IsEmpty || equipSlot.item == null)
+            return false;
+
+        ItemInstance equipped = equipSlot.item;
+        equipped.equipped = false;
+        equipSlot.item = null;
+
+        // 다시 인벤으로 넣기
+        AddItem(equipped);
+
+        Debug.Log("[InventoryManager] UnequipWeapon: 무기 해제 완료");
+        OnInventoryChanged?.Invoke();
+        return true;
+    }
+
+    /// <summary>
+    /// PlayerWeaponVisual 같은 곳에서 현재 장착된 무기를 읽어오기 위한 함수
+    /// </summary>
+    public ItemInstance GetEquippedWeapon()
+    {
+        int equipIdx = WeaponEquipStartIndex;
+        var equipSlot = GetSlot(equipIdx);
+
+        if (equipSlot == null || equipSlot.IsEmpty || equipSlot.item == null)
+            return null;
+
+        if (equipSlot.item.equipped == false)
+            return null;
+
+        return equipSlot.item;
+    }
 }
