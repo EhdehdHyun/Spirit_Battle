@@ -10033,14 +10033,13 @@ GameObject:
   - component: {fileID: 441120242284874780}
   - component: {fileID: 4515928226743125942}
   - component: {fileID: 6946897576507010950}
-  - component: {fileID: 5754751827736333754}
   m_Layer: 9
   m_Name: TestBoss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1026357426712680895
 Transform:
   m_ObjectHideFlags: 0
@@ -10051,7 +10050,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -7.74295, y: 0.12, z: 24.72}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 5636710383446690980}
@@ -10119,7 +10118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 30
-  attackCooldown: 2
+  attackCooldown: 1.4
   hitOrigin: {fileID: 1267480653314365648}
   hitRadius: 3.58
   hitMask:
@@ -10269,24 +10268,8 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 112
+  m_Constraints: 80
   m_CollisionDetection: 0
---- !u!114 &5754751827736333754
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2366965492673321758}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 214c843dc80a366448031157c4fb62ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parryWindowOpen: 0
-  defaultParryGroggyDuration: 2
-  parryGroggyTriggerName: ParryGroggy
-  ignoreParryWhileBreakGroggy: 1
 --- !u!1 &2441181751788210102
 GameObject:
   m_ObjectHideFlags: 0
@@ -15629,7 +15612,7 @@ MeshCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: e3db1015a489a1348aa04b3f859c9f62, type: 3}
 --- !u!1 &6636326947631931802

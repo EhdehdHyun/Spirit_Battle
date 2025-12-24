@@ -12,6 +12,7 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
     public float maxHp = 100f;
     public float currentHp;
     public float moveSpeed = 3f;
+    public event Action<DamageInfo> OnDied;
 
     public event Action<float, float> OnHpChanged;
 
@@ -58,6 +59,7 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
             currentHp = 0;
             OnHpChanged?.Invoke(currentHp, maxHp);
             OnDie(info);
+            OnDied?.Invoke(info);
         }
         else
         {

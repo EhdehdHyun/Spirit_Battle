@@ -42,15 +42,21 @@ public class EyeBlinkController : MonoBehaviour
         yield return RotateCamera(leftRotation, rightRotation, 1.5f);
 
         dialogueText.text = "배를 탔던 기억은 있었는데.. 저건 뭐지..?";
-        yield return Fade(1f, 0f, 1.5f);
+        yield return Fade(1f, 0f, 2f);
 
         yield return new WaitForSeconds(2f);
+        
+        //완전히 감김
+        yield return CloseEyes(3f);
+        
+        yield return new WaitForSeconds(3f);
+        
         dialogueText.text = "";
-
         gameObject.SetActive(false);
+        
     }
 
-    //눈 깜빡임 
+    //눈 깜빡임
     IEnumerator Blink()
     {
         yield return Fade(1f, 0.3f, 0.8f);
@@ -69,6 +75,11 @@ public class EyeBlinkController : MonoBehaviour
             yield return null;
         }
     }
+    IEnumerator CloseEyes(float time)
+    {
+        // 지금 상태(열림) → 완전 감김
+        yield return Fade(0f, 1f, time);
+    }
 
     void SetAlpha(float a)
     {
@@ -86,5 +97,13 @@ public class EyeBlinkController : MonoBehaviour
             cameraTransform.rotation = Quaternion.Slerp(from, to, t / time);
             yield return null;
         }
+    }
+    void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+    void OnDestroy()
+    {
+        StopAllCoroutines();
     }
 }
