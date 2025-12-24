@@ -141,7 +141,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5534237714700669123}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.008857892, y: -0.008220089, z: 0.0025119972, w: 0.9999238}
+  m_LocalRotation: {x: 0.008854489, y: -0.008224261, z: 0.0025160902, w: 0.9999238}
   m_LocalPosition: {x: 363.52, y: 7.16, z: 338.26}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -190,7 +190,7 @@ MonoBehaviour:
   rewardItemKey: 3001
   rewardAmount: 1
   spawnPoint: {fileID: 2387546457152569899}
-  coinPrefab: {fileID: 3580968226293983027, guid: bda8d582f57289e4f8701478752c8021, type: 3}
+  coinPrefab: {fileID: 3580968226293983027, guid: afccde2187f35bc4aa5e8271050b4de7, type: 3}
   autoPickup: 0
   coinLifetime: 100
 --- !u!65 &2016841580964219478
