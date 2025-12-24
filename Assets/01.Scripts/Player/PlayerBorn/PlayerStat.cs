@@ -67,16 +67,15 @@ public class PlayerStat : MonoBehaviour
 
     public bool TryConsumeDash()
     {
-        if(curDashCount <= 0) return false;
+        if (curDashCount <= 0) return false;
 
         curDashCount--;
-        
         return true;
     }
 
     private void RechargeDashCount()
     {
-        if(curDashCount >= maxDashCount) return;
+        if (curDashCount >= maxDashCount) return;
 
         dashRechargeAcc += Time.deltaTime;
 
@@ -91,6 +90,7 @@ public class PlayerStat : MonoBehaviour
         if (curDashCount >= maxDashCount)
             dashRechargeAcc = 0f;
     }
+
     // =======================
     // 레벨 데이터 적용
     // =======================
