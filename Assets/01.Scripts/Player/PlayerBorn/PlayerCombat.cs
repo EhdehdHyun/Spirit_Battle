@@ -237,7 +237,7 @@ public class PlayerCombat : MonoBehaviour
         _nextSkill1Time = Time.time + skill1Cooldown;
 
         physicsCharacter?.SetMovementLocked(true);
-        ClearAttackBuffer(); 
+        ClearAttackBuffer();
 
         playerAnim?.PlaySkill1(); // Skill1 트리거:contentReference[oaicite:5]{index=5}
     }
