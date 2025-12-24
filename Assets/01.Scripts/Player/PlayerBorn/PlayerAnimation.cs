@@ -42,6 +42,7 @@ public class PlayerAnimation : MonoBehaviour
     private static readonly int ComboIndexHash = Animator.StringToHash("ComboIndex");
     private static readonly int AttackHash = Animator.StringToHash("Attack");
     private static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
+    private static readonly int IsHitHash = Animator.StringToHash("IsHit");
 
     private void Awake()
     {
@@ -107,6 +108,7 @@ public class PlayerAnimation : MonoBehaviour
     }
     public void PlayHitMotion()
     {
+        anim.SetBool(IsHitHash, true);
         anim.SetTrigger(HitHash);
     }
 
@@ -229,6 +231,11 @@ public class PlayerAnimation : MonoBehaviour
     public void EvSkill1_End()
     {
         combat?.OnSkill1EndFromAnim();
+    }
+
+    public void EvHitEnd()
+    {
+        anim.SetBool(IsHitHash, false);
     }
 }
 

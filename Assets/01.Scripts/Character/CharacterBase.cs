@@ -23,6 +23,9 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
     [Header("피격 모션 기준")]
     [SerializeField] private float heavyHit = 25f;
 
+    protected float LastFinalDamage {  get; private set; }
+    protected bool LastHeavyHit { get; private set; }
+
 
     public void StartInvincible(float duration)
     {
@@ -56,6 +59,9 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
 
         //currentHp -= info.amount;
         currentHp -= finalDamage;
+
+        LastFinalDamage = finalDamage;
+        LastHeavyHit = finalDamage >= heavyHit;
 
         if (currentHp <= 0)
         {
