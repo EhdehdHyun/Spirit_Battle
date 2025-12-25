@@ -38,6 +38,20 @@ public class ItemActionPopupUI : MonoBehaviour
             exitButton.onClick.AddListener(OnClickExit);
     }
 
+    private Sprite LoadIconSprite(string iconKey)
+    {
+        if (string.IsNullOrEmpty(iconKey)) return null;
+
+        // ✅ 1) 기존 방식
+        Sprite sp = Resources.Load<Sprite>($"ItemIcons/{iconKey}");
+
+        // ✅ 2) B방법 폴더 구조
+        if (sp == null)
+            sp = Resources.Load<Sprite>($"ItemIcons/{iconKey}/{iconKey}");
+
+        return sp;
+    }
+
     public void Show(int slotIndex, ItemInstance item)
     {
         _slotIndex = slotIndex;
@@ -46,8 +60,6 @@ public class ItemActionPopupUI : MonoBehaviour
         if (root != null)
         {
             root.SetActive(true);
-
-            // ✅ 같은 Canvas 안에서 맨 위로 올리기
             root.transform.SetAsLastSibling();
         }
 
@@ -57,12 +69,16 @@ public class ItemActionPopupUI : MonoBehaviour
             return;
         }
 
-        // 아이콘 로드(Resources)
+        // 아이콘 로드
         if (iconImage != null)
         {
             Sprite icon = null;
             if (!string.IsNullOrEmpty(item.data.Icon))
-                icon = Resources.Load<Sprite>($"ItemIcons/{item.data.Icon}");
+                icon = ItemIconLoader.Load(item.data.Icon);
+
+            if (icon == null && !string.IsNullOrEmpty(item.data.Icon))
+                Debug.LogWarning($"[ItemActionPopupUI] 아이콘 로드 실패: Icon='{item.data.Icon}' " +
+                                 $"Try: 'Resources/ItemIcons/{item.data.Icon}' OR 'Resources/ItemIcons/{item.data.Icon}/{item.data.Icon}'");
 
             iconImage.sprite = icon;
             iconImage.enabled = (icon != null);
@@ -110,7 +126,15 @@ public class ItemActionPopupUI : MonoBehaviour
 
         var data = slot.item.data;
 
-        // 장비면 장착
+        // ✅ 장비칸(0번)에서 Use를 누르면 = 해제
+        if (_slotIndex == InventoryManager.EquipWeaponIndex)
+        {
+            inv.UnequipWeapon();
+            Hide();
+            return;
+        }
+
+        // 장비면 장착 (WeaponPanel 범위에서만 통과)
         if (inv.IsEquipItem(data))
         {
             inv.EquipFromInventory(_slotIndex);
@@ -118,7 +142,7 @@ public class ItemActionPopupUI : MonoBehaviour
             return;
         }
 
-        // 소비템이면 사용(지금은 수량만 감소)
+        // 소비템이면 사용
         if (inv.IsConsumableItem(data))
         {
             inv.UseItemFromSlot(_slotIndex, 1);
@@ -130,9 +154,6 @@ public class ItemActionPopupUI : MonoBehaviour
         Hide();
     }
 
-    // ===============
-    // Exit 버튼 (버리기)
-    // ===============
     public void OnClickExit()
     {
         var inv = InventoryManager.Instance;

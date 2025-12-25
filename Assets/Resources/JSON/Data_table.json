@@ -192,7 +192,7 @@
       "HealAmount": 0,
       "MaxStack": 999,
       "IsConsumable": false,
-      "Icon": "icon_P09_Weapon_Sword_01",
+      "Icon": "Old_IronSword_icon",
       "ItemTypes": [
         0,
         1,

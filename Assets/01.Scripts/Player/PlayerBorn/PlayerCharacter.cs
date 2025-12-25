@@ -57,6 +57,15 @@ public class PlayerCharacter : CharacterBase
         StartCoroutine(Co_ShowGameOver());
     }
 
+    protected override void OnDamaged(DamageInfo info)
+    {
+        if (LastFinalDamage < 0f) return;
+
+        if (physicsChar.IsDashing) return;
+        if (LastHeavyHit) 
+            anim.PlayHitMotion();
+    }
+
     private IEnumerator Co_ShowGameOver()
     {
         if (gameOverShowDelay > 0f)
