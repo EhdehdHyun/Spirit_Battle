@@ -57,11 +57,16 @@ public class DialogueCameraController : MonoBehaviour
 
     IEnumerator DialogueCamRoutine()
     {
+        Vector3 startPos = mainCamera.transform.position;
+
         while (true)
         {
+            // ▶ NPC 기준 오프셋 (옆 + 얼굴 높이)
             Vector3 targetPos = currentNPCTarget.position;
-            targetPos.y = mainCamera.transform.position.y;
+            targetPos += currentNPCTarget.right * -0.8f;   // 좌우 구도
+            targetPos += Vector3.up * 1.6f;               // 얼굴 높이
 
+            // ▶ 회전
             Vector3 dir = (targetPos - mainCamera.transform.position).normalized;
             Quaternion lookRot = Quaternion.LookRotation(dir);
 
@@ -71,6 +76,8 @@ public class DialogueCameraController : MonoBehaviour
                     lookRot,
                     Time.deltaTime * lookSpeed
                 );
+
+            // ▶ 줌
             mainCamera.fieldOfView =
                 Mathf.Lerp(
                     mainCamera.fieldOfView,
@@ -78,9 +85,18 @@ public class DialogueCameraController : MonoBehaviour
                     Time.deltaTime * zoomSpeed
                 );
 
+            // ▶ 거리 연출 (앞으로 살짝만, 누적 ❌)
+            mainCamera.transform.position =
+                Vector3.Lerp(
+                    mainCamera.transform.position,
+                    startPos + mainCamera.transform.forward * 0.4f,
+                    Time.deltaTime * 0.5f
+                );
+
             yield return null;
         }
     }
+
 
     IEnumerator ResetCamRoutine()
     {
