@@ -32,14 +32,46 @@ public class PlayerCharacter : CharacterBase
     {
         // 입력 / 이동 락, 죽음 애니메이션
         input?.Lock();
-        if (physicsChar != null) physicsChar.SetMovementLocked(true);
-        anim?.PlayDie();
+        physicsChar.SetMovementLocked(true);
+        anim?.PlayDie(); // 함수명은 네꺼에 맞춰
 
-        // 게임오버 UI 호출
-        if (GameOverUI.Instance != null)
-            GameOverUI.Instance.ShowDeath("YOU DIED");
+        StartCoroutine(Co_ShowGameOver());
+    }
+
+    protected override void OnDamaged(DamageInfo info)
+    {
+        if (LastFinalDamage < 0f) return;
+
+        if (physicsChar.IsDashing) return;
+        if (LastHeavyHit)
+            anim.PlayHitMotion();
+    }
+
+    private IEnumerator Co_ShowGameOver()
+    {
+        if (gameOverShowDelay > 0f)
+            yield return new WaitForSecondsRealtime(gameOverShowDelay);
+
+        var ui = GameOverUI.Instance;
+        if (ui == null) yield break;
+
+        if (pendingTutorialDeath)
+        {
+            ui.ShowTutorialSequence(
+                "YOU DIED",
+                pendingLines ?? new[] { "아직 힘을 잃지마요." },
+                onFinished: () =>
+                {
+                    // TODO: 여기서 스킬 해금/대사 시작/리스폰 버튼 띄우기 등 연결
+                    // 예) SkillManager.Instance.Unlock(...);
+                    // 예) DialogueManager.Instance.Start(...);
+                }
+            );
+        }
         else
-            Debug.LogWarning("[PlayerCharacter] GameOverUI.Instance가 없음");
+        {
+            ui.ShowNormalDeath("YOU DIED");
+        }
     }
 
     public void RespawnAt(Vector3 position)

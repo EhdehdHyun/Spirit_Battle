@@ -4,16 +4,16 @@ public class PlayerWeaponVisual : MonoBehaviour
 {
     [Header("참조")]
     [SerializeField] private InventoryManager inventoryManager;
-    [SerializeField] private GameObject swordObject;
 
-    [Header("장비 슬롯 인덱스 (InventoryManager 기준)")]
-    [SerializeField] private int weaponSlotIndex = 0;   // 무기 장비칸 = 0번
+    [Header("플레이어 무기 오브젝트")]
+    [SerializeField] private GameObject swordObject; // Sword_001
 
     private void Awake()
     {
-        // 시작할 때는 항상 무기 비활성화
-        if (swordObject != null)
-            swordObject.SetActive(false);
+        if (inventoryManager == null)
+            inventoryManager = InventoryManager.Instance;
+
+        ApplyEquippedVisual("Awake");
     }
 
     private void OnEnable()
@@ -22,33 +22,47 @@ public class PlayerWeaponVisual : MonoBehaviour
             inventoryManager = InventoryManager.Instance;
 
         if (inventoryManager != null)
-            inventoryManager.OnInventoryChanged += RefreshWeaponVisual;
+            inventoryManager.OnInventoryChanged += OnInventoryChanged;
 
-        RefreshWeaponVisual();
+        ApplyEquippedVisual("OnEnable");
     }
 
     private void OnDisable()
     {
         if (inventoryManager != null)
-            inventoryManager.OnInventoryChanged -= RefreshWeaponVisual;
+            inventoryManager.OnInventoryChanged -= OnInventoryChanged;
     }
 
-    public void RefreshWeaponVisual()
+    private void OnInventoryChanged()
     {
-        if (inventoryManager == null || swordObject == null)
+        ApplyEquippedVisual("OnInventoryChanged");
+    }
+
+    private void ApplyEquippedVisual(string from)
+    {
+        if (swordObject == null)
+        {
+            Debug.LogWarning("[PlayerWeaponVisual] swordObject가 비어있음");
             return;
+        }
 
-        var slot = inventoryManager.GetSlot(weaponSlotIndex);
+        if (inventoryManager == null)
+            inventoryManager = InventoryManager.Instance;
 
-        bool hasWeapon =
-            slot != null &&
-            !slot.IsEmpty &&
-            slot.item != null &&
-            slot.item.data != null &&
-            inventoryManager.IsEquipItem(slot.item.data);
+        if (inventoryManager == null)
+        {
+            Debug.LogWarning("[PlayerWeaponVisual] InventoryManager.Instance가 없음");
+            return;
+        }
 
-        Debug.Log($"[PlayerWeaponVisual] RefreshWeaponVisual: idx={weaponSlotIndex}, hasWeapon={hasWeapon}");
+        // ✅ 슬롯0 직접 확인 (가장 확실)
+        var slot0 = inventoryManager.GetSlot(InventoryManager.EquipWeaponIndex);
+        bool hasWeaponInSlot0 = (slot0 != null && !slot0.IsEmpty && slot0.item != null && slot0.item.data != null);
 
-        swordObject.SetActive(hasWeapon);
+        swordObject.SetActive(hasWeaponInSlot0);
+
+        Debug.Log($"[PlayerWeaponVisual:{from}] slot0HasWeapon={hasWeaponInSlot0} " +
+                  $"slot0Item={(hasWeaponInSlot0 ? slot0.item.data.ItemName : "null")} " +
+                  $"swordActive={swordObject.activeSelf}");
     }
 }
