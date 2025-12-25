@@ -8,40 +8,29 @@ using UnityEngine.UI;
 public class GameOverUI : MonoBehaviour
 {
     public static GameOverUI Instance { get; private set; }
+    public event Action OnRetryPressed;
 
-    public event Action OnRetryPressed; // ✅ 추가
-
-    [Header("Root (Fade)")]
+    [Header("Root (Fade 대상)")]
     [SerializeField] private CanvasGroup rootGroup;
-    [SerializeField] private float fadeInDuration = 0.35f;
 
-    [Header("Texts")]
+    [Tooltip("0 -> 1 까지 페이드 인 시간(초)")]
+    [SerializeField] private float fadeDuration = 2f;
+
+    [Header("Title")]
     [SerializeField] private TMP_Text titleText;
-
-    [Header("Tutorial Panel")]
-    [SerializeField] private GameObject tutorialPanelRoot;
-    [SerializeField] private TMP_Text bodyText;
-    [SerializeField] private TMP_Text hintText;
+    [SerializeField] private string defaultTitle = "YOU DIED";
 
     [Header("Retry UI")]
-    [SerializeField] private GameObject retryRoot;  // 버튼/패널 묶음
+    [SerializeField] private GameObject retryRoot;   // 버튼/패널 묶음
     [SerializeField] private Button retryButton;
 
-    [Header("Input (New Input System)")]
-    [SerializeField] private InputActionReference nextAction;
-    [SerializeField] private bool alsoAllowKeyboardF = false;
-
-    [Header("Time")]
-    [SerializeField] private bool pauseTimeScale = true;
+    [Header("옵션")]
+    [SerializeField] private bool pauseTimeAfterFade = true;
+    [SerializeField] private bool showCursorOnGameOver = true;
 
     private bool showing;
-    private bool isTutorial;
+    private bool waitingAnyKey;
     private bool fading;
-
-    private bool sequenceEnded; // ✅ 마지막까지 봤는지 (중복 Next 방지)
-    private string[] lines = Array.Empty<string>();
-    private int index;
-    private Action onSequenceFinished;
 
     private void Awake()
     {
@@ -54,79 +43,110 @@ public class GameOverUI : MonoBehaviour
         HideImmediate();
     }
 
-    private void OnEnable()
-    {
-        if (nextAction != null) nextAction.action.Enable();
-    }
-
-    private void OnDisable()
-    {
-        if (nextAction != null) nextAction.action.Disable();
-    }
-
     private void Update()
     {
-        if (!showing || fading) return;
-        if (!isTutorial) return;
-        if (sequenceEnded) return;
+        if (!showing) return;
+        if (!waitingAnyKey) return;
 
-        bool nextPressed = false;
-
-        if (nextAction != null && nextAction.action != null)
-            nextPressed = nextAction.action.WasPressedThisFrame();
-
-        if (!nextPressed && alsoAllowKeyboardF)
-            nextPressed = Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame;
-
-        if (nextPressed)
-            Next();
+        // "아무키"
+        if (IsAnyKeyPressedThisFrame())
+        {
+            waitingAnyKey = false;
+            SetRetryVisible(true);
+        }
     }
 
-    public void ShowNormalDeath(string title = "YOU DIED")
+    public void ShowDeath(string title = null)
     {
+        if (rootGroup == null)
+        {
+            Debug.LogWarning("[GameOverUI] rootGroup(CanvasGroup)가 비어있음");
+            return;
+        }
+
         showing = true;
-        isTutorial = false;
-        sequenceEnded = true;      // 일반 사망은 텍스트 진행 없음
-        onSequenceFinished = null;
+        fading = true;
+        waitingAnyKey = false;
 
         gameObject.SetActive(true);
 
-        if (titleText != null) titleText.text = title;
-        if (tutorialPanelRoot != null) tutorialPanelRoot.SetActive(false);
+        // UI 초기 상태
+        rootGroup.alpha = 0f;
+        rootGroup.blocksRaycasts = true;
+        rootGroup.interactable = true;
 
-        // ✅ 일반 사망은 바로 Retry 보여줄지 선택
-        SetRetryVisible(true);
+        if (titleText != null)
+        {
+            titleText.text = string.IsNullOrEmpty(title) ? defaultTitle : title;
+            titleText.gameObject.SetActive(false); // 페이드 끝난 뒤 "확" 등장
+        }
 
-        StartFadeIn();
-
-        if (pauseTimeScale)
-            Time.timeScale = 0f;
-    }
-
-    public void ShowTutorialSequence(string title, string[] tutorialLines, Action onFinished)
-    {
-        showing = true;
-        isTutorial = true;
-        sequenceEnded = false;
-        onSequenceFinished = onFinished;
-
-        lines = tutorialLines ?? Array.Empty<string>();
-        index = 0;
-
-        gameObject.SetActive(true);
-
-        if (titleText != null) titleText.text = title;
-        if (tutorialPanelRoot != null) tutorialPanelRoot.SetActive(true);
-        if (hintText != null) hintText.text = "Press [F]";
-
-        // ✅ 진행 중엔 Retry 숨김
         SetRetryVisible(false);
 
-        RefreshBody();
-        StartFadeIn();
+        if (showCursorOnGameOver)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
 
-        if (pauseTimeScale)
+        StopAllCoroutines();
+        StartCoroutine(FadeInThenPauseRoutine());
+    }
+
+    private IEnumerator FadeInThenPauseRoutine()
+    {
+        // 타임스케일 영향 없이 페이드
+        float t = 0f;
+        while (t < fadeDuration)
+        {
+            t += Time.unscaledDeltaTime;
+            rootGroup.alpha = Mathf.Clamp01(t / Mathf.Max(0.0001f, fadeDuration));
+            yield return null;
+        }
+
+        rootGroup.alpha = 1f;
+
+        // 타이틀 "확" 등장
+        if (titleText != null)
+            titleText.gameObject.SetActive(true);
+
+        // 여기서 시간 멈춤
+        if (pauseTimeAfterFade)
             Time.timeScale = 0f;
+
+        fading = false;
+        waitingAnyKey = true; // 이제 아무키 입력을 기다림
+    }
+
+    private bool IsAnyKeyPressedThisFrame()
+    {
+        // 키보드
+        if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
+            return true;
+
+        // 마우스
+        if (Mouse.current != null)
+        {
+            if (Mouse.current.leftButton.wasPressedThisFrame) return true;
+            if (Mouse.current.rightButton.wasPressedThisFrame) return true;
+            if (Mouse.current.middleButton.wasPressedThisFrame) return true;
+        }
+
+        // 게임패드(있으면)
+        if (Gamepad.current != null)
+        {
+            var g = Gamepad.current;
+            if (g.buttonSouth.wasPressedThisFrame) return true;
+            if (g.buttonNorth.wasPressedThisFrame) return true;
+            if (g.buttonWest.wasPressedThisFrame) return true;
+            if (g.buttonEast.wasPressedThisFrame) return true;
+            if (g.startButton.wasPressedThisFrame) return true;
+            if (g.selectButton.wasPressedThisFrame) return true;
+            if (g.leftShoulder.wasPressedThisFrame) return true;
+            if (g.rightShoulder.wasPressedThisFrame) return true;
+        }
+
+        return false;
     }
 
     private void SetRetryVisible(bool visible)
@@ -135,77 +155,13 @@ public class GameOverUI : MonoBehaviour
         else if (retryButton != null) retryButton.gameObject.SetActive(visible);
     }
 
-    private void StartFadeIn()
-    {
-        if (rootGroup == null) return;
-
-        StopAllCoroutines();
-        rootGroup.alpha = 0f;
-        rootGroup.blocksRaycasts = true;
-        rootGroup.interactable = true;
-
-        StartCoroutine(FadeInRoutine());
-    }
-
-    private IEnumerator FadeInRoutine()
-    {
-        fading = true;
-
-        float t = 0f;
-        while (t < fadeInDuration)
-        {
-            t += Time.unscaledDeltaTime;
-            rootGroup.alpha = Mathf.Clamp01(t / fadeInDuration);
-            yield return null;
-        }
-
-        rootGroup.alpha = 1f;
-        fading = false;
-    }
-
-    private void RefreshBody()
-    {
-        if (bodyText == null) return;
-
-        if (lines == null || lines.Length == 0)
-        {
-            bodyText.text = string.Empty;
-            return;
-        }
-
-        index = Mathf.Clamp(index, 0, lines.Length - 1);
-        bodyText.text = lines[index];
-    }
-
-    private void Next()
-    {
-        if (lines == null || lines.Length == 0) return;
-
-        index++;
-
-        if (index >= lines.Length)
-        {
-            sequenceEnded = true;
-            if (hintText != null) hintText.text = string.Empty;
-
-            // ✅ 여기서 “대화 끝” → Retry 버튼 활성화
-            SetRetryVisible(true);
-
-            onSequenceFinished?.Invoke();
-            return;
-        }
-
-        RefreshBody();
-    }
-
     public void Hide()
     {
         showing = false;
-        isTutorial = false;
+        waitingAnyKey = false;
         fading = false;
-        sequenceEnded = false;
 
-        if (pauseTimeScale)
+        if (pauseTimeAfterFade)
             Time.timeScale = 1f;
 
         HideImmediate();
@@ -220,10 +176,13 @@ public class GameOverUI : MonoBehaviour
             rootGroup.interactable = false;
         }
 
-        if (tutorialPanelRoot != null)
-            tutorialPanelRoot.SetActive(false);
+        if (titleText != null)
+            titleText.gameObject.SetActive(false);
 
         SetRetryVisible(false);
-        gameObject.SetActive(false);
+
+        // UI 오브젝트는 꺼도 되는데, Instance 때문에 씬에 항상 켜두는 쪽을 추천
+        // 필요하면 아래 줄 주석 처리/해제 선택
+        // gameObject.SetActive(false);
     }
 }

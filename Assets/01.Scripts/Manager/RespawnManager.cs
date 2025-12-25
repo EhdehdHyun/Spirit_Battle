@@ -2,65 +2,77 @@ using UnityEngine;
 
 public class RespawnManager : MonoBehaviour
 {
-    public static RespawnManager Instance { get; private set; }
+    [Header("Respawn Point")]
+    [SerializeField] private Transform respawnPoint;
 
-    [Header("Spawn Point (현재는 1개)")]
-    [SerializeField] private Transform spawnPoint;
-
-    [Header("Player (비우면 Tag=Player로 자동 찾음)")]
-    [SerializeField] private PlayerCharacter player;
+    [Header("Player Root GameObject (비워두면 Tag=Player로 탐색)")]
+    [SerializeField] private GameObject playerRoot;
 
     private void Awake()
     {
-        if (Instance != null && Instance != this) { Destroy(gameObject); return; }
-        Instance = this;
-    }
-
-    private void Start()
-    {
-        // GameOverUI의 Retry 버튼 이벤트 연결
-        if (GameOverUI.Instance != null)
-            GameOverUI.Instance.OnRetryPressed += Respawn;
-    }
-
-    private void OnDestroy()
-    {
-        if (GameOverUI.Instance != null)
-            GameOverUI.Instance.OnRetryPressed -= Respawn;
-    }
-
-    public void SetSpawnPoint(Transform newPoint)
-    {
-        spawnPoint = newPoint;
-    }
-
-    public void Respawn()
-    {
-        if (spawnPoint == null)
+        if (playerRoot == null)
         {
-            Debug.LogWarning("[RespawnManager] spawnPoint가 비어있음");
+            var p = GameObject.FindGameObjectWithTag("Player");
+            if (p != null) playerRoot = p; // ✅ 여기서 “루트”가 맞는지 중요!
+        }
+    }
+
+    public void Retry()
+    {
+        if (playerRoot == null || respawnPoint == null)
+        {
+            Debug.LogWarning("[RespawnManager] playerRoot 또는 respawnPoint 없음");
             return;
         }
 
-        if (player == null)
+        // 이동(텔레포트)
+        TeleportPlayerRoot(playerRoot, respawnPoint.position);
+
+        // HP 풀회복 + 입력/이동락 해제
+        var baseChar = playerRoot.GetComponentInParent<CharacterBase>();
+        if (baseChar != null)
+            baseChar.RestoreFullHp();
+
+        var input = playerRoot.GetComponentInParent<PlayerInputController>();
+        input?.Unlock();
+
+        var phy = playerRoot.GetComponentInParent<PhysicsCharacter>();
+        if (phy != null)
+            phy.SetMovementLocked(false);
+
+        // 애니메이션 “처음으로”
+        var animator = playerRoot.GetComponentInChildren<Animator>();
+        if (animator != null)
         {
-            var pObj = GameObject.FindGameObjectWithTag("Player");
-            if (pObj != null) player = pObj.GetComponentInParent<PlayerCharacter>();
+            animator.Rebind();
+            animator.Update(0f);
         }
 
-        if (player == null)
-        {
-            Debug.LogWarning("[RespawnManager] PlayerCharacter를 찾지 못함");
-            return;
-        }
-
-        // UI 닫고 시간 복구
+        // 게임오버 UI 닫기(시간 복구는 GameOverUI.Hide가 한다고 가정)
         if (GameOverUI.Instance != null)
             GameOverUI.Instance.Hide();
-        else
-            Time.timeScale = 1f;
 
-        // ✅ 실제 부활
-        player.RespawnAt(spawnPoint.position, spawnPoint.rotation);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    private void TeleportPlayerRoot(GameObject root, Vector3 pos)
+    {
+        // Rigidbody가 있으면 rb.position으로 이동 (스냅백 방지)
+        var rb = root.GetComponent<Rigidbody>()
+              ?? root.GetComponentInChildren<Rigidbody>()
+              ?? root.GetComponentInParent<Rigidbody>();
+
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.position = pos;
+            root.transform.position = pos; // 동기화(안전)
+        }
+        else
+        {
+            root.transform.position = pos;
+        }
     }
 }

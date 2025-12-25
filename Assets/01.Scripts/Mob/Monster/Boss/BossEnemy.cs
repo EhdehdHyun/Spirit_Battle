@@ -143,53 +143,6 @@ public class BossEnemy : EnemyBase
 
         if (bossUI != null)
             bossUI.SetBreakVisible(CurrentPhase >= breakEnableFromPhase);
-
-        //튜토리얼 보스 용 특수 연출
-        if (CurrentPhase == 3 && usePhase3TutorialSequence && !phase3SequencePlayed)
-        {
-            phase3SequencePlayed = true;
-            StartCoroutine(Phase3TutorialRoutine());
-        }
-    }
-
-    private IEnumerator Phase3TutorialRoutine()
-    {
-        // 1) 보스 연출 트리거
-        var anim = GetComponentInChildren<Animator>();
-        if (anim != null && !string.IsNullOrEmpty(phase3TutorialTriggerName))
-        {
-            anim.ResetTrigger(phase3TutorialTriggerName);
-            anim.SetTrigger(phase3TutorialTriggerName);
-        }
-
-        if (phase3SetHpDelay > 0f)
-            yield return new WaitForSeconds(phase3SetHpDelay);
-
-        // 2) 플레이어 찾기
-        var playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj == null) yield break;
-
-        // ✅ 여기! (죽이기/HP 조정 전에 “튜토 사망 연출” 예약)
-        var playerChar = playerObj.GetComponentInParent<PlayerCharacter>();
-        if (playerChar != null)
-        {
-            playerChar.PrepareTutorialDeath(new[]
-            {
-            "아직 힘을 잃지마요.",
-            "이 힘을 받아요."
-        });
-        }
-
-        // 3) 이제 HP를 1로 만들거나(원하면 0으로) 처리
-        var baseChar = playerObj.GetComponentInParent<CharacterBase>();
-        if (baseChar == null) yield break;
-
-        if (baseChar.currentHp > 1f)
-        {
-            float dmg = baseChar.currentHp - 1f;
-            DamageInfo finisher = new DamageInfo(dmg, baseChar.transform.position, Vector3.up);
-            baseChar.TakeDamage(finisher);
-        }
     }
 
     //페이즈에 따라 스탯 적용

@@ -36,6 +36,17 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
 
     protected virtual float GetIncomingDamageMultiplier(DamageInfo info) => 1f;
 
+    public void SetHp(float newCurrentHp, bool notify = true)
+    {
+        currentHp = Mathf.Clamp(newCurrentHp, 0f, maxHp);
+        if (notify) OnHpChanged?.Invoke(currentHp, maxHp);
+    }
+
+    public void RestoreFullHp(bool notify = true)
+    {
+        SetHp(maxHp, notify);
+    }
+
     //데미지 받았을 때 호출
     public void TakeDamage(DamageInfo info)
     {
@@ -51,7 +62,6 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
         float multiplier = Mathf.Max(0f, GetIncomingDamageMultiplier(info));
         float finalDamage = info.amount * multiplier;
 
-        //currentHp -= info.amount;
         currentHp -= finalDamage;
 
         if (currentHp <= 0)
