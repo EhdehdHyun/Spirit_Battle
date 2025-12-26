@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 [Serializable]
@@ -16,23 +17,23 @@ public class InventoryManager : MonoBehaviour
     // =========================================================
     // ✅ 슬롯 인덱스 규칙 (고정)
     //  - 장비칸(무기 장착): 0
-    //  - WeaponPanel(무기 인벤): 1 ~ 25 (25칸)
-    //  - ItemPanel(아이템 인벤): 26 ~ 50 (25칸)
+    //  - WeaponPanel(무기 인벤): 1 ~ 25
+    //  - ItemPanel(아이템 인벤): 26 ~ 50
     //  - 총 슬롯: 0 ~ 50 (51개)
     // =========================================================
     public const int EquipWeaponIndex = 0;
 
     public const int WeaponInvStart = 1;
-    public const int WeaponInvCount = 25;                      // 1~25
-    public const int WeaponInvEnd = WeaponInvStart + WeaponInvCount - 1;
+    public const int WeaponInvCount = 25;
+    public const int WeaponInvEnd = WeaponInvStart + WeaponInvCount - 1; // 25
 
     public const int ItemInvStart = 26;
-    public const int ItemInvCount = 25;                        // 26~50
-    public const int ItemInvEnd = ItemInvStart + ItemInvCount - 1;
+    public const int ItemInvCount = 25;
+    public const int ItemInvEnd = ItemInvStart + ItemInvCount - 1;       // 50
 
-    public const int TotalSlotCount = 51;                      // 0~50
+    public const int TotalSlotCount = 51; // 0~50
 
-    [Header("Grid Size (Rows x Columns) - (기존 변수 유지용, 실제 슬롯 수는 TotalSlotCount로 고정)")]
+    [Header("Grid Size (기존 변수 유지용, 실제 슬롯 수는 TotalSlotCount로 고정)")]
     public int rows = 5;
     public int columns = 5;
 
@@ -53,6 +54,35 @@ public class InventoryManager : MonoBehaviour
     /// <summary>인벤토리가 바뀔 때마다 UI가 구독하는 이벤트</summary>
     public event Action OnInventoryChanged;
 
+    // =========================================================
+    // ✅ 소비 아이템(예: Apple) 회복 설정
+    //  - itemKey: Data_table.key
+    //  - healAmount: 1개 사용 시 회복량
+    //  - 회복 적용은 PlayerTag("Player") 대상에서 Heal/TryHeal/AddHp 등 메서드를 찾아 호출
+    // =========================================================
+    [Serializable]
+    public class HealConsumableEntry
+    {
+        public int itemKey;
+        public int healAmount;
+    }
+
+    [Header("소비 아이템 회복 테이블(Apple 등)")]
+    [SerializeField] private List<HealConsumableEntry> healConsumables = new List<HealConsumableEntry>();
+
+    [Header("회복 적용 대상(플레이어)")]
+    [SerializeField] private string playerTag = "Player";
+
+    private GameObject _playerObj;
+    private object _healTarget;
+    private MethodInfo _healMethod;
+    private bool _healParamIsInt;
+
+    private static readonly string[] HealMethodCandidates =
+    {
+        "TryHeal", "Heal", "AddHp", "RecoverHp", "RestoreHp", "RestoreHP"
+    };
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -66,6 +96,8 @@ public class InventoryManager : MonoBehaviour
         WeaponEquipStartIndex = EquipWeaponIndex;
 
         InitSlots();
+        BindPlayerAndHealMethod();
+
         Debug.Log($"[InventoryManager] Awake: slot count = {slots.Count} (expected {TotalSlotCount})");
     }
 
@@ -131,7 +163,6 @@ public class InventoryManager : MonoBehaviour
             return;
         }
 
-        // ✅ 범위 선택
         int start, end;
         if (IsEquipItem(newItem.data))
         {
@@ -144,20 +175,19 @@ public class InventoryManager : MonoBehaviour
             end = ItemInvEnd;
         }
 
-        // 실패해도 기존 코드 흐름 유지 (경고만)
         bool ok = AddItemToRange(newItem, start, end);
         if (!ok)
             Debug.LogWarning($"[InventoryManager] AddItem: 범위({start}~{end})가 가득 찼습니다.");
     }
 
-    // ✅ 범위 지정 추가(성공/실패 반환) - 장착/해제 안정성 때문에 bool로 운용
+    // ✅ 범위 지정 추가(성공/실패 반환)
     private bool AddItemToRange(ItemInstance newItem, int start, int end)
     {
         if (newItem == null || newItem.data == null || newItem.quantity <= 0) return false;
 
         Data_table data = newItem.data;
 
-        // 1) 같은 아이템 스택 채우기 (범위 내에서만)
+        // 1) 같은 아이템 스택 채우기
         for (int i = start; i <= end; i++)
         {
             InventorySlot slot = slots[i];
@@ -182,7 +212,7 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        // 2) 빈 슬롯 찾기 (범위 내에서만)
+        // 2) 빈 슬롯 찾기
         for (int i = start; i <= end; i++)
         {
             InventorySlot slot = slots[i];
@@ -211,9 +241,6 @@ public class InventoryManager : MonoBehaviour
         var slot = GetSlot(slotIndex);
         if (slot == null || slot.IsEmpty || slot.item == null || slot.item.data == null)
             return false;
-
-        // ✅ 장비칸(0번)에서 버리기 막고 싶으면 여기서 return false 처리해도 됨
-        // if (slotIndex == EquipWeaponIndex) return false;
 
         var itemInstance = slot.item;
         var data = itemInstance.data;
@@ -276,7 +303,9 @@ public class InventoryManager : MonoBehaviour
     }
 
     // =========================
-    // Use (소비 아이템)
+    // Use (소비 아이템) - ✅ 사용 시 체력 회복까지 적용
+    // 정책:
+    //  - 회복 적용 성공했을 때만 수량 감소 (체력 풀/메서드 못찾음이면 소비 안 함)
     // =========================
     public bool UseItemFromSlot(int slotIndex, int amount = 1)
     {
@@ -291,6 +320,16 @@ public class InventoryManager : MonoBehaviour
             return false;
 
         int useAmount = Mathf.Clamp(amount, 1, slot.item.quantity);
+
+        // ✅ 1) 효과 적용 먼저 (성공해야 소비)
+        bool applied = TryApplyConsumableEffect(data, useAmount);
+        if (!applied)
+        {
+            Debug.Log($"[InventoryManager] UseItemFromSlot: 효과 적용 실패(체력 풀/미등록/대상 없음) key={data.key}");
+            return false;
+        }
+
+        // ✅ 2) 적용 성공 -> 수량 감소
         slot.item.quantity -= useAmount;
         if (slot.item.quantity <= 0) slot.item = null;
 
@@ -299,8 +338,105 @@ public class InventoryManager : MonoBehaviour
     }
 
     // =========================================================
-    // ✅ 장비 장착/해제 (단순화 버전)
-    //  - EquipFromInventory(fromIndex): 장비 아이템이면 "무조건 0번"으로 이동
+    // ✅ 소비 아이템 효과 적용 (현재는 "회복"만)
+    // =========================================================
+    private bool TryApplyConsumableEffect(Data_table data, int amount)
+    {
+        if (data == null || amount <= 0) return false;
+
+        // 1) 회복 테이블에서 찾기
+        int healPerOne = 0;
+        for (int i = 0; i < healConsumables.Count; i++)
+        {
+            if (healConsumables[i].itemKey == data.key)
+            {
+                healPerOne = healConsumables[i].healAmount;
+                break;
+            }
+        }
+
+        if (healPerOne <= 0)
+        {
+            // 등록 안 된 소비템이면 여기서는 효과 없음(원하면 true로 바꿔서 "소비만" 가능)
+            return false;
+        }
+
+        int totalHeal = healPerOne * amount;
+
+        // 2) 플레이어/힐 메서드 바인딩
+        if (_playerObj == null || _healMethod == null || _healTarget == null)
+            BindPlayerAndHealMethod();
+
+        if (_playerObj == null || _healMethod == null || _healTarget == null)
+        {
+            Debug.LogWarning("[InventoryManager] TryApplyConsumableEffect: 플레이어 회복 메서드를 찾지 못했습니다. (TryHeal/Heal/AddHp/RecoverHp...)");
+            return false;
+        }
+
+        // 3) 호출
+        object ret = _healParamIsInt
+            ? _healMethod.Invoke(_healTarget, new object[] { totalHeal })
+            : _healMethod.Invoke(_healTarget, new object[] { (float)totalHeal });
+
+        // bool 반환이면 그 값 사용(예: 체력 풀이면 false 구현 가능)
+        if (ret is bool b) return b;
+
+        // void면 성공으로 간주
+        return true;
+    }
+
+    private void BindPlayerAndHealMethod()
+    {
+        _playerObj = null;
+        _healTarget = null;
+        _healMethod = null;
+
+        var p = GameObject.FindGameObjectWithTag(playerTag);
+        if (p == null) return;
+
+        _playerObj = p;
+
+        // 플레이어에 붙은 컴포넌트들에서 힐 메서드 자동 탐색
+        var comps = p.GetComponents<MonoBehaviour>();
+        foreach (var c in comps)
+        {
+            if (c == null) continue;
+            var t = c.GetType();
+
+            for (int i = 0; i < HealMethodCandidates.Length; i++)
+            {
+                string name = HealMethodCandidates[i];
+
+                // int 파라미터
+                var mInt = t.GetMethod(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                    null, new[] { typeof(int) }, null);
+                if (mInt != null)
+                {
+                    _healTarget = c;
+                    _healMethod = mInt;
+                    _healParamIsInt = true;
+                    Debug.Log($"[InventoryManager] Heal method bound: {t.Name}.{name}(int)");
+                    return;
+                }
+
+                // float 파라미터
+                var mFloat = t.GetMethod(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+                    null, new[] { typeof(float) }, null);
+                if (mFloat != null)
+                {
+                    _healTarget = c;
+                    _healMethod = mFloat;
+                    _healParamIsInt = false;
+                    Debug.Log($"[InventoryManager] Heal method bound: {t.Name}.{name}(float)");
+                    return;
+                }
+            }
+        }
+    }
+
+    // =========================================================
+    // ✅ 장비 장착/해제 (단순화)
+    //  - EquipFromInventory(fromIndex): 장비 아이템이면 무조건 0번으로 이동
     //  - UnequipWeapon(): 0번 -> WeaponPanel(1~25)로 복귀
     // =========================================================
     public bool EquipFromInventory(int fromSlotIndex)
@@ -316,7 +452,7 @@ public class InventoryManager : MonoBehaviour
             return false;
         }
 
-        int equipIdx = EquipWeaponIndex; // ✅ 무조건 0번
+        int equipIdx = EquipWeaponIndex;
         var equipSlot = GetSlot(equipIdx);
 
         // 이미 장착 중이면 해제 먼저 (실패하면 장착 중단)
@@ -354,7 +490,7 @@ public class InventoryManager : MonoBehaviour
 
     public bool UnequipWeapon()
     {
-        int equipIdx = EquipWeaponIndex; // 0
+        int equipIdx = EquipWeaponIndex;
         var equipSlot = GetSlot(equipIdx);
 
         if (equipSlot == null || equipSlot.IsEmpty || equipSlot.item == null)
@@ -366,7 +502,7 @@ public class InventoryManager : MonoBehaviour
         equipSlot.item = null;
         equipped.equipped = false;
 
-        // ✅ 무기는 WeaponPanel로만 되돌림 (1~25)
+        // 무기는 WeaponPanel로만 되돌림 (1~25)
         bool ok = AddItemToRange(equipped, WeaponInvStart, WeaponInvEnd);
         if (!ok)
         {
@@ -390,6 +526,7 @@ public class InventoryManager : MonoBehaviour
         if (equipSlot == null || equipSlot.IsEmpty || equipSlot.item == null)
             return null;
 
+        // ✅ 0번에 있으면 장착으로 간주 (equipped 플래그에 의존 X)
         return equipSlot.item;
     }
 }

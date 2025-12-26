@@ -61,6 +61,8 @@ public class InventoryToggleController : MonoBehaviour
     {
         isInventoryOpen = false;
 
+        ItemActionPopupUI.Instance?.Hide();
+
         if (inventoryRoot != null)
             inventoryRoot.SetActive(false);
 

@@ -163,4 +163,25 @@ public class PlayerStat : MonoBehaviour
         ui.UpdateExp(currentExp, maxExp);
         ui.UpdateLevel(level);
     }
+
+    // =======================
+    // 체력회복
+    // =======================
+    public bool TryHeal(int amount)
+    {
+        if (amount <= 0) return false;
+        if (character == null) return false;
+
+        float before = character.currentHp;
+        character.currentHp = Mathf.Min(character.maxHp, character.currentHp + amount);
+
+        // 체력이 이미 풀이라 변화가 없으면 false
+        if (Mathf.Approximately(character.currentHp, before))
+            return false;
+
+        if (ui != null)
+            ui.UpdateHp(character.currentHp, character.maxHp);
+
+        return true;
+    }
 }
