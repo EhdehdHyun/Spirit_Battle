@@ -9,6 +9,7 @@
       "MaxStack": 999,
       "IsConsumable": true,
       "Icon": "hp_potion_icon",
+      "Description": "",
       "ItemTypes": [
         0,
         1,
@@ -32,6 +33,7 @@
       "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "red_flower_icon",
+      "Description": "",
       "ItemTypes": [
         0,
         1,
@@ -55,6 +57,7 @@
       "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "Mushroom_icon",
+      "Description": "",
       "ItemTypes": [
         0,
         1,
@@ -78,6 +81,7 @@
       "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "decayed_teeth_icon",
+      "Description": "",
       "ItemTypes": [
         0,
         1,
@@ -101,6 +105,7 @@
       "MaxStack": 999,
       "IsConsumable": true,
       "Icon": "Apple_icon",
+      "Description": "싱싱한 사과. 사용 시 체력 30 회복.",
       "ItemTypes": [
         0,
         1,
@@ -124,6 +129,7 @@
       "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "",
+      "Description": "",
       "ItemTypes": [
         0,
         1,
@@ -147,6 +153,7 @@
       "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "",
+      "Description": "",
       "ItemTypes": [
         0,
         1,
@@ -170,6 +177,7 @@
       "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "",
+      "Description": "",
       "ItemTypes": [
         0,
         1,
@@ -193,6 +201,7 @@
       "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "Old_IronSword_icon",
+      "Description": "",
       "ItemTypes": [
         0,
         1,
