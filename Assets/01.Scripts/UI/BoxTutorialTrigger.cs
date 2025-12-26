@@ -32,23 +32,18 @@ public class BoxTutorialTrigger : MonoBehaviour
 
     private IEnumerator TutorialSequence()
     {
-        //  플레이어 입력 잠금
-        //if (playerMovement != null)
-            //playerMovement.enabled = false;
-        //  상호작용 잠금
-        boxInteract.canInteract = false;
+        if (boxInteract == null)
+        {
+            Debug.LogError("[BoxTutorialTrigger] boxInteract is NULL");
+            yield break;
+        }
 
-        //  카메라 포커스
+        boxInteract.enabled = false;
+
         cameraController.FocusOnce(boxCameraPoint, 1.3f);
-
-        // 카메라 연출 대기
         yield return new WaitForSeconds(2f);
 
-        // 가이드 텍스트 표시
-        if (guideText != null)
-            guideText.SetActive(true);
-
-        //  상호작용 해금
-        boxInteract.canInteract = true;
+        boxInteract.enabled = true;
     }
+
 }
