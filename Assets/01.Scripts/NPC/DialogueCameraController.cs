@@ -126,7 +126,7 @@ public class DialogueCameraController : MonoBehaviour
             t += Time.deltaTime * lookSpeed;
 
             Vector3 targetPos = target.position;
-            targetPos.y = mainCamera.transform.position.y;
+            targetPos.y = mainCamera.transform.position.y; 
 
             Vector3 dir = (targetPos - mainCamera.transform.position).normalized;
             Quaternion lookRot = Quaternion.LookRotation(dir);

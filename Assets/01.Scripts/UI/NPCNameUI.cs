@@ -50,8 +50,14 @@ public class NPCNameUI : MonoBehaviour
             cg.alpha = 0f;
             return;
         }
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rect.parent as RectTransform,
+            screenPos,
+            null, // Screen Space - Overlay
+            out Vector2 localPos
+        );
 
         cg.alpha = 1f;
-        rect.position = screenPos;
+        rect.localPosition = localPos;
     }
 }
