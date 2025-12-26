@@ -145,10 +145,10 @@ public class GameOverUI : MonoBehaviour
 
         fading = false;
 
-        // ✅ 여기서부터 "아무 키" 입력을 받기 시작
+        // 여기서부터 "아무 키" 입력을 받기 시작
         waitingAnyKey = true;
 
-        // ✅ 전용 대사 모드면: 패널/텍스트 켜고 1줄 보여주기
+        // 전용 대사 모드면: 패널/텍스트 켜고 1줄 보여주기
         if (dialogueMode)
         {
             if (dialogueLines.Length > 0)
