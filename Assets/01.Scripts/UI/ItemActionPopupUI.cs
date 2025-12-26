@@ -12,12 +12,19 @@ public class ItemActionPopupUI : MonoBehaviour
     [Header("UI 참조")]
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI nameText;
-    [SerializeField] private TextMeshProUGUI qtyText;
-    [SerializeField] private Button useButton;
-    [SerializeField] private Button exitButton;
+
+    [Header("✅ Body(설명) - Description만 출력")]
+    [SerializeField] private TextMeshProUGUI bodyText; // Panel/Body 연결
+
+    [Header("버튼들")]
+    [SerializeField] private Button useButton;      // 사용
+    [SerializeField] private Button dropButton;     // 버리기
+    [SerializeField] private Button closeButton;    // 우측상단 X 닫기
 
     private int _slotIndex = -1;
     private ItemInstance _cachedItem;
+
+    public bool IsOpen => root != null && root.activeSelf;
 
     private void Awake()
     {
@@ -34,22 +41,18 @@ public class ItemActionPopupUI : MonoBehaviour
         if (useButton != null)
             useButton.onClick.AddListener(OnClickUse);
 
-        if (exitButton != null)
-            exitButton.onClick.AddListener(OnClickExit);
+        if (dropButton != null)
+            dropButton.onClick.AddListener(OnClickDrop);
+
+        if (closeButton != null)
+            closeButton.onClick.AddListener(OnClickClose);
     }
 
-    private Sprite LoadIconSprite(string iconKey)
+    private void Update()
     {
-        if (string.IsNullOrEmpty(iconKey)) return null;
-
-        // ✅ 1) 기존 방식
-        Sprite sp = Resources.Load<Sprite>($"ItemIcons/{iconKey}");
-
-        // ✅ 2) B방법 폴더 구조
-        if (sp == null)
-            sp = Resources.Load<Sprite>($"ItemIcons/{iconKey}/{iconKey}");
-
-        return sp;
+        // ✅ ESC 누르면 툴팁 닫기
+        if (IsOpen && Input.GetKeyDown(KeyCode.Escape))
+            Hide();
     }
 
     public void Show(int slotIndex, ItemInstance item)
@@ -69,28 +72,32 @@ public class ItemActionPopupUI : MonoBehaviour
             return;
         }
 
-        // 아이콘 로드
+        var data = item.data;
+
+        // 아이콘 로드(Resources)
         if (iconImage != null)
         {
             Sprite icon = null;
-            if (!string.IsNullOrEmpty(item.data.Icon))
-                icon = ItemIconLoader.Load(item.data.Icon);
-
-            if (icon == null && !string.IsNullOrEmpty(item.data.Icon))
-                Debug.LogWarning($"[ItemActionPopupUI] 아이콘 로드 실패: Icon='{item.data.Icon}' " +
-                                 $"Try: 'Resources/ItemIcons/{item.data.Icon}' OR 'Resources/ItemIcons/{item.data.Icon}/{item.data.Icon}'");
+            if (!string.IsNullOrEmpty(data.Icon))
+            {
+                icon = Resources.Load<Sprite>($"ItemIcons/{data.Icon}");
+                if (icon == null)
+                    icon = Resources.Load<Sprite>($"ItemIcons/{data.Icon}/{data.Icon}");
+            }
 
             iconImage.sprite = icon;
             iconImage.enabled = (icon != null);
         }
 
         if (nameText != null)
-            nameText.text = item.data.ItemName;
+            nameText.text = data.ItemName;
 
-        if (qtyText != null)
-            qtyText.text = $"보유 {item.quantity}";
-
-        Debug.Log($"[ItemActionPopupUI] Show slot={slotIndex}, item={item.data.ItemName}");
+        // ✅ Body에는 Description만 출력
+        if (bodyText != null)
+        {
+            // Description이 비어있으면 그냥 빈 문자열
+            bodyText.text = string.IsNullOrEmpty(data.Description) ? "" : data.Description;
+        }
     }
 
     public void Hide()
@@ -108,14 +115,13 @@ public class ItemActionPopupUI : MonoBehaviour
     public void OnClickUse()
     {
         var inv = InventoryManager.Instance;
-        if (inv == null)
-        {
-            Debug.LogWarning("[ItemActionPopupUI] OnClickUse: InventoryManager null");
-            return;
-        }
+        if (inv == null) return;
 
         if (_slotIndex < 0)
+        {
+            Hide();
             return;
+        }
 
         var slot = inv.GetSlot(_slotIndex);
         if (slot == null || slot.IsEmpty || slot.item == null || slot.item.data == null)
@@ -126,15 +132,7 @@ public class ItemActionPopupUI : MonoBehaviour
 
         var data = slot.item.data;
 
-        // ✅ 장비칸(0번)에서 Use를 누르면 = 해제
-        if (_slotIndex == InventoryManager.EquipWeaponIndex)
-        {
-            inv.UnequipWeapon();
-            Hide();
-            return;
-        }
-
-        // 장비면 장착 (WeaponPanel 범위에서만 통과)
+        // 장비면 장착
         if (inv.IsEquipItem(data))
         {
             inv.EquipFromInventory(_slotIndex);
@@ -150,23 +148,28 @@ public class ItemActionPopupUI : MonoBehaviour
             return;
         }
 
-        Debug.Log("[ItemActionPopupUI] OnClickUse: 처리할 타입이 아님");
         Hide();
     }
 
-    public void OnClickExit()
+    // 버리기 버튼
+    public void OnClickDrop()
     {
         var inv = InventoryManager.Instance;
-        if (inv == null)
+        if (inv == null) return;
+
+        if (_slotIndex < 0)
         {
-            Debug.LogWarning("[ItemActionPopupUI] OnClickExit: InventoryManager null");
+            Hide();
             return;
         }
 
-        if (_slotIndex < 0)
-            return;
-
         inv.DropItemFromSlot(_slotIndex, 1);
+        Hide();
+    }
+
+    // 우측상단 닫기(X)
+    public void OnClickClose()
+    {
         Hide();
     }
 }

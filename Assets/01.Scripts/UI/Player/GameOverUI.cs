@@ -3,211 +3,339 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.UI;
 
 public class GameOverUI : MonoBehaviour
 {
     public static GameOverUI Instance { get; private set; }
+    public event Action OnRetryPressed;
 
-    public event Action OnRetryPressed; // ✅ 추가
-
-    [Header("Root (Fade)")]
+    [Header("Root (Fade 대상)")]
     [SerializeField] private CanvasGroup rootGroup;
-    [SerializeField] private float fadeInDuration = 0.35f;
 
-    [Header("Texts")]
+    [Tooltip("0 -> 1 까지 페이드 인 시간(초)")]
+    [SerializeField] private float fadeDuration = 2f;
+
+    [Header("Title")]
     [SerializeField] private TMP_Text titleText;
+    [SerializeField] private string defaultTitle = "YOU DIED";
 
-    [Header("Tutorial Panel")]
+    [Header("Respawn Hint (Blink)")]
+    [SerializeField] private TMP_Text respawnHintText;      // "아무 키나 눌러 부활" 표시용
+    [SerializeField] private string respawnHint = "아무 키나 눌러 부활";
+    [SerializeField] private float blinkInterval = 0.5f;
+
+    [Header("Forced Dialogue UI (튜토보스 전용)")]
     [SerializeField] private GameObject tutorialPanelRoot;
-    [SerializeField] private TMP_Text bodyText;
-    [SerializeField] private TMP_Text hintText;
+    [SerializeField] private TMP_Text tutorialBodyText;
+    [SerializeField] private TMP_Text tutorialHintText;
+    [SerializeField] private string tutorialHint = "아무 키나 눌러 계속";
 
-    [Header("Retry UI")]
-    [SerializeField] private GameObject retryRoot;  // 버튼/패널 묶음
-    [SerializeField] private Button retryButton;
+    [Header("옵션")]
+    [SerializeField] private bool pauseTimeAfterFade = true;
+    [SerializeField] private bool showCursorOnGameOver = true;
 
-    [Header("Input (New Input System)")]
-    [SerializeField] private InputActionReference nextAction;
-    [SerializeField] private bool alsoAllowKeyboardF = false;
+    [Tooltip("죽는 프레임에 눌려있던 입력이 곧바로 처리되는 걸 방지(초)")]
+    [SerializeField] private float inputBlockSeconds = 0.2f;
 
-    [Header("Time")]
-    [SerializeField] private bool pauseTimeScale = true;
+    private enum Phase
+    {
+        Hidden,
+        Fading,
+        WaitFirstAnyKey,     // (일반) 타이틀 뜬 뒤 첫 입력 -> 힌트(깜빡) 표시
+        Dialogue,            // (튜토) 대사 진행 중
+        WaitRespawnAnyKey    // (일반/튜토 공통) 깜빡 힌트 중 -> 입력 시 부활
+    }
+
+    private Phase phase = Phase.Hidden;
 
     private bool showing;
-    private bool isTutorial;
-    private bool fading;
+    private float inputBlockUntil;
 
-    private bool sequenceEnded; // ✅ 마지막까지 봤는지 (중복 Next 방지)
-    private string[] lines = Array.Empty<string>();
-    private int index;
-    private Action onSequenceFinished;
+    private bool dialogueMode;
+    private string[] dialogueLines = Array.Empty<string>();
+    private int dialogueIndex;
+
+    private Coroutine fadeCo;
+    private Coroutine blinkCo;
 
     private void Awake()
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
 
-        if (retryButton != null)
-            retryButton.onClick.AddListener(() => OnRetryPressed?.Invoke());
-
         HideImmediate();
-    }
-
-    private void OnEnable()
-    {
-        if (nextAction != null) nextAction.action.Enable();
-    }
-
-    private void OnDisable()
-    {
-        if (nextAction != null) nextAction.action.Disable();
     }
 
     private void Update()
     {
-        if (!showing || fading) return;
-        if (!isTutorial) return;
-        if (sequenceEnded) return;
+        if (!showing) return;
+        if (Time.unscaledTime < inputBlockUntil) return;
 
-        bool nextPressed = false;
+        // 대기 상태가 아니면 입력 무시
+        if (phase != Phase.WaitFirstAnyKey && phase != Phase.Dialogue && phase != Phase.WaitRespawnAnyKey)
+            return;
 
-        if (nextAction != null && nextAction.action != null)
-            nextPressed = nextAction.action.WasPressedThisFrame();
+        if (!IsAnyKeyPressedThisFrame())
+            return;
 
-        if (!nextPressed && alsoAllowKeyboardF)
-            nextPressed = Keyboard.current != null && Keyboard.current.fKey.wasPressedThisFrame;
+        switch (phase)
+        {
+            case Phase.WaitFirstAnyKey:
+                // 첫 입력 -> 깜빡 힌트 보여주기
+                ShowRespawnHintBlink();
+                phase = Phase.WaitRespawnAnyKey;
+                inputBlockUntil = Time.unscaledTime + inputBlockSeconds;
+                break;
 
-        if (nextPressed)
-            Next();
+            case Phase.Dialogue:
+                AdvanceDialogueOrGoToRespawnHint();
+                inputBlockUntil = Time.unscaledTime + inputBlockSeconds;
+                break;
+
+            case Phase.WaitRespawnAnyKey:
+                // 입력 -> 부활
+                TriggerRespawn();
+                break;
+        }
     }
 
-    public void ShowNormalDeath(string title = "YOU DIED")
+    public void ShowDeath(string title = null)
     {
+        ShowInternal(title, useDialogue: false, lines: null);
+    }
+
+    public void ShowTutorialDeath(string title, string[] lines)
+    {
+        ShowInternal(title, useDialogue: true, lines: lines);
+    }
+
+    private void ShowInternal(string title, bool useDialogue, string[] lines)
+    {
+        if (rootGroup == null)
+        {
+            Debug.LogWarning("[GameOverUI] rootGroup(CanvasGroup)가 비어있음");
+            return;
+        }
+
         showing = true;
-        isTutorial = false;
-        sequenceEnded = true;      // 일반 사망은 텍스트 진행 없음
-        onSequenceFinished = null;
+        dialogueMode = useDialogue;
+        dialogueLines = lines ?? Array.Empty<string>();
+        dialogueIndex = 0;
 
         gameObject.SetActive(true);
 
-        if (titleText != null) titleText.text = title;
-        if (tutorialPanelRoot != null) tutorialPanelRoot.SetActive(false);
-
-        // ✅ 일반 사망은 바로 Retry 보여줄지 선택
-        SetRetryVisible(true);
-
-        StartFadeIn();
-
-        if (pauseTimeScale)
-            Time.timeScale = 0f;
-    }
-
-    public void ShowTutorialSequence(string title, string[] tutorialLines, Action onFinished)
-    {
-        showing = true;
-        isTutorial = true;
-        sequenceEnded = false;
-        onSequenceFinished = onFinished;
-
-        lines = tutorialLines ?? Array.Empty<string>();
-        index = 0;
-
-        gameObject.SetActive(true);
-
-        if (titleText != null) titleText.text = title;
-        if (tutorialPanelRoot != null) tutorialPanelRoot.SetActive(true);
-        if (hintText != null) hintText.text = "Press [F]";
-
-        // ✅ 진행 중엔 Retry 숨김
-        SetRetryVisible(false);
-
-        RefreshBody();
-        StartFadeIn();
-
-        if (pauseTimeScale)
-            Time.timeScale = 0f;
-    }
-
-    private void SetRetryVisible(bool visible)
-    {
-        if (retryRoot != null) retryRoot.SetActive(visible);
-        else if (retryButton != null) retryButton.gameObject.SetActive(visible);
-    }
-
-    private void StartFadeIn()
-    {
-        if (rootGroup == null) return;
-
-        StopAllCoroutines();
+        // 초기 UI 상태
         rootGroup.alpha = 0f;
         rootGroup.blocksRaycasts = true;
         rootGroup.interactable = true;
 
-        StartCoroutine(FadeInRoutine());
+        if (titleText != null)
+        {
+            titleText.text = string.IsNullOrEmpty(title) ? defaultTitle : title;
+            titleText.gameObject.SetActive(false);
+        }
+
+        SetTutorialPanelVisible(false);
+        HideRespawnHint();
+        StopBlink();
+
+        if (showCursorOnGameOver)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        inputBlockUntil = Time.unscaledTime + inputBlockSeconds;
+
+        if (fadeCo != null) StopCoroutine(fadeCo);
+        fadeCo = StartCoroutine(FadeInThenPauseRoutine());
     }
 
-    private IEnumerator FadeInRoutine()
+    private IEnumerator FadeInThenPauseRoutine()
     {
-        fading = true;
+        phase = Phase.Fading;
 
         float t = 0f;
-        while (t < fadeInDuration)
+        float dur = Mathf.Max(0.0001f, fadeDuration);
+
+        while (t < dur)
         {
             t += Time.unscaledDeltaTime;
-            rootGroup.alpha = Mathf.Clamp01(t / fadeInDuration);
+            rootGroup.alpha = Mathf.Clamp01(t / dur);
             yield return null;
         }
 
         rootGroup.alpha = 1f;
-        fading = false;
+
+        // 타이틀 "확"
+        if (titleText != null)
+            titleText.gameObject.SetActive(true);
+
+        // 시간 멈춤
+        if (pauseTimeAfterFade)
+            Time.timeScale = 0f;
+
+        // 이제 입력을 받는다
+        if (dialogueMode && dialogueLines.Length > 0)
+        {
+            SetTutorialPanelVisible(true);
+            RefreshDialogue();
+            phase = Phase.Dialogue;
+        }
+        else
+        {
+            dialogueMode = false;
+            phase = Phase.WaitFirstAnyKey; // (일반) 첫 입력 대기
+        }
+
+        inputBlockUntil = Time.unscaledTime + inputBlockSeconds;
     }
 
-    private void RefreshBody()
+    private void AdvanceDialogueOrGoToRespawnHint()
     {
-        if (bodyText == null) return;
-
-        if (lines == null || lines.Length == 0)
+        if (!dialogueMode || dialogueLines == null || dialogueLines.Length == 0)
         {
-            bodyText.text = string.Empty;
+            dialogueMode = false;
+            phase = Phase.WaitFirstAnyKey;
             return;
         }
 
-        index = Mathf.Clamp(index, 0, lines.Length - 1);
-        bodyText.text = lines[index];
-    }
+        dialogueIndex++;
 
-    private void Next()
-    {
-        if (lines == null || lines.Length == 0) return;
-
-        index++;
-
-        if (index >= lines.Length)
+        if (dialogueIndex >= dialogueLines.Length)
         {
-            sequenceEnded = true;
-            if (hintText != null) hintText.text = string.Empty;
+            // ✅ 대사 끝 -> 패널 끄고 "부활 안내(깜빡)"로 넘어감
+            dialogueMode = false;
+            SetTutorialPanelVisible(false);
 
-            // ✅ 여기서 “대화 끝” → Retry 버튼 활성화
-            SetRetryVisible(true);
-
-            onSequenceFinished?.Invoke();
+            ShowRespawnHintBlink();
+            phase = Phase.WaitRespawnAnyKey;
             return;
         }
 
-        RefreshBody();
+        RefreshDialogue();
+    }
+
+    private void RefreshDialogue()
+    {
+        if (tutorialBodyText != null)
+            tutorialBodyText.text = dialogueLines[Mathf.Clamp(dialogueIndex, 0, dialogueLines.Length - 1)];
+
+        if (tutorialHintText != null)
+            tutorialHintText.text = tutorialHint;
+    }
+
+    private void TriggerRespawn()
+    {
+        // 중복 방지
+        if (!showing) return;
+        showing = false;
+
+        StopBlink();
+        HideRespawnHint();
+
+        // 이벤트로 RespawnManager 쪽에서 처리(텔레포트/HP회복/애니 리셋/커서 잠금/Hide 호출 등)
+        OnRetryPressed?.Invoke();
+    }
+
+    // ====== Hint Blink ======
+
+    private void ShowRespawnHintBlink()
+    {
+        if (respawnHintText == null) return;
+
+        respawnHintText.text = respawnHint;
+        respawnHintText.gameObject.SetActive(true);
+        respawnHintText.enabled = true;
+
+        StopBlink();
+        blinkCo = StartCoroutine(BlinkRoutine());
+    }
+
+    private void HideRespawnHint()
+    {
+        if (respawnHintText != null)
+            respawnHintText.gameObject.SetActive(false);
+    }
+
+    private IEnumerator BlinkRoutine()
+    {
+        bool on = true;
+
+        while (true)
+        {
+            if (respawnHintText != null)
+                respawnHintText.enabled = on;
+
+            on = !on;
+
+            float t = 0f;
+            while (t < blinkInterval)
+            {
+                t += Time.unscaledDeltaTime;
+                yield return null;
+            }
+        }
+    }
+
+    private void StopBlink()
+    {
+        if (blinkCo != null)
+        {
+            StopCoroutine(blinkCo);
+            blinkCo = null;
+        }
+
+        if (respawnHintText != null)
+            respawnHintText.enabled = true;
+    }
+
+    // ====== Utility ======
+
+    private void SetTutorialPanelVisible(bool visible)
+    {
+        if (tutorialPanelRoot != null)
+            tutorialPanelRoot.SetActive(visible);
+    }
+
+    private bool IsAnyKeyPressedThisFrame()
+    {
+        if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
+            return true;
+
+        if (Mouse.current != null)
+        {
+            if (Mouse.current.leftButton.wasPressedThisFrame) return true;
+            if (Mouse.current.rightButton.wasPressedThisFrame) return true;
+            if (Mouse.current.middleButton.wasPressedThisFrame) return true;
+        }
+
+        if (Gamepad.current != null)
+        {
+            var g = Gamepad.current;
+            if (g.buttonSouth.wasPressedThisFrame) return true;
+            if (g.buttonNorth.wasPressedThisFrame) return true;
+            if (g.buttonWest.wasPressedThisFrame) return true;
+            if (g.buttonEast.wasPressedThisFrame) return true;
+            if (g.startButton.wasPressedThisFrame) return true;
+            if (g.selectButton.wasPressedThisFrame) return true;
+        }
+
+        return false;
     }
 
     public void Hide()
     {
         showing = false;
-        isTutorial = false;
-        fading = false;
-        sequenceEnded = false;
+        phase = Phase.Hidden;
+        dialogueMode = false;
+        dialogueLines = Array.Empty<string>();
+        dialogueIndex = 0;
 
-        if (pauseTimeScale)
+        if (pauseTimeAfterFade)
             Time.timeScale = 1f;
 
+        StopBlink();
         HideImmediate();
     }
 
@@ -220,10 +348,10 @@ public class GameOverUI : MonoBehaviour
             rootGroup.interactable = false;
         }
 
-        if (tutorialPanelRoot != null)
-            tutorialPanelRoot.SetActive(false);
+        if (titleText != null)
+            titleText.gameObject.SetActive(false);
 
-        SetRetryVisible(false);
-        gameObject.SetActive(false);
+        SetTutorialPanelVisible(false);
+        HideRespawnHint();
     }
 }

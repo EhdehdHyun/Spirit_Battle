@@ -47,6 +47,11 @@ public class Data_table
     public string Icon;
 
     /// <summary>
+    /// Description
+    /// </summary>
+    public string Description;
+
+    /// <summary>
     /// ItemTypes
     /// </summary>
     public List<DesignEnums.ItemTypes> ItemTypes;
@@ -55,7 +60,6 @@ public class Data_table
     /// Raritys
     /// </summary>
     public List<DesignEnums.Raritys> Raritys;
-
 }
 public class Data_tableLoader
 {
