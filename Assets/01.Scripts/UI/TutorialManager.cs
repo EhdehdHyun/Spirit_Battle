@@ -66,6 +66,7 @@ public class TutorialManager : MonoBehaviour
                 CompleteAttackTutorial();
             }
         }
+       
     }
 
     void CompleteMoveTutorial()
