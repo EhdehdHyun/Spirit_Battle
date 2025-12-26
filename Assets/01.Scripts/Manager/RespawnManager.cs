@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class RespawnManager : MonoBehaviour
@@ -8,13 +9,23 @@ public class RespawnManager : MonoBehaviour
     [Header("Player Root GameObject (비워두면 Tag=Player로 탐색)")]
     [SerializeField] private GameObject playerRoot;
 
-    private void Awake()
+    private IEnumerator Start()
     {
         if (playerRoot == null)
         {
             var p = GameObject.FindGameObjectWithTag("Player");
-            if (p != null) playerRoot = p; // ✅ 여기서 “루트”가 맞는지 중요!
+            if (p != null) playerRoot = p;
         }
+
+        // GameOverUI.Instance가 준비될 때까지 기다렸다가 구독
+        while (GameOverUI.Instance == null) yield return null;
+        GameOverUI.Instance.OnRetryPressed += Retry;
+    }
+
+    private void OnDestroy()
+    {
+        if (GameOverUI.Instance != null)
+            GameOverUI.Instance.OnRetryPressed -= Retry;
     }
 
     public void Retry()
