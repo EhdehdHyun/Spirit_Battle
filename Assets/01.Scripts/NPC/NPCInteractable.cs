@@ -6,6 +6,7 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     [SerializeField] private string startDialogueID = "DLG_1001";
 
     private bool isTalking;
+    public bool canInteract = true;
 
     // PlayerInteraction에서 조준 중일 때 호출
     public string GetInteractPrompt()
