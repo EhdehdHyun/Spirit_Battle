@@ -60,34 +60,20 @@ public class ChestInteractable : MonoBehaviour, IInteractable
     public void Interact(PlayerInteraction player)
     {
         Debug.Log("[ChestInteractable] Interact 호출");
-
-        if (worldArrow != null)
+        if (worldArrow != null && worldArrow.gameObject.activeSelf)
         {
             worldArrow.gameObject.SetActive(false);
-            Debug.Log("[ChestInteractable] 월드 화살표 OFF");
         }
-        // 한 번만 열리게 하고 싶으면 중복 방지
         if (openOnlyOnce && isOpened)
-        {
-            Debug.Log("[ChestInteractable] 이미 열린 상자 - 무시");
             return;
-        }
 
         isOpened = true;
 
-        // 1) 애니메이션 실행
-        if (animator != null && !string.IsNullOrEmpty(openTriggerName))
-        {
+        if (animator != null)
             animator.SetTrigger(openTriggerName);
-            Debug.Log($"[ChestInteractable] Trigger '{openTriggerName}' 발동");
-        }
-        else
-        {
-            Debug.LogWarning("[ChestInteractable] Animator 또는 Trigger 이름이 비어 있습니다.");
-        }
 
-        // 2) 보상 처리 (코인 스폰 + 인벤토리 추가)
         GiveReward(player);
+        TutorialManager.Instance.ShowMoveForwardText();
     }
 
     private void GiveReward(PlayerInteraction player)

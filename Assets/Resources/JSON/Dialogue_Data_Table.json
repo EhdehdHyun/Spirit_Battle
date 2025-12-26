@@ -63,6 +63,30 @@
       "Text": "그대의 힘으로 성소를 조사해줄 수 있겠나?",
       "NextID": "",
       "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_SHRINE_01",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "음.? 저건 무엇이지?",
+      "NextID": "DLG_SHRINE_02",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_SHRINE_02",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "나도 모르는 굉장히 불쾌한 성소가 이런곳에 있다니.. ",
+      "NextID": "DLG_SHRINE_03",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_SHRINE_03",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "미안하지만 부탁하나만 하지. 저 불쾌해 보이는 성소좀 조사해줘.",
+      "NextID": "",
+      "IsChoice": false
     }
   ]
 }

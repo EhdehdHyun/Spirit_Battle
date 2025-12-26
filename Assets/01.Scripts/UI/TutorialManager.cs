@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
-    enum Step { Move, Jump, Done }
+    enum Step { Move, Jump, Attack, Done }
     Step currentStep;
 
     public static TutorialManager Instance;
@@ -52,6 +52,21 @@ public class TutorialManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
                 CompleteJumpTutorial();
         }
+        else if (currentStep == Step.Attack)
+        {
+            // 우클릭 : 무기 꺼내기
+            if (Input.GetMouseButtonDown(1))
+            {
+                Debug.Log("Weapon Draw Input");
+            }
+
+            // 좌클릭 : 공격
+            if (Input.GetMouseButtonDown(0))
+            {
+                CompleteAttackTutorial();
+            }
+        }
+       
     }
 
     void CompleteMoveTutorial()
@@ -71,5 +86,27 @@ public class TutorialManager : MonoBehaviour
         // 다음 단계: 월드 화살표 + 이동 트리거 ON
         
         worldArrow.gameObject.SetActive(true); 
+    }
+    public void ShowMoveForwardText()
+    {
+        tutorialUI.Show("Tab키를 눌러 아이템을 장착한 뒤 앞으로 이동하세요");
+    }
+    
+    public void StartAttackTutorial()
+    {
+        isActive = true;
+        currentStep = Step.Attack;
+
+        tutorialUI.Show(
+            "오른쪽 클릭으로 검을 꺼내고\n왼쪽 클릭으로 공격을 시도해 보세요!"
+        );
+    }
+    void CompleteAttackTutorial()
+    {
+        isActive = false;
+        currentStep = Step.Done;
+
+        tutorialUI.Hide();
+        Debug.Log("Attack Tutorial Complete");
     }
 }
