@@ -2,13 +2,18 @@ using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
+    enum Step { Move, Jump, Done }
+    Step currentStep;
+
     public static TutorialManager Instance;
 
     [SerializeField] private TutorialUI tutorialUI;
-    private bool hasShownMoveGuide = false;
+    [SerializeField] WorldArrowController worldArrow;
+
 
     bool w, a, s, d;
     bool isActive;
+    bool hasShownMoveGuide;
 
     private void Awake()
     {
@@ -16,55 +21,55 @@ public class TutorialManager : MonoBehaviour
         tutorialUI.Hide();
     }
 
-    // 대화 끝났을 때 호출할 함수
     public void StartMoveTutorial()
     {
-        Debug.Log("StartMoveTutorial CALLED");
-        // 저장 기준 1회 제한 
-        //if (PlayerPrefs.GetInt("MoveGuideShown", 0) == 1)
-            //return;
-
-        // 실행 중 1회 제한
-        if (hasShownMoveGuide)
-            return;
+        if (hasShownMoveGuide) return;
 
         hasShownMoveGuide = true;
         isActive = true;
+        currentStep = Step.Move;
+
         w = a = s = d = false;
-
         tutorialUI.Show("WASD 키로 움직여 보세요");
-
-        PlayerPrefs.SetInt("MoveGuideShown", 1);
-        PlayerPrefs.Save();
     }
 
     private void Update()
     {
         if (!isActive) return;
 
-        if (Input.GetKeyDown(KeyCode.W)) w = true;
-        if (Input.GetKeyDown(KeyCode.A)) a = true;
-        if (Input.GetKeyDown(KeyCode.S)) s = true;
-        if (Input.GetKeyDown(KeyCode.D)) d = true;
-
-        if (w && a && s && d)
+        if (currentStep == Step.Move)
         {
-            CompleteMoveTutorial();
+            if (Input.GetKeyDown(KeyCode.W)) w = true;
+            if (Input.GetKeyDown(KeyCode.A)) a = true;
+            if (Input.GetKeyDown(KeyCode.S)) s = true;
+            if (Input.GetKeyDown(KeyCode.D)) d = true;
+
+            if (w && a && s && d)
+                CompleteMoveTutorial();
+        }
+        else if (currentStep == Step.Jump)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+                CompleteJumpTutorial();
         }
     }
 
     void CompleteMoveTutorial()
     {
-        isActive = false;
-        tutorialUI.Hide();
-
-        // 여기서 다음 단계 호출
-        StartJumpTutorial();
+        currentStep = Step.Jump;
+        tutorialUI.Show("Space 키로 점프해 보세요.");
     }
 
-    void StartJumpTutorial()
+    void CompleteJumpTutorial()
     {
-        tutorialUI.Show("Space 키로 점프해 보세요.");
-        // 점프 입력 체크는 여기서 이어서 구현
+        isActive = false;
+        currentStep = Step.Done;
+
+        tutorialUI.Hide();
+        tutorialUI.Show("화살표 방향으로 이동해 보세요.");
+
+        // 다음 단계: 월드 화살표 + 이동 트리거 ON
+        
+        worldArrow.gameObject.SetActive(true); 
     }
 }

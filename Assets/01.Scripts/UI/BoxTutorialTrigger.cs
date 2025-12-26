@@ -10,6 +10,7 @@ public class BoxTutorialTrigger : MonoBehaviour
 
     [Header("Guide Text")]
     [SerializeField] private GameObject guideText;
+    
 
     private bool triggered = false;
 
@@ -25,6 +26,7 @@ public class BoxTutorialTrigger : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         triggered = true;
+        //worldArrow.gameObject.SetActive(true);
         StartCoroutine(TutorialSequence());
     }
 
