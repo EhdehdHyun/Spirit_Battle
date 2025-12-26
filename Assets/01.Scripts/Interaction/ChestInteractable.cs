@@ -73,6 +73,7 @@ public class ChestInteractable : MonoBehaviour, IInteractable
             animator.SetTrigger(openTriggerName);
 
         GiveReward(player);
+        TutorialManager.Instance.ShowMoveForwardText();
     }
 
     private void GiveReward(PlayerInteraction player)
