@@ -23,7 +23,7 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
     [Header("피격 모션 기준")]
     [SerializeField] private float heavyHit = 25f;
 
-    protected float LastFinalDamage {  get; private set; }
+    protected float LastFinalDamage { get; private set; }
     protected bool LastHeavyHit { get; private set; }
 
 
@@ -42,6 +42,17 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
 
     protected virtual float GetIncomingDamageMultiplier(DamageInfo info) => 1f;
 
+    public void SetHp(float newCurrentHp, bool notify = true)
+    {
+        currentHp = Mathf.Clamp(newCurrentHp, 0f, maxHp);
+        if (notify) OnHpChanged?.Invoke(currentHp, maxHp);
+    }
+
+    public void RestoreFullHp(bool notify = true)
+    {
+        SetHp(maxHp, notify);
+    }
+
     //데미지 받았을 때 호출
     public void TakeDamage(DamageInfo info)
     {
@@ -57,7 +68,6 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
         float multiplier = Mathf.Max(0f, GetIncomingDamageMultiplier(info));
         float finalDamage = info.amount * multiplier;
 
-        //currentHp -= info.amount;
         currentHp -= finalDamage;
 
         LastFinalDamage = finalDamage;
@@ -75,6 +85,16 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
             OnHpChanged?.Invoke(currentHp, maxHp);
             OnDamaged(info);
         }
+    }
+
+    public void ForeceKill(DamageInfo info)
+    {
+        if (!IsAlive) return;
+
+        currentHp = 0;
+        OnHpChanged?.Invoke(currentHp, maxHp);
+        OnDie(info);
+        OnDied?.Invoke(info);
     }
 
     protected virtual void OnDamaged(DamageInfo info) { }

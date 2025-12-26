@@ -17,6 +17,9 @@ public class ChestInteractable : MonoBehaviour, IInteractable
     [SerializeField] private GameObject coinPrefab;    // 코인 3D 프리팹
     [SerializeField] private bool autoPickup = true;   // 인벤토리에 자동으로 넣을지
     [SerializeField] private float coinLifetime = 2f;  // 연출용 코인 유지 시간(초). 0이면 안 지움
+    
+    [Header("튜토리얼 연출")]
+    [SerializeField] private WorldArrowController worldArrow;
 
     private bool isOpened;
 
@@ -58,6 +61,11 @@ public class ChestInteractable : MonoBehaviour, IInteractable
     {
         Debug.Log("[ChestInteractable] Interact 호출");
 
+        if (worldArrow != null)
+        {
+            worldArrow.gameObject.SetActive(false);
+            Debug.Log("[ChestInteractable] 월드 화살표 OFF");
+        }
         // 한 번만 열리게 하고 싶으면 중복 방지
         if (openOnlyOnce && isOpened)
         {

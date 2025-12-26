@@ -8,6 +8,7 @@ public class PrologueStartController : MonoBehaviour
     [SerializeField] private DialogueManager dialogueManager;
     [SerializeField] private DialogueCameraController dialogueCamera;
     [SerializeField] private MonoBehaviour playerMovement;
+    [SerializeField] private NPCInteractable npcInteractable;
 
     private const string PROLOGUE_KEY = "ProloguePlayed";
 
@@ -15,6 +16,9 @@ public class PrologueStartController : MonoBehaviour
     {
         if (PlayerPrefs.GetInt(PROLOGUE_KEY, 0) == 1)
             return; // 이미 봤으면 아무것도 안 함
+        
+        if (npcInteractable != null)
+            npcInteractable.canInteract = false; 
 
         StartCoroutine(PrologueSequence());
     }
@@ -40,9 +44,17 @@ public class PrologueStartController : MonoBehaviour
         );
     }
 
-    private void OnDialogueEnd()
+  private void OnDialogueEnd()
     {
-        dialogueCamera.EndDialogueCamera();
-        playerMovement.enabled = true;
+        Debug.Log("PROLOGUE OnDialogueEnd CALLED");
+
+        if (TutorialManager.Instance == null)
+        {
+            Debug.LogError("TutorialManager.Instance is NULL");
+            return;
+        }
+
+        Debug.Log("CALL StartMoveTutorial");
+        TutorialManager.Instance.StartMoveTutorial();
     }
 }
