@@ -21,8 +21,14 @@ public class GameOverUI : MonoBehaviour
     [SerializeField] private string defaultTitle = "YOU DIED";
 
     [Header("Retry UI")]
-    [SerializeField] private GameObject retryRoot;   // 버튼/패널 묶음
+    [SerializeField] private GameObject retryRoot;
     [SerializeField] private Button retryButton;
+
+    [Header("Forced Dialogue UI (튜토보스 전용)")]
+    [SerializeField] private GameObject tutorialPanelRoot;
+    [SerializeField] private TMP_Text tutorialBodyText;
+    [SerializeField] private TMP_Text tutorialHintText;
+    [SerializeField] private string tutorialHint = "아무 키나 눌러 계속";
 
     [Header("옵션")]
     [SerializeField] private bool pauseTimeAfterFade = true;
@@ -31,6 +37,11 @@ public class GameOverUI : MonoBehaviour
     private bool showing;
     private bool waitingAnyKey;
     private bool fading;
+
+    // ✅ 전용 대사 모드 상태
+    private bool dialogueMode;
+    private string[] dialogueLines = Array.Empty<string>();
+    private int dialogueIndex;
 
     private void Awake()
     {
@@ -48,8 +59,13 @@ public class GameOverUI : MonoBehaviour
         if (!showing) return;
         if (!waitingAnyKey) return;
 
-        // "아무키"
-        if (IsAnyKeyPressedThisFrame())
+        if (!IsAnyKeyPressedThisFrame()) return;
+
+        if (dialogueMode)
+        {
+            AdvanceDialogueOrShowRetry();
+        }
+        else
         {
             waitingAnyKey = false;
             SetRetryVisible(true);
@@ -57,6 +73,16 @@ public class GameOverUI : MonoBehaviour
     }
 
     public void ShowDeath(string title = null)
+    {
+        ShowInternal(title, useDialogue: false, lines: null);
+    }
+
+    public void ShowTutorialDeath(string title, string[] lines)
+    {
+        ShowInternal(title, useDialogue: true, lines: lines);
+    }
+
+    private void ShowInternal(string title, bool useDialogue, string[] lines)
     {
         if (rootGroup == null)
         {
@@ -68,9 +94,12 @@ public class GameOverUI : MonoBehaviour
         fading = true;
         waitingAnyKey = false;
 
+        dialogueMode = useDialogue;
+        dialogueLines = lines ?? Array.Empty<string>();
+        dialogueIndex = 0;
+
         gameObject.SetActive(true);
 
-        // UI 초기 상태
         rootGroup.alpha = 0f;
         rootGroup.blocksRaycasts = true;
         rootGroup.interactable = true;
@@ -78,10 +107,11 @@ public class GameOverUI : MonoBehaviour
         if (titleText != null)
         {
             titleText.text = string.IsNullOrEmpty(title) ? defaultTitle : title;
-            titleText.gameObject.SetActive(false); // 페이드 끝난 뒤 "확" 등장
+            titleText.gameObject.SetActive(false);
         }
 
         SetRetryVisible(false);
+        SetTutorialPanelVisible(false);
 
         if (showCursorOnGameOver)
         {
@@ -95,7 +125,6 @@ public class GameOverUI : MonoBehaviour
 
     private IEnumerator FadeInThenPauseRoutine()
     {
-        // 타임스케일 영향 없이 페이드
         float t = 0f;
         while (t < fadeDuration)
         {
@@ -110,21 +139,71 @@ public class GameOverUI : MonoBehaviour
         if (titleText != null)
             titleText.gameObject.SetActive(true);
 
-        // 여기서 시간 멈춤
+        // 시간 멈춤
         if (pauseTimeAfterFade)
             Time.timeScale = 0f;
 
         fading = false;
-        waitingAnyKey = true; // 이제 아무키 입력을 기다림
+
+        // ✅ 여기서부터 "아무 키" 입력을 받기 시작
+        waitingAnyKey = true;
+
+        // ✅ 전용 대사 모드면: 패널/텍스트 켜고 1줄 보여주기
+        if (dialogueMode)
+        {
+            if (dialogueLines.Length > 0)
+            {
+                SetTutorialPanelVisible(true);
+                RefreshDialogue();
+            }
+            else
+            {
+                // 라인이 없으면 그냥 일반처럼 처리
+                dialogueMode = false;
+            }
+        }
+    }
+
+    private void AdvanceDialogueOrShowRetry()
+    {
+        if (dialogueLines == null || dialogueLines.Length == 0)
+        {
+            dialogueMode = false;
+            waitingAnyKey = false;
+            SetRetryVisible(true);
+            return;
+        }
+
+        dialogueIndex++;
+
+        if (dialogueIndex >= dialogueLines.Length)
+        {
+            // ✅ 대사 끝: 패널/텍스트 끄고 리스폰 버튼 보여주기
+            dialogueMode = false;
+            waitingAnyKey = false;
+
+            SetTutorialPanelVisible(false);
+            SetRetryVisible(true);
+            return;
+        }
+
+        RefreshDialogue();
+    }
+
+    private void RefreshDialogue()
+    {
+        if (tutorialBodyText != null)
+            tutorialBodyText.text = dialogueLines[Mathf.Clamp(dialogueIndex, 0, dialogueLines.Length - 1)];
+
+        if (tutorialHintText != null)
+            tutorialHintText.text = tutorialHint;
     }
 
     private bool IsAnyKeyPressedThisFrame()
     {
-        // 키보드
         if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
             return true;
 
-        // 마우스
         if (Mouse.current != null)
         {
             if (Mouse.current.leftButton.wasPressedThisFrame) return true;
@@ -132,7 +211,6 @@ public class GameOverUI : MonoBehaviour
             if (Mouse.current.middleButton.wasPressedThisFrame) return true;
         }
 
-        // 게임패드(있으면)
         if (Gamepad.current != null)
         {
             var g = Gamepad.current;
@@ -142,8 +220,6 @@ public class GameOverUI : MonoBehaviour
             if (g.buttonEast.wasPressedThisFrame) return true;
             if (g.startButton.wasPressedThisFrame) return true;
             if (g.selectButton.wasPressedThisFrame) return true;
-            if (g.leftShoulder.wasPressedThisFrame) return true;
-            if (g.rightShoulder.wasPressedThisFrame) return true;
         }
 
         return false;
@@ -155,11 +231,19 @@ public class GameOverUI : MonoBehaviour
         else if (retryButton != null) retryButton.gameObject.SetActive(visible);
     }
 
+    private void SetTutorialPanelVisible(bool visible)
+    {
+        if (tutorialPanelRoot != null) tutorialPanelRoot.SetActive(visible);
+    }
+
     public void Hide()
     {
         showing = false;
         waitingAnyKey = false;
         fading = false;
+        dialogueMode = false;
+        dialogueLines = Array.Empty<string>();
+        dialogueIndex = 0;
 
         if (pauseTimeAfterFade)
             Time.timeScale = 1f;
@@ -179,10 +263,7 @@ public class GameOverUI : MonoBehaviour
         if (titleText != null)
             titleText.gameObject.SetActive(false);
 
+        SetTutorialPanelVisible(false);
         SetRetryVisible(false);
-
-        // UI 오브젝트는 꺼도 되는데, Instance 때문에 씬에 항상 켜두는 쪽을 추천
-        // 필요하면 아래 줄 주석 처리/해제 선택
-        // gameObject.SetActive(false);
     }
 }

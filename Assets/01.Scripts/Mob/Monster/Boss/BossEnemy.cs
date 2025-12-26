@@ -51,6 +51,10 @@ public class BossEnemy : EnemyBase
     [Tooltip("그로기 애니메이션 트리거 이름")]
     public string breakGroggyTriggerName = "BreakGroggy";
 
+    [Header("튜토보스 3페이즈 강제 종료")]
+    [SerializeField] private bool isTutorialBoss = false;
+    [SerializeField] private string phase3FinaleTriggerName = "Phase3Finale";
+
     public event Action<int, int> OnBreakHitChanged;
     public event Action<bool> OnGroggyChanged;
 
@@ -61,6 +65,9 @@ public class BossEnemy : EnemyBase
     private MonsterAnimation monsterAnim;
 
     public int CurrentPhase { get; private set; } = 1;
+
+    private bool phase3FinaleStarted = false;
+    private bool phase3FinaleKillDone = false;
 
     [Header("3페이즈 특수 연출(튜토보스용)")]
     [Tooltip("체크하면 3페이즈 진입 시 전용 연출 + 플레이어 HP 1로")]
@@ -126,6 +133,26 @@ public class BossEnemy : EnemyBase
         else if (CurrentPhase == 2 && maxPhase >= 3 && hpRatio <= phase3HpRatio)
         {
             EnterPhase(3);
+        }
+
+        if (CurrentPhase == 3 && isTutorialBoss && !phase3FinaleStarted)
+        {
+            phase3FinaleStarted = true;
+
+            // 보스 더 이상 안 맞게(무적)
+            StartInvincible(999999f);
+
+            // 전용 트리거 발동
+            var anim = GetComponentInChildren<Animator>();
+            if (anim != null && !string.IsNullOrEmpty(phase3FinaleTriggerName))
+            {
+                anim.ResetTrigger(phase3FinaleTriggerName);
+                anim.SetTrigger(phase3FinaleTriggerName);
+            }
+
+            // AI 멈춤
+            var ai = GetComponent<BossAIController>();
+            if (ai != null) ai.enabled = false;
         }
     }
 
@@ -227,5 +254,29 @@ public class BossEnemy : EnemyBase
     public void Anim_DestroySelf()
     {
         Destroy(gameObject);
+    }
+
+    public void Anim_Phase3Finale_KillPlayer()
+    {
+        Debug.Log("[BossEnemy] Anim_Phase3Finale_KillPlayer CALLED", this);
+
+        if (!phase3FinaleStarted) return;
+        if (phase3FinaleKillDone) return;
+        phase3FinaleKillDone = true;
+
+        var playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj == null) return;
+
+        var player = playerObj.GetComponentInParent<CharacterBase>();
+        if (player == null) return;
+
+        var info = new DamageInfo(
+            amount: 999999f,
+            point: player.transform.position,
+            normal: Vector3.up,
+            reason: DamageReason.TutorialBossPhase3Finale
+        );
+
+        player.TakeDamage(info);
     }
 }

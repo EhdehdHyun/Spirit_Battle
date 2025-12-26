@@ -23,7 +23,7 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
     [Header("피격 모션 기준")]
     [SerializeField] private float heavyHit = 25f;
 
-    protected float LastFinalDamage {  get; private set; }
+    protected float LastFinalDamage { get; private set; }
     protected bool LastHeavyHit { get; private set; }
 
 
@@ -85,6 +85,16 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
             OnHpChanged?.Invoke(currentHp, maxHp);
             OnDamaged(info);
         }
+    }
+
+    public void ForeceKill(DamageInfo info)
+    {
+        if (!IsAlive) return;
+
+        currentHp = 0;
+        OnHpChanged?.Invoke(currentHp, maxHp);
+        OnDie(info);
+        OnDied?.Invoke(info);
     }
 
     protected virtual void OnDamaged(DamageInfo info) { }

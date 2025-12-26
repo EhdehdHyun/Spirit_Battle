@@ -9,6 +9,13 @@ public class PlayerCharacter : CharacterBase
     [SerializeField] private PlayerCombat combat;
     [SerializeField] private PlayerParry parry;
 
+    [Header("튜토보스 전용 사망 대사")]
+    [SerializeField]
+    private string[] tutorialBossDeathLines =
+    {
+        "당신 혼자로는 아직 무리입니다…!",
+        "이 힘을 사용하세요!"
+    };
 
     protected override void Awake()
     {
@@ -27,15 +34,25 @@ public class PlayerCharacter : CharacterBase
         return 1f;
     }
 
-
     protected override void OnDie(DamageInfo info)
     {
         // 입력 / 이동 락, 죽음 애니메이션
         input?.Lock();
         physicsChar.SetMovementLocked(true);
-        anim?.PlayDie(); // 함수명은 네꺼에 맞춰
+        anim?.PlayDie();
 
-        StartCoroutine(Co_ShowGameOver());
+        var ui = GameOverUI.Instance;
+        if (ui == null)
+        {
+            Debug.LogWarning("[PlayerCharacter] GameOverUI.Instance가 없음");
+            return;
+        }
+
+        // “튜토보스 3페이즈 강제 이벤트”로 죽은 경우만 대사 모드
+        if (info.reason == DamageReason.TutorialBossPhase3Finale)
+            ui.ShowTutorialDeath("YOU DIED", tutorialBossDeathLines);
+        else
+            ui.ShowDeath("YOU DIED");
     }
 
     protected override void OnDamaged(DamageInfo info)
@@ -47,37 +64,18 @@ public class PlayerCharacter : CharacterBase
             anim.PlayHitMotion();
     }
 
-    private IEnumerator Co_ShowGameOver()
-    {
-        if (gameOverShowDelay > 0f)
-            yield return new WaitForSecondsRealtime(gameOverShowDelay);
-
-        var ui = GameOverUI.Instance;
-        if (ui == null) yield break;
-
-        if (pendingTutorialDeath)
-        {
-            ui.ShowTutorialSequence(
-                "YOU DIED",
-                pendingLines ?? new[] { "아직 힘을 잃지마요." },
-                onFinished: () =>
-                {
-                    // TODO: 여기서 스킬 해금/대사 시작/리스폰 버튼 띄우기 등 연결
-                    // 예) SkillManager.Instance.Unlock(...);
-                    // 예) DialogueManager.Instance.Start(...);
-                }
-            );
-        }
-        else
-        {
-            ui.ShowNormalDeath("YOU DIED");
-        }
-    }
-
     public void RespawnAt(Vector3 position)
     {
         // 위치 이동
         transform.position = position;
+
+        // 물리 리셋(있으면)
+        var rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
 
         // HP 풀피
         RestoreFullHp(notify: true);
@@ -85,6 +83,5 @@ public class PlayerCharacter : CharacterBase
         // 다시 조작 가능
         input?.Unlock();
         if (physicsChar != null) physicsChar.SetMovementLocked(false);
-
     }
 }
