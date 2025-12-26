@@ -71,6 +71,7 @@ public class DialogueCameraController : MonoBehaviour
                     lookRot,
                     Time.deltaTime * lookSpeed
                 );
+
             mainCamera.fieldOfView =
                 Mathf.Lerp(
                     mainCamera.fieldOfView,
@@ -81,6 +82,7 @@ public class DialogueCameraController : MonoBehaviour
             yield return null;
         }
     }
+
 
     IEnumerator ResetCamRoutine()
     {
@@ -117,14 +119,14 @@ public class DialogueCameraController : MonoBehaviour
         originalRotation = mainCamera.transform.rotation;
         originalFOV = mainCamera.fieldOfView;
 
-        // ▶ 포커스
+        //  포커스
         float t = 0f;
         while (t < 1f)
         {
             t += Time.deltaTime * lookSpeed;
 
             Vector3 targetPos = target.position;
-            targetPos.y = mainCamera.transform.position.y;
+            targetPos.y = mainCamera.transform.position.y; 
 
             Vector3 dir = (targetPos - mainCamera.transform.position).normalized;
             Quaternion lookRot = Quaternion.LookRotation(dir);
@@ -138,10 +140,10 @@ public class DialogueCameraController : MonoBehaviour
             yield return null;
         }
 
-        // ▶ 잠깐 유지
+        // 잠깐 유지
         yield return new WaitForSeconds(holdTime);
 
-        // ▶ 원래 시점으로 복귀
+        // 원래 시점으로 복귀
         yield return StartCoroutine(ResetCamRoutine());
     }
 }
