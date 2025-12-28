@@ -37,6 +37,7 @@ public class NormalEnemy : EnemyBase
     // Die 애니메이션 마지막 프레임에 Animation Event로 호출
     public void Anim_DestroySelf()
     {
+        GetComponent<TutorialEnemy>()?.OnTutorialEnemyDead();
         Destroy(gameObject);
     }
 }

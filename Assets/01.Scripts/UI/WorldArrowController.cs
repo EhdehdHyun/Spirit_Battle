@@ -12,6 +12,20 @@ public class WorldArrowController : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+    
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+
+        if (target != null)
+            gameObject.SetActive(true);
+    }
+
+    public void ClearTarget()
+    {
+        target = null;
+        gameObject.SetActive(false);
+    }
     void LateUpdate()
     {
         if (player == null || target == null) return;

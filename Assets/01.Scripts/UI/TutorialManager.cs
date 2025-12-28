@@ -2,21 +2,32 @@ using UnityEngine;
 
 public class TutorialManager : MonoBehaviour
 {
-    enum Step { Move, Jump, Attack, Done }
+    enum Step
+    {
+        Move, 
+        Jump,
+        Dash,
+        Attack,
+        Done
+    }
     Step currentStep;
 
     public static TutorialManager Instance;
 
     [SerializeField] private TutorialUI tutorialUI;
-    [SerializeField] WorldArrowController worldArrow;
-
-
-    bool w, a, s, d;
+    [SerializeField] private WorldArrowController worldArrow;
+    [SerializeField] private Transform attackTargetMonster;
+    
     bool isActive;
     bool hasShownMoveGuide;
 
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
         Instance = this;
         tutorialUI.Hide();
     }
@@ -28,8 +39,7 @@ public class TutorialManager : MonoBehaviour
         hasShownMoveGuide = true;
         isActive = true;
         currentStep = Step.Move;
-
-        w = a = s = d = false;
+        
         tutorialUI.Show("WASD 키로 움직여 보세요");
     }
 
@@ -39,18 +49,27 @@ public class TutorialManager : MonoBehaviour
 
         if (currentStep == Step.Move)
         {
-            if (Input.GetKeyDown(KeyCode.W)) w = true;
-            if (Input.GetKeyDown(KeyCode.A)) a = true;
-            if (Input.GetKeyDown(KeyCode.S)) s = true;
-            if (Input.GetKeyDown(KeyCode.D)) d = true;
-
-            if (w && a && s && d)
+            if (
+                Input.GetKeyDown(KeyCode.W) ||
+                Input.GetKeyDown(KeyCode.A) ||
+                Input.GetKeyDown(KeyCode.S) ||
+                Input.GetKeyDown(KeyCode.D)
+            )
+            {
                 CompleteMoveTutorial();
+            }
         }
         else if (currentStep == Step.Jump)
         {
             if (Input.GetKeyDown(KeyCode.Space))
                 CompleteJumpTutorial();
+        }
+        else if (currentStep == Step.Dash)
+        {
+            if (Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift))
+            {
+                CompleteDashTutorial();
+            }
         }
         else if (currentStep == Step.Attack)
         {
@@ -77,23 +96,26 @@ public class TutorialManager : MonoBehaviour
 
     void CompleteJumpTutorial()
     {
-        isActive = false;
+        currentStep = Step.Dash;
+        tutorialUI.Show("Shift 키를 눌러 대쉬를 사용할 수 있습니다!");
+    }
+    void CompleteDashTutorial()
+    {
         currentStep = Step.Done;
+        isActive = false;
 
-        tutorialUI.Hide();
-        tutorialUI.Show("화살표 방향으로 이동해 보세요.");
-
-        // 다음 단계: 월드 화살표 + 이동 트리거 ON
-        
-        worldArrow.gameObject.SetActive(true); 
+        tutorialUI.Show("화살표 방향으로 이동해 F키를 눌러 보세요.");
+        worldArrow.gameObject.SetActive(true);
     }
     public void ShowMoveForwardText()
     {
-        tutorialUI.Show("Tab키를 눌러 아이템을 장착한 뒤 앞으로 이동하세요");
+        tutorialUI.Show("Tab키를 눌러 장비칸에서 무기를 클릭해 장착한 뒤 화살표 방향으로 이동하세요");
+        worldArrow.SetTarget(attackTargetMonster);
     }
     
     public void StartAttackTutorial()
     {
+        worldArrow.ClearTarget();
         isActive = true;
         currentStep = Step.Attack;
 
@@ -108,5 +130,9 @@ public class TutorialManager : MonoBehaviour
 
         tutorialUI.Hide();
         Debug.Log("Attack Tutorial Complete");
+    }
+    public void ShowSimpleMessage(string message)
+    {
+        tutorialUI.Show("다음 몬스터를 상대하면서 패링을 배워보자");
     }
 }
