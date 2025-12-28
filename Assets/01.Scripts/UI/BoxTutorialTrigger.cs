@@ -28,7 +28,7 @@ public class BoxTutorialTrigger : MonoBehaviour
         if (playerMovement != null)
             playerMovement.enabled = false;
         
-        cameraController.FocusOnce(boxCameraPoint, 1.3f);
+        cameraController.FocusOnce(boxCameraPoint, 1.3f, 10f);
         yield return new WaitForSeconds(2f);
         
         //플레이어 이동 해제
