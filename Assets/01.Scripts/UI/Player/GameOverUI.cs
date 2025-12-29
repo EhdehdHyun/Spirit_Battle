@@ -19,10 +19,9 @@ public class GameOverUI : MonoBehaviour
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private string defaultTitle = "YOU DIED";
 
-    [Header("Respawn Hint (Blink)")]
+    [Header("Respawn Hint")]
     [SerializeField] private TMP_Text respawnHintText;      // "아무 키나 눌러 부활" 표시용
     [SerializeField] private string respawnHint = "아무 키나 눌러 부활";
-    [SerializeField] private float blinkInterval = 0.5f;
 
     [Header("Forced Dialogue UI (튜토보스 전용)")]
     [SerializeField] private GameObject tutorialPanelRoot;
@@ -41,9 +40,9 @@ public class GameOverUI : MonoBehaviour
     {
         Hidden,
         Fading,
-        WaitFirstAnyKey,     // (일반) 타이틀 뜬 뒤 첫 입력 -> 힌트(깜빡) 표시
+        WaitFirstAnyKey,     // (일반) 타이틀 뜬 뒤 첫 입력 -> 힌트 표시
         Dialogue,            // (튜토) 대사 진행 중
-        WaitRespawnAnyKey    // (일반/튜토 공통) 깜빡 힌트 중 -> 입력 시 부활
+        WaitRespawnAnyKey    // (일반/튜토 공통) 힌트 표시 중 -> 입력 시 부활
     }
 
     private Phase phase = Phase.Hidden;
@@ -56,7 +55,6 @@ public class GameOverUI : MonoBehaviour
     private int dialogueIndex;
 
     private Coroutine fadeCo;
-    private Coroutine blinkCo;
 
     private void Awake()
     {
@@ -71,7 +69,6 @@ public class GameOverUI : MonoBehaviour
         if (!showing) return;
         if (Time.unscaledTime < inputBlockUntil) return;
 
-        // 대기 상태가 아니면 입력 무시
         if (phase != Phase.WaitFirstAnyKey && phase != Phase.Dialogue && phase != Phase.WaitRespawnAnyKey)
             return;
 
@@ -81,8 +78,8 @@ public class GameOverUI : MonoBehaviour
         switch (phase)
         {
             case Phase.WaitFirstAnyKey:
-                // 첫 입력 -> 깜빡 힌트 보여주기
-                ShowRespawnHintBlink();
+                // 첫 입력 -> 힌트 보여주기 (깜빡임 없음)
+                ShowRespawnHint();
                 phase = Phase.WaitRespawnAnyKey;
                 inputBlockUntil = Time.unscaledTime + inputBlockSeconds;
                 break;
@@ -137,7 +134,6 @@ public class GameOverUI : MonoBehaviour
 
         SetTutorialPanelVisible(false);
         HideRespawnHint();
-        StopBlink();
 
         if (showCursorOnGameOver)
         {
@@ -204,11 +200,11 @@ public class GameOverUI : MonoBehaviour
 
         if (dialogueIndex >= dialogueLines.Length)
         {
-            // ✅ 대사 끝 -> 패널 끄고 "부활 안내(깜빡)"로 넘어감
+            // 대사 끝 -> 패널 끄고 "부활 안내"로
             dialogueMode = false;
             SetTutorialPanelVisible(false);
 
-            ShowRespawnHintBlink();
+            ShowRespawnHint();
             phase = Phase.WaitRespawnAnyKey;
             return;
         }
@@ -227,67 +223,30 @@ public class GameOverUI : MonoBehaviour
 
     private void TriggerRespawn()
     {
-        // 중복 방지
         if (!showing) return;
         showing = false;
 
-        StopBlink();
         HideRespawnHint();
 
-        // 이벤트로 RespawnManager 쪽에서 처리(텔레포트/HP회복/애니 리셋/커서 잠금/Hide 호출 등)
+        // RespawnManager가 이 이벤트를 구독해서 부활 처리
         OnRetryPressed?.Invoke();
     }
 
-    // ====== Hint Blink ======
+    // ====== Hint (No Blink) ======
 
-    private void ShowRespawnHintBlink()
+    private void ShowRespawnHint()
     {
         if (respawnHintText == null) return;
 
         respawnHintText.text = respawnHint;
-        respawnHintText.gameObject.SetActive(true);
         respawnHintText.enabled = true;
-
-        StopBlink();
-        blinkCo = StartCoroutine(BlinkRoutine());
+        respawnHintText.gameObject.SetActive(true);
     }
 
     private void HideRespawnHint()
     {
         if (respawnHintText != null)
             respawnHintText.gameObject.SetActive(false);
-    }
-
-    private IEnumerator BlinkRoutine()
-    {
-        bool on = true;
-
-        while (true)
-        {
-            if (respawnHintText != null)
-                respawnHintText.enabled = on;
-
-            on = !on;
-
-            float t = 0f;
-            while (t < blinkInterval)
-            {
-                t += Time.unscaledDeltaTime;
-                yield return null;
-            }
-        }
-    }
-
-    private void StopBlink()
-    {
-        if (blinkCo != null)
-        {
-            StopCoroutine(blinkCo);
-            blinkCo = null;
-        }
-
-        if (respawnHintText != null)
-            respawnHintText.enabled = true;
     }
 
     // ====== Utility ======
@@ -335,7 +294,6 @@ public class GameOverUI : MonoBehaviour
         if (pauseTimeAfterFade)
             Time.timeScale = 1f;
 
-        StopBlink();
         HideImmediate();
     }
 

@@ -14,26 +14,21 @@ public class BossAIController : MonoBehaviour
     }
 
     [Header("이동 설정")]
-    [Tooltip("플레이어에게 이 거리까지는 접근, 그 안에서는 멈춤")]
     public float stopDistance = 3f;
-
-    [Tooltip("보스 회전 속도")]
     public float rotateSpeed = 8f;
 
     [Header("패턴 시스템 ")]
     public BossPatternBase[] patterns;
 
     private BossPatternBase currentPattern;
-    private BossEnemy boss; //보스 스탯/상태
+    private BossEnemy boss;
     private BossCore bossCore;
-    private Transform target; //플레이어
-    private IEnemyAttack basicAttack; //기본 공격
+    private Transform target;
+    private IEnemyAttack basicAttack;
+    private EnemyMeleeAttack meleeAttack; // ✅ 추가(보스도 EnemyMeleeAttack 쓰는 전제)
     private MonsterAnimation monsterAnim;
 
-    // 이동 잠금 여부
     private bool canMove = true;
-
-    //UI 한 번만 연결하기 위한 플래그
     private bool uiLinked = false;
 
     private BossState state = BossState.Idle;
@@ -42,10 +37,15 @@ public class BossAIController : MonoBehaviour
     public bool HasTarget => target != null && !boss.IsDead;
     private Coroutine downCo;
 
+    // ✅ 공격 기준: hitOrigin/hitRadius 우선
+    private Transform AttackOrigin => (meleeAttack != null) ? meleeAttack.AttackOrigin : transform;
+    private float AttackRange => (meleeAttack != null) ? meleeAttack.AttackRadius : boss.attackRange;
+
     private void Awake()
     {
         boss = GetComponent<BossEnemy>();
         basicAttack = GetComponent<IEnemyAttack>();
+        meleeAttack = GetComponent<EnemyMeleeAttack>(); // ✅ 추가
         monsterAnim = GetComponent<MonsterAnimation>() ?? GetComponentInChildren<MonsterAnimation>();
         bossCore = GetComponentInChildren<BossCore>();
 
@@ -61,7 +61,6 @@ public class BossAIController : MonoBehaviour
                 target = playerObj.transform;
         }
 
-        //어차피 보스전에서는 무조건 플레이를 쫓아오게 되어있으니까
         if (HasTarget)
             ChangeState(BossState.Chase);
     }
@@ -71,24 +70,14 @@ public class BossAIController : MonoBehaviour
         if (boss == null) return;
 
         if (boss.IsDead)
-        {
             ChangeState(BossState.Dead);
-        }
 
         switch (state)
         {
-            case BossState.Idle:
-                UpdateIdle();
-                break;
-            case BossState.Chase:
-                UpdateChase();
-                break;
-            case BossState.BasicAttack:
-                UpdateBasicAttack();
-                break;
-            case BossState.Pattern:
-                UpdatePattern();
-                break;
+            case BossState.Idle: UpdateIdle(); break;
+            case BossState.Chase: UpdateChase(); break;
+            case BossState.BasicAttack: UpdateBasicAttack(); break;
+            case BossState.Pattern: UpdatePattern(); break;
         }
 
         UpdateAnimation();
@@ -113,33 +102,18 @@ public class BossAIController : MonoBehaviour
 
         switch (state)
         {
-            case BossState.Idle:
-                SetCanMove(false);
-                break;
-
-            case BossState.BasicAttack:
-                SetCanMove(false);
-                break;
-
-            case BossState.Chase:
-                SetCanMove(true);
-                break;
-
-            case BossState.Pattern:
-                SetCanMove(false);
-                break;
-            case BossState.Down:
-                SetCanMove(false);
-                break;
+            case BossState.Idle: SetCanMove(false); break;
+            case BossState.BasicAttack: SetCanMove(false); break;
+            case BossState.Chase: SetCanMove(true); break;
+            case BossState.Pattern: SetCanMove(false); break;
+            case BossState.Down: SetCanMove(false); break;
         }
     }
 
     private void UpdateIdle()
     {
         if (HasTarget)
-        {
             ChangeState(BossState.Chase);
-        }
     }
 
     private void UpdateChase()
@@ -150,15 +124,12 @@ public class BossAIController : MonoBehaviour
             return;
         }
 
-        stateTimer += Time.deltaTime;
-
-        float dist = DistanceToTarget();
-
-        //패턴 먼저 시도
+        // 패턴 먼저
         if (TryUsePattern()) return;
 
-        float attackRange = boss.attackRange;
-        if (dist <= attackRange)
+        // ✅ 공격 전환 판단을 hitOrigin/hitRadius로
+        float distToAttackOrigin = Vector3.Distance(AttackOrigin.position, target.position);
+        if (distToAttackOrigin <= AttackRange)
         {
             ChangeState(BossState.BasicAttack);
             return;
@@ -167,7 +138,6 @@ public class BossAIController : MonoBehaviour
         MoveTowardsTarget(stopDistance);
     }
 
-    //기본 근접 공격 상태
     private void UpdateBasicAttack()
     {
         if (!HasTarget)
@@ -176,13 +146,12 @@ public class BossAIController : MonoBehaviour
             return;
         }
 
-        float dist = DistanceToTarget();
-        float attackRange = boss.attackRange;
-
         bool isAttacking = (basicAttack != null && basicAttack.IsAttacking);
 
-        // 공격 중이 아니고, 너무 멀어졌으면 다시 추적
-        if (!isAttacking && dist > attackRange * 1.2f)
+        // ✅ “너무 멀어졌나?”도 hitOrigin 기준
+        float distToAttackOrigin = Vector3.Distance(AttackOrigin.position, target.position);
+
+        if (!isAttacking && distToAttackOrigin > AttackRange * 1.2f)
         {
             ChangeState(BossState.Chase);
             return;
@@ -190,26 +159,26 @@ public class BossAIController : MonoBehaviour
 
         if (!isAttacking && TryUsePattern()) return;
 
-        // 기본 공격 시도 (쿨타임/거리 체크는 EnemyMeleeAttack 안에서 처리)
         basicAttack?.TryAttack(target);
     }
 
     private void UpdatePattern()
     {
         if (currentPattern != null && currentPattern.IsRunning)
-        {
             return;
-        }
 
         currentPattern = null;
+
         if (!HasTarget)
         {
             ChangeState(BossState.Idle);
             return;
         }
 
-        float dist = DistanceToTarget();
-        if (dist <= boss.attackRange)
+        // ✅ 패턴 끝나고 상태 복귀 판단도 hitOrigin 기준
+        float distToAttackOrigin = Vector3.Distance(AttackOrigin.position, target.position);
+
+        if (distToAttackOrigin <= AttackRange)
             ChangeState(BossState.BasicAttack);
         else
             ChangeState(BossState.Chase);
@@ -234,16 +203,9 @@ public class BossAIController : MonoBehaviour
         return false;
     }
 
-    public void HandleCoreBroken()
-    {
-        StartCoroutine(DownRoutine());
-    }
-
     public void EnterBreakGroggy(float duration, string triggerName)
     {
-
         StopAllCoroutines();
-
         ChangeState(BossState.Down);
 
         var anim = GetComponentInChildren<Animator>();
@@ -262,36 +224,12 @@ public class BossAIController : MonoBehaviour
             yield return null;
         }
 
-        // 다운 끝나면 다시 전투 재개
         if (!HasTarget) ChangeState(BossState.Idle);
         else ChangeState(BossState.Chase);
     }
 
-    private IEnumerator DownRoutine()
-    {
-        ChangeState(BossState.Down);
+    public bool IsDownState => state == BossState.Down;
 
-        float downDuration = 5f; // 임시 값 
-        float timer = 0f;
-        while (timer < downDuration)
-        {
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        if (!HasTarget)
-            ChangeState(BossState.Idle);
-        else
-        {
-            float dist = DistanceToTarget();
-            if (dist <= boss.attackRange)
-                ChangeState(BossState.BasicAttack);
-            else
-                ChangeState(BossState.Chase);
-        }
-    }
-
-    public bool IsDownState => state == BossState.Dead;
     public void EnterParryGroggy(float duration, string triggerName)
     {
         StopAllCoroutines();
@@ -300,20 +238,14 @@ public class BossAIController : MonoBehaviour
         var anim = GetComponentInChildren<Animator>();
         if (anim != null && !string.IsNullOrEmpty(triggerName))
         {
-            anim.ResetTrigger(triggerName); // 트리거 씹힘 방지
+            anim.ResetTrigger(triggerName);
             anim.SetTrigger(triggerName);
         }
 
         downCo = StartCoroutine(DownTimer(duration));
     }
 
-    private float DistanceToTarget()
-    {
-        if (!HasTarget) return Mathf.Infinity;
-        return Vector3.Distance(transform.position, target.position);
-    }
-
-    private void MoveTowardsTarget(float stopDistance)
+    private void MoveTowardsTarget(float stopDist)
     {
         if (!HasTarget) return;
         if (!canMove) return;
@@ -322,7 +254,7 @@ public class BossAIController : MonoBehaviour
         toTarget.y = 0f;
 
         float dist = toTarget.magnitude;
-        if (dist <= stopDistance) return;
+        if (dist <= stopDist) return;
 
         Vector3 dir = toTarget.normalized;
 
@@ -331,8 +263,7 @@ public class BossAIController : MonoBehaviour
         if (dir.sqrMagnitude > 0.001f)
         {
             Quaternion lookRot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation, lookRot, rotateSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, rotateSpeed * Time.deltaTime);
         }
     }
 
@@ -341,11 +272,8 @@ public class BossAIController : MonoBehaviour
         if (monsterAnim == null) return;
 
         float speed = 0f;
-
         if (state == BossState.Chase && canMove)
-        {
             speed = boss.moveSpeed;
-        }
 
         bool isChasing = (state == BossState.Chase);
         bool isDead = boss.IsDead;
@@ -355,17 +283,13 @@ public class BossAIController : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        if (boss == null)
-            boss = GetComponent<BossEnemy>();
+        if (boss == null) boss = GetComponent<BossEnemy>();
 
-        // 공격 범위 정도만 참고용으로 표시
         Gizmos.color = Color.red;
-        if (boss != null)
-            Gizmos.DrawWireSphere(transform.position, boss.attackRange);
+        Vector3 center = (meleeAttack != null && meleeAttack.AttackOrigin != null) ? meleeAttack.AttackOrigin.position : transform.position;
+        float r = (meleeAttack != null) ? meleeAttack.AttackRadius : (boss != null ? boss.attackRange : 0f);
+        if (r > 0f) Gizmos.DrawWireSphere(center, r);
     }
 
-    public void SetCanMove(bool value)
-    {
-        canMove = value;
-    }
+    public void SetCanMove(bool value) => canMove = value;
 }

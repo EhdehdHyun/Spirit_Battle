@@ -188,8 +188,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Use
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3b5a3fc992259f14b804b21dc274b64e, type: 2}
+  m_sharedMaterial: {fileID: -7017452475758020853, guid: 3b5a3fc992259f14b804b21dc274b64e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -322,8 +322,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Body
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3b5a3fc992259f14b804b21dc274b64e, type: 2}
+  m_sharedMaterial: {fileID: -7017452475758020853, guid: 3b5a3fc992259f14b804b21dc274b64e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -618,9 +618,10 @@ MonoBehaviour:
   root: {fileID: 7576256908235709307}
   iconImage: {fileID: 3578283876437831433}
   nameText: {fileID: 1946926088343178961}
-  qtyText: {fileID: 0}
+  bodyText: {fileID: 0}
   useButton: {fileID: 1918717100667841843}
-  exitButton: {fileID: 1503065949725234682}
+  dropButton: {fileID: 0}
+  closeButton: {fileID: 0}
 --- !u!1 &7626013305870814302
 GameObject:
   m_ObjectHideFlags: 0
@@ -865,8 +866,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Title
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3b5a3fc992259f14b804b21dc274b64e, type: 2}
+  m_sharedMaterial: {fileID: -7017452475758020853, guid: 3b5a3fc992259f14b804b21dc274b64e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -999,8 +1000,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Exit
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 3b5a3fc992259f14b804b21dc274b64e, type: 2}
+  m_sharedMaterial: {fileID: -7017452475758020853, guid: 3b5a3fc992259f14b804b21dc274b64e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

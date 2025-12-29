@@ -44,7 +44,7 @@ public class BossCore : MonoBehaviour
         // 보스 Down 상태 진입 요청
         if (bossAI != null)
         {
-            bossAI.HandleCoreBroken();
+            //bossAI.HandleCoreBroken();
         }
     }
 }

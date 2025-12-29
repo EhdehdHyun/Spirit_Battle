@@ -10039,7 +10039,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1026357426712680895
 Transform:
   m_ObjectHideFlags: 0
@@ -10070,12 +10070,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcef1d1e20ef8f6438cad2c4335dbd7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 100
+  maxHp: 400
   currentHp: 0
   moveSpeed: 3
+  heavyHit: 25
   detectRange: 16.9
-  attackRange: 4
-  maxPhase: 2
+  attackRange: 8.94
+  maxPhase: 3
   phase2HpRatio: 0.5
   phase3HpRatio: 0.2
   phase2MoveSpeedMultiplier: 1.2
@@ -10088,6 +10089,11 @@ MonoBehaviour:
   breakGroggyDuration: 5
   groggyExtraDamageRatio: 5
   breakGroggyTriggerName: BreakGroggy
+  isTutorialBoss: 1
+  phase3FinaleTriggerName: Phase3Finale
+  usePhase3TutorialSequence: 1
+  phase3TutorialTriggerName: Phase3Finale
+  phase3SetHpDelay: 5
 --- !u!114 &5510159728944212933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10120,7 +10126,7 @@ MonoBehaviour:
   damage: 30
   attackCooldown: 1.4
   hitOrigin: {fileID: 1267480653314365648}
-  hitRadius: 3.58
+  hitRadius: 6.51
   hitMask:
     serializedVersion: 2
     m_Bits: 128
@@ -10221,7 +10227,7 @@ MonoBehaviour:
   parryWindowOpen: 0
   defaultParryGroggyDuration: 2
   parryGroggyTriggerName: ParryGroggy
-  ignoreParryWhileBreakGroggy: 1
+  ignoreParryWhileGroggy: 1
 --- !u!95 &4515928226743125942
 Animator:
   serializedVersion: 5
@@ -20632,7 +20638,7 @@ Transform:
   m_GameObject: {fileID: 8014719168056428358}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
