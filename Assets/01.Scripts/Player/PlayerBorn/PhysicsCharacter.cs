@@ -76,6 +76,16 @@ public class PhysicsCharacter : MonoBehaviour
     [Tooltip("지면 체크 여유 거리")]
     public float groundCastExtra = 0.05f;
 
+    [Header("벽 슬라이드 (벽에 달라붙는 현상 방지)")]
+    [Tooltip("벽 체크 거리")]
+    public float wallCheckDistance = 0.2f;
+
+    [Tooltip("이 값보다 normal.y가 작으면 벽/수직면으로 판단")]
+    [Range(0f, 1f)] public float wallNormalYThreshold = 0.2f;
+
+    [Tooltip("미세한 접촉에서 떨림 방지용")]
+    public float wallStickEpsilon = 0.01f;
+
     [Header("이동 정지")]
     public bool movementLock = false;
 
@@ -277,6 +287,43 @@ public class PhysicsCharacter : MonoBehaviour
         p2 = center - up * offset;
     }
 
+    Vector3 RemoveIntoWallVelocity(Vector3 horizontal)
+    {
+        if (horizontal.sqrMagnitude <= 0.0001f) return horizontal;
+
+        GetCapsuleWorldPoints(out Vector3 p1, out Vector3 p2, out float radius);
+
+        Vector3 dir = horizontal.normalized;
+        float castRadius = radius * groundCastSkin;
+
+        // 이동하는 방향으로 캡슐캐스트해서 "바로 앞의 벽"만 검사
+        if (Physics.CapsuleCast(
+            p1, p2,
+            castRadius,
+            dir,
+            out RaycastHit hit,
+            wallCheckDistance,
+            groundMask,
+            QueryTriggerInteraction.Ignore
+        ))
+        {
+            // 노멀이 거의 수평이면(= y가 작으면) 벽으로 판단
+            if (Mathf.Abs(hit.normal.y) < wallNormalYThreshold)
+            {
+                // 벽 안으로 파고드는 성분 제거 + 평면 투영(슬라이드)
+                float dot = Vector3.Dot(horizontal, hit.normal);
+
+                // dot이 음수면(대부분) 벽 쪽으로 파고드는 중이므로 그 성분만 제거
+                if (dot < -wallStickEpsilon)
+                    horizontal -= hit.normal * dot;
+
+                horizontal = Vector3.ProjectOnPlane(horizontal, hit.normal);
+            }
+        }
+
+        return horizontal;
+    }
+
     void UpdateGroundCheck()
     {
         _wasGrounded = _isGrounded;
@@ -409,6 +456,9 @@ public class PhysicsCharacter : MonoBehaviour
 
         // 넉백 수평 성분 합산
         horizontal += new Vector3(_externalHorizontalVelocity.x, 0f, _externalHorizontalVelocity.z);
+
+        // 벽에 붙는 현상 방지: 벽 안으로 파고드는 성분 제거(슬라이드)
+        horizontal = RemoveIntoWallVelocity(horizontal);
 
         v.x = horizontal.x;
         v.z = horizontal.z;

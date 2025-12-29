@@ -15,7 +15,6 @@ public class LoadingSpinnerRotator : MonoBehaviour
 
     private void OnEnable()
     {
-        // 켤 때 각도 초기화(원하면)
         if (rt != null) rt.localRotation = Quaternion.identity;
     }
 
@@ -24,7 +23,7 @@ public class LoadingSpinnerRotator : MonoBehaviour
         float dt = useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
         float delta = degreesPerSecond * dt;
 
-        // UI는 보통 Z축 회전
+
         transform.Rotate(0f, 0f, -delta);
     }
 }
