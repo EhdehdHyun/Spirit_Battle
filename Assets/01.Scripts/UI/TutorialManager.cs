@@ -133,7 +133,7 @@ public class TutorialManager : MonoBehaviour
     }
     public void ShowSimpleMessage(string message)
     {
-        Debug.Log("ShowSimpleMessage CALLED");
-        tutorialUI.Show("다음 몬스터를 상대하면서 패링을 배워보자");
+        if (string.IsNullOrEmpty(message)) return;
+        tutorialUI.Show(message);
     }
 }
