@@ -36,6 +36,11 @@ public class RespawnManager : MonoBehaviour
             return;
         }
 
+        if (BossUIStatus.Instance != null)
+        {
+            BossUIStatus.Instance.SetVisible(false);
+        }
+
         // 이동(텔레포트)
         TeleportPlayerRoot(playerRoot, respawnPoint.position);
 

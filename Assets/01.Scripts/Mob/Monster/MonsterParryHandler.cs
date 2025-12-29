@@ -1,60 +1,67 @@
-﻿using Unity.VisualScripting;
-using UnityEditor.EditorTools;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MonsterParryHandler : MonoBehaviour, IParryable, IParryReceiver
 {
     [Header("패링 윈도우")]
-    [Tooltip("애니메이션 이벤트로 켜고 끌 패링 가능 구간")]
     [SerializeField] private bool parryWindowOpen = false;
 
     [Header("패링 그로기")]
     [SerializeField] private float defaultParryGroggyDuration = 2f;
     [SerializeField] private string parryGroggyTriggerName = "ParryGroggy";
-    [Tooltip("브레이크 그로기 중엔 패링을 무시할지(혹시 모를 상황을 대비해 체크용으로 넣어 둠)")]
-    [SerializeField] private bool ignoreParryWhileBreakGroggy = true;
+    [SerializeField] private bool ignoreParryWhileGroggy = true;
 
-    private BossAIController bossAI;
-    private BossEnemy bossEnemy;
+    private CharacterBase character;
+    private IParryGroggyController groggy;
 
-    private void Awake()
+    private void Awake() => CacheRefs();
+    private void OnEnable() => CacheRefs();
+
+    private void CacheRefs()
     {
-        bossAI = GetComponentInParent<BossAIController>();
-        bossEnemy = GetComponentInParent<BossEnemy>();
+        if (character == null) character = GetComponentInParent<CharacterBase>();
+        if (groggy == null) groggy = GetComponentInParent<IParryGroggyController>();
     }
 
     public bool TryParry(WeaponHitBox hitBox, Vector3 hitPoint)
     {
-        if (bossEnemy != null && bossEnemy.IsDead) return false;
-
-        if (ignoreParryWhileBreakGroggy && bossAI != null && bossAI.IsDownState)
-            return false;
+        CacheRefs();
 
         if (!parryWindowOpen) return false;
+        if (character != null && !character.IsAlive) return false;
 
+        if (groggy == null)
+        {
+            Debug.LogWarning($"[{name}] IParryGroggyController를 부모에서 찾지 못함. (EnemyAIController/BossAIController에 인터페이스 구현 필요)", this);
+            return false;
+        }
+
+        if (ignoreParryWhileGroggy && groggy.IsParryImmune)
+            return false;
+
+        // ✅ 패링 정보 만들고 공통 처리로 넘김
         ParryInfo info = new ParryInfo
         {
             defender = hitBox != null ? hitBox.gameObject : null,
             point = hitPoint,
             stunTime = defaultParryGroggyDuration
         };
+
         OnParried(info);
         return true;
     }
 
     public void OnParried(ParryInfo info)
     {
-        if (bossAI == null) return;
-        float duration = (info.stunTime > 0f) ? info.stunTime : defaultParryGroggyDuration;
+        CacheRefs();
+        if (groggy == null) return;
 
-        bossAI.EnterParryGroggy(duration, parryGroggyTriggerName);
+        float duration = (info.stunTime > 0f) ? info.stunTime : defaultParryGroggyDuration;
+        groggy.EnterParryGroggy(duration, parryGroggyTriggerName);
 
         parryWindowOpen = false;
-
-
     }
 
-    //애니메이션 이벤트용(공격 모션 중간 패링이 가능한 구간에 애니메이션 삽입)
+    // 애니메이션 이벤트
     public void Anim_ParryWindowOn() => parryWindowOpen = true;
     public void Anim_ParryWindowOff() => parryWindowOpen = false;
 }

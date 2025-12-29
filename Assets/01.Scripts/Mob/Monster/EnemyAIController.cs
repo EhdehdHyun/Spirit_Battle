@@ -1,15 +1,16 @@
-using Unity.Mathematics;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyAIController : MonoBehaviour
+public class EnemyAIController : MonoBehaviour, IParryGroggyController
 {
     public enum AIState
     {
-        Idle, //대기
-        Chase, //추적
-        Attack, //공격
-        Dead // 유다희
+        Idle,
+        Chase,
+        Attack,
+        Groggy,
+        Dead
     }
 
     [Header("AI 설정")]
@@ -20,48 +21,69 @@ public class EnemyAIController : MonoBehaviour
     [Tooltip("더 이상 안 쫓아오는 거리")]
     public float loseTargetDistance = 20f;
 
-    private EnemyBase enemy; //몬스터 기본 스탯/상태
+    private EnemyBase enemy;
     private NavMeshAgent agent;
     private IEnemyAttack attack;
+    private EnemyMeleeAttack meleeAttack; // ✅ hitOrigin/hitRadius 접근용
     private Transform target;
     private MonsterAnimation monsterAnim;
 
     private AIState state = AIState.Idle;
-    private float stateTimer = 0f; // 업데이트 간격 용
+    private float stateTimer = 0f;
 
     public bool HasTarget => target != null;
+
+    // ===== 패링(그로기)용 =====
+    [Header("Parry Groggy")]
+    [SerializeField] private string defaultParryGroggyTrigger = "ParryGroggy";
+    private Coroutine groggyCo;
+
+    // IParryGroggyController
+    public bool IsParryImmune => (enemy != null && enemy.IsDead) || state == AIState.Groggy || state == AIState.Dead;
+
+    // ✅ 공격 기준(핵심): hitOrigin/hitRadius 우선, 없으면 fallback
+    private Transform AttackOrigin
+    {
+        get
+        {
+            if (meleeAttack != null && meleeAttack.hitOrigin != null) return meleeAttack.hitOrigin;
+            return transform;
+        }
+    }
+
+    private float AttackRange
+    {
+        get
+        {
+            if (meleeAttack != null) return meleeAttack.hitRadius;
+            return enemy != null ? enemy.attackRange : 0f; // fallback
+        }
+    }
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-
         enemy = GetComponent<EnemyBase>();
-
         attack = GetComponent<IEnemyAttack>();
+        meleeAttack = GetComponent<EnemyMeleeAttack>(); // ✅ 있으면 공격거리 통일
 
         if (enemy == null)
             Debug.LogError($"{name} : EnemyBase가 필요합니다");
 
         if (attack == null)
-            Debug.LogWarning($"{name} : 컴포넌트가 없습니다.");
+            Debug.LogWarning($"{name} : IEnemyAttack 컴포넌트가 없습니다.");
 
-        monsterAnim = GetComponent<MonsterAnimation>();
-        if (monsterAnim == null)
-        {
-            monsterAnim = GetComponentInChildren<MonsterAnimation>();
-        }
+        monsterAnim = GetComponent<MonsterAnimation>() ?? GetComponentInChildren<MonsterAnimation>();
 
-        if (target == null) //플레이어 자동 탐색
+        if (target == null)
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null)
                 target = playerObj.transform;
         }
 
-        if (enemy != null && agent != null) //EnemyBase의 moveSpeed를 navMeshAgent의 speed에도 반영
-        {
+        if (enemy != null && agent != null)
             agent.speed = enemy.moveSpeed;
-        }
     }
 
     private void Update()
@@ -69,24 +91,15 @@ public class EnemyAIController : MonoBehaviour
         if (enemy == null) return;
 
         if (enemy.IsDead)
-        {
             ChangeState(AIState.Dead);
-        }
 
-        switch (state) //현재 상태에 따른 다른 Update로직 실행
+        switch (state)
         {
-            case AIState.Idle:
-                UpdateIdle();
-                break;
-            case AIState.Chase:
-                UpdateChase();
-                break;
-            case AIState.Attack:
-                UpdateAttack();
-                break;
-            case AIState.Dead:
-                UpdateDead();
-                break;
+            case AIState.Idle: UpdateIdle(); break;
+            case AIState.Chase: UpdateChase(); break;
+            case AIState.Attack: UpdateAttack(); break;
+            case AIState.Groggy: UpdateGroggy(); break;
+            case AIState.Dead: UpdateDead(); break;
         }
 
         UpdateAnimation();
@@ -102,28 +115,79 @@ public class EnemyAIController : MonoBehaviour
         switch (state)
         {
             case AIState.Idle:
-                agent.isStopped = true; // 제자리 대기
+                if (agent != null) { agent.isStopped = true; agent.ResetPath(); }
                 break;
+
             case AIState.Chase:
-                agent.isStopped = false; // 추적 시작
+                if (agent != null) agent.isStopped = false;
                 break;
+
             case AIState.Attack:
-                agent.isStopped = true; // 공격할 땐 제자리
+                if (agent != null) { agent.isStopped = true; agent.ResetPath(); }
                 break;
+
+            case AIState.Groggy:
+                if (agent != null) { agent.isStopped = true; agent.ResetPath(); }
+                break;
+
             case AIState.Dead:
-                agent.isStopped = true; // 죽으면 멈춤
+                if (agent != null) { agent.isStopped = true; agent.ResetPath(); }
                 monsterAnim?.PlayDie();
                 break;
         }
     }
 
-    #region  각 상태별 Update 로직
+    // ====== IParryGroggyController 구현 ======
+    public void EnterParryGroggy(float duration, string triggerName)
+    {
+        if (enemy == null || enemy.IsDead) return;
 
+        if (groggyCo != null) StopCoroutine(groggyCo);
+
+        ChangeState(AIState.Groggy);
+
+        var anim = GetComponentInChildren<Animator>();
+        string trig = string.IsNullOrEmpty(triggerName) ? defaultParryGroggyTrigger : triggerName;
+        if (anim != null && !string.IsNullOrEmpty(trig))
+        {
+            anim.ResetTrigger(trig);
+            anim.SetTrigger(trig);
+        }
+
+        groggyCo = StartCoroutine(GroggyRoutine(Mathf.Max(0.05f, duration)));
+    }
+
+    private IEnumerator GroggyRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        groggyCo = null;
+
+        if (!HasTarget) { ChangeState(AIState.Idle); yield break; }
+
+        float dist = DistanceToTarget(); // ✅ 추적 포기/감지 등은 몬스터 기준이 자연스러움
+        if (dist > loseTargetDistance)
+        {
+            ChangeState(AIState.Idle);
+        }
+        else
+        {
+            float atkDist = DistanceToTargetFromAttackOrigin(); // ✅ 공격 여부는 hitOrigin 기준
+            if (atkDist <= AttackRange)
+                ChangeState(AIState.Attack);
+            else
+            {
+                ChangeState(AIState.Chase);
+                if (agent != null) agent.SetDestination(target.position);
+            }
+        }
+    }
+
+    // ====== 상태별 Update ======
     private void UpdateIdle()
     {
         stateTimer += Time.deltaTime;
 
-        if (!HasTarget) //타겟 없으면 새로 검색
+        if (!HasTarget)
         {
             TryFindTarget();
             return;
@@ -134,111 +198,91 @@ public class EnemyAIController : MonoBehaviour
             stateTimer = 0f;
 
             float dist = DistanceToTarget();
-
-            if (dist <= enemy.detectRange) //감지 범위 안에 들어오면 추적 시작
-            {
+            if (dist <= enemy.detectRange)
                 ChangeState(AIState.Chase);
-            }
         }
     }
 
-    private void UpdateChase() //chase = 추적 즉 타겟을 NavMesh로 따라감
+    private void UpdateChase()
     {
-        if (!HasTarget)
-        {
-            ChangeState(AIState.Idle);
-            return;
-        }
+        if (!HasTarget) { ChangeState(AIState.Idle); return; }
 
         stateTimer += Time.deltaTime;
 
         float dist = DistanceToTarget();
+        if (dist > loseTargetDistance) { ChangeState(AIState.Idle); return; }
 
-        if (dist > loseTargetDistance)
-        {
-            ChangeState(AIState.Idle);
-            return;
-        }
-
-        //공격 범위에 들어왔으면 Attack 상태로
-        float attackRange = enemy.attackRange;
-        if (dist <= attackRange)
+        // ✅ 공격 전환은 hitOrigin 기준으로!
+        float atkDist = DistanceToTargetFromAttackOrigin();
+        if (atkDist <= AttackRange)
         {
             ChangeState(AIState.Attack);
             return;
         }
 
-        //일정 주기로 목지만 갱신, 성능 최적화 목적으로 일단 넣어봄
         if (stateTimer >= chaseUpdateInterval)
         {
             stateTimer = 0f;
-            agent.SetDestination(target.position);
+            if (agent != null) agent.SetDestination(target.position);
         }
     }
 
-    private void UpdateAttack() // attack 상태 
+    private void UpdateAttack()
     {
-        if (!HasTarget)
-        {
-            ChangeState(AIState.Idle);
-            return;
-        }
-
-        float dist = DistanceToTarget();
-        float attackRange = enemy.attackRange;
+        if (!HasTarget) { ChangeState(AIState.Idle); return; }
 
         bool isAttacking = (attack != null && attack.IsAttacking);
 
-        //너무 멀어졌으면 다시 추적 시작
-        if (!isAttacking && dist > attackRange * 1.2f)
+        // ✅ 공격 유지/이탈 판단도 hitOrigin 기준으로!
+        float atkDist = DistanceToTargetFromAttackOrigin();
+        float atkRange = AttackRange;
+
+        if (!isAttacking && atkDist > atkRange * 1.2f)
         {
             ChangeState(AIState.Chase);
             return;
         }
 
-        //타겟 쪽으로 회전
+        // 회전
         Vector3 dir = (target.position - transform.position);
         dir.y = 0f;
-
         if (dir.sqrMagnitude > 0.01f)
         {
             Quaternion lookRot = Quaternion.LookRotation(dir.normalized);
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, 10f * Time.deltaTime);
         }
 
-        //공격 시도
-        if (attack != null)
-        {
-            attack.TryAttack(target);
-        }
-        else
-        {
-            ChangeState(AIState.Chase);
-        }
+        attack?.TryAttack(target);
+    }
+
+    private void UpdateGroggy()
+    {
+        // 그로기 중엔 아무 것도 안 함
     }
 
     private void UpdateAnimation()
     {
-        if (monsterAnim == null || agent == null) return;
+        if (monsterAnim == null || agent == null || enemy == null) return;
 
-        float speed = agent.velocity.magnitude;
+        float speed = (state == AIState.Groggy || state == AIState.Dead) ? 0f : agent.velocity.magnitude;
         bool isChasing = (state == AIState.Chase);
         bool isDead = enemy.IsDead;
 
         monsterAnim.UpdateLocomotion(speed, isChasing, isDead);
     }
 
-    private void UpdateDead()
-    {
-        //사망 애니메이션 재생 후 Destory 실행
-    }
-
-    #endregion
+    private void UpdateDead() { }
 
     private float DistanceToTarget()
     {
         if (!HasTarget) return Mathf.Infinity;
         return Vector3.Distance(transform.position, target.position);
+    }
+
+    private float DistanceToTargetFromAttackOrigin()
+    {
+        if (!HasTarget) return Mathf.Infinity;
+        return Vector3.Distance(AttackOrigin.position, target.position);
     }
 
     private void TryFindTarget()
@@ -248,42 +292,29 @@ public class EnemyAIController : MonoBehaviour
             target = playerObj.transform;
     }
 
-    //몬스터 감지, 공격 범위(사거리), 추적 포기 거리를 볼 수 있게 해주는 메써드
     private void OnDrawGizmosSelected()
     {
-        // EnemyBase, IEnemyAttack가 아직 할당 안 됐을 수 있으니까 안전하게 가져오기
-        if (enemy == null)
-            enemy = GetComponent<EnemyBase>();
-        if (attack == null)
-            attack = GetComponent<IEnemyAttack>();
+        if (enemy == null) enemy = GetComponent<EnemyBase>();
 
-        // 기준 위치 (몬스터 발 밑)
         Vector3 center = transform.position;
 
-        // 1) 감지 범위 - 노란색
+        // 감지 범위
         if (enemy != null)
         {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(center, enemy.detectRange);
         }
 
-        // 2) 공격 범위 - 빨간색
-        float attackRange = 0f;
+        // 공격 범위(✅ hitOrigin 기준으로!)
+        Gizmos.color = Color.red;
+        Vector3 atkCenter = AttackOrigin != null ? AttackOrigin.position : transform.position;
+        float atkRange = AttackRange;
+        if (atkRange > 0f)
+            Gizmos.DrawWireSphere(atkCenter, atkRange);
 
-        if (enemy != null)
-            attackRange = enemy.attackRange;
-
-        if (attackRange > 0f)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(center, attackRange);
-        }
-
-        // 3) 타겟 포기 거리 - 파란색
+        // 포기 거리
+        Gizmos.color = Color.cyan;
         if (loseTargetDistance > 0f)
-        {
-            Gizmos.color = Color.cyan;
             Gizmos.DrawWireSphere(center, loseTargetDistance);
-        }
     }
 }
