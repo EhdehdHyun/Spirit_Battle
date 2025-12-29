@@ -63,6 +63,19 @@ public class PhysicsCharacter : MonoBehaviour
     [Tooltip("지면/벽으로 인식할 레이어 마스크")]
     public LayerMask groundMask;
 
+    [Header("경사/붙이기")]
+    [Tooltip("이 각도보다 가파르면 지면으로 인정하지 않음")]
+    public float slopeLimit = 55f;
+
+    [Tooltip("바닥에 붙이는 힘")]
+    public float groundStickForce = 30f;
+
+    [Tooltip("캡슐 캐스트 반지름에 적용할 스킨")]
+    [Range(0.7f, 1.0f)] public float groundCastSkin = 0.95f;
+
+    [Tooltip("지면 체크 여유 거리")]
+    public float groundCastExtra = 0.05f;
+
     [Header("이동 정지")]
     public bool movementLock = false;
 
@@ -79,6 +92,7 @@ public class PhysicsCharacter : MonoBehaviour
 
     // 내부 필드
     Rigidbody _rb;
+    CapsuleCollider _col; // 캡슐 기반 지면판정용
 
     // 입력 벡터 (XZ)
     Vector2 _moveInput;
@@ -87,6 +101,10 @@ public class PhysicsCharacter : MonoBehaviour
     bool _isGrounded;
     bool _wasGrounded;
     float _lastGroundedTime;
+
+    // 현재 지면 노멀/히트 정보(경사 투영 정보)
+    Vector3 _groundNormal = Vector3.up;
+    RaycastHit _groundHit;
 
     //달리기 상태
     bool _runAfterDash;
@@ -108,6 +126,7 @@ public class PhysicsCharacter : MonoBehaviour
     void Awake()
     {
         _rb = GetComponent<Rigidbody>();
+        _col = GetComponent<CapsuleCollider>();
 
         // Dynamic 설정
         _rb.isKinematic = false;
@@ -116,13 +135,15 @@ public class PhysicsCharacter : MonoBehaviour
                         | RigidbodyConstraints.FreezeRotationY
                         | RigidbodyConstraints.FreezeRotationZ;
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
+
+        _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
     }
 
     void FixedUpdate()
     {
         float dt = Time.fixedDeltaTime;
 
-        if (_runAfterDash && !_isDashing &&_moveInput.sqrMagnitude <= 0.001f)
+        if (_runAfterDash && !_isDashing && _moveInput.sqrMagnitude <= 0.001f)
             _runAfterDash = false;
 
         UpdateGroundCheck();
@@ -192,7 +213,12 @@ public class PhysicsCharacter : MonoBehaviour
         if (_dashCooldownTimer > 0f)
             return false;
 
-        direction.y = 0f;
+        //  지상 대쉬는 경사면 평면에 투영
+        if (IsGrounded)
+            direction = Vector3.ProjectOnPlane(direction, _groundNormal);
+        else
+            direction.y = 0f;
+
         if (direction.sqrMagnitude < 0.0001f)
             return false;
 
@@ -224,44 +250,89 @@ public class PhysicsCharacter : MonoBehaviour
 
     // ================== 내부 로직 ================== //
 
+    // 경사면 투영 유틸
+    static Vector3 ProjectOnGround(Vector3 dir, Vector3 groundNormal)
+    {
+        dir = Vector3.ProjectOnPlane(dir, groundNormal);
+        return dir.sqrMagnitude > 0.0001f ? dir.normalized : Vector3.zero;
+    }
+
+    // 캡슐 월드 포인트 계산
+    void GetCapsuleWorldPoints(out Vector3 p1, out Vector3 p2, out float radius)
+    {
+        Vector3 center = transform.TransformPoint(_col.center);
+
+        float scaleX = Mathf.Abs(transform.lossyScale.x);
+        float scaleY = Mathf.Abs(transform.lossyScale.y);
+        float scaleZ = Mathf.Abs(transform.lossyScale.z);
+
+        radius = _col.radius * Mathf.Max(scaleX, scaleZ);
+        float height = Mathf.Max(_col.height * scaleY, radius * 2f);
+
+        float half = height * 0.5f;
+        float offset = half - radius;
+
+        Vector3 up = Vector3.up;
+        p1 = center + up * offset;
+        p2 = center - up * offset;
+    }
+
     void UpdateGroundCheck()
     {
         _wasGrounded = _isGrounded;
 
-        Vector3 origin = transform.position + Vector3.up * 0.1f;
-        Ray ray = new Ray(origin, Vector3.down);
-        float dist = groundCheckDistance + 0.1f;
+        GetCapsuleWorldPoints(out Vector3 p1, out Vector3 p2, out float radius);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, dist, groundMask, QueryTriggerInteraction.Ignore))
+        float castRadius = radius * groundCastSkin;
+        float dist = groundCheckDistance + groundCastExtra;        
+
+        bool hit = Physics.CapsuleCast(
+            p1, p2,
+            castRadius,
+            Vector3.down,
+            out _groundHit,
+            dist,
+            groundMask,
+            QueryTriggerInteraction.Ignore
+        );
+
+        if (hit)
         {
-            _isGrounded = true;
-            _lastGroundedTime = Time.time;
+            float angle = Vector3.Angle(_groundHit.normal, Vector3.up);
 
-            // 지면에 닿았으면 낙하 종료
-            IsFalling = false;
-
-            // 아래로 떨어지던 중이면 y 속도 정리
-            Vector3 v = _rb.velocity;
-            if (v.y < 0f)
+            // 너무 가파른 면은 벽/미끄럼 취급
+            if (angle <= slopeLimit)
             {
-                v.y = 0f;
-                _rb.velocity = v;
+                _isGrounded = true;
+                _groundNormal = _groundHit.normal; // 이동/대쉬 투영에 사용
+                _lastGroundedTime = Time.time;
+
+                IsFalling = false;
+
+                // 땅 밟으면 에어대쉬 사용 상태 리셋
+                _airDashUsed = false;
+
+                // 아래로 떨어지던 중이면 y 속도 정리(착지 튐 방지)
+                Vector3 v = _rb.velocity;
+                if (v.y < 0f)
+                {
+                    v.y = 0f;
+                    _rb.velocity = v;
+                }
+                return;
             }
         }
-        else
-        {
-            _isGrounded = false;
 
-            // 이전 프레임까지는 땅이었는데 지금은 공중이고,
-            // y속도가 아래로 향하면 떨어지기 시작한 상태로 본다.
-            Vector3 v = _rb.velocity;
-            if (_wasGrounded && v.y <= 0f)
-            {
-                IsFalling = true;
-            }
+        _isGrounded = false;
+        _groundNormal = Vector3.up;
+
+        // 이전 프레임까지는 땅이었는데 지금은 공중이고,
+        // y속도가 아래로 향하면 떨어지기 시작한 상태로 본다.
+        Vector3 vv = _rb.velocity;
+        if (_wasGrounded && vv.y <= 0f)
+        {
+            IsFalling = true;
         }
-        if (_isGrounded)
-            _airDashUsed = true;
     }
 
     void UpdateDashTimers(float dt)
@@ -276,11 +347,13 @@ public class PhysicsCharacter : MonoBehaviour
                 _isDashing = false;
         }
     }
+
     //Walk적용
     void UpdateHorizontalVelocity(float dt)
     {
         Vector3 v = _rb.velocity;
         Vector3 horizontal = new Vector3(v.x, 0f, v.z);
+
         if (movementLock)
         {
             horizontal = Vector3.zero;
@@ -289,13 +362,27 @@ public class PhysicsCharacter : MonoBehaviour
         if (_isDashing)
         {
             // 대쉬 중에는 입력 무시, 고정 속도
-            horizontal = _dashDirection * dashSpeed;
+            Vector3 dashDir = _dashDirection;
+
+            // 지상 대쉬는 경사면 평면을 따라감
+            if (_isGrounded)
+                dashDir = ProjectOnGround(dashDir, _groundNormal);
+
+            horizontal = dashDir * dashSpeed;
         }
         else
         {
             float targetSpeed = (_weaponEquipped || _runAfterDash) ? runSpeed : walkSpeed;
 
-            Vector3 desired = new Vector3(_moveInput.x, 0f, _moveInput.y) * targetSpeed;
+            // 입력 벡터를 "지면 평면"에 맞춰서 이동
+            Vector3 inputDir = new Vector3(_moveInput.x, 0f, _moveInput.y);
+            if (inputDir.sqrMagnitude > 0.0001f)
+                inputDir.Normalize();
+
+            if (_isGrounded)
+                inputDir = ProjectOnGround(inputDir, _groundNormal);
+
+            Vector3 desired = inputDir * targetSpeed;
 
             //Vector3 desired = inputDir * targetSpeed;
 
@@ -326,6 +413,12 @@ public class PhysicsCharacter : MonoBehaviour
         v.x = horizontal.x;
         v.z = horizontal.z;
         _rb.velocity = v;
+
+        // 바닥 붙이기
+        if (_isGrounded && !_isDashing && !_jumpRequested)
+        {
+            _rb.AddForce(-_groundNormal * groundStickForce, ForceMode.Acceleration);
+        }
     }
 
     void ApplyJumpIfRequested()
