@@ -18,6 +18,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private WorldArrowController worldArrow;
     [SerializeField] private Transform attackTargetMonster;
     
+    [SerializeField] private Collider dashBlocker;
+    
     bool isActive;
     bool hasShownMoveGuide;
 
@@ -103,6 +105,10 @@ public class TutorialManager : MonoBehaviour
     {
         currentStep = Step.Done;
         isActive = false;
+        
+        // 벽 열기
+        if (dashBlocker != null)
+            dashBlocker.enabled = false;
 
         tutorialUI.Show("화살표 방향으로 이동해 F키를 눌러 보세요.");
         worldArrow.gameObject.SetActive(true);
