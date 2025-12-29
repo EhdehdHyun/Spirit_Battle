@@ -19,7 +19,8 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private Transform attackTargetMonster;
     
     [SerializeField] private Collider dashBlocker;
-    
+
+    bool w, a, s, d;
     bool isActive;
     bool hasShownMoveGuide;
 
@@ -42,6 +43,7 @@ public class TutorialManager : MonoBehaviour
         isActive = true;
         currentStep = Step.Move;
         
+        w = a = s = d = false;
         tutorialUI.Show("WASD 키로 움직여 보세요");
     }
 
@@ -51,15 +53,14 @@ public class TutorialManager : MonoBehaviour
 
         if (currentStep == Step.Move)
         {
-            if (
-                Input.GetKeyDown(KeyCode.W) ||
-                Input.GetKeyDown(KeyCode.A) ||
-                Input.GetKeyDown(KeyCode.S) ||
-                Input.GetKeyDown(KeyCode.D)
-            )
-            {
-                CompleteMoveTutorial();
-            }
+            if(Input.GetKeyDown(KeyCode.W)) w = true;
+            if(Input.GetKeyDown(KeyCode.A)) a = true;
+            if(Input.GetKeyDown(KeyCode.S)) s = true;
+            if(Input.GetKeyDown(KeyCode.D)) d = true;
+                if (w && a && s && d)
+                {
+                    CompleteMoveTutorial();
+                }
         }
         else if (currentStep == Step.Jump)
         {

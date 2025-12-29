@@ -56,7 +56,7 @@ public class DialogueManager : MonoBehaviour
         currentDialogueID = startID;
         onDialogueEnd = onEnd;
 
-        // ✅ 대화 시작 시 일시정지
+        //대화 시작 시 일시정지
         GamePause.Request(this);
 
         // 커서/락 (대화 중엔 UI 조작)
@@ -140,7 +140,7 @@ public class DialogueManager : MonoBehaviour
         if (npcFaceController != null)
             npcFaceController.StopLook();
 
-        // ✅ 대화 종료 시 일시정지 해제
+        //대화 종료 시 일시정지 해제
         GamePause.Release(this);
 
         // 커서 원복(게임 조작)
