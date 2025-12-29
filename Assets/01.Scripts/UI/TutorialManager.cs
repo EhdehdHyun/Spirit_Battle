@@ -136,4 +136,8 @@ public class TutorialManager : MonoBehaviour
         if (string.IsNullOrEmpty(message)) return;
         tutorialUI.Show(message);
     }
+    public void EndTutorialUI()
+    {
+        tutorialUI.Hide();
+    }
 }
