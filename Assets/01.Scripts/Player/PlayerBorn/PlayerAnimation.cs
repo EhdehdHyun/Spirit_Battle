@@ -219,7 +219,11 @@ public class PlayerAnimation : MonoBehaviour
 
     public void EvSlash(int comboIndex)
     {
-        comboIndex = anim.GetInteger(ComboIndexHash);
+        if (Time.timeScale == 0f) return;
+
+        // 공격 중이 아닐 때(장착/해제/무기뽑기 애니 등) 재생 금지
+        // (PlayerCombat의 isAttacking을 쓰는 방식)
+        if (combat != null && !combat.IsAttacking) return;
         vfx?.PlaySlash(comboIndex);
     }
 
