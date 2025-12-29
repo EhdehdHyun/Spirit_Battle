@@ -60,10 +60,8 @@ public class ChestInteractable : MonoBehaviour, IInteractable
     public void Interact(PlayerInteraction player)
     {
         Debug.Log("[ChestInteractable] Interact 호출");
-        if (worldArrow != null && worldArrow.gameObject.activeSelf)
-        {
-            worldArrow.gameObject.SetActive(false);
-        }
+
+        // 이미 열렸으면 아무 일도 안 함 (F 눌러도 무시)
         if (openOnlyOnce && isOpened)
             return;
 
@@ -73,6 +71,8 @@ public class ChestInteractable : MonoBehaviour, IInteractable
             animator.SetTrigger(openTriggerName);
 
         GiveReward(player);
+
+        // 튜토리얼 흐름만 알림 (화살표는 여기서 끄지 않음)
         TutorialManager.Instance.ShowMoveForwardText();
     }
 
