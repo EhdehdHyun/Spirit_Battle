@@ -14,4 +14,10 @@ public class AttackAreaBlocker : MonoBehaviour
             blockCollider.enabled = false;
             TutorialManager.Instance.ShowSimpleMessage(null);
         }
+        
+        private IEnumerator ShowMessageNextFrame()
+        {
+            yield return null; // 한 프레임 대기
+            TutorialManager.Instance.ShowSimpleMessage(null);
+        }
 }
