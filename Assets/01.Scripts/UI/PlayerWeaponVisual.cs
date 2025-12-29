@@ -1,68 +1,66 @@
 ﻿using UnityEngine;
+using UnityEngine.VFX;
 
 public class PlayerWeaponVisual : MonoBehaviour
 {
-    [Header("참조")]
     [SerializeField] private InventoryManager inventoryManager;
+    [SerializeField] private GameObject swordObject; // Sword_001 or Sword_002
 
-    [Header("플레이어 무기 오브젝트")]
-    [SerializeField] private GameObject swordObject; // Sword_001
+    // ✅ 소켓(VFX_Slash)은 끄면 안됨! vfxgraph만 끈다
+    private static readonly string[] AUTO_PLAY_VFX_NAMES =
+    {
+        "vfxgraph_Slash",
+        "vfxgraph_Spear"
+    };
 
     private void Awake()
     {
         if (inventoryManager == null)
             inventoryManager = InventoryManager.Instance;
-
-        ApplyEquippedVisual("Awake");
     }
 
     private void OnEnable()
     {
-        if (inventoryManager == null)
-            inventoryManager = InventoryManager.Instance;
-
         if (inventoryManager != null)
-            inventoryManager.OnInventoryChanged += OnInventoryChanged;
+            inventoryManager.OnInventoryChanged += Refresh;
 
-        ApplyEquippedVisual("OnEnable");
+        Refresh();
     }
 
     private void OnDisable()
     {
         if (inventoryManager != null)
-            inventoryManager.OnInventoryChanged -= OnInventoryChanged;
+            inventoryManager.OnInventoryChanged -= Refresh;
     }
 
-    private void OnInventoryChanged()
+    private void Refresh()
     {
-        ApplyEquippedVisual("OnInventoryChanged");
+        if (inventoryManager == null || swordObject == null) return;
+
+        bool hasWeapon = inventoryManager.GetEquippedWeapon() != null;
+
+        swordObject.SetActive(hasWeapon);
+
+        // ✅ 장착해서 무기 켜는 순간, 자동재생되는 vfxgraph만 OFF
+        if (hasWeapon)
+            DisableAutoPlayVFXGraphsOnly(swordObject.transform);
     }
 
-    private void ApplyEquippedVisual(string from)
+    private void DisableAutoPlayVFXGraphsOnly(Transform weaponRoot)
     {
-        if (swordObject == null)
+        foreach (Transform t in weaponRoot.GetComponentsInChildren<Transform>(true))
         {
-            Debug.LogWarning("[PlayerWeaponVisual] swordObject가 비어있음");
-            return;
+            for (int i = 0; i < AUTO_PLAY_VFX_NAMES.Length; i++)
+            {
+                if (t.name == AUTO_PLAY_VFX_NAMES[i])
+                {
+                    var vfx = t.GetComponent<VisualEffect>();
+                    if (vfx != null) vfx.Stop(); // 혹시 켜지며 재생되면 멈춤
+
+                    // ✅ 이 오브젝트만 꺼서 장착 순간 보이는 현상 차단
+                    t.gameObject.SetActive(false);
+                }
+            }
         }
-
-        if (inventoryManager == null)
-            inventoryManager = InventoryManager.Instance;
-
-        if (inventoryManager == null)
-        {
-            Debug.LogWarning("[PlayerWeaponVisual] InventoryManager.Instance가 없음");
-            return;
-        }
-
-        // ✅ 슬롯0 직접 확인 (가장 확실)
-        var slot0 = inventoryManager.GetSlot(InventoryManager.EquipWeaponIndex);
-        bool hasWeaponInSlot0 = (slot0 != null && !slot0.IsEmpty && slot0.item != null && slot0.item.data != null);
-
-        swordObject.SetActive(hasWeaponInSlot0);
-
-        Debug.Log($"[PlayerWeaponVisual:{from}] slot0HasWeapon={hasWeaponInSlot0} " +
-                  $"slot0Item={(hasWeaponInSlot0 ? slot0.item.data.ItemName : "null")} " +
-                  $"swordActive={swordObject.activeSelf}");
     }
 }

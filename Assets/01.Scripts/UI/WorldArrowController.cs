@@ -12,6 +12,20 @@ public class WorldArrowController : MonoBehaviour
     {
         gameObject.SetActive(false);
     }
+    
+    public void SetTarget(Transform newTarget)
+    {
+        target = newTarget;
+
+        if (target != null)
+            gameObject.SetActive(true);
+    }
+
+    public void ClearTarget()
+    {
+        target = null;
+        gameObject.SetActive(false);
+    }
     void LateUpdate()
     {
         if (player == null || target == null) return;
@@ -31,7 +45,7 @@ public class WorldArrowController : MonoBehaviour
         //  각도 계산
         float angle = Mathf.Atan2(flatDir.z, flatDir.x) * Mathf.Rad2Deg;
 
-        //  왼쪽(←)이 기본인 스프라이트 보정
+        //  왼쪽이 기본인 스프라이트 보정
         arrowMesh.rotation = Quaternion.Euler(90f, -angle + 180f, 0f);
     }
 }

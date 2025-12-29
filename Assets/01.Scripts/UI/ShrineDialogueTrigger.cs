@@ -15,6 +15,8 @@ public class ShrineDialogueTrigger : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         triggered = true;
+        
+        TutorialManager.Instance.EndTutorialUI();
 
         DialogueManager.Instance.StartDialogue(
             dialogueID,

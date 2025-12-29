@@ -33,17 +33,16 @@ public class DialogueCameraController : MonoBehaviour
 
     public void StartDialogueCamera(Transform npc)
     {
-        if (thirdPersonCamera != null)
-            thirdPersonCamera.enabled = false; // 끄기
-
-        originalRotation = mainCamera.transform.rotation;
-        originalFOV = mainCamera.fieldOfView;
-        
-        currentNPCTarget = npc;
-
         if (camRoutine != null)
             StopCoroutine(camRoutine);
+        //대화 시작 직전에 기준값 저장
+        originalRotation = mainCamera.transform.rotation;
+        originalFOV = mainCamera.fieldOfView;
 
+        if (thirdPersonCamera != null)
+            thirdPersonCamera.enabled = false;
+
+        currentNPCTarget = npc;
         camRoutine = StartCoroutine(DialogueCamRoutine());
     }
 
@@ -57,93 +56,95 @@ public class DialogueCameraController : MonoBehaviour
 
     IEnumerator DialogueCamRoutine()
     {
-        while (true)
-        {
-            Vector3 targetPos = currentNPCTarget.position;
-            targetPos.y = mainCamera.transform.position.y;
+        float t = 0f;
 
-            Vector3 dir = (targetPos - mainCamera.transform.position).normalized;
-            Quaternion lookRot = Quaternion.LookRotation(dir);
+        Vector3 startPos = mainCamera.transform.position;
+        Quaternion startRot = mainCamera.transform.rotation;
+        float startFOV = mainCamera.fieldOfView;
+
+        Vector3 targetPos = currentNPCTarget.position;
+        targetPos.y = mainCamera.transform.position.y;
+
+        Quaternion targetRot =
+            Quaternion.LookRotation((targetPos - mainCamera.transform.position).normalized);
+
+        while (t < 1f)
+        {
+            t += Time.deltaTime * lookSpeed;
 
             mainCamera.transform.rotation =
-                Quaternion.Slerp(
-                    mainCamera.transform.rotation,
-                    lookRot,
-                    Time.deltaTime * lookSpeed
-                );
+                Quaternion.Slerp(startRot, targetRot, t);
 
             mainCamera.fieldOfView =
-                Mathf.Lerp(
-                    mainCamera.fieldOfView,
-                    zoomInFOV,
-                    Time.deltaTime * zoomSpeed
-                );
+                Mathf.Lerp(startFOV, zoomInFOV, t);
 
             yield return null;
         }
+        mainCamera.transform.rotation = targetRot;
+        mainCamera.fieldOfView = zoomInFOV;
     }
 
 
     IEnumerator ResetCamRoutine()
     {
-        while (true)
+        float t = 0f;
+        while (t < 1f)
         {
+            t += Time.deltaTime * zoomSpeed;
+
             mainCamera.transform.rotation =
-                Quaternion.Slerp(mainCamera.transform.rotation, originalRotation, Time.deltaTime * lookSpeed);
+                Quaternion.Slerp(mainCamera.transform.rotation, originalRotation, t);
 
             mainCamera.fieldOfView =
-                Mathf.Lerp(mainCamera.fieldOfView, originalFOV, Time.deltaTime * zoomSpeed);
-
-            if (Mathf.Abs(mainCamera.fieldOfView - originalFOV) < 0.1f)
-                break;
+                Mathf.Lerp(mainCamera.fieldOfView, originalFOV, t);
 
             yield return null;
         }
-        // 다시 켜기
         if (thirdPersonCamera != null)
             thirdPersonCamera.enabled = true;
     }
-    public void FocusOnce(Transform target, float focusTime = 1.2f)
+    public void FocusOnce(Transform target, float focusTime = 1.2f, float customFOV = -1f)
     {
         if (camRoutine != null)
             StopCoroutine(camRoutine);
 
-        camRoutine = StartCoroutine(FocusOnceRoutine(target, focusTime));
+        camRoutine = StartCoroutine(FocusOnceRoutine(target, focusTime, customFOV));
     }
-    IEnumerator FocusOnceRoutine(Transform target, float holdTime)
+
+    IEnumerator FocusOnceRoutine(Transform target, float holdTime, float customFOV)
     {
-        // 3인칭 카메라 잠금
         if (thirdPersonCamera != null)
             thirdPersonCamera.enabled = false;
 
         originalRotation = mainCamera.transform.rotation;
         originalFOV = mainCamera.fieldOfView;
 
-        //  포커스
+        float targetFOV = (customFOV > 0f) ? customFOV : zoomInFOV;
+
         float t = 0f;
+
+        Quaternion startRot = mainCamera.transform.rotation;
+        float startFOV = mainCamera.fieldOfView;
+
+        Vector3 targetPos = target.position;
+        targetPos.y += 0.5f;
+        Quaternion targetRot =
+            Quaternion.LookRotation((targetPos - mainCamera.transform.position).normalized);
+
         while (t < 1f)
         {
             t += Time.deltaTime * lookSpeed;
 
-            Vector3 targetPos = target.position;
-            targetPos.y = mainCamera.transform.position.y; 
-
-            Vector3 dir = (targetPos - mainCamera.transform.position).normalized;
-            Quaternion lookRot = Quaternion.LookRotation(dir);
-
             mainCamera.transform.rotation =
-                Quaternion.Slerp(mainCamera.transform.rotation, lookRot, Time.deltaTime * lookSpeed);
+                Quaternion.Slerp(startRot, targetRot, t);
 
             mainCamera.fieldOfView =
-                Mathf.Lerp(mainCamera.fieldOfView, zoomInFOV, Time.deltaTime * zoomSpeed);
+                Mathf.Lerp(startFOV, targetFOV, t);
 
             yield return null;
         }
 
-        // 잠깐 유지
         yield return new WaitForSeconds(holdTime);
-
-        // 원래 시점으로 복귀
         yield return StartCoroutine(ResetCamRoutine());
     }
 }
