@@ -77,6 +77,13 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         if (loadingOverlay != null)
             loadingOverlay.SetActive(true);
 
+        // 텔레포트
+        if (teleportPlayerOnUse && player != null && teleportTarget != null)
+            TeleportPlayer(player.transform, teleportTarget.position, teleportTarget.rotation);
+
+        // 텔포 직후 카메라/추적 스냅을 한 프레임 더 가리기
+        yield return null;
+
         // overlay가 먼저 화면에 그려지게 한 프레임 양보
         yield return null;
 
@@ -85,14 +92,6 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
         if (loadingOverlay != null)
             loadingOverlay.SetActive(false);
-
-
-        // 텔레포트
-        if (teleportPlayerOnUse && player != null && teleportTarget != null)
-            TeleportPlayer(player.transform, teleportTarget.position, teleportTarget.rotation);
-
-        // 텔포 직후 카메라/추적 스냅을 한 프레임 더 가리기
-        yield return null;
 
         // 스폰 딜레이(연출 시간)
         if (spawnDelay > 0f)

@@ -2503,10 +2503,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visualRoot: {fileID: 2007961977671066383}
   duration: 0.12
-  positionAmplitude: 0.05
+  positionAmplitude: 0.2
   rotationAmplitude: 2
-  frequency: 35
-  rendererRoot: {fileID: 2007961977671066383}
+  frequency: 50
+  rendererRoot: {fileID: 9004699525207733244}
   useHitFlash: 1
   flashColor: {r: 1, g: 0.2, b: 0.2, a: 1}
   flashHoldTime: 0.05
@@ -3801,6 +3801,7 @@ MonoBehaviour:
   detectRange: 9.52
   attackRange: 1.8
   monsterAnim: {fileID: 0}
+  damageFeedback: {fileID: 0}
   playHitOnDamaged: 1
 --- !u!114 &5617319711150474419
 MonoBehaviour:
