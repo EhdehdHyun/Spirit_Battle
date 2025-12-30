@@ -13,6 +13,10 @@ public class PlayerStat : MonoBehaviour
     public float maxStamina;
     public float currentStamina;
 
+    [Header("Stamina Charge")]
+    public float regenPerSecond = 1f;
+    private float regenTimer = 0f;
+
     [Header("Dash Count")]
     public int maxDashCount = 2;
     public int curDashCount;
@@ -73,6 +77,8 @@ public class PlayerStat : MonoBehaviour
     {
         float dt = Time.deltaTime;
 
+        AutoRegenStamina(dt);
+
         if (_dashCooldownRemain > 0f)
         {
             _dashCooldownRemain -= dt;
@@ -90,6 +96,34 @@ public class PlayerStat : MonoBehaviour
                 _secondDashUsed = false;
             }
         }
+    }
+
+    void AutoRegenStamina(float dt)
+    {
+        if (maxStamina <= 0f) return;
+
+        // 이미 풀스태면 타이머 정리
+        if (currentStamina >= maxStamina)
+        {
+            currentStamina = maxStamina;
+            regenTimer = 0f;
+            return;
+        }
+
+        regenTimer += dt;
+
+        float before = currentStamina;
+
+        while (regenTimer >= 1f)
+        {
+            regenTimer -= 1f;
+            currentStamina = Mathf.Min(maxStamina, currentStamina + regenPerSecond);
+            if (currentStamina >= maxStamina) { regenTimer = 0f; break; }
+        }
+
+        if (!Mathf.Approximately(before, currentStamina))
+            ui?.UpdateStamina(currentStamina, maxStamina);
+
     }
 
     public bool CanStartDashUse()
