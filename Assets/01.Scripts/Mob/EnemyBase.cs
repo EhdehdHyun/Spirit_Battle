@@ -21,8 +21,6 @@ public abstract class EnemyBase : CharacterBase
     // 이동/상태머신 담당
     protected Transform target;
 
-
-
     protected override void Awake()
     {
         base.Awake();
