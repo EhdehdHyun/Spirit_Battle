@@ -12,7 +12,6 @@ public class PlayerInputController : MonoBehaviour
     public PlayerCombat combat;
     public PlayerStat stat;
     public PlayerParry parry;
-    public PlayerStat Stat;
     public PlayerAbility ability;
 
 
@@ -20,6 +19,9 @@ public class PlayerInputController : MonoBehaviour
 
     private InputAction moveAction;
     private InputAction lookAction;
+
+    private InputAction runAction;
+    private bool runHeld;
 
     private Vector2 moveRaw;
     private Vector2 lookRaw;
@@ -44,6 +46,7 @@ public class PlayerInputController : MonoBehaviour
 
         moveAction = playerInput.actions["Move"];
         lookAction = playerInput.actions["Look"];
+        runAction = playerInput.actions["Run"];
     }
 
     private void Update()
@@ -51,6 +54,8 @@ public class PlayerInputController : MonoBehaviour
         // 매 프레임 현재 입력 상태를 다시 읽음 (대쉬 후 입력 다시 누를 필요 없어짐)
         moveRaw = moveAction.ReadValue<Vector2>();
         lookRaw = lookAction.ReadValue<Vector2>();
+        runHeld = runAction != null && runAction.IsPressed();
+        character.SetRunHeld(runHeld);
 
         // 노이즈 컷
         if (moveRaw.magnitude < 0.05f) moveRaw = Vector2.zero;
@@ -126,16 +131,14 @@ public class PlayerInputController : MonoBehaviour
     {
         if (!ctx.performed) return;
         if (isLocked) return;
-        if(IsParrying()) return;
+        if (IsParrying()) return;
 
         bool airDashAllowed = (ability != null && ability.Has(AbilityId.AirDash));
-
         if (!character.IsGrounded && !airDashAllowed) return;
 
-        // 0이면 아예 대쉬 시작 못하게 막기
-        if (stat == null || stat.curDashCount <= 0)
+        if (stat == null)
         {
-            Debug.Log("대쉬카운트 없음");
+            Debug.LogWarning("PlayerStat 없음");
             return;
         }
 
@@ -145,11 +148,34 @@ public class PlayerInputController : MonoBehaviour
 
         combat?.CancelAttackForDash();
 
-        bool dashStarted = (combat != null) && combat.TryDash(dir, airDashAllowed);
-        if (!dashStarted) return;
+        // 1) 2번째 대쉬 (윈도우 안)
+        if (stat.CanSecondDashNow)
+        {
+            // 2번째는 "대쉬 중 재시작"이 가능해야 함 -> PlayerCombat/PhysicsCharacter 수정 필요(아래 참고)
+            bool startedSecond = (combat != null) && combat.TryDash(dir, airDashAllowed, allowWhileDashing: true);
+            if (!startedSecond) return;
 
-        // 여기까지 왔으면 무조건 1개 소비
-        stat.TryConsumeDash();
+            stat.CommitSecondDashUsed(); // 여기서 1초 쿨 시작(스태미나 추가 소모 없음)
+            SetDashLock(character.dashDuration);
+            return;
+        }
+
+        // 2) 첫 대쉬 (새 “대쉬 사용” 시작)
+        if (!stat.CanStartDashUse())
+        {
+            // 쿨타임이거나 스태미나 부족
+            return;
+        }
+
+        bool startedFirst = (combat != null) && combat.TryDash(dir, airDashAllowed, allowWhileDashing: false);
+        if (!startedFirst) return;
+
+        // 첫 대쉬가 실제로 시작됐으니: 스태미나 15 소모 + 2번째 입력 윈도우 오픈
+        if (!stat.CommitDashUseStart())
+        {
+            Debug.LogWarning("대쉬 시작됐는데 스태미나 커밋 실패(체크/커밋 타이밍 꼬임)");
+            return;
+        }
 
         SetDashLock(character.dashDuration);
     }
@@ -181,6 +207,8 @@ public class PlayerInputController : MonoBehaviour
         if (isLocked) return;
         if (IsParrying()) return;
         if (!ctx.started) return;
+        if (character.IsDashing) return;
+        if (dashLocked) return;
         combat?.OnToggleWeaponInput();
     }
 

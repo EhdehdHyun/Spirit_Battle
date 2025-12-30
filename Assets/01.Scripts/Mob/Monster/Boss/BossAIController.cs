@@ -15,17 +15,25 @@ public class BossAIController : MonoBehaviour
 
     [Header("이동 설정")]
     public float stopDistance = 3f;
-    public float rotateSpeed = 8f;
+
+    [Header("회전 설정")]
+    [Tooltip("추적(Chase) 중 회전 속도")]
+    [SerializeField] private float rotateSpeedChase = 8f;
+
+    [Tooltip("공격(BasicAttack) 중 회전 속도 (0이면 공격 중 회전 안 함)")]
+    [SerializeField] private float rotateSpeedAttack = 12f;
+
+    [Tooltip("Slerp에 곱해질 보정값(너무 빠르면 낮추기)")]
+    [SerializeField] private float rotateMultiplier = 1f;
 
     [Header("패턴 시스템 ")]
     public BossPatternBase[] patterns;
 
     private BossPatternBase currentPattern;
     private BossEnemy boss;
-    private BossCore bossCore;
     private Transform target;
     private IEnemyAttack basicAttack;
-    private EnemyMeleeAttack meleeAttack; // ✅ 추가(보스도 EnemyMeleeAttack 쓰는 전제)
+    private EnemyMeleeAttack meleeAttack;
     private MonsterAnimation monsterAnim;
 
     private bool canMove = true;
@@ -34,20 +42,15 @@ public class BossAIController : MonoBehaviour
     private BossState state = BossState.Idle;
     private float stateTimer = 0f;
 
-    public bool HasTarget => target != null && !boss.IsDead;
+    public bool HasTarget => target != null && boss != null && !boss.IsDead;
     private Coroutine downCo;
-
-    // ✅ 공격 기준: hitOrigin/hitRadius 우선
-    private Transform AttackOrigin => (meleeAttack != null) ? meleeAttack.AttackOrigin : transform;
-    private float AttackRange => (meleeAttack != null) ? meleeAttack.AttackRadius : boss.attackRange;
 
     private void Awake()
     {
         boss = GetComponent<BossEnemy>();
         basicAttack = GetComponent<IEnemyAttack>();
-        meleeAttack = GetComponent<EnemyMeleeAttack>(); // ✅ 추가
+        meleeAttack = GetComponent<EnemyMeleeAttack>();
         monsterAnim = GetComponent<MonsterAnimation>() ?? GetComponentInChildren<MonsterAnimation>();
-        bossCore = GetComponentInChildren<BossCore>();
 
         if (boss == null)
             Debug.LogError("BossEnemy 컴포넌트가 필요합니다");
@@ -57,8 +60,7 @@ public class BossAIController : MonoBehaviour
         if (target == null)
         {
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null)
-                target = playerObj.transform;
+            if (playerObj != null) target = playerObj.transform;
         }
 
         if (HasTarget)
@@ -69,8 +71,7 @@ public class BossAIController : MonoBehaviour
     {
         if (boss == null) return;
 
-        if (boss.IsDead)
-            ChangeState(BossState.Dead);
+        if (boss.IsDead) ChangeState(BossState.Dead);
 
         switch (state)
         {
@@ -81,6 +82,24 @@ public class BossAIController : MonoBehaviour
         }
 
         UpdateAnimation();
+    }
+
+    private float GetBasicAttackRange()
+    {
+        if (meleeAttack != null) return meleeAttack.hitRadius;
+        return boss != null ? boss.attackRange : 2f;
+    }
+
+    private Vector3 GetBasicAttackOrigin()
+    {
+        if (meleeAttack != null && meleeAttack.hitOrigin != null) return meleeAttack.hitOrigin.position;
+        return transform.position;
+    }
+
+    private float DistToTargetFromAttackOrigin()
+    {
+        if (!HasTarget) return Mathf.Infinity;
+        return Vector3.Distance(GetBasicAttackOrigin(), target.position);
     }
 
     private void ChangeState(BossState newState)
@@ -102,18 +121,22 @@ public class BossAIController : MonoBehaviour
 
         switch (state)
         {
-            case BossState.Idle: SetCanMove(false); break;
-            case BossState.BasicAttack: SetCanMove(false); break;
-            case BossState.Chase: SetCanMove(true); break;
-            case BossState.Pattern: SetCanMove(false); break;
-            case BossState.Down: SetCanMove(false); break;
+            case BossState.Idle:
+            case BossState.BasicAttack:
+            case BossState.Pattern:
+            case BossState.Down:
+                SetCanMove(false);
+                break;
+
+            case BossState.Chase:
+                SetCanMove(true);
+                break;
         }
     }
 
     private void UpdateIdle()
     {
-        if (HasTarget)
-            ChangeState(BossState.Chase);
+        if (HasTarget) ChangeState(BossState.Chase);
     }
 
     private void UpdateChase()
@@ -124,18 +147,21 @@ public class BossAIController : MonoBehaviour
             return;
         }
 
-        // 패턴 먼저
+        stateTimer += Time.deltaTime;
+
         if (TryUsePattern()) return;
 
-        // ✅ 공격 전환 판단을 hitOrigin/hitRadius로
-        float distToAttackOrigin = Vector3.Distance(AttackOrigin.position, target.position);
-        if (distToAttackOrigin <= AttackRange)
+        float atkRange = GetBasicAttackRange();
+        float distAtk = DistToTargetFromAttackOrigin();
+
+        if (distAtk <= atkRange)
         {
             ChangeState(BossState.BasicAttack);
             return;
         }
 
-        MoveTowardsTarget(stopDistance);
+        float adjustedStop = Mathf.Min(stopDistance, Mathf.Max(0.1f, atkRange * 0.9f));
+        MoveTowardsTarget(adjustedStop);
     }
 
     private void UpdateBasicAttack()
@@ -146,12 +172,12 @@ public class BossAIController : MonoBehaviour
             return;
         }
 
+        float atkRange = GetBasicAttackRange();
+        float distAtk = DistToTargetFromAttackOrigin();
+
         bool isAttacking = (basicAttack != null && basicAttack.IsAttacking);
 
-        // ✅ “너무 멀어졌나?”도 hitOrigin 기준
-        float distToAttackOrigin = Vector3.Distance(AttackOrigin.position, target.position);
-
-        if (!isAttacking && distToAttackOrigin > AttackRange * 1.2f)
+        if (!isAttacking && distAtk > atkRange * 1.2f)
         {
             ChangeState(BossState.Chase);
             return;
@@ -159,13 +185,15 @@ public class BossAIController : MonoBehaviour
 
         if (!isAttacking && TryUsePattern()) return;
 
+        // 공격 중에도 플레이어 쪽으로 돌아보게 하고 싶으면(선택)
+        RotateTowardsTarget(rotateSpeedAttack);
+
         basicAttack?.TryAttack(target);
     }
 
     private void UpdatePattern()
     {
-        if (currentPattern != null && currentPattern.IsRunning)
-            return;
+        if (currentPattern != null && currentPattern.IsRunning) return;
 
         currentPattern = null;
 
@@ -175,13 +203,11 @@ public class BossAIController : MonoBehaviour
             return;
         }
 
-        // ✅ 패턴 끝나고 상태 복귀 판단도 hitOrigin 기준
-        float distToAttackOrigin = Vector3.Distance(AttackOrigin.position, target.position);
+        float atkRange = GetBasicAttackRange();
+        float distAtk = DistToTargetFromAttackOrigin();
 
-        if (distToAttackOrigin <= AttackRange)
-            ChangeState(BossState.BasicAttack);
-        else
-            ChangeState(BossState.Chase);
+        if (distAtk <= atkRange) ChangeState(BossState.BasicAttack);
+        else ChangeState(BossState.Chase);
     }
 
     private bool TryUsePattern()
@@ -210,7 +236,10 @@ public class BossAIController : MonoBehaviour
 
         var anim = GetComponentInChildren<Animator>();
         if (anim != null && !string.IsNullOrEmpty(triggerName))
+        {
+            anim.ResetTrigger(triggerName);
             anim.SetTrigger(triggerName);
+        }
 
         downCo = StartCoroutine(DownTimer(duration));
     }
@@ -260,35 +289,33 @@ public class BossAIController : MonoBehaviour
 
         transform.position += dir * boss.moveSpeed * Time.deltaTime;
 
-        if (dir.sqrMagnitude > 0.001f)
-        {
-            Quaternion lookRot = Quaternion.LookRotation(dir);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, rotateSpeed * Time.deltaTime);
-        }
+        RotateTowardsTarget(rotateSpeedChase);
+    }
+
+    private void RotateTowardsTarget(float speed)
+    {
+        if (!HasTarget) return;
+        if (speed <= 0f) return;
+
+        Vector3 toTarget = target.position - transform.position;
+        toTarget.y = 0f;
+        if (toTarget.sqrMagnitude < 0.0001f) return;
+
+        Quaternion lookRot = Quaternion.LookRotation(toTarget.normalized);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, speed * rotateMultiplier * Time.deltaTime);
     }
 
     private void UpdateAnimation()
     {
-        if (monsterAnim == null) return;
+        if (monsterAnim == null || boss == null) return;
 
         float speed = 0f;
-        if (state == BossState.Chase && canMove)
-            speed = boss.moveSpeed;
+        if (state == BossState.Chase && canMove) speed = boss.moveSpeed;
 
         bool isChasing = (state == BossState.Chase);
         bool isDead = boss.IsDead;
 
         monsterAnim.UpdateLocomotion(speed, isChasing, isDead);
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        if (boss == null) boss = GetComponent<BossEnemy>();
-
-        Gizmos.color = Color.red;
-        Vector3 center = (meleeAttack != null && meleeAttack.AttackOrigin != null) ? meleeAttack.AttackOrigin.position : transform.position;
-        float r = (meleeAttack != null) ? meleeAttack.AttackRadius : (boss != null ? boss.attackRange : 0f);
-        if (r > 0f) Gizmos.DrawWireSphere(center, r);
     }
 
     public void SetCanMove(bool value) => canMove = value;

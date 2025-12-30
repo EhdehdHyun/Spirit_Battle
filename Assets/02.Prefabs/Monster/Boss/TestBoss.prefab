@@ -10105,6 +10105,7 @@ GameObject:
   - component: {fileID: 441120242284874780}
   - component: {fileID: 4515928226743125942}
   - component: {fileID: 6946897576507010950}
+  - component: {fileID: 1994699578886220731}
   m_Layer: 9
   m_Name: TestBoss
   m_TagString: Untagged
@@ -10163,7 +10164,7 @@ MonoBehaviour:
   breakGroggyTriggerName: BreakGroggy
   isTutorialBoss: 1
   phase3FinaleTriggerName: Phase3Finale
-  phase3Phase2LoopSeconds: 3
+  phase3Phase2LoopSeconds: 5
   phase3Phase2To3TriggerName: Phase3Finale_To3
   phase3State2Name: 3Phase_2
   animatorLayerIndex: 0
@@ -10180,7 +10181,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopDistance: 3
-  rotateSpeed: 4
+  rotateSpeedChase: 2
+  rotateSpeedAttack: 0
+  rotateMultiplier: 1
   patterns:
   - {fileID: 6195351339223519092}
   - {fileID: 2669310880747356631}
@@ -10349,6 +10352,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &1994699578886220731
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2366965492673321758}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0713d55e6afdbf041bfb9f29b6ecf9f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2441181751788210102
 GameObject:
   m_ObjectHideFlags: 0
@@ -15736,7 +15751,6 @@ GameObject:
   - component: {fileID: 2004932087676674414}
   - component: {fileID: 4110737707762472430}
   - component: {fileID: 5875212206092990250}
-  - component: {fileID: 2505515344108449627}
   m_Layer: 9
   m_Name: Giant_Mesh
   m_TagString: Untagged
@@ -15839,28 +15853,6 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5746672515277153883}
-  m_Mesh: {fileID: 4300000, guid: e3db1015a489a1348aa04b3f859c9f62, type: 3}
---- !u!64 &2505515344108449627
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5746672515277153883}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: e3db1015a489a1348aa04b3f859c9f62, type: 3}
 --- !u!1 &6636326947631931802
 GameObject:

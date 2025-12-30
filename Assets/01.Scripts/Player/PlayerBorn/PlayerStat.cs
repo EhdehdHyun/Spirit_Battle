@@ -17,29 +17,38 @@ public class PlayerStat : MonoBehaviour
     public int maxDashCount = 2;
     public int curDashCount;
 
-    [Header("Dash Charge Count")]
-    public float dashRechargeTime = 1f;
+    [Header("Run Stamina (전투 중)")]
+    public float combatRunStaminaPerSec = 10f;
 
-    private float dashRechargeAcc = 0f;
+    [Header("Dash Stamina")]
+    public float dashUseStaminaCost = 15f;
+
+    [Header("Dash Burst")]
+    public float secondDashWindow = 0.45f;   // 일정 시간
+    public float secondDashCooldown = 1f;
+
+    private float _secondWindowRemain = 0f;
+    private bool _secondDashUsed = false;
+    private float _dashCooldownRemain = 0f;
 
     public float maxExp; // 다음 레벨 필요 경험치
 
     private CharacterBase character;
     private Level_Data_Loader levelTable;
 
+    public bool IsDashCooling => _dashCooldownRemain > 0f;
+    public bool CanSecondDashNow => (_secondWindowRemain > 0f) && !_secondDashUsed;
+
     private void Awake()
     {
         character = GetComponent<CharacterBase>();
         levelTable = new Level_Data_Loader();
-        curDashCount = maxDashCount;
     }
 
     private void Start()
     {
         ApplyLevelData();
         UpdateAllUI();
-
-        dashRechargeAcc = 0f;
     }
 
     private void OnEnable()
@@ -62,33 +71,81 @@ public class PlayerStat : MonoBehaviour
 
     private void Update()
     {
-        RechargeDashCount();
+        float dt = Time.deltaTime;
+
+        if (_dashCooldownRemain > 0f)
+        {
+            _dashCooldownRemain -= dt;
+            if (_dashCooldownRemain < 0f) _dashCooldownRemain = 0f;
+        }
+
+        // 2번째 대쉬 입력 윈도우
+        if (_secondWindowRemain > 0f)
+        {
+            _secondWindowRemain -= dt;
+            if (_secondWindowRemain <= 0f)
+            {
+                // 2번째 안 썼으면 종료
+                _secondWindowRemain = 0f;
+                _secondDashUsed = false;
+            }
+        }
     }
 
-    public bool TryConsumeDash()
+    public bool CanStartDashUse()
     {
-        if (curDashCount <= 0) return false;
+        if (IsDashCooling) return false;
+        if (_secondWindowRemain > 0f) return false;
+        return currentStamina >= dashUseStaminaCost;
+    }
 
-        curDashCount--;
+    public bool CommitDashUseStart()
+    {
+        if (!CanStartDashUse()) return false;
+        if (!TryConsumeStamina(dashUseStaminaCost)) return false;
+
+        _secondDashUsed = false;
+        _secondWindowRemain = secondDashWindow;
         return true;
     }
 
-    private void RechargeDashCount()
+    public void CommitSecondDashUsed()
     {
-        if (curDashCount >= maxDashCount) return;
+        if (!CanSecondDashNow) return;
 
-        dashRechargeAcc += Time.deltaTime;
+        _secondDashUsed = true;
+        _secondWindowRemain = 0f;
+        _dashCooldownRemain = secondDashCooldown;
+    }
 
-        while (dashRechargeAcc >= dashRechargeTime && curDashCount < maxDashCount)
+    public bool HasStamina(float amount) => currentStamina >= amount;
+
+    public bool TryConsumeStamina(float amount)
+    {
+        if (amount <= 0f) return true;
+        if (currentStamina < amount) return false;
+
+        currentStamina -= amount;
+        if (currentStamina < 0f) currentStamina = 0f;
+
+        ui?.UpdateStamina(currentStamina, maxStamina);
+        return true;
+    }
+
+    public bool TickCombatRunStamina(bool inCombat, bool isTryingRun, float dt)
+    {
+        if (!inCombat) return true;
+        if (!isTryingRun) return true;
+
+        float cost = combatRunStaminaPerSec * dt;
+        if (!TryConsumeStamina(cost))
         {
-            dashRechargeAcc -= dashRechargeTime;
-            curDashCount++;
-
-            // ui.UpdateDash(curDashCount, maxDashCount);
+            currentStamina = 0f;
+            ui?.UpdateStamina(currentStamina, maxStamina);
+            return false;
         }
 
-        if (curDashCount >= maxDashCount)
-            dashRechargeAcc = 0f;
+        return currentStamina > 0f;
     }
 
     // =======================
