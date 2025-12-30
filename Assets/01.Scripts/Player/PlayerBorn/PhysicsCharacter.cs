@@ -272,8 +272,8 @@ public class PhysicsCharacter : MonoBehaviour
     {
         _runHeld = held;
 
-        if (!_weaponEquipped)
-            _runAfterDash = held;
+        //if (!_weaponEquipped)
+        //    _runAfterDash = held;
     }
 
     // ================== 내부 로직 ================== //
