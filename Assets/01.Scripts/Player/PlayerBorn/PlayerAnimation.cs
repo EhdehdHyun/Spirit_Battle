@@ -30,6 +30,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private static readonly int RunHash = Animator.StringToHash("Run");
     private static readonly int WalkHash = Animator.StringToHash("Walk");
+    private static readonly int EquippedWalkHash = Animator.StringToHash("EquippedWalk");
     private static readonly int JumpHash = Animator.StringToHash("Jump");
     private static readonly int DashHash = Animator.StringToHash("Dash");
     private static readonly int ParryHash = Animator.StringToHash("Parry");
@@ -57,20 +58,33 @@ public class PlayerAnimation : MonoBehaviour
     {
         if (rb == null) return;
 
-        if (character.IsDashing)
+        // 대쉬 중이면 이동 애니들 다 끔
+        if (character != null && character.IsDashing)
         {
             anim.SetBool(WalkHash, false);
+            anim.SetBool(EquippedWalkHash, false);
             anim.SetBool(RunHash, false);
+
+            if (character != null)
+                anim.SetBool(GroundedHash, character.IsGrounded);
+
+            return;
         }
 
         Vector3 v = rb.velocity;
         v.y = 0f;
 
-        // 수평 속도가 일정 이상이면 달리기
         bool moving = v.magnitude > runhold;
         bool running = (character != null && character.IsRunning);
+
+        bool equipped = anim.GetBool(WeaponEquippedHash);
+
+        bool equippedWalk = equipped && moving && !running;
+        bool normalWalk = !equipped && moving && !running;
+
         anim.SetBool(RunHash, running);
-        anim.SetBool(WalkHash, moving && !running);
+        anim.SetBool(EquippedWalkHash, equippedWalk);
+        anim.SetBool(WalkHash, normalWalk);
 
         if (character != null)
             anim.SetBool(GroundedHash, character.IsGrounded);

@@ -120,6 +120,10 @@ public class DialogueManager : MonoBehaviour
         Debug.Log("EndDialogue CALLED");
 
         IsDialogueActive = false;
+        
+        var playerInteract = FindObjectOfType<PlayerInteraction>();
+        if (playerInteract != null)
+            playerInteract.LockInteract(0.4f);
 
         if (dialogueText != null)
         {

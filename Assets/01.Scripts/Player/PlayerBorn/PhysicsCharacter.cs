@@ -49,9 +49,6 @@ public class PhysicsCharacter : MonoBehaviour
     [Tooltip("대쉬 지속 시간")]
     public float dashDuration = 0.2f;
 
-    [Tooltip("대쉬 쿨타임")]
-    public float dashCooldown = 0.5f;
-
     [Header("넉백")]
     [Tooltip("넉백 수평 속도가 줄어드는 정도")]
     public float knockbackDrag = 10f;
@@ -95,10 +92,13 @@ public class PhysicsCharacter : MonoBehaviour
     public bool IsDashing => _isDashing;
     public bool IsFalling { get; private set; }
     public bool IsRunning =>
-        !_isDashing &&
-        !movementLock &&
-        _moveInput.sqrMagnitude > 0.001f &&
-        (_weaponEquipped || _runAfterDash);
+         !_isDashing &&
+         !movementLock &&
+         _moveInput.sqrMagnitude > 0.001f &&
+         (
+             (_weaponEquipped && _canCombatRun) ||
+             (!_weaponEquipped && _runAfterDash)
+         );
 
     // 내부 필드
     Rigidbody _rb;
@@ -119,6 +119,7 @@ public class PhysicsCharacter : MonoBehaviour
     //달리기 상태
     bool _runAfterDash;
     bool _weaponEquipped;
+    bool _runHeld;
 
     // 대쉬 상태
     bool _isDashing;
@@ -133,14 +134,17 @@ public class PhysicsCharacter : MonoBehaviour
     // 외부 수평 임펄스 (넉백 등)
     Vector3 _externalHorizontalVelocity;
 
+    //스탯 관련
+    PlayerStat _stat;
+    bool _canCombatRun = true;
     void Awake()
     {
+        _stat = GetComponent<PlayerStat>();
         _rb = GetComponent<Rigidbody>();
         _col = GetComponent<CapsuleCollider>();
 
-        // Dynamic 설정
         _rb.isKinematic = false;
-        _rb.useGravity = false; // 중력은 직접 처리
+        _rb.useGravity = false;
         _rb.constraints = RigidbodyConstraints.FreezeRotationX
                         | RigidbodyConstraints.FreezeRotationY
                         | RigidbodyConstraints.FreezeRotationZ;
@@ -158,6 +162,16 @@ public class PhysicsCharacter : MonoBehaviour
 
         UpdateGroundCheck();
         UpdateDashTimers(dt);
+
+        bool wantsRunMode = !_isDashing && !movementLock && _moveInput.sqrMagnitude > 0.001f && (_weaponEquipped || _runAfterDash);
+        if (_weaponEquipped && _stat != null)
+            _canCombatRun = _stat.TickCombatRunStamina(inCombat: true, isTryingRun: (_runHeld || _runAfterDash), dt: dt);
+        else
+            _canCombatRun = true;
+
+        if (_weaponEquipped)
+            _canCombatRun = _canCombatRun && (_runHeld || _runAfterDash);
+
         UpdateHorizontalVelocity(dt);
         ApplyJumpIfRequested();
         ApplyGravity(dt);
@@ -175,7 +189,7 @@ public class PhysicsCharacter : MonoBehaviour
     }
 
     /// <summary>
-    /// 달리기
+    /// 무기장착 요청
     /// </summary>
     public void SetWeaponEquipped(bool equipped)
     {
@@ -205,9 +219,9 @@ public class PhysicsCharacter : MonoBehaviour
     /// 대쉬 요청
     /// direction은 보통 캐릭터 forward 또는 입력 방향
     /// </summary>
-    public bool TryDash(Vector3 direction, bool allowAirDash)
+    public bool TryDash(Vector3 direction, bool allowAirDash, bool allowWhileDashing)
     {
-        if (_isDashing)
+        if (_isDashing && !allowWhileDashing)
             return false;
 
         if (!IsGrounded && !allowAirDash)
@@ -216,14 +230,11 @@ public class PhysicsCharacter : MonoBehaviour
         if (!IsGrounded)
         {
             if (!allowAirDash) return false;
-            if (_airDashUsed) return false;
+            if (_airDashUsed) return false; // 공중 대쉬는 1회만(원하면 여기 바꿔)
             _airDashUsed = true;
         }
 
-        if (_dashCooldownTimer > 0f)
-            return false;
-
-        //  지상 대쉬는 경사면 평면에 투영
+        // 지상 대쉬는 경사면 투영
         if (IsGrounded)
             direction = Vector3.ProjectOnPlane(direction, _groundNormal);
         else
@@ -236,7 +247,6 @@ public class PhysicsCharacter : MonoBehaviour
 
         _isDashing = true;
         _dashTimer = dashDuration;
-        _dashCooldownTimer = dashCooldown;
         _dashDirection = direction;
 
         _runAfterDash = true;
@@ -256,6 +266,14 @@ public class PhysicsCharacter : MonoBehaviour
         Vector3 v = _rb.velocity;
         v.y += impulse.y;
         _rb.velocity = v;
+    }
+
+    public void SetRunHeld(bool held)
+    {
+        _runHeld = held;
+
+        //if (!_weaponEquipped)
+        //    _runAfterDash = held;
     }
 
     // ================== 내부 로직 ================== //
@@ -419,7 +437,23 @@ public class PhysicsCharacter : MonoBehaviour
         }
         else
         {
+            bool runMode = (_weaponEquipped || _runAfterDash);
+
+            if (_weaponEquipped && !_canCombatRun)
+                runMode = false;
+
             float targetSpeed = (_weaponEquipped || _runAfterDash) ? runSpeed : walkSpeed;
+
+            if (_weaponEquipped)
+            {
+                if (!(_runHeld || _runAfterDash) || !_canCombatRun)
+                    targetSpeed = walkSpeed;
+            }
+            else
+            {
+                if (_runHeld || _runAfterDash)
+                    targetSpeed = runSpeed;
+            }
 
             // 입력 벡터를 "지면 평면"에 맞춰서 이동
             Vector3 inputDir = new Vector3(_moveInput.x, 0f, _moveInput.y);
@@ -430,8 +464,6 @@ public class PhysicsCharacter : MonoBehaviour
                 inputDir = ProjectOnGround(inputDir, _groundNormal);
 
             Vector3 desired = inputDir * targetSpeed;
-
-            //Vector3 desired = inputDir * targetSpeed;
 
             if (_moveInput.sqrMagnitude > 0f)
             {
@@ -457,7 +489,6 @@ public class PhysicsCharacter : MonoBehaviour
         // 넉백 수평 성분 합산
         horizontal += new Vector3(_externalHorizontalVelocity.x, 0f, _externalHorizontalVelocity.z);
 
-        // 벽에 붙는 현상 방지: 벽 안으로 파고드는 성분 제거(슬라이드)
         horizontal = RemoveIntoWallVelocity(horizontal);
 
         v.x = horizontal.x;
