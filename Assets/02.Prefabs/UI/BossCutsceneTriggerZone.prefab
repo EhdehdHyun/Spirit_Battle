@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1010447712665983535
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8701628102434458668}
+  - component: {fileID: 5596389059608689418}
+  - component: {fileID: 709066985626843472}
+  m_Layer: 0
+  m_Name: BossCutsceneTriggerZone
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8701628102434458668
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010447712665983535}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1985.5, y: 5.27, z: -3891.97}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &5596389059608689418
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010447712665983535}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 121.19, y: 5, z: 174.1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &709066985626843472
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1010447712665983535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7d7d7413a4bc4e49b43f779728b7990, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cutsceneDelay: 5
+  mainCamera: {fileID: 0}
+  cutsceneCamera: {fileID: 0}
+  points:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  lookTarget: {fileID: 0}
+  moveDurations:
+  - 1.2
+  - 1.2
+  - 1.3
+  - 2
+  holdDurations:
+  - 0
+  defaultMoveDuration: 0
+  freezeTimeScale: 0
+  disableWhileCutscene: []
+  skipKey: 27
+  playOnlyOnce: 1
+  letterboxTop: {fileID: 0}
+  letterboxBottom: {fileID: 0}
+  letterboxHeight: 160
+  letterboxAnimTime: 0.25
+  letterboxPreRoll: 0.2
+  letterboxPostRoll: 0.2
