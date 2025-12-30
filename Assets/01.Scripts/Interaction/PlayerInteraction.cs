@@ -14,7 +14,8 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private Color crosshairNormalColor = Color.white;
     [SerializeField] private Color crosshairInteractColor = Color.red;
     [SerializeField] private TextMeshProUGUI interactText;  // "F키를 눌러 상호작용" 텍스트
-
+    
+    private float interactLockTime = 0f; // F상호작용 쿨타임
     private IInteractable currentTarget;
 
     private void Awake()
@@ -30,6 +31,11 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
+        if (interactLockTime > 0f)
+        {
+            interactLockTime -= Time.deltaTime;
+            return;
+        }
         UpdateTargetByRaycast();
 
         if (Input.GetKeyDown(KeyCode.F))
@@ -118,5 +124,10 @@ public class PlayerInteraction : MonoBehaviour
 
         Debug.Log($"[PlayerInteraction] {currentTarget} 에 상호작용 시도");
         currentTarget.Interact(this);
+    }
+    
+    public void LockInteract(float time)
+    {
+        interactLockTime = time;
     }
 }
