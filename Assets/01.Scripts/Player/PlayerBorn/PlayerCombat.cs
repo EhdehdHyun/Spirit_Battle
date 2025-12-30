@@ -68,12 +68,12 @@ public class PlayerCombat : MonoBehaviour
         parry = GetComponent<PlayerParry>();
     }
 
-    public bool TryDash(Vector3 dir, bool allowAirDash)
+    public bool TryDash(Vector3 dir, bool allowAirDash, bool allowWhileDashing)
     {
         if (isAttacking)
             CancelAttackCommon();
 
-        bool started = physicsCharacter.TryDash(dir, allowAirDash);
+        bool started = physicsCharacter.TryDash(dir, allowAirDash, allowWhileDashing);
         if (!started) return false;
 
         var character = GetComponent<CharacterBase>();
@@ -102,7 +102,6 @@ public class PlayerCombat : MonoBehaviour
         bufferedNextInput = true;
     }
 
-    //  패링 입력 들어오면 “자세/락/애니”만
     public void TryStartParryStance()
     {
         if (IsAttacking) return;
@@ -118,7 +117,6 @@ public class PlayerCombat : MonoBehaviour
         playerAnim?.PlayParry(); // 패링 애니 재생
     }
 
-    //  성공 연출만 (몬스터 OnParried는 절대 건드리지 마)
     public void OnParrySuccess(Transform attacker, Vector3 hitPoint)
     {
         // 여기서 성공 이펙트/사운드/카메라/짧은 무적 등만 처리
