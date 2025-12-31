@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4161824563419651123}
   - component: {fileID: 3451373512705394088}
   - component: {fileID: 4909623335689686746}
+  - component: {fileID: 2358565566828245466}
   m_Layer: 0
   m_Name: BossCutSceneCamera
   m_TagString: Untagged
@@ -128,3 +129,11 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!81 &2358565566828245466
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8572364757122331539}
+  m_Enabled: 1
