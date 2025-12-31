@@ -8,6 +8,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private PlayerInputController playerInput;
     [SerializeField] private WeaponHitBox weaponHitBox;
     [SerializeField] private InventoryManager inventoryManager;
+    [SerializeField] private PlayerSFX sfx;
 
     [Header("콤보 설정")]
     [SerializeField] private int maxCombo = 3;
@@ -64,8 +65,12 @@ public class PlayerCombat : MonoBehaviour
             weaponHitBox = GetComponentInChildren<WeaponHitBox>();
         if (inventoryManager == null)
             inventoryManager = InventoryManager.Instance;
+        if (sfx == null)
+            sfx = GetComponent<PlayerSFX>();
 
-        parry = GetComponent<PlayerParry>();
+            parry = GetComponent<PlayerParry>();
+
+        weaponHitBox.DamageAppliedOnce += () => sfx?.PlayAttackHit(currentCombo);
     }
 
     public bool TryDash(Vector3 dir, bool allowAirDash, bool allowWhileDashing)
@@ -120,7 +125,7 @@ public class PlayerCombat : MonoBehaviour
     public void OnParrySuccess(Transform attacker, Vector3 hitPoint)
     {
         // 여기서 성공 이펙트/사운드/카메라/짧은 무적 등만 처리
-        // Debug.Log("[Parry] SUCCESS");
+        sfx.PlayParrySuccess();
 
         // 예시) 잠깐 무적
         var character = GetComponent<CharacterBase>();

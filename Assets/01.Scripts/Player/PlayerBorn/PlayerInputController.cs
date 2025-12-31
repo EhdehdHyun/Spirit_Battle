@@ -20,9 +20,6 @@ public class PlayerInputController : MonoBehaviour
     private InputAction moveAction;
     private InputAction lookAction;
 
-    private InputAction runAction;
-    private bool runHeld;
-
     private Vector2 moveRaw;
     private Vector2 lookRaw;
 
@@ -46,7 +43,6 @@ public class PlayerInputController : MonoBehaviour
 
         moveAction = playerInput.actions["Move"];
         lookAction = playerInput.actions["Look"];
-        runAction = playerInput.actions["Run"];
     }
 
     private void Update()
@@ -54,8 +50,6 @@ public class PlayerInputController : MonoBehaviour
         // 매 프레임 현재 입력 상태를 다시 읽음 (대쉬 후 입력 다시 누를 필요 없어짐)
         moveRaw = moveAction.ReadValue<Vector2>();
         lookRaw = lookAction.ReadValue<Vector2>();
-        runHeld = runAction != null && runAction.IsPressed();
-        character.SetRunHeld(runHeld);
 
         // 노이즈 컷
         if (moveRaw.magnitude < 0.05f) moveRaw = Vector2.zero;
