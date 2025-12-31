@@ -193,6 +193,9 @@ MonoBehaviour:
   coinPrefab: {fileID: 3580968226293983027, guid: afccde2187f35bc4aa5e8271050b4de7, type: 3}
   autoPickup: 0
   coinLifetime: 100
+  chestVanishDelay: 5
+  disableInsteadOfDestroy: 0
+  worldArrow: {fileID: 0}
 --- !u!65 &2016841580964219478
 BoxCollider:
   m_ObjectHideFlags: 0

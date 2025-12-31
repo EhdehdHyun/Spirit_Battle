@@ -31,10 +31,15 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
     [SerializeField] private AudioSource sfxAudioSourceToStop;
 
     [Header("Loading Overlay (텔포 순간 가리기)")]
-    [Tooltip("전체 화면을 덮는 로딩 패널/캔버스 오브젝트 (SetActive로 on/off)")]
     [SerializeField] private GameObject loadingOverlay;
-    [Tooltip("로딩이 너무 번쩍이지 않게 최소 유지 시간(초)")]
     [SerializeField] private float loadingMinDuration = 0.25f;
+
+    // 추가: 보스맵 진입 시 리스폰 포인트 변경
+    [Header("Respawn Switch (보스맵 진입 시 리스폰 지점 변경)")]
+    [SerializeField] private bool changeRespawnPointOnUse = true;
+    [Tooltip("보스맵에서 리스폰될 위치(=B). 비워두면 teleportTarget을 사용")]
+    [SerializeField] private Transform bossRespawnPoint;
+    [SerializeField] private RespawnManager respawnManager;
 
     private bool used = false;
     private Coroutine co;
@@ -43,8 +48,12 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
     private void Awake()
     {
         col = GetComponent<Collider>();
+
         if (loadingOverlay != null)
             loadingOverlay.SetActive(false);
+
+        if (respawnManager == null)
+            respawnManager = FindObjectOfType<RespawnManager>();
     }
 
     public string GetInteractPrompt()
@@ -60,7 +69,6 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
         used = true;
 
-        // 다시는 상호작용 안되게
         if (disableColliderOnUse && col != null)
             col.enabled = false;
 
@@ -69,11 +77,18 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
     private IEnumerator UseRoutine(PlayerInteraction player)
     {
-        // SFX 끄기(원하는 방식 아무거나)
+        // 보스맵 리스폰 포인트로 교체 (이 시점부터 앞으로 B에서 부활)
+        if (changeRespawnPointOnUse && respawnManager != null)
+        {
+            Transform newRespawn = bossRespawnPoint != null ? bossRespawnPoint : teleportTarget;
+            if (newRespawn != null)
+                respawnManager.SetRespawnPoint(newRespawn);
+        }
+
+        // SFX 끄기
         DisableSfx();
 
-        // 로딩 오버레이 켜기(텔포 장면 가리기)
-        float loadingStart = Time.unscaledTime;
+        // 로딩 오버레이 켜기
         if (loadingOverlay != null)
             loadingOverlay.SetActive(true);
 
@@ -81,19 +96,18 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         if (teleportPlayerOnUse && player != null && teleportTarget != null)
             TeleportPlayer(player.transform, teleportTarget.position, teleportTarget.rotation);
 
-        // 텔포 직후 카메라/추적 스냅을 한 프레임 더 가리기
+        // 카메라 스냅 가리기용 프레임 양보
+        yield return null;
         yield return null;
 
-        // overlay가 먼저 화면에 그려지게 한 프레임 양보
-        yield return null;
-
+        // 로딩 최소 유지시간만큼만 켜기
         if (loadingMinDuration > 0f)
             yield return new WaitForSecondsRealtime(loadingMinDuration);
 
         if (loadingOverlay != null)
             loadingOverlay.SetActive(false);
 
-        // 스폰 딜레이(연출 시간)
+        // 스폰 딜레이(연출)
         if (spawnDelay > 0f)
             yield return new WaitForSeconds(spawnDelay);
 

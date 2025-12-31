@@ -9,6 +9,8 @@ public class RespawnManager : MonoBehaviour
     [Header("Player Root GameObject (비워두면 Tag=Player로 탐색)")]
     [SerializeField] private GameObject playerRoot;
 
+    public Transform CurrentRespawnPoint => respawnPoint;
+
     private IEnumerator Start()
     {
         if (playerRoot == null)
@@ -28,6 +30,19 @@ public class RespawnManager : MonoBehaviour
             GameOverUI.Instance.OnRetryPressed -= Retry;
     }
 
+    // 보스맵 진입 등 특정 타이밍에 리스폰 지점 변경
+    public void SetRespawnPoint(Transform newPoint)
+    {
+        if (newPoint == null)
+        {
+            Debug.LogWarning("[RespawnManager] SetRespawnPoint: newPoint가 null입니다.");
+            return;
+        }
+
+        respawnPoint = newPoint;
+        // Debug.Log($"[RespawnManager] RespawnPoint changed => {newPoint.name}");
+    }
+
     public void Retry()
     {
         if (playerRoot == null || respawnPoint == null)
@@ -36,6 +51,7 @@ public class RespawnManager : MonoBehaviour
             return;
         }
 
+        // 보스 HP바 등 끄기
         if (BossUIStatus.Instance != null)
         {
             BossUIStatus.Instance.SetVisible(false);

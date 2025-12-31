@@ -135,10 +135,6 @@ public class PlayerParry : MonoBehaviour
 
             var receiver = col.GetComponentInParent<IParryReceiver>();
             if (receiver == null) continue;
-            if (receiver is Component compp)
-            {
-                Debug.Log($"[PLY] Candidate: {compp.name} (col={col.name})", this);
-            }
 
             Vector3 p = col.ClosestPoint(origin.position);
 
@@ -156,15 +152,12 @@ public class PlayerParry : MonoBehaviour
                 best = receiver;
                 bestPoint = p;
 
-                // ✅ 여기만 안전하게 바꿔
                 if (receiver is Component comp)
                 {
                     bestTransform = comp.transform;
-                    Debug.Log($"[PLY] BEST -> {bestTransform.name}  dist={dist:F2}  angle={a:F1}  score={score:F2}", this);
                 }
             }
         }
-        Debug.Log($"[PLY] Final BEST = {(bestTransform ? bestTransform.name : "null")}", this);
         return best;
     }
 

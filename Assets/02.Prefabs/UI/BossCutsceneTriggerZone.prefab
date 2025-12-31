@@ -66,30 +66,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7d7d7413a4bc4e49b43f779728b7990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cutsceneDelay: 5
   mainCamera: {fileID: 0}
   cutsceneCamera: {fileID: 0}
+  cutsceneDelay: 2
+  cutsceneTimeScale: 0.4
   points:
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   lookTarget: {fileID: 0}
   moveDurations:
-  - 1.2
-  - 1.2
-  - 1.3
   - 2
+  - 1
+  - 1
+  - 3
+  defaultMoveDuration: 0
   holdDurations:
   - 0
-  defaultMoveDuration: 0
-  freezeTimeScale: 0
+  - 0
+  - 0
+  - 0
+  - 0
   disableWhileCutscene: []
+  uiToDisableWhileCutscene:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   skipKey: 27
   playOnlyOnce: 1
-  letterboxTop: {fileID: 0}
-  letterboxBottom: {fileID: 0}
-  letterboxHeight: 160
-  letterboxAnimTime: 0.25
-  letterboxPreRoll: 0.2
-  letterboxPostRoll: 0.2
+  bgmSource: {fileID: 0}
+  bossBgmClip: {fileID: 8300000, guid: 75809951836972743baf521ade23dca0, type: 3}
+  bossBgmVolume: 1
+  bossBgmFadeIn: 0.5
+  bossBgmFadeOutPrev: 0.3
+  testBossRoot: {fileID: 0}
+  bossBgmFadeOutOnBossEnd: 1
+  cutsceneBossRoot: {fileID: 0}
+  cutsceneBossAnimator: {fileID: 0}
+  bossWalkSeconds: 3
+  bossPhase2Seconds: 5
+  walkStateName: walk
+  phase2StateName: 3phase_1
+  cutsceneBossScriptsToDisable: []

@@ -96,7 +96,7 @@ public class PhysicsCharacter : MonoBehaviour
          !movementLock &&
          _moveInput.sqrMagnitude > 0.001f &&
          (
-             (_weaponEquipped && _canCombatRun) ||
+             (_weaponEquipped && _runAfterDash && _canCombatRun) ||
              (!_weaponEquipped && _runAfterDash)
          );
 
@@ -119,7 +119,6 @@ public class PhysicsCharacter : MonoBehaviour
     //달리기 상태
     bool _runAfterDash;
     bool _weaponEquipped;
-    bool _runHeld;
 
     // 대쉬 상태
     bool _isDashing;
@@ -165,12 +164,15 @@ public class PhysicsCharacter : MonoBehaviour
 
         bool wantsRunMode = !_isDashing && !movementLock && _moveInput.sqrMagnitude > 0.001f && (_weaponEquipped || _runAfterDash);
         if (_weaponEquipped && _stat != null)
-            _canCombatRun = _stat.TickCombatRunStamina(inCombat: true, isTryingRun: (_runHeld || _runAfterDash), dt: dt);
+        {
+            bool isTryingCombatRun = !_isDashing && !movementLock && _runAfterDash && _moveInput.sqrMagnitude > 0.001f;
+            _canCombatRun = isTryingCombatRun ? _stat.TickCombatRunStamina(inCombat: true, isTryingRun: true, dt: dt) : true;
+        }
         else
             _canCombatRun = true;
 
         if (_weaponEquipped)
-            _canCombatRun = _canCombatRun && (_runHeld || _runAfterDash);
+            _canCombatRun = _canCombatRun && _runAfterDash;
 
         UpdateHorizontalVelocity(dt);
         ApplyJumpIfRequested();
@@ -266,14 +268,6 @@ public class PhysicsCharacter : MonoBehaviour
         Vector3 v = _rb.velocity;
         v.y += impulse.y;
         _rb.velocity = v;
-    }
-
-    public void SetRunHeld(bool held)
-    {
-        _runHeld = held;
-
-        //if (!_weaponEquipped)
-        //    _runAfterDash = held;
     }
 
     // ================== 내부 로직 ================== //
@@ -446,12 +440,12 @@ public class PhysicsCharacter : MonoBehaviour
 
             if (_weaponEquipped)
             {
-                if (!(_runHeld || _runAfterDash) || !_canCombatRun)
+                if (!_runAfterDash || !_canCombatRun)
                     targetSpeed = walkSpeed;
             }
             else
             {
-                if (_runHeld || _runAfterDash)
+                if (_runAfterDash)
                     targetSpeed = runSpeed;
             }
 

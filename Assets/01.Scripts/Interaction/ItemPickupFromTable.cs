@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class ItemPickupFromTable : MonoBehaviour, IInteractable
 {
@@ -8,6 +9,9 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
 
     private bool isCollected = false;
 
+    // ✅ 추가: 줍기 성공 이벤트(상자 등에서 구독)
+    public Action onPickedUp;
+
     private static Data_tableLoader loader;
 
     private static void EnsureLoader()
@@ -16,7 +20,7 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
 
         try
         {
-            loader = new Data_tableLoader();   // "JSON/Data_table" 사용
+            loader = new Data_tableLoader();
             Debug.Log("[ItemPickupFromTable] Data_tableLoader 생성 완료");
         }
         catch (System.Exception e)
@@ -51,11 +55,9 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
 
         isCollected = true;
 
-        // 2) ItemInstance 생성
         ItemInstance instance = new ItemInstance(data, quantity);
         Debug.Log($"[ItemPickupFromTable] ItemInstance 생성: {instance.data.ItemName} x{instance.quantity}");
 
-        // 3) 인벤토리 매니저에 추가 (ItemInstance 기반)
         if (InventoryManager.Instance != null)
         {
             Debug.Log("[ItemPickupFromTable] InventoryManager.AddItem 호출 시도");
@@ -68,21 +70,15 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
 
         Debug.Log($"[ItemPickupFromTable] {data.ItemName} x{quantity} 획득 후 인벤토리에 추가 시도");
 
+        // ✅ 여기서 "줍기 완료" 이벤트 발생 (상자가 이걸 듣고 사라짐)
+        onPickedUp?.Invoke();
+
         Destroy(gameObject);
     }
-
 
     public string GetInteractPrompt()
     {
         EnsureLoader();
-
-        if (loader == null)
-            return "Press [F]";
-
-        Data_table data = loader.GetByKey(itemKey);
-        if (data == null)
-            return "Press [F]";
-
-        return $"Press [F]";
+        return "Press [F]";
     }
 }
