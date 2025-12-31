@@ -10,6 +10,9 @@ public class MonsterParryHandler : MonoBehaviour, IParryable, IParryReceiver
     [SerializeField] private string parryGroggyTriggerName = "ParryGroggy";
     [SerializeField] private bool ignoreParryWhileGroggy = true;
 
+    [Header("Parry Telegraph (Shrink Rings)")]
+    [SerializeField] private ParryTelegraphShrinkRing telegraph;
+
     private CharacterBase character;
     private IParryGroggyController groggy;
 
@@ -20,6 +23,9 @@ public class MonsterParryHandler : MonoBehaviour, IParryable, IParryReceiver
     {
         if (character == null) character = GetComponentInParent<CharacterBase>();
         if (groggy == null) groggy = GetComponentInParent<IParryGroggyController>();
+
+        // 텔레그래프 자동 탐색(인스펙터에 안 넣어도 되게)
+        if (telegraph == null) telegraph = GetComponentInChildren<ParryTelegraphShrinkRing>(true);
     }
 
     public bool TryParry(WeaponHitBox hitBox, Vector3 hitPoint)
@@ -31,14 +37,13 @@ public class MonsterParryHandler : MonoBehaviour, IParryable, IParryReceiver
 
         if (groggy == null)
         {
-            Debug.LogWarning($"[{name}] IParryGroggyController를 부모에서 찾지 못함. (EnemyAIController/BossAIController에 인터페이스 구현 필요)", this);
+            Debug.LogWarning($"[{name}] IParryGroggyController를 부모에서 찾지 못함.", this);
             return false;
         }
 
         if (ignoreParryWhileGroggy && groggy.IsParryImmune)
             return false;
 
-        // ✅ 패링 정보 만들고 공통 처리로 넘김
         ParryInfo info = new ParryInfo
         {
             defender = hitBox != null ? hitBox.gameObject : null,
@@ -58,10 +63,38 @@ public class MonsterParryHandler : MonoBehaviour, IParryable, IParryReceiver
         float duration = (info.stunTime > 0f) ? info.stunTime : defaultParryGroggyDuration;
         groggy.EnterParryGroggy(duration, parryGroggyTriggerName);
 
+        // 패링 성공 연출: 즉시 원 제거
+        telegraph?.ParrySuccessHide();
+
+        // 타임 슬로우 (네가 이미 쓰는 거)
+        ParryTimeSlow.Play();
+
         parryWindowOpen = false;
     }
 
-    // 애니메이션 이벤트
-    public void Anim_ParryWindowOn() => parryWindowOpen = true;
-    public void Anim_ParryWindowOff() => parryWindowOpen = false;
+    // 공격 시작 시점
+    public void Anim_TelegraphStart()
+    {
+        telegraph?.TelegraphStart();
+    }
+
+    // 패링 타이밍 ON
+    public void Anim_ParryWindowOn()
+    {
+        parryWindowOpen = true;
+        telegraph?.ParryWindowOn();
+    }
+
+    // 패링 타이밍 OFF
+    public void Anim_ParryWindowOff()
+    {
+        parryWindowOpen = false;
+        telegraph?.ParryWindowOff();
+    }
+
+    // 공격 애니 끝
+    public void Anim_TelegraphEnd()
+    {
+        telegraph?.TelegraphEnd();
+    }
 }
