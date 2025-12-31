@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BossCutsceneTrigger_A : MonoBehaviour
 {
@@ -55,29 +56,58 @@ public class BossCutsceneTrigger_A : MonoBehaviour
 
     [Header("컷씬 보스(연출용 TestBoss2)")]
     [Tooltip("씬에 꺼진 상태로 배치해둔 컷씬용 보스 오브젝트")]
-    [SerializeField] private GameObject cutsceneBossRoot; // TestBoss2 Root (SetActive(false) 상태 권장)
-
+    [SerializeField] private GameObject cutsceneBossRoot; // TestBoss2 Root (SetActive(false) 권장)
     [Tooltip("컷씬 보스 Animator (비워두면 cutsceneBossRoot에서 자동으로 찾음)")]
     [SerializeField] private Animator cutsceneBossAnimator;
-
     [Tooltip("walk 상태 유지 시간")]
     [SerializeField] private float bossWalkSeconds = 3f;
-
     [Tooltip("3Phase_2 상태 유지 시간")]
     [SerializeField] private float bossPhase2Seconds = 2f;
-
     [Tooltip("Animator State 이름 (정확히 Animator에 있는 state 이름과 동일해야 함)")]
     [SerializeField] private string walkStateName = "walk";
     [SerializeField] private string phase2StateName = "3Phase_2";
-
     [Tooltip("컷씬 보스가 켜질 때, AI/전투 스크립트가 있으면 같이 꺼버리기(원치 않는 행동 방지)")]
     [SerializeField] private MonoBehaviour[] cutsceneBossScriptsToDisable;
+
+    // ===================== Letterbox(컷씬에서만 켜짐) =====================
+    [Header("Letterbox UI (컷씬에서만 켜짐)")]
+    [Tooltip("LetterBar 루트(부모 오브젝트). 없으면 Top/Bottom만으로도 동작함")]
+    [SerializeField] private GameObject letterboxRoot;
+
+    [Tooltip("위 검은 바 RectTransform (Image가 붙어있어야 함)")]
+    [SerializeField] private RectTransform letterboxTop;
+
+    [Tooltip("아래 검은 바 RectTransform (Image가 붙어있어야 함)")]
+    [SerializeField] private RectTransform letterboxBottom;
+
+    [Tooltip("바 높이(픽셀)")]
+    [SerializeField] private float letterboxHeight = 160f;
+
+    [Tooltip("바 애니메이션 시간(초)")]
+    [SerializeField] private float letterboxAnimTime = 0.25f;
+
+    [Tooltip("컷씬 시작 전 미리 살짝 대기(연출용)")]
+    [SerializeField] private float letterboxPreRoll = 0.0f;
+
+    [Tooltip("컷씬 끝난 후 유지 시간(연출용)")]
+    [SerializeField] private float letterboxPostRoll = 0.0f;
+
+    private float topBaseH;
+    private float bottomBaseH;
+
+    // ====================================================================
 
     private bool played;
     private float prevTimeScale = 1f;
 
     private Coroutine bossEndWatchCo;
     private bool bossBgmStarted;
+
+    private void Awake()
+    {
+        CacheLetterboxBase();
+        SetLetterboxInstant(false); // 시작은 무조건 꺼진 상태
+    }
 
     private void Reset()
     {
@@ -130,7 +160,7 @@ public class BossCutsceneTrigger_A : MonoBehaviour
             yield return StartCoroutine(CoPlayBossBgm());
             bossBgmStarted = true;
 
-            // ✅ “testboss 비활성화될 때까지” 자동 감시 시작
+            // “testboss 비활성화될 때까지” 자동 감시 시작
             if (bossEndWatchCo == null)
                 bossEndWatchCo = StartCoroutine(CoWatchBossEndAndStopBgm());
         }
@@ -149,11 +179,17 @@ public class BossCutsceneTrigger_A : MonoBehaviour
                 if (go) go.SetActive(false);
         }
 
-        // 4) TimeScale 조절(0~1)
+        // 4) Letterbox ON
+        if (letterboxPreRoll > 0f)
+            yield return WaitUnscaled(letterboxPreRoll);
+
+        yield return AnimateLetterbox(true);
+
+        // 5) TimeScale 조절(0~1)
         prevTimeScale = Time.timeScale;
         Time.timeScale = Mathf.Clamp01(cutsceneTimeScale);
 
-        // 5) 컷씬 카메라 전환
+        // 6) 컷씬 카메라 전환
         mainCamera.gameObject.SetActive(false);
         cutsceneCamera.gameObject.SetActive(true);
 
@@ -161,7 +197,7 @@ public class BossCutsceneTrigger_A : MonoBehaviour
         cutsceneCamera.transform.position = points[0].position;
         cutsceneCamera.transform.rotation = points[0].rotation;
 
-        // 6) 컷씬 보스 연출 시작(동시에 진행)
+        // 7) 컷씬 보스 연출 시작(동시에 진행)
         Coroutine bossCo = null;
         if (cutsceneBossRoot != null)
             bossCo = StartCoroutine(CoPlayCutsceneBoss());
@@ -169,7 +205,7 @@ public class BossCutsceneTrigger_A : MonoBehaviour
         // 시작 포인트 홀드
         yield return HoldAtPoint(0);
 
-        // 7) 카메라 경로 이동
+        // 8) 카메라 경로 이동
         for (int seg = 0; seg < points.Length - 1; seg++)
         {
             float dur = GetMoveDuration(seg);
@@ -213,16 +249,23 @@ public class BossCutsceneTrigger_A : MonoBehaviour
             yield return HoldAtPoint(seg + 1);
         }
 
-        // 8) 컷씬 보스 코루틴이 아직 돌고 있으면 기다려줌(선택)
+        // 9) 컷씬 보스 코루틴이 아직 돌고 있으면 기다려줌(선택)
         if (bossCo != null)
             yield return bossCo;
 
-        // 9) 원복
+        // 10) 원복
         cutsceneCamera.gameObject.SetActive(false);
         mainCamera.gameObject.SetActive(true);
 
         Time.timeScale = prevTimeScale;
 
+        // 11) Letterbox OFF
+        if (letterboxPostRoll > 0f)
+            yield return WaitUnscaled(letterboxPostRoll);
+
+        yield return AnimateLetterbox(false);
+
+        // 12) UI/입력 복구
         if (uiToDisableWhileCutscene != null)
         {
             foreach (var go in uiToDisableWhileCutscene)
@@ -235,8 +278,8 @@ public class BossCutsceneTrigger_A : MonoBehaviour
                 if (s) s.enabled = true;
         }
 
-        // ✅ 여기서는 BGM을 끄지 않는다!
-        // BGM은 “testBossRoot가 비활성화될 때” 코루틴이 끈다.
+        // BGM은 여기서 끄지 않음!
+        // “testBossRoot가 비활성화될 때” CoWatchBossEndAndStopBgm이 끈다.
     }
 
     private IEnumerator CoPlayCutsceneBoss()
@@ -269,26 +312,19 @@ public class BossCutsceneTrigger_A : MonoBehaviour
 
     private IEnumerator CoWatchBossEndAndStopBgm()
     {
-        // testBossRoot가 없으면 감지 불가
         if (testBossRoot == null)
         {
             Debug.LogWarning("[BossCutsceneTrigger_A] Test Boss Root가 비어있어서 BGM 종료 감지를 할 수 없습니다.");
             yield break;
         }
 
-        // 보스가 “활성화 되기 전” 구간도 있을 수 있으니,
-        // 1) 먼저 활성화 될 때까지 기다렸다가
-        // 2) 그 다음 비활성화 될 때를 기다린다.
+        // 보스가 켜질 때까지 대기
         while (testBossRoot != null && !testBossRoot.activeInHierarchy)
-        {
             yield return null;
-        }
 
-        // 이제 보스가 켜졌으니, 꺼질 때까지 대기
+        // 꺼질 때까지 대기
         while (testBossRoot != null && testBossRoot.activeInHierarchy)
-        {
             yield return null;
-        }
 
         // 보스가 꺼졌다 -> BGM 종료
         if (bossBgmStarted)
@@ -320,7 +356,7 @@ public class BossCutsceneTrigger_A : MonoBehaviour
         }
 
         bgmSource.Stop();
-        bgmSource.volume = bossBgmVolume; // 다음에 다시 재생될 때를 대비해 복구
+        bgmSource.volume = bossBgmVolume; // 다음 재생 대비 복구
     }
 
     private IEnumerator WaitUnscaled(float seconds)
@@ -385,7 +421,7 @@ public class BossCutsceneTrigger_A : MonoBehaviour
             yield break;
         }
 
-        // 이전 BGM이 있다면 페이드아웃
+        // 이전 BGM 페이드아웃
         if (bgmSource.isPlaying && bossBgmFadeOutPrev > 0f)
         {
             float startVol = bgmSource.volume;
@@ -415,5 +451,110 @@ public class BossCutsceneTrigger_A : MonoBehaviour
             }
             bgmSource.volume = bossBgmVolume;
         }
+    }
+
+    // ===================== Letterbox 구현 =====================
+
+    private void CacheLetterboxBase()
+    {
+        if (letterboxTop) topBaseH = letterboxTop.sizeDelta.y;
+        if (letterboxBottom) bottomBaseH = letterboxBottom.sizeDelta.y;
+    }
+
+    private void SetLetterboxInstant(bool on)
+    {
+        if (letterboxRoot) letterboxRoot.SetActive(on);
+
+        if (letterboxTop)
+        {
+            var s = letterboxTop.sizeDelta;
+            s.y = on ? (topBaseH + letterboxHeight) : topBaseH;
+            letterboxTop.sizeDelta = s;
+        }
+
+        if (letterboxBottom)
+        {
+            var s = letterboxBottom.sizeDelta;
+            s.y = on ? (bottomBaseH + letterboxHeight) : bottomBaseH;
+            letterboxBottom.sizeDelta = s;
+        }
+
+        // 바 색이 투명하면 안 보일 수 있으니 기본 보정(필요하면 삭제)
+        ForceImageVisible(letterboxTop);
+        ForceImageVisible(letterboxBottom);
+    }
+
+    private IEnumerator AnimateLetterbox(bool show)
+    {
+        // Root를 show 시작 시 켜기 / hide 끝나고 끄기
+        if (show && letterboxRoot) letterboxRoot.SetActive(true);
+
+        if (!letterboxTop && !letterboxBottom)
+            yield break;
+
+        ForceImageVisible(letterboxTop);
+        ForceImageVisible(letterboxBottom);
+
+        float dur = Mathf.Max(0.01f, letterboxAnimTime);
+        float t = 0f;
+
+        float fromTop = letterboxTop ? letterboxTop.sizeDelta.y : 0f;
+        float fromBottom = letterboxBottom ? letterboxBottom.sizeDelta.y : 0f;
+
+        float toTop = letterboxTop ? (show ? (topBaseH + letterboxHeight) : topBaseH) : 0f;
+        float toBottom = letterboxBottom ? (show ? (bottomBaseH + letterboxHeight) : bottomBaseH) : 0f;
+
+        while (t < dur)
+        {
+            t += Time.unscaledDeltaTime;
+            float lerp = Mathf.Clamp01(t / dur);
+
+            if (letterboxTop)
+            {
+                var s = letterboxTop.sizeDelta;
+                s.y = Mathf.Lerp(fromTop, toTop, lerp);
+                letterboxTop.sizeDelta = s;
+            }
+
+            if (letterboxBottom)
+            {
+                var s = letterboxBottom.sizeDelta;
+                s.y = Mathf.Lerp(fromBottom, toBottom, lerp);
+                letterboxBottom.sizeDelta = s;
+            }
+
+            yield return null;
+        }
+
+        // 정확히 맞추기
+        if (letterboxTop)
+        {
+            var s = letterboxTop.sizeDelta;
+            s.y = toTop;
+            letterboxTop.sizeDelta = s;
+        }
+
+        if (letterboxBottom)
+        {
+            var s = letterboxBottom.sizeDelta;
+            s.y = toBottom;
+            letterboxBottom.sizeDelta = s;
+        }
+
+        if (!show && letterboxRoot)
+            letterboxRoot.SetActive(false);
+    }
+
+    private void ForceImageVisible(RectTransform rt)
+    {
+        if (!rt) return;
+        var img = rt.GetComponent<Image>();
+        if (!img) return;
+
+        // 알파가 0이면 안 보이니까 보정
+        var c = img.color;
+        if (c.a <= 0.01f) c.a = 1f;
+        img.color = c;
+        img.enabled = true;
     }
 }
