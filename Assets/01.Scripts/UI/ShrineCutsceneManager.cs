@@ -55,6 +55,9 @@ public class ShrineCutsceneManager : MonoBehaviour
     public Transform camFaceToFace;
     public Transform camShrineFocus;
     
+    [Header("FaceToFace Camera Follow")]
+    public float faceToFaceFollowSpeed = 1.0f; // 플레이어 속도에 대한 비율
+    
     [Header("Shrine Target")]
     public Transform shrineTarget;
 
@@ -82,6 +85,7 @@ public class ShrineCutsceneManager : MonoBehaviour
      * ======================= */
     public void PlayCutscene()
     {
+        TutorialManager.Instance?.EndTutorialUI();
         StartCoroutine(Co_PlayCutscene());
     }
 
@@ -119,38 +123,31 @@ public class ShrineCutsceneManager : MonoBehaviour
 
         cutsceneCamera.transform.LookAt(cutscenePlayer.transform.position + Vector3.up * 1.5f);
     }
-
+    
     void FollowFaceToFace()
     {
-        Vector3 currentPos = cutscenePlayer.transform.position;
-        float deltaX = currentPos.x - prevPlayerPos.x;
-        faceToFaceXOffset -= deltaX;
-        prevPlayerPos = currentPos;
+        // 플레이어 이동량 계산
+        Vector3 playerDelta = cutscenePlayer.transform.position - prevPlayerPos;
 
-        Vector3 mid =
-            (cutscenePlayer.transform.position + cutsceneNpc.transform.position) * 0.5f;
+        // 플레이어가 이동한 만큼 FaceToFace 오브젝트를 -X로 이동
+        camFaceToFace.position += Vector3.left * playerDelta.magnitude * faceToFaceFollowSpeed;
 
-        Vector3 faceDir =
-            (cutscenePlayer.transform.position - cutsceneNpc.transform.position).normalized;
+        prevPlayerPos = cutscenePlayer.transform.position;
 
-        //  여기서 camFaceToFace의 localPosition 사용
-        Vector3 basePos =
-            mid
-            + faceDir * camFaceToFace.localPosition.z
-            + Vector3.right * camFaceToFace.localPosition.x
-            + Vector3.up * camFaceToFace.localPosition.y;
-
-        Vector3 targetPos = basePos + Vector3.right * faceToFaceXOffset;
-
+        // 카메라는 FaceToFace 오브젝트만 따라감
         cutsceneCamera.transform.position =
             Vector3.Lerp(
                 cutsceneCamera.transform.position,
-                targetPos,
-                Time.deltaTime * 2.5f
+                camFaceToFace.position,
+                Time.deltaTime * 3f
             );
 
+        // 항상 두 캐릭터 정면을 바라봄
+        Vector3 mid =
+            (cutscenePlayer.transform.position + cutsceneNpc.transform.position) * 0.5f;
+
         cutsceneCamera.transform.LookAt(mid + Vector3.up * 1.6f);
-    }    
+    }
 
     void FocusShrine()
     {
