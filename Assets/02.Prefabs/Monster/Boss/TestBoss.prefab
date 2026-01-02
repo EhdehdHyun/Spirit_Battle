@@ -10153,7 +10153,7 @@ MonoBehaviour:
   attackRange: 8.94
   maxPhase: 3
   phase2HpRatio: 0.5
-  phase3HpRatio: 0.2
+  phase3HpRatio: 0.25
   phase2MoveSpeedMultiplier: 1.2
   phase3MoveSpeedMultiplier: 3
   coreObject: {fileID: 850459025388662697}
