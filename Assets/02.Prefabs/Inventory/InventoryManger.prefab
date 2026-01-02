@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &455896673299020461
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5173912399988912430}
+  - component: {fileID: 6325169664097541195}
+  - component: {fileID: 3464042237868613026}
+  m_Layer: 0
+  m_Name: InventoryManger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5173912399988912430
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455896673299020461}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 264.04977, y: 5.8135953, z: -20.072542}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6325169664097541195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455896673299020461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dae4d8a13f5b3384783c6d87aff1a6e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rows: 5
+  columns: 10
+  slots: []
+  playerInteraction: {fileID: 0}
+  dropPrefabs:
+  - itemKey: 1001
+    prefab: {fileID: 7709453454447007937, guid: 08993e4c20abc154981ade8797b99c37, type: 3}
+  - itemKey: 2001
+    prefab: {fileID: 6618062954455593845, guid: 4b4f7e8e5f578f143a5db0e017c4971b, type: 3}
+  - itemKey: 2002
+    prefab: {fileID: 723085354614441825, guid: 2d1fa913456bf8643828393ff146a5d9, type: 3}
+  - itemKey: 2003
+    prefab: {fileID: 2136707441161788966, guid: f2065d3b29ef6fa4295cb878affb9109, type: 3}
+  - itemKey: 2004
+    prefab: {fileID: 7861733044339470675, guid: db3c1a68d610e8e4d98027bc48f5c4e6, type: 3}
+  - itemKey: 3001
+    prefab: {fileID: 3580968226293983027, guid: afccde2187f35bc4aa5e8271050b4de7, type: 3}
+  defaultDropPrefab: {fileID: 2913128437352123816, guid: 75337b806e466e2449091c86a351af82, type: 3}
+  WeaponEquipStartIndex: 0
+--- !u!114 &3464042237868613026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 455896673299020461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14d7f62dab513d241a0b68cd8e1e04cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  inventoryRoot: {fileID: 0}
+  gameplayScriptsToDisable: []

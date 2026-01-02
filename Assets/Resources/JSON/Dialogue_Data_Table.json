@@ -1,0 +1,92 @@
+{
+  "Dialogues": [
+    {
+      "DialogueID": "DLG_1001",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "정신이 드는가 외지인이여?",
+      "NextID": "DLG_1002",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1002",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "폭풍 속에서 그대의 배를 발견했네. 이 섬까지 살아서 흘러온 건 기적에 가깝지.",
+      "NextID": "DLG_1003",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1003",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "게다가… 네 몸에서 매우 순수한 정령의 기운이 느껴진다네.",
+      "NextID": "DLG_1004",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1004",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이 섬의 사람이 아닌데도, 정령과 이렇게 동화되는 이는 처음이네.",
+      "NextID": "DLG_1005",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1005",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "아마도… 그대는 이 섬이 부른 존재일지도 모르겠군.",
+      "NextID": "DLG_1006",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1006",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "부탁이 있다. 마을 근처의 작은 성소가 오염되기 시작했네.",
+      "NextID": "DLG_1007",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1007",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "정령들이 날뛰고, 몬스터가 나타나 주민들이 불안에 떨고 있지.",
+      "NextID": "DLG_1008",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1008",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그대의 힘으로 성소를 조사해줄 수 있겠나?",
+      "NextID": "",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_SHRINE_01",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "음.? 저건 무엇이지?",
+      "NextID": "DLG_SHRINE_02",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_SHRINE_02",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "나도 모르는 굉장히 불쾌한 성소가 이런곳에 있다니.. ",
+      "NextID": "DLG_SHRINE_03",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_SHRINE_03",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "미안하지만 부탁하나만 하지. 저 불쾌해 보이는 성소좀 조사해줘.",
+      "NextID": "",
+      "IsChoice": false
+    }
+  ]
+}

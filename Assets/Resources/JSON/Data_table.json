@@ -1,0 +1,220 @@
+{
+  "Items": [
+    {
+      "key": 1001,
+      "ItemName": "체력 포션",
+      "ItemType": 0,
+      "Rarity": 0,
+      "HealAmount": 30,
+      "MaxStack": 999,
+      "IsConsumable": true,
+      "Icon": "hp_potion_icon",
+      "Description": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2001,
+      "ItemName": "붉은 꽃",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "red_flower_icon",
+      "Description": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2002,
+      "ItemName": "버섯",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "Mushroom_icon",
+      "Description": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2003,
+      "ItemName": "썩은 이빨",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "decayed_teeth_icon",
+      "Description": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2004,
+      "ItemName": "사과",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 30,
+      "MaxStack": 999,
+      "IsConsumable": true,
+      "Icon": "Apple_icon",
+      "Description": "싱싱한 사과. 사용 시 체력 20 회복.",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2005,
+      "ItemName": "철광석",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "",
+      "Description": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2006,
+      "ItemName": "구리",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "",
+      "Description": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 2007,
+      "ItemName": "늑대 가죽",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "",
+      "Description": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "key": 3001,
+      "ItemName": "낡은 검",
+      "ItemType": 1,
+      "Rarity": 0,
+      "HealAmount": 0,
+      "MaxStack": 999,
+      "IsConsumable": false,
+      "Icon": "Old_IronSword_icon",
+      "Description": "",
+      "ItemTypes": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "Raritys": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ]
+    }
+  ]
+}
