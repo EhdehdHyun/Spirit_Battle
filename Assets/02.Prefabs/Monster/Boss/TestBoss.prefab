@@ -10204,7 +10204,7 @@ MonoBehaviour:
   damage: 30
   attackCooldown: 1.4
   hitOrigin: {fileID: 1267480653314365648}
-  hitRadius: 6.51
+  hitRadius: 3.91
   hitMask:
     serializedVersion: 2
     m_Bits: 128
@@ -10384,7 +10384,7 @@ MonoBehaviour:
   outerRing: {fileID: 7000958094733227354}
   innerRing: {fileID: 4889029108700100268}
   rootObject: {fileID: 6570658422539742348}
-  shrinkSeconds: 0.35
+  shrinkSeconds: 0.55
   fadeOutSeconds: 0.2
   outerStartScaleMul: 6
   faceCamera: 1
@@ -15650,7 +15650,7 @@ Transform:
   m_GameObject: {fileID: 4205012935547573799}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.87, z: 2.31}
+  m_LocalPosition: {x: 0, y: 2.04, z: 3.74}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -69,6 +69,8 @@ public class MonsterParryHandler : MonoBehaviour, IParryable, IParryReceiver
         // 타임 슬로우 (네가 이미 쓰는 거)
         ParryTimeSlow.Play();
 
+        ParryPostFxPulse.Play();
+
         parryWindowOpen = false;
     }
 
