@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &494314764258997666
+--- !u!1 &3516399989093812627
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,44 +8,44 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 311959025378149660}
-  - component: {fileID: 5465858498878608356}
+  - component: {fileID: 3688353998398087748}
+  - component: {fileID: 3381002525120969981}
   m_Layer: 0
-  m_Name: DialogueManager
+  m_Name: PrologueDialogue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &311959025378149660
+--- !u!4 &3688353998398087748
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 494314764258997666}
+  m_GameObject: {fileID: 3516399989093812627}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 369.77078, y: 6.415095, z: 336.0922}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5465858498878608356
+--- !u!114 &3381002525120969981
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 494314764258997666}
+  m_GameObject: {fileID: 3516399989093812627}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44d5ede7eb73145a1a2f677b26643d91, type: 3}
+  m_Script: {fileID: 11500000, guid: 5593adbaa938449658a38ff77ea42018, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialogueCanvas: {fileID: 0}
-  dialogueText: {fileID: 0}
+  npcTransform: {fileID: 0}
+  dialogueManager: {fileID: 0}
   dialogueCamera: {fileID: 0}
   playerMovement: {fileID: 0}
-  playerTransform: {fileID: 0}
+  npcInteractable: {fileID: 0}
