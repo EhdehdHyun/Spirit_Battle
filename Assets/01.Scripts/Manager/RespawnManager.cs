@@ -60,6 +60,13 @@ public class RespawnManager : MonoBehaviour
         // 이동(텔레포트)
         TeleportPlayerRoot(playerRoot, respawnPoint.position);
 
+        //인벤토리 비우기
+        if (InventoryManager.Instance != null)
+        {
+            // 0번 슬롯 = EquipWeaponIndex
+            InventoryManager.Instance.ClearSlot(InventoryManager.EquipWeaponIndex);
+        }
+
         // HP 풀회복 + 입력/이동락 해제
         var baseChar = playerRoot.GetComponentInParent<CharacterBase>();
         if (baseChar != null)

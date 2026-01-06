@@ -4,14 +4,9 @@ using UnityEngine.VFX;
 public class PlayerWeaponVisual : MonoBehaviour
 {
     [SerializeField] private InventoryManager inventoryManager;
-    [SerializeField] private GameObject swordObject; // Sword_001 or Sword_002
+    [SerializeField] private GameObject swordObject;
 
-    // ✅ 소켓(VFX_Slash)은 끄면 안됨! vfxgraph만 끈다
-    private static readonly string[] AUTO_PLAY_VFX_NAMES =
-    {
-        "vfxgraph_Slash",
-        "vfxgraph_Spear"
-    };
+    private static readonly string[] AUTO_PLAY_VFX_NAMES = { "vfxgraph_Slash", "vfxgraph_Spear" };
 
     private void Awake()
     {
@@ -23,8 +18,6 @@ public class PlayerWeaponVisual : MonoBehaviour
     {
         if (inventoryManager != null)
             inventoryManager.OnInventoryChanged += Refresh;
-
-        Refresh();
     }
 
     private void OnDisable()
@@ -33,17 +26,26 @@ public class PlayerWeaponVisual : MonoBehaviour
             inventoryManager.OnInventoryChanged -= Refresh;
     }
 
+    private void Update()
+    {
+        Refresh();
+    }
+
     private void Refresh()
     {
         if (inventoryManager == null || swordObject == null) return;
 
-        bool hasWeapon = inventoryManager.GetEquippedWeapon() != null;
+        bool hasItem = inventoryManager.GetEquippedWeapon() != null;
 
-        swordObject.SetActive(hasWeapon);
+        // 장착만 되어 있다면 무조건 활성화 (허리에 보이게 됨)
+        if (swordObject.activeSelf != hasItem)
+        {
+            swordObject.SetActive(hasItem);
 
-        // ✅ 장착해서 무기 켜는 순간, 자동재생되는 vfxgraph만 OFF
-        if (hasWeapon)
-            DisableAutoPlayVFXGraphsOnly(swordObject.transform);
+            // 무기가 켜질 때 쓸데없는 이펙트(검기 등)가 나오지 않도록 끔
+            if (hasItem)
+                DisableAutoPlayVFXGraphsOnly(swordObject.transform);
+        }
     }
 
     private void DisableAutoPlayVFXGraphsOnly(Transform weaponRoot)
@@ -55,9 +57,7 @@ public class PlayerWeaponVisual : MonoBehaviour
                 if (t.name == AUTO_PLAY_VFX_NAMES[i])
                 {
                     var vfx = t.GetComponent<VisualEffect>();
-                    if (vfx != null) vfx.Stop(); // 혹시 켜지며 재생되면 멈춤
-
-                    // ✅ 이 오브젝트만 꺼서 장착 순간 보이는 현상 차단
+                    if (vfx != null) vfx.Stop();
                     t.gameObject.SetActive(false);
                 }
             }

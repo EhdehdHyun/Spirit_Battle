@@ -9,20 +9,9 @@
       "MaxStack": 999,
       "IsConsumable": true,
       "Icon": "hp_potion_icon",
-      "Description": "",
-      "ItemTypes": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "Raritys": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ]
+      "Description": "체력을 30 회복시켜주는 기본 포션입니다.",
+      "ItemTypes": [ 0, 1, 2, 3 ],
+      "Raritys": [ 0, 1, 2, 3, 4 ]
     },
     {
       "key": 2001,
@@ -33,20 +22,9 @@
       "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "red_flower_icon",
-      "Description": "",
-      "ItemTypes": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "Raritys": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ]
+      "Description": "연금술 재료로 쓰이는 붉은 꽃입니다.",
+      "ItemTypes": [ 0, 1, 2, 3 ],
+      "Raritys": [ 0, 1, 2, 3, 4 ]
     },
     {
       "key": 2002,
@@ -57,44 +35,9 @@
       "MaxStack": 999,
       "IsConsumable": false,
       "Icon": "Mushroom_icon",
-      "Description": "",
-      "ItemTypes": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "Raritys": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    {
-      "key": 2003,
-      "ItemName": "썩은 이빨",
-      "ItemType": 1,
-      "Rarity": 0,
-      "HealAmount": 0,
-      "MaxStack": 999,
-      "IsConsumable": false,
-      "Icon": "decayed_teeth_icon",
-      "Description": "",
-      "ItemTypes": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "Raritys": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ]
+      "Description": "습한 곳에서 자라는 흔한 버섯입니다.",
+      "ItemTypes": [ 0, 1, 2, 3 ],
+      "Raritys": [ 0, 1, 2, 3, 4 ]
     },
     {
       "key": 2004,
@@ -105,20 +48,9 @@
       "MaxStack": 999,
       "IsConsumable": true,
       "Icon": "Apple_icon",
-      "Description": "싱싱한 사과. 사용 시 체력 20 회복.",
-      "ItemTypes": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "Raritys": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ]
+      "Description": "싱싱한 사과. 사용 시 체력 30 회복.",
+      "ItemTypes": [ 0, 1, 2, 3 ],
+      "Raritys": [ 0, 1, 2, 3, 4 ]
     },
     {
       "key": 2005,
@@ -128,93 +60,36 @@
       "HealAmount": 0,
       "MaxStack": 999,
       "IsConsumable": false,
-      "Icon": "",
-      "Description": "",
-      "ItemTypes": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "Raritys": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ]
+      "Icon": "iron_ore_icon",
+      "Description": "단단한 철광석입니다.",
+      "ItemTypes": [ 0, 1, 2, 3 ],
+      "Raritys": [ 0, 1, 2, 3, 4 ]
     },
     {
-      "key": 2006,
-      "ItemName": "구리",
+      "key": 2008,
+      "ItemName": "낡은 뼈조각",
       "ItemType": 1,
       "Rarity": 0,
       "HealAmount": 0,
       "MaxStack": 999,
       "IsConsumable": false,
-      "Icon": "",
-      "Description": "",
-      "ItemTypes": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "Raritys": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ]
-    },
-    {
-      "key": 2007,
-      "ItemName": "늑대 가죽",
-      "ItemType": 1,
-      "Rarity": 0,
-      "HealAmount": 0,
-      "MaxStack": 999,
-      "IsConsumable": false,
-      "Icon": "",
-      "Description": "",
-      "ItemTypes": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "Raritys": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ]
+      "Icon": "old_bone_icon",
+      "Description": "오래된 뼈의 파편입니다.",
+      "ItemTypes": [ 0, 1, 2, 3 ],
+      "Raritys": [ 0, 1, 2, 3, 4 ]
     },
     {
       "key": 3001,
       "ItemName": "낡은 검",
-      "ItemType": 1,
+      "ItemType": 2,
       "Rarity": 0,
       "HealAmount": 0,
-      "MaxStack": 999,
+      "MaxStack": 1,
       "IsConsumable": false,
       "Icon": "Old_IronSword_icon",
-      "Description": "",
-      "ItemTypes": [
-        0,
-        1,
-        2,
-        3
-      ],
-      "Raritys": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ]
+      "Description": "오래되어 날이 무뎌진 검입니다.",
+      "ItemTypes": [ 0, 1, 2, 3 ],
+      "Raritys": [ 0, 1, 2, 3, 4 ]
     }
   ]
 }
