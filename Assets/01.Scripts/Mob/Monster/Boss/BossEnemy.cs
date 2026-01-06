@@ -25,10 +25,10 @@ public class BossEnemy : EnemyBase
 
     [Header("브레이크 시스템")]
     public int breakEnableFromPhase = 2;
-    public int breakHitThreshold = 10;
-    public float breakGroggyDuration = 5f;
-    [Range(0f, 5f)] public float groggyExtraDamageRatio = 0.2f;
-    public string breakGroggyTriggerName = "BreakGroggy";
+    public int bossBreakHitThreshold = 10;
+    public float bossBreakGroggyDuration = 5f;
+    [Range(0f, 5f)] public float bossGroggyExtraDamageRatio = 0.2f;
+    public string bossBreakGroggyTriggerName = "BreakGroggy";
 
     [Header("튜토보스 3페이즈 강제 종료")]
     [SerializeField] private bool isTutorialBoss = false;
@@ -47,16 +47,16 @@ public class BossEnemy : EnemyBase
     [Tooltip("Animator 레이어 인덱스(보통 0)")]
     [SerializeField] private int animatorLayerIndex = 0;
 
-    public event Action<int, int> OnBreakHitChanged;
-    public event Action<bool> OnGroggyChanged;
+    public event Action<int, int> bossOnBreakHitChanged;
+    public event Action<bool> BossOnGroggyChanged;
 
-    private int breakHitCount = 0;
-    private bool isGroggy = false;
+    private int bossBreakHitCount = 0;
+    private bool bossIsGroggy = false;
 
     private BossAIController ai;
     private MonsterAnimation monsterAnim;
     private EnemyMeleeAttack meleeAttack;
-    private Animator anim;
+    private Animator bossAnim;
 
     public int CurrentPhase { get; private set; } = 1;
 
@@ -212,14 +212,14 @@ public class BossEnemy : EnemyBase
         }
     }
 
-    private void TryAccumulateBreak()
+    private void bossTryAccumulateBreak()
     {
         if (isGroggy) return;
         if (CurrentPhase < breakEnableFromPhase) return;
         if (breakHitThreshold <= 0) return;
 
         breakHitCount++;
-        OnBreakHitChanged?.Invoke(breakHitCount, breakHitThreshold);
+        bossOnBreakHitChanged?.Invoke(breakHitCount, breakHitThreshold);
         bossUI?.UpdateBreak(breakHitCount, breakHitThreshold);
 
         if (breakHitCount >= breakHitThreshold)
@@ -231,7 +231,7 @@ public class BossEnemy : EnemyBase
         if (isGroggy) yield break;
 
         isGroggy = true;
-        OnGroggyChanged?.Invoke(true);
+        BossOnGroggyChanged?.Invoke(true);
         bossUI?.SetGroggy(true);
 
         if (ai != null)
@@ -240,11 +240,11 @@ public class BossEnemy : EnemyBase
         yield return new WaitForSeconds(breakGroggyDuration);
 
         breakHitCount = 0;
-        OnBreakHitChanged?.Invoke(breakHitCount, breakHitThreshold);
+        bossOnBreakHitChanged?.Invoke(breakHitCount, breakHitThreshold);
         bossUI?.UpdateBreak(breakHitCount, breakHitThreshold);
 
         isGroggy = false;
-        OnGroggyChanged?.Invoke(false);
+        BossOnGroggyChanged?.Invoke(false);
         bossUI?.SetGroggy(false);
     }
 
