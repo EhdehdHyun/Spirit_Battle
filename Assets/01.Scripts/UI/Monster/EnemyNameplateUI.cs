@@ -8,6 +8,7 @@ public class EnemyNameplateUI : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private Image hpFill;
+    [SerializeField] private Image breakFill;
 
     [Header("Target")]
     [SerializeField] private CharacterBase target;
@@ -17,12 +18,14 @@ public class EnemyNameplateUI : MonoBehaviour
     [SerializeField] private bool hideWhenDead = true;
 
     private Coroutine refreshCo;
+    private EnemyBase enemy;
 
     private void Awake()
     {
         if (target == null)
             target = GetComponentInParent<CharacterBase>();
 
+        enemy = target as EnemyBase;
         ApplyName();
     }
     private void OnEnable()
@@ -56,6 +59,12 @@ public class EnemyNameplateUI : MonoBehaviour
         yield return null;
 
         RefreshHp();
+
+        if (enemy != null)
+            HandleBreakChanged(enemy.BreakHitCount, enemy.BreakHitThreshold);
+        else
+            HandleBreakChanged(0, 1);
+
         refreshCo = null;
     }
 
@@ -64,6 +73,7 @@ public class EnemyNameplateUI : MonoBehaviour
         Unbind();
 
         target = newTarget;
+        enemy = target as EnemyBase;
         nameOverride = overrideName ?? string.Empty;
 
         ApplyName();
@@ -77,15 +87,37 @@ public class EnemyNameplateUI : MonoBehaviour
 
     private void Bind()
     {
+        if (enemy != null)
+            HandleBreakChanged(enemy.BreakHitCount, enemy.BreakHitThreshold);
+        else
+            HandleBreakChanged(0, 1);
+
         if (target == null) return;
+
         target.OnHpChanged -= HandleHpChanged;
         target.OnHpChanged += HandleHpChanged;
+
+        enemy = target as EnemyBase;
+        if (enemy != null)
+        {
+            enemy.OnBreakHitChanged -= HandleBreakChanged;
+            enemy.OnBreakHitChanged += HandleBreakChanged;
+
+            HandleBreakChanged(enemy.BreakHitCount, enemy.BreakHitThreshold);
+        }
     }
 
     private void Unbind()
     {
         if (target == null) return;
+
         target.OnHpChanged -= HandleHpChanged;
+
+        if (enemy != null)
+        {
+            enemy.OnBreakHitChanged -= HandleBreakChanged;
+            enemy = null;
+        }
     }
 
     private void ApplyName()
@@ -111,5 +143,14 @@ public class EnemyNameplateUI : MonoBehaviour
 
         if (hideWhenDead && current <= 0f)
             gameObject.SetActive(false);
+    }
+
+    private void HandleBreakChanged(int current, int max)
+    {
+        if (breakFill == null) return;
+
+        float t = (max > 0) ? Mathf.Clamp01((float)current / max) : 0f;
+
+        breakFill.fillAmount = 1f - t;
     }
 }

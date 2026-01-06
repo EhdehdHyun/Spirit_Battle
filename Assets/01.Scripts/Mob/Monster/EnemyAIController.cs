@@ -30,7 +30,7 @@ public class EnemyAIController : MonoBehaviour, IParryGroggyController
 
     public bool HasTarget => target != null;
 
-    // ===== 패링(그로기)용 =====
+    // 패링 그로기 용 
     [Header("Parry Groggy")]
     [SerializeField] private string defaultParryGroggyTrigger = "ParryGroggy";
     private Coroutine groggyCo;
@@ -129,7 +129,6 @@ public class EnemyAIController : MonoBehaviour, IParryGroggyController
         return Vector3.Distance(GetEffectiveAttackOrigin(), target.position);
     }
 
-    // ====== IParryGroggyController 구현 ======
     public void EnterParryGroggy(float duration, string triggerName)
     {
         if (enemy == null || enemy.IsDead) return;
@@ -167,7 +166,6 @@ public class EnemyAIController : MonoBehaviour, IParryGroggyController
         }
     }
 
-    // ====== 상태별 Update ======
     private void UpdateIdle()
     {
         stateTimer += Time.deltaTime;
@@ -240,6 +238,11 @@ public class EnemyAIController : MonoBehaviour, IParryGroggyController
         }
 
         attack?.TryAttack(target);
+    }
+
+    public void EnterBreakGroggy(float duration, string triggerName)
+    {
+        EnterParryGroggy(duration, triggerName);
     }
 
     private void UpdateGroggy()

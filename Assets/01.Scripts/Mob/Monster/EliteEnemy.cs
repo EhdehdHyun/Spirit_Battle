@@ -21,6 +21,8 @@ public class EliteEnemy : EnemyBase
         base.OnDamaged(info);
         if (IsDead) return;
 
+        TryAccumulateBreak();
+
         if (playHitOnDamaged)
             monsterAnim?.TryPlayHit();
     }

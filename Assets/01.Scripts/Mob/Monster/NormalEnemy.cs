@@ -29,6 +29,7 @@ public class NormalEnemy : EnemyBase
 
         damageFeedback?.Play();
 
+        TryAccumulateBreak();
 
         if (playHitOnDamaged)
             monsterAnim?.TryPlayHit();
