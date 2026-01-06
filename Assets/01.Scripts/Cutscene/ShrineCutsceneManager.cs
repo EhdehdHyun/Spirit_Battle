@@ -77,6 +77,9 @@ public class ShrineCutsceneManager : MonoBehaviour
      * Cutscene State Flags
      * ======================= */
     private bool dialogueFinished;
+    bool isCutscenePlaying = false;
+    bool isExiting = false;
+    Coroutine cutsceneRoutine;
 
     /* =======================
      * Public Entry
@@ -84,7 +87,18 @@ public class ShrineCutsceneManager : MonoBehaviour
     public void PlayCutscene()
     {
         TutorialManager.Instance?.EndTutorialUI();
-        StartCoroutine(Co_PlayCutscene());
+        isCutscenePlaying = true;
+
+        cutsceneRoutine = StartCoroutine(Co_PlayCutscene());
+    }
+    void Update()
+    {
+        if (!isCutscenePlaying || isExiting) return;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SkipCutscene();
+        }
     }
 
     /* =======================
@@ -108,6 +122,19 @@ public class ShrineCutsceneManager : MonoBehaviour
                 FocusShrine();
                 break;
         }
+    }
+
+    void SkipCutscene()
+    {
+        if (isExiting) return;
+        isExiting = true;
+
+        if (cutsceneRoutine != null)
+        {
+            StopCoroutine(cutsceneRoutine);
+            cutsceneRoutine = null;
+        }
+        StartCoroutine(Co_ExitCutscene());
     }
 
     void FollowCorner()
@@ -173,6 +200,7 @@ public class ShrineCutsceneManager : MonoBehaviour
      * ======================= */
     IEnumerator Co_PlayCutscene()
     {
+        isExiting = false;
         dialogueFinished = false;
 
         // 실제 플레이어 비활성화
@@ -245,8 +273,8 @@ public class ShrineCutsceneManager : MonoBehaviour
         {
             yield return null;
         }
-
         OnCutsceneEnd();
+        yield break;
     }
 
     /* =======================
@@ -308,15 +336,46 @@ public class ShrineCutsceneManager : MonoBehaviour
      * ======================= */
     void OnCutsceneEnd()
     {
+        StartCoroutine(Co_ExitCutscene());
+    }
+
+    IEnumerator Co_ExitCutscene()
+    {
         Vector3 finalPos = cutscenePlayer.transform.position;
-        Quaternion finalRot = cutscenePlayer.transform.rotation;
+        float finalY = cutscenePlayer.transform.eulerAngles.y;
 
         Destroy(cutscenePlayer);
         Destroy(cutsceneNpc);
 
-        realPlayer.transform.position = finalPos;
-        realPlayer.transform.rotation = finalRot;
+        // 위치/회전 먼저
+        realPlayer.transform.SetPositionAndRotation(
+            finalPos,
+            Quaternion.Euler(0, finalY, 0)
+        );
+
         realPlayer.gameObject.SetActive(true);
+
+        Animator anim = realPlayer.GetComponent<Animator>();
+        PhysicsCharacter phys = realPlayer.GetComponent<PhysicsCharacter>();
+        Rigidbody rb = realPlayer.GetComponent<Rigidbody>();
+
+        // ===== 1단계: 즉시 정지 =====
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true;
+
+        anim.Rebind();
+        anim.Update(0f);
+        anim.applyRootMotion = false;
+
+        phys.ResetMovementState();
+        realPlayer.ResetInputState();
+
+        yield return null; //1프레임 대기
+
+        // ===== 2단계: 물리 재개 =====
+        rb.isKinematic = false;
+
         realPlayer.Unlock();
 
         StartCoroutine(Co_CloseLetterbox());
@@ -326,6 +385,9 @@ public class ShrineCutsceneManager : MonoBehaviour
 
         cutsceneCamera.gameObject.SetActive(false);
         playerCamera.gameObject.SetActive(true);
+        
+        isCutscenePlaying = false;
+        isExiting = false;
     }
 
     /* =======================
