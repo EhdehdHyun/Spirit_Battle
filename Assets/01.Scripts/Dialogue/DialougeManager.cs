@@ -80,6 +80,9 @@ public class DialogueManager : MonoBehaviour
 
         if (dialogueCanvas != null)
             dialogueCanvas.SetActive(true);
+        
+        
+        ShowCurrent();
 
         // 카메라 연출 끝까지 대기
         if (dialogueCamera != null)
@@ -92,7 +95,6 @@ public class DialogueManager : MonoBehaviour
         if (npcFaceController != null && playerTransform != null)
             npcFaceController.LookAtTarget(playerTransform);
 
-        ShowCurrent();
     }
 
     public void Next()

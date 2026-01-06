@@ -265,7 +265,7 @@ public class ShrineCutsceneManager : MonoBehaviour
         dialogueText.text = "천천히 생각하게나, 아직 정신이 온전히 않을테니..";
         yield return new WaitForSeconds(2f);
 
-        dialogueText.text = "기억이 돌아올때까지 이 섬에서 잠쉬 쉬었다 가보는게 좋을것 같네";
+        dialogueText.text = "기억이 돌아올때까지 이 섬에서 잠시 쉬었다 가보는게 좋을것 같네";
         yield return new WaitForSeconds(2.5f);
 
         dialogueText.text = "…";
