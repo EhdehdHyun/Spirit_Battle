@@ -224,6 +224,25 @@ public class PlayerInputController : MonoBehaviour
         if (dashLockCo != null) StopCoroutine(dashLockCo);
         dashLockCo = StartCoroutine(DashLockRoutine(duration));
     }
+    public void ResetInputState()
+    {
+        moveRaw = Vector2.zero;
+        lookRaw = Vector2.zero;
+
+        moveWorld = Vector3.zero;
+
+        // 회전 기준을 현재 바라보는 방향으로 강제 동기화
+        targetRot = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+
+        character.SetMoveInput(Vector2.zero);
+
+        dashLocked = false;
+        if (dashLockCo != null)
+        {
+            StopCoroutine(dashLockCo);
+            dashLockCo = null;
+        }
+    }
 
     private IEnumerator DashLockRoutine(float duration)
     {

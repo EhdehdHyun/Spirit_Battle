@@ -406,6 +406,36 @@ public class PhysicsCharacter : MonoBehaviour
                 _isDashing = false;
         }
     }
+    public void ResetMovementState()
+    {
+        // 입력
+        _moveInput = Vector2.zero;
+
+        // 속도 완전 초기화
+        if (_rb != null)
+        {
+            _rb.velocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+        }
+
+        // 대쉬/달리기 상태
+        _isDashing = false;
+        _dashTimer = 0f;
+        _runAfterDash = false;
+        _airDashUsed = false;
+
+        // 넉백/외부 힘 제거
+        _externalHorizontalVelocity = Vector3.zero;
+
+        // 지면 상태 리셋
+        _isGrounded = false;
+        _wasGrounded = false;
+        IsFalling = false;
+        _groundNormal = Vector3.up;
+
+        // 이동 락 해제 (컷씬에서 잠갔을 경우 대비)
+        movementLock = false;
+    }
 
     //Walk적용
     void UpdateHorizontalVelocity(float dt)

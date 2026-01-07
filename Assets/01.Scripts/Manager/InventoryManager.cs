@@ -526,7 +526,15 @@ public class InventoryManager : MonoBehaviour
         if (equipSlot == null || equipSlot.IsEmpty || equipSlot.item == null)
             return null;
 
-        // ✅ 0번에 있으면 장착으로 간주 (equipped 플래그에 의존 X)
         return equipSlot.item;
+    }
+    public void ClearSlot(int slotIndex)
+    {
+        var slot = GetSlot(slotIndex);
+        if (slot == null || slot.IsEmpty || slot.item == null)
+            return;
+        slot.item = null;
+        Debug.Log($"[InventoryManager] ClearSlot: 슬롯 {slotIndex}번 아이템이 삭제되었습니다.");
+        OnInventoryChanged?.Invoke();
     }
 }

@@ -23692,7 +23692,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
+  blocker: {fileID: 1170516021}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 2141124479}
   onClearMessage: "\uB2E4\uC74C \uBAAC\uC2A4\uD130\uB97C \uC0C1\uB300\uD558\uBA74\uC11C
@@ -67073,6 +67073,28 @@ BoxCollider:
   m_CorrespondingSourceObject: {fileID: 452210312406894760, guid: 229b8df30d31d4c68abc672d8a8cc1ec, type: 3}
   m_PrefabInstance: {fileID: 1170516018}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1170516020 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9218459298391549819, guid: 229b8df30d31d4c68abc672d8a8cc1ec, type: 3}
+  m_PrefabInstance: {fileID: 1170516018}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d20fd8099ee4100a7351a07ab5c8c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1170516021 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4492461741819244598, guid: 229b8df30d31d4c68abc672d8a8cc1ec, type: 3}
+  m_PrefabInstance: {fileID: 1170516018}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66d20fd8099ee4100a7351a07ab5c8c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1170836389
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -118608,7 +118630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
+  blocker: {fileID: 1170516020}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 1617069071}
   onClearMessage: "\uC9C0\uAE08\uAE4C\uC9C0 \uBC30\uC6B4\uAC83\uC744 \uD65C\uC6A9\uD574
