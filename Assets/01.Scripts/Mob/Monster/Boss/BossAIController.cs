@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BossAIController : MonoBehaviour
 {
@@ -26,6 +27,11 @@ public class BossAIController : MonoBehaviour
     [Tooltip("Slerp에 곱해질 보정값(너무 빠르면 낮추기)")]
     [SerializeField] private float rotateMultiplier = 1f;
 
+    [Header("NavMeshAgent 옵션")]
+    [SerializeField] private bool manualRotation = true;
+    [Tooltip("목표 지점을 얼마나 자주 갱신할지(초). 0이면 매 프레임 갱신")]
+    [SerializeField] private float repathInterval = 0.05f;
+
     [Header("패턴 시스템 ")]
     public BossPatternBase[] patterns;
 
@@ -36,6 +42,8 @@ public class BossAIController : MonoBehaviour
     private EnemyMeleeAttack meleeAttack;
     private MonsterAnimation monsterAnim;
 
+    private NavMeshAgent agent;
+
     private bool canMove = true;
     private bool uiLinked = false;
 
@@ -45,12 +53,16 @@ public class BossAIController : MonoBehaviour
     public bool HasTarget => target != null && boss != null && !boss.IsDead;
     private Coroutine downCo;
 
+    private float nextRepathTime = 0f;
+
     private void Awake()
     {
         boss = GetComponent<BossEnemy>();
         basicAttack = GetComponent<IEnemyAttack>();
         meleeAttack = GetComponent<EnemyMeleeAttack>();
         monsterAnim = GetComponent<MonsterAnimation>() ?? GetComponentInChildren<MonsterAnimation>();
+
+        agent = GetComponent<NavMeshAgent>();
 
         if (boss == null)
             Debug.LogError("BossEnemy 컴포넌트가 필요합니다");
@@ -63,8 +75,15 @@ public class BossAIController : MonoBehaviour
             if (playerObj != null) target = playerObj.transform;
         }
 
+        agent.updateRotation = !manualRotation;
+        agent.speed = boss != null ? boss.moveSpeed : agent.speed;
+        agent.stoppingDistance = stopDistance;
+        agent.autoBraking = true;
+
         if (HasTarget)
             ChangeState(BossState.Chase);
+        else
+            ChangeState(BossState.Idle);
     }
 
     private void Update()
@@ -72,6 +91,9 @@ public class BossAIController : MonoBehaviour
         if (boss == null) return;
 
         if (boss.IsDead) ChangeState(BossState.Dead);
+
+        if (agent != null && boss != null)
+            agent.speed = boss.moveSpeed;
 
         switch (state)
         {
@@ -136,7 +158,10 @@ public class BossAIController : MonoBehaviour
 
     private void UpdateIdle()
     {
-        if (HasTarget) ChangeState(BossState.Chase);
+        StopAgent();
+
+        if (HasTarget)
+            ChangeState(BossState.Chase);
     }
 
     private void UpdateChase()
@@ -161,7 +186,9 @@ public class BossAIController : MonoBehaviour
         }
 
         float adjustedStop = Mathf.Min(stopDistance, Mathf.Max(0.1f, atkRange * 0.9f));
-        MoveTowardsTarget(adjustedStop);
+        MoveTowardsTarget_Nav(adjustedStop);
+
+        RotateTowardsTarget(rotateSpeedChase);
     }
 
     private void UpdateBasicAttack()
@@ -171,6 +198,8 @@ public class BossAIController : MonoBehaviour
             ChangeState(BossState.Idle);
             return;
         }
+
+        StopAgent();
 
         float atkRange = GetBasicAttackRange();
         float distAtk = DistToTargetFromAttackOrigin();
@@ -185,7 +214,6 @@ public class BossAIController : MonoBehaviour
 
         if (!isAttacking && TryUsePattern()) return;
 
-        // 공격 중에도 플레이어 쪽으로 돌아보게 하고 싶으면(선택)
         RotateTowardsTarget(rotateSpeedAttack);
 
         basicAttack?.TryAttack(target);
@@ -274,26 +302,45 @@ public class BossAIController : MonoBehaviour
         downCo = StartCoroutine(DownTimer(duration));
     }
 
-    private void MoveTowardsTarget(float stopDist)
+    private void MoveTowardsTarget_Nav(float stopDist)
     {
         if (!HasTarget) return;
         if (!canMove) return;
+        if (agent == null) return;
 
-        Vector3 toTarget = target.position - transform.position;
-        toTarget.y = 0f;
+        agent.stoppingDistance = Mathf.Max(0f, stopDist);
 
-        float dist = toTarget.magnitude;
-        if (dist <= stopDist) return;
+        if (repathInterval > 0f && Time.time < nextRepathTime)
+            return;
 
-        Vector3 dir = toTarget.normalized;
+        nextRepathTime = Time.time + repathInterval;
 
-        transform.position += dir * boss.moveSpeed * Time.deltaTime;
+        if (!agent.enabled) return;
 
-        RotateTowardsTarget(rotateSpeedChase);
+        agent.isStopped = false;
+        agent.SetDestination(target.position);
+    }
+
+    private void StopAgent()
+    {
+        if (agent == null) return;
+        if (!agent.enabled) return;
+
+        agent.isStopped = true;
+        agent.ResetPath();
+    }
+
+    private void ResumeAgent()
+    {
+        if (agent == null) return;
+        if (!agent.enabled) return;
+
+        agent.isStopped = false;
     }
 
     private void RotateTowardsTarget(float speed)
     {
+        if (!manualRotation) return;
         if (!HasTarget) return;
         if (speed <= 0f) return;
 

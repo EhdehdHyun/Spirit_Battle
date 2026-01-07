@@ -107,7 +107,7 @@ NavMeshSettings:
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
-    agentSlope: 45
+    agentSlope: 60
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
@@ -121,7 +121,7 @@ NavMeshSettings:
     preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
-  m_NavMeshData: {fileID: 23800000, guid: 7bd7d66f75f3e6a48a661498cbd54a77, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 0847cc9e2e271084bab32179348f075f, type: 2}
 --- !u!1001 &121378
 PrefabInstance:
   m_ObjectHideFlags: 0
