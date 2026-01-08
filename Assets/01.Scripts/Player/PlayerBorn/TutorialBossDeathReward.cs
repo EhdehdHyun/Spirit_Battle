@@ -74,7 +74,7 @@ public class TutorialBossDeathReward : MonoBehaviour
         // 기존 죽음 처리(ShowDeath)가 같은 프레임에 들어오면 먼저 실행되게 한 프레임 양보
         yield return null;
 
-        // GameOverUI가 늦게 생길 수도 있으니 조금 기다렸다가 호출)
+        // GameOverUI가 늦게 생길 수도 있으니 조금 기다렸다가 호출
         float timeout = 1f;
         while (GameOverUI.Instance == null && timeout > 0f)
         {

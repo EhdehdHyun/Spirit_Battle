@@ -6,6 +6,7 @@ public enum AbilityId
 {
     AirDash,
     Skill1,
+    DoubleJump,
 }
 public class PlayerAbility : MonoBehaviour
 {

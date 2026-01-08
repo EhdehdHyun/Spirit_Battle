@@ -14,7 +14,7 @@ public class PlayerInputController : MonoBehaviour
     public PlayerParry parry;
     public PlayerAbility ability;
 
-     
+
     public float faceTurnSpeed = 18f;
 
     private InputAction moveAction;
@@ -58,7 +58,7 @@ public class PlayerInputController : MonoBehaviour
         if (isLocked)
         {
             character.SetMoveInput(Vector2.zero);
-            if(cam != null )
+            if (cam != null)
             {
                 cam.SetLookInput(Vector2.zero);
             }
@@ -107,7 +107,7 @@ public class PlayerInputController : MonoBehaviour
     {
         if (isLocked || character.movementLock) return;
 
-        if(IsParrying()) return;
+        if (IsParrying()) return;
 
         if (ctx.performed)
         {
@@ -142,7 +142,7 @@ public class PlayerInputController : MonoBehaviour
 
         combat?.CancelAttackForDash();
 
-        // 1) 2번째 대쉬 (윈도우 안)
+        // 2번째 대쉬 (윈도우 안)
         if (stat.CanSecondDashNow)
         {
             // 2번째는 "대쉬 중 재시작"이 가능해야 함 -> PlayerCombat/PhysicsCharacter 수정 필요(아래 참고)
@@ -154,7 +154,7 @@ public class PlayerInputController : MonoBehaviour
             return;
         }
 
-        // 2) 첫 대쉬 (새 “대쉬 사용” 시작)
+        // 첫 대쉬 (새 “대쉬 사용” 시작)
         if (!stat.CanStartDashUse())
         {
             // 쿨타임이거나 스태미나 부족
@@ -209,7 +209,7 @@ public class PlayerInputController : MonoBehaviour
     public void Lock()
     {
         isLocked = true;
-        if(cam != null) 
+        if (cam != null)
             cam.SetLookInput(Vector2.zero);
     }
 

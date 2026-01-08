@@ -1,10 +1,8 @@
 ﻿using UnityEngine;
 
-/// <summary>
 /// Dynamic Rigidbody 기반 캐릭터 컨트롤러
 /// - Transform.position을 직접 수정하지 않고 Rigidbody.velocity로만 이동
 /// - 이동, 점프, 대쉬, 넉백, 낙하 상태 관리 포함
-/// </summary>
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class PhysicsCharacter : MonoBehaviour
 {
@@ -182,25 +180,19 @@ public class PhysicsCharacter : MonoBehaviour
 
     // ================== 외부 API ================== //
 
-    /// <summary>
     /// 움직임 정지
-    /// </summary>
     public void SetMovementLocked(bool locked)
     {
         movementLock = locked;
     }
 
-    /// <summary>
     /// 무기장착 요청
-    /// </summary>
     public void SetWeaponEquipped(bool equipped)
     {
         _weaponEquipped = equipped;
     }
 
-    /// <summary>
     /// 입력 방향 설정 (XZ 평면)
-    /// </summary>
     public void SetMoveInput(Vector2 input)
     {
         _moveInput = input;
@@ -208,19 +200,15 @@ public class PhysicsCharacter : MonoBehaviour
             _moveInput.Normalize();
     }
 
-    /// <summary>
     /// 점프 요청 (Update에서 호출)
     /// 실제 점프 적용은 FixedUpdate에서 처리
-    /// </summary>
     public void RequestJump()
     {
         _jumpRequested = true;
     }
 
-    /// <summary>
     /// 대쉬 요청
     /// direction은 보통 캐릭터 forward 또는 입력 방향
-    /// </summary>
     public bool TryDash(Vector3 direction, bool allowAirDash, bool allowWhileDashing)
     {
         if (_isDashing && !allowWhileDashing)
@@ -255,9 +243,7 @@ public class PhysicsCharacter : MonoBehaviour
         return true;
     }
 
-    /// <summary>
     /// 넉백/스킬 등 외부 임펄스 추가
-    /// </summary>
     public void AddImpulse(Vector3 impulse)
     {
         // 수평 임펄스는 별도 벡터에 누적
@@ -343,7 +329,7 @@ public class PhysicsCharacter : MonoBehaviour
         GetCapsuleWorldPoints(out Vector3 p1, out Vector3 p2, out float radius);
 
         float castRadius = radius * groundCastSkin;
-        float dist = groundCheckDistance + groundCastExtra;        
+        float dist = groundCheckDistance + groundCastExtra;
 
         bool hit = Physics.CapsuleCast(
             p1, p2,
