@@ -26,6 +26,27 @@ public class PhysicsCharacter : MonoBehaviour
     [Tooltip("코요테 타임. 지면에서 떨어진 후 이 시간 동안은 점프 허용")]
     public float coyoteTime = 0.1f;
 
+    [Header("더블 점프")]
+    [SerializeField] private bool useAbilityGateForDoubleJump = true;
+    [SerializeField] private float doubleJumpPowerMultiplier = 1.0f;
+
+    [Header("Animator State Params")]
+    [SerializeField] private string groundedBoolName = "Grounded";
+    [SerializeField] private string speedFloatName = "Speed";
+    private int _hashGrounded;
+    private int _hashSpeed;
+
+    [Header("Jump Anim")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private string jumpTriggerName = "Jump";
+    [SerializeField] private string doubleJumpTriggerName = "DoubleJump";
+
+    private int _hashJump;
+    private int _hashDoubleJump;
+
+    private PlayerAbility _ablity;
+    private int _jumpUsed = 0;
+
     [Header("중력 설정")]
     [Tooltip("초당 y 속도에 더해질 중력 값(음수)")]
     public float gravity = -25f;
@@ -136,6 +157,7 @@ public class PhysicsCharacter : MonoBehaviour
     bool _canCombatRun = true;
     void Awake()
     {
+        _ablity = GetComponent<PlayerAbility>();
         _stat = GetComponent<PlayerStat>();
         _rb = GetComponent<Rigidbody>();
         _col = GetComponent<CapsuleCollider>();
@@ -148,6 +170,14 @@ public class PhysicsCharacter : MonoBehaviour
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
 
         _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+
+        if (animator == null) animator = GetComponentInChildren<Animator>();
+
+        _hashJump = Animator.StringToHash(jumpTriggerName);
+        _hashDoubleJump = Animator.StringToHash(doubleJumpTriggerName);
+
+        _hashGrounded = Animator.StringToHash(groundedBoolName);//점프 후 착지 전까지 나올 애니메이션
+        _hashSpeed = Animator.StringToHash(speedFloatName);
     }
 
     void FixedUpdate()
@@ -176,6 +206,8 @@ public class PhysicsCharacter : MonoBehaviour
         ApplyJumpIfRequested();
         ApplyGravity(dt);
         UpdateExternalImpulse(dt);
+
+        UpdateAnimatorParams();
     }
 
     // ================== 외부 API ================== //
@@ -200,15 +232,21 @@ public class PhysicsCharacter : MonoBehaviour
             _moveInput.Normalize();
     }
 
-    /// 점프 요청 (Update에서 호출)
-    /// 실제 점프 적용은 FixedUpdate에서 처리
+    // 점프 요청 (Update에서 호출)
+    // 실제 점프 적용은 FixedUpdate에서 처리
     public void RequestJump()
     {
         _jumpRequested = true;
     }
 
-    /// 대쉬 요청
-    /// direction은 보통 캐릭터 forward 또는 입력 방향
+    private bool HasDoubleJump()
+    {
+        if (!useAbilityGateForDoubleJump) return true;
+        return _ablity != null && _ablity.Has(AbilityId.DoubleJump);
+    }
+
+    // 대쉬 요청
+    // direction은 보통 캐릭터 forward 또는 입력 방향
     public bool TryDash(Vector3 direction, bool allowAirDash, bool allowWhileDashing)
     {
         if (_isDashing && !allowWhileDashing)
@@ -220,7 +258,7 @@ public class PhysicsCharacter : MonoBehaviour
         if (!IsGrounded)
         {
             if (!allowAirDash) return false;
-            if (_airDashUsed) return false; // 공중 대쉬는 1회만(원하면 여기 바꿔)
+            if (_airDashUsed) return false; // 공중 대쉬는 1회만
             _airDashUsed = true;
         }
 
@@ -364,6 +402,8 @@ public class PhysicsCharacter : MonoBehaviour
                     v.y = 0f;
                     _rb.velocity = v;
                 }
+
+                _jumpUsed = 0;
                 return;
             }
         }
@@ -514,24 +554,83 @@ public class PhysicsCharacter : MonoBehaviour
 
     void ApplyJumpIfRequested()
     {
-        if (movementLock)
-            return;
+        if (movementLock) return;
 
-        if (!_jumpRequested)
-            return;
+        // 점프 입력이 없으면 아무것도 안 함
+        if (!_jumpRequested) return;
 
         _jumpRequested = false;
 
-        bool canJump = _isGrounded || (Time.time - _lastGroundedTime <= coyoteTime);
-        if (!canJump)
+        bool canGroundJump = _isGrounded || (Time.time - _lastGroundedTime <= coyoteTime);
+
+        // 첫 점프: 지상/코요테 + 아직 점프 안쓴 상태
+        if (canGroundJump && _jumpUsed == 0)
+        {
+            Dojump(jumpPower);
+            _jumpUsed = 1;
+
+            _isGrounded = false;
+            IsFalling = false;
+
+            TriggerJumpAnim();
             return;
+        }
 
+        // 2두 번째 입력: 공중 + 1단 점프를 이미 쓴 상태 + 더블점프 해금
+        if (!_isGrounded && _jumpUsed == 1 && HasDoubleJump())
+        {
+            DoDoubleJump();
+            _jumpUsed = 2;
+
+            IsFalling = false;
+            TriggerDoubleJumpAnim();
+            return;
+        }
+    }
+
+    private void TriggerJumpAnim()
+    {
+        if (animator == null) return;
+        animator.ResetTrigger(_hashDoubleJump);
+        animator.SetTrigger(_hashJump);
+    }
+
+    private void TriggerDoubleJumpAnim()
+    {
+        if (animator == null) return;
+        animator.ResetTrigger(_hashJump);
+        animator.SetTrigger(_hashDoubleJump);
+    }
+
+    private void Dojump(float power)
+    {
         Vector3 v = _rb.velocity;
-        v.y = jumpPower;
+        if (v.y < 0f) v.y = 0f;
+        v.y = power;
         _rb.velocity = v;
+    }
 
-        _isGrounded = false;
-        IsFalling = false;
+    private void DoDoubleJump()
+    {
+        Vector3 v = _rb.velocity;
+
+        if (v.y < 0f) v.y = 0f;
+
+        v.y = jumpPower * doubleJumpPowerMultiplier;
+
+        _rb.velocity = v;
+    }
+
+    // 착지했을 때 애니메이터 파라미터 업데이트
+    private void UpdateAnimatorParams()
+    {
+        if (animator == null) return;
+
+        animator.SetBool(_hashGrounded, _isGrounded);
+
+        Vector3 hv = _rb.velocity;
+        hv.y = 0f;
+        animator.SetFloat(_hashSpeed, hv.magnitude);
     }
 
     void ApplyGravity(float dt)
