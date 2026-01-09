@@ -2296,6 +2296,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (22)
@@ -2377,7 +2381,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1001 &48720144
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2875,6 +2879,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (14)
@@ -2956,7 +2964,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1 &54870984
 GameObject:
   m_ObjectHideFlags: 0
@@ -21841,6 +21849,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (23)
@@ -21922,7 +21934,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1001 &358072429
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23174,6 +23186,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (25)
@@ -23255,7 +23271,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1 &385609809
 GameObject:
   m_ObjectHideFlags: 0
@@ -26424,6 +26440,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (24)
@@ -26505,7 +26525,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1001 &431826046
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -31008,6 +31028,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1801946940}
     - target: {fileID: 3063026561651884442, guid: 6ff080ba9543ad54286d36ef1cd29ba9, type: 3}
+      propertyPath: chestVanishDelay
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3063026561651884442, guid: 6ff080ba9543ad54286d36ef1cd29ba9, type: 3}
       propertyPath: showTutorialMessage
       value: 1
       objectReference: {fileID: 0}
@@ -32400,6 +32424,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (26)
@@ -32481,7 +32509,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1 &532038188
 GameObject:
   m_ObjectHideFlags: 0
@@ -34443,6 +34471,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (15)
@@ -34524,7 +34556,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1001 &573486625
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -38731,6 +38763,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (21)
@@ -38812,7 +38848,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1001 &660565380
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -50801,6 +50837,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (27)
@@ -50882,7 +50922,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1 &859325861
 GameObject:
   m_ObjectHideFlags: 0
@@ -63077,6 +63117,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (19)
@@ -63158,7 +63202,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1 &1075662344
 GameObject:
   m_ObjectHideFlags: 0
@@ -66063,6 +66107,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (11)
@@ -66144,7 +66192,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1 &1133477093
 GameObject:
   m_ObjectHideFlags: 0
@@ -68085,6 +68133,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (13)
@@ -68166,7 +68218,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1001 &1177149111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -83783,6 +83835,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (17)
@@ -83864,7 +83920,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1 &1468146200
 GameObject:
   m_ObjectHideFlags: 0
@@ -88942,6 +88998,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (12)
@@ -89023,7 +89083,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1 &1563045731
 GameObject:
   m_ObjectHideFlags: 0
@@ -92812,6 +92872,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (20)
@@ -92893,7 +92957,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1001 &1642923027
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -105585,6 +105649,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (16)
@@ -105666,7 +105734,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1001 &1878976446
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -106624,6 +106692,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 105194280216652777, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (18)
@@ -106705,7 +106777,7 @@ MonoBehaviour:
   blocker: {fileID: 0}
   worldArrow: {fileID: 1801946940}
   nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
+  onClearMessage: 
 --- !u!1001 &1894648672
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -120800,6 +120872,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 577885600110971645, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 683646512682648683, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: blocker
       value: 
@@ -120812,30 +120888,78 @@ PrefabInstance:
       propertyPath: m_Name
       value: Monster
       objectReference: {fileID: 0}
+    - target: {fileID: 1244675827318066002, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1474731866986057417, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: worldArrow
       value: 
       objectReference: {fileID: 1801946940}
+    - target: {fileID: 1474731866986057417, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1485342934196419071, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: worldArrow
       value: 
       objectReference: {fileID: 1801946940}
+    - target: {fileID: 1485342934196419071, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1801602164576387003, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: worldArrow
       value: 
       objectReference: {fileID: 1801946940}
+    - target: {fileID: 1801602164576387003, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 2346150383284929452, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: worldArrow
       value: 
       objectReference: {fileID: 1801946940}
+    - target: {fileID: 2346150383284929452, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2970428968588610675, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3631366412185560012, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3698714299991194996, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: worldArrow
       value: 
       objectReference: {fileID: 1801946940}
+    - target: {fileID: 3698714299991194996, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4029059514858123772, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4718540520538538194, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5448795256362200023, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: worldArrow
       value: 
       objectReference: {fileID: 1801946940}
+    - target: {fileID: 5705265745353518067, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6869957231163544882, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: hideOnDisable
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6925920704591146870, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: blocker
       value: 
@@ -120848,10 +120972,18 @@ PrefabInstance:
       propertyPath: worldArrow
       value: 
       objectReference: {fileID: 1801946940}
+    - target: {fileID: 7275275991377348517, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8049136611103385840, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: worldArrow
       value: 
       objectReference: {fileID: 1801946940}
+    - target: {fileID: 8049136611103385840, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 9023242639698396836, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: m_LocalPosition.x
       value: -500
@@ -120896,6 +121028,10 @@ PrefabInstance:
       propertyPath: worldArrow
       value: 
       objectReference: {fileID: 1801946940}
+    - target: {fileID: 9029933392520366514, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
