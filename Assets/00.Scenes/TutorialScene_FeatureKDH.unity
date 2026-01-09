@@ -36986,6 +36986,13 @@ MonoBehaviour:
   deceleration: 30
   jumpPower: 10
   coyoteTime: 0.1
+  useAbilityGateForDoubleJump: 1
+  doubleJumpPowerMultiplier: 0.7
+  groundedBoolName: Grounded
+  speedFloatName: Speed
+  animator: {fileID: 0}
+  jumpTriggerName: Jump
+  doubleJumpTriggerName: DoubleJump
   gravity: -25
   terminalVelocity: -40
   groundFriction: 2
@@ -114042,7 +114049,7 @@ MonoBehaviour:
   damage: 10
   attackCooldown: 2.3
   hitOrigin: {fileID: 4245014227963198722}
-  hitRadius: 2.07
+  hitRadius: 1.78
   hitMask:
     serializedVersion: 2
     m_Bits: 128
@@ -114190,7 +114197,7 @@ Transform:
   m_GameObject: {fileID: 5239951798853234060}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0.465, z: 0.736}
+  m_LocalPosition: {x: -0, y: 0.465, z: 1.233}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
