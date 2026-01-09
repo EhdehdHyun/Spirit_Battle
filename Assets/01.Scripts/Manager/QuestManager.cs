@@ -13,16 +13,17 @@ public class QuestManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
-
         questTable = GameManager.Instance
             .Data
             .Quest_Data_Loader
             .ItemsDict;
+        
+        // 테스트용 메인 퀘스트 1번 자동 수락
+        AcceptQuest(1000);
     }
     void Start()
     {
-        // 테스트용 메인 퀘스트 1번 자동 수락
-        AcceptQuest(1000);
+      
     }
 
 
@@ -36,9 +37,6 @@ public class QuestManager : MonoBehaviour
     //카테고리별 퀘스트 가져오기 (UI용)
     public IEnumerable<Quest_Data_Table> GetQuestsByType(string type)
     {
-        if (type == "Side")
-            type = "Growth";
-
         return activeQuests
             .Select(id => questTable[id])
             .Where(q => q.QuestType == type);
