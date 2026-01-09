@@ -39879,6 +39879,13 @@ MonoBehaviour:
   deceleration: 30
   jumpPower: 10
   coyoteTime: 0.1
+  useAbilityGateForDoubleJump: 1
+  doubleJumpPowerMultiplier: 1
+  groundedBoolName: Grounded
+  speedFloatName: Speed
+  animator: {fileID: 0}
+  jumpTriggerName: Jump
+  doubleJumpTriggerName: DoubleJump
   gravity: -25
   terminalVelocity: -40
   groundFriction: 2
@@ -68738,6 +68745,7 @@ GameObject:
   - component: {fileID: 1175213972}
   - component: {fileID: 1175213974}
   - component: {fileID: 1175213973}
+  - component: {fileID: 1175213975}
   m_Layer: 5
   m_Name: RightPanel
   m_TagString: Untagged
@@ -68805,6 +68813,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1175213971}
   m_CullTransparentMesh: 1
+--- !u!114 &1175213975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1175213971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c464ee5428c9c4c139b7266f81329b2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questTitle: {fileID: 222415806}
+  questPurpose: {fileID: 1739082683}
+  questDescription: {fileID: 2031380369}
 --- !u!1001 &1177149111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -87806,6 +87829,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1530079322}
   - component: {fileID: 1530079321}
+  - component: {fileID: 1530079323}
   m_Layer: 0
   m_Name: QuestManager
   m_TagString: Untagged
@@ -87840,6 +87864,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1530079323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1530079320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31f57cddf2a374536a7fff249f9e33d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1536873784
 GameObject:
   m_ObjectHideFlags: 0
@@ -115063,8 +115099,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000010836651}
-  m_SizeDelta: {x: 0, y: 300}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 480}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2031380369
 MonoBehaviour:
@@ -118282,7 +118318,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 972720988}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.997633
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

@@ -29,6 +29,11 @@ public class Quest_Data_Table
     /// Start Condition
     /// </summary>
     public string StartCondition;
+    
+    /// <summary>
+    /// Quest Desciption
+    ///</summary>
+    public string Description;
 
     /// <summary>
     /// Complete Condition

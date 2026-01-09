@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QuestItemUI : MonoBehaviour
 {
@@ -12,10 +13,8 @@ public class QuestItemUI : MonoBehaviour
         questData = quest;
         questTitleText.text = quest.QuestName;
     }
-
-    // 클릭 시 상세창에 알려주기 (다음 단계용)
-    public Quest_Data_Table GetQuestData()
+    public void OnClick()
     {
-        return questData;
+        QuestDetailUI.Instance.ShowQuest(questData);
     }
 }

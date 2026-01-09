@@ -1,21 +1,24 @@
+using TMPro;
 using UnityEngine;
 
 public class QuestDetailUI : MonoBehaviour
 {
     public static QuestDetailUI Instance;
 
-    public TMPro.TMP_Text titleText;
-    public TMPro.TMP_Text descText;
+    [Header("Texts")]
+    [SerializeField] private TextMeshProUGUI questTitle;
+    [SerializeField] private TextMeshProUGUI questPurpose;
+    [SerializeField] private TextMeshProUGUI questDescription;
 
     void Awake()
     {
         Instance = this;
     }
 
-    public void Show(Quest_Data_Table quest)
+    public void ShowQuest(Quest_Data_Table quest)
     {
-        titleText.text = quest.QuestName;
-        descText.text = quest.CompleteCondition;
+        questTitle.text = quest.QuestName;
+        questPurpose.text = quest.CompleteCondition;
+        questDescription.text = quest.Description;
     }
 }
-
