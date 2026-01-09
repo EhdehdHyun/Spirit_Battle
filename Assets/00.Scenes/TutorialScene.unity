@@ -39807,7 +39807,7 @@ MonoBehaviour:
   interactDistance: 5
   interactLayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 4096
   crosshair: {fileID: 0}
   interactText: {fileID: 1260718036}
 --- !u!114 &680367621
@@ -106630,15 +106630,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 736.9
+      value: 736.91
       objectReference: {fileID: 0}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 141.9
+      value: 140.73
       objectReference: {fileID: 0}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 329.9
+      value: 329.89
       objectReference: {fileID: 0}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalRotation.w
