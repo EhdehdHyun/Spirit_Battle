@@ -70,6 +70,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d0f9de91ef5c7045bdb323d24d3f94d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  guardMonsters:
+  - {fileID: 0}
+  detectRadius: 5
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  warningText: {fileID: 0}
   animator: {fileID: 6338791369093577461}
   openTriggerName: Open
   openOnlyOnce: 1
