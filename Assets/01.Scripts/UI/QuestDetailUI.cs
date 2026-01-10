@@ -15,7 +15,7 @@ public class QuestDetailUI : MonoBehaviour
         Instance = this;
     }
 
-    public void ShowQuest(Quest_Data_Table quest)
+    public void SetQuest(Quest_Data_Table quest)
     {
         questTitle.text = quest.QuestName;
         questPurpose.text = quest.CompleteCondition;

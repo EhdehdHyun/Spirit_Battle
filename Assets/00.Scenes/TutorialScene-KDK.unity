@@ -87877,6 +87877,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questCanvasRoot: {fileID: 1556534148}
+  mainCategoryUI: {fileID: 1067824752}
 --- !u!1 &1536873784
 GameObject:
   m_ObjectHideFlags: 0
@@ -115144,7 +115145,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000021899514}
+  m_AnchoredPosition: {x: 0, y: 0.00007567763}
   m_SizeDelta: {x: 0, y: 480}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2031380369
@@ -118363,7 +118364,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 972720988}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.99997383
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

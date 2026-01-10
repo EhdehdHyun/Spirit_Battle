@@ -13,6 +13,9 @@ public class QuestManager : MonoBehaviour
     void Awake()
     {
         Instance = this;
+    }
+    void Start()
+    {
         questTable = GameManager.Instance
             .Data
             .Quest_Data_Loader
@@ -20,10 +23,6 @@ public class QuestManager : MonoBehaviour
         
         // 테스트용 메인 퀘스트 1번 자동 수락
         AcceptQuest(1000);
-    }
-    void Start()
-    {
-      
     }
 
 

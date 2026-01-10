@@ -5,36 +5,60 @@ public class QuestCategoryUI : MonoBehaviour
     public string questType;
     public Transform questListParent;
     public QuestItemUI questItemPrefab;
-
-    void Start()
+    
+    void OnEnable()
     {
-        Debug.Log("QuestCategoryUI.Start 호출됨");
+        if (QuestManager.Instance == null)
+        {
+            Debug.LogWarning("QuestManager not ready yet");
+            return;
+        }
         Refresh();
     }
-
     public void Refresh()
     {
-        Debug.Log("=== QuestCategoryUI.Refresh START ===");
-
-        Debug.Log("QuestManager.Instance = " + QuestManager.Instance);
-        Debug.Log("questListParent = " + questListParent);
-        Debug.Log("questItemPrefab = " + questItemPrefab);
-        Debug.Log("questType = " + questType);
-        
-        foreach (Transform child in questListParent)
+        if (questListParent == null)
         {
-            Destroy(child.gameObject);
+            Debug.LogError("questListParent is NULL");
+            return;
+        }
+
+        if (questItemPrefab == null)
+        {
+            Debug.LogError("questItemPrefab is NULL");
+            return;
+        }
+
+        if (QuestManager.Instance == null)
+        {
+            Debug.LogError("QuestManager.Instance is NULL");
+            return;
         }
         
         var quests = QuestManager.Instance.GetQuestsByType(questType);
-        Debug.Log("quests = " + quests);
-        
+        if (quests == null)
+        {
+            Debug.LogWarning("quests is NULL");
+            return;
+        }
+
+        foreach (Transform child in questListParent)
+            Destroy(child.gameObject);
+
         foreach (var quest in quests)
         {
             var item = Instantiate(questItemPrefab, questListParent);
             item.SetData(quest);
         }
+    }
+    public void SelectFirstQuest()
+    {
+        if (questListParent.childCount == 0) return;
 
-        Debug.Log("=== QuestCategoryUI.Refresh END ===");
+        var firstItem = questListParent
+            .GetChild(0)
+            .GetComponent<QuestItemUI>();
+
+        firstItem.OnClick();
     }
 }
