@@ -107,7 +107,7 @@ NavMeshSettings:
     agentTypeID: 0
     agentRadius: 0.5
     agentHeight: 2
-    agentSlope: 45
+    agentSlope: 60
     agentClimb: 0.4
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 0
@@ -38972,6 +38972,7 @@ GameObject:
   - component: {fileID: 680367634}
   - component: {fileID: 680367635}
   - component: {fileID: 680367636}
+  - component: {fileID: 680367637}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -39125,6 +39126,7 @@ MonoBehaviour:
   combat: {fileID: 0}
   weaponHitbox: {fileID: 50551004}
   vfx: {fileID: 0}
+  whirlwindSkill: {fileID: 0}
   weaponParent: {fileID: 787444772}
   handSourceIndex: 0
   sideSourceIndex: 1
@@ -39149,6 +39151,7 @@ MonoBehaviour:
   stat: {fileID: 0}
   parry: {fileID: 0}
   ability: {fileID: 0}
+  whirlwind: {fileID: 0}
   faceTurnSpeed: 15
   isLocked: 0
   dashLocked: 0
@@ -39170,6 +39173,13 @@ MonoBehaviour:
   deceleration: 30
   jumpPower: 10
   coyoteTime: 0.1
+  useAbilityGateForDoubleJump: 1
+  doubleJumpPowerMultiplier: 1
+  groundedBoolName: Grounded
+  speedFloatName: Speed
+  animator: {fileID: 0}
+  jumpTriggerName: Jump
+  doubleJumpTriggerName: DoubleJump
   gravity: -25
   terminalVelocity: -40
   groundFriction: 2
@@ -39400,6 +39410,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: b3451841-799a-450d-9e13-438c13a7b796
     m_ActionName: Player/Skill01[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 680367625}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: OnWhirlwind
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a5942d06-5a6f-4d9d-8643-56650980977d
+    m_ActionName: Player/Whirlwind[/Keyboard/e]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -39536,6 +39562,37 @@ MonoBehaviour:
   - {fileID: 0}
   parrySuccessClip: {fileID: 8300000, guid: c5955b1ca51d47245ae5e5e10395d910, type: 3}
   volume: 0.4
+--- !u!114 &680367637
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680367618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7a40e79b488d8342aeac6b3bb820b64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAnim: {fileID: 0}
+  physicsCharacter: {fileID: 0}
+  playerInput: {fileID: 0}
+  combat: {fileID: 0}
+  parry: {fileID: 0}
+  debugKey: 0
+  cooldown: 5
+  damage: 25
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 0
+  radius: 3
+  centerOffset: {x: 0, y: 1, z: 0}
+  maxHits: 32
+  vfxPrefab: {fileID: 0}
+  vfxSpawn: {fileID: 0}
+  vfxObject: {fileID: 0}
+  vfxAutoOffTime: 1
+  lockMovementDuringCast: 1
 --- !u!1001 &680445110
 PrefabInstance:
   m_ObjectHideFlags: 0

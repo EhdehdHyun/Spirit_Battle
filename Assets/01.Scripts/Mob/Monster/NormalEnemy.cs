@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class NormalEnemy : EnemyBase
+public class NormalEnemy : EnemyBase, IAoeDamageable
 {
     [Header("애니메이션")]
     [SerializeField] private MonsterAnimation monsterAnim;
@@ -50,4 +50,5 @@ public class NormalEnemy : EnemyBase
         GetComponent<TutorialEnemy>()?.OnTutorialEnemyDead();
         Destroy(gameObject);
     }
+
 }
