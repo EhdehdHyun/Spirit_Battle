@@ -1,28 +1,37 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic; // List 사용을 위해 추가
 using UnityEngine;
+using TMPro;
 
 public class ChestInteractable : MonoBehaviour, IInteractable
 {
+    [Header("몬스터 설정 (특정 몬스터 처치 필수)")]
+    [Tooltip("이 리스트에 몬스터를 넣으면, 해당 몬스터들이 모두 죽어야만 상자가 열립니다.")]
+    [SerializeField] private List<GameObject> guardMonsters;
+
+    [Header("일반 몬스터 감지 (가디언 없을 때)")]
+    [SerializeField] private float detectRadius = 5.0f;
+    [SerializeField] private LayerMask monsterLayer;
+    [SerializeField] private TextMeshProUGUI warningText;
+
     [Header("애니메이션 설정")]
-    [SerializeField] private Animator animator;        // TreasureChest에 붙은 Animator
+    [SerializeField] private Animator animator;
     [SerializeField] private string openTriggerName = "Open";
-    [SerializeField] private bool openOnlyOnce = true; // 한 번만 열리게
+    [SerializeField] private bool openOnlyOnce = true;
 
     [Header("보상 아이템 설정")]
-    [SerializeField] private int rewardItemKey = 2002; // 코인 데이터 key (엑셀/JSON에 있는 key)
-    [SerializeField] private int rewardAmount = 1;     // 몇 개 줄지
+    [SerializeField] private int rewardItemKey = 2002;
+    [SerializeField] private int rewardAmount = 1;
 
     [Header("코인 스폰 설정")]
-    [SerializeField] private Transform spawnPoint;     // 코인이 나타날 위치(없으면 Chest 위치)
-    [SerializeField] private GameObject coinPrefab;    // 코인 3D 프리팹
-    [SerializeField] private bool autoPickup = true;   // 인벤토리에 자동으로 넣을지
-    [SerializeField] private float coinLifetime = 2f;  // 연출용 코인 유지 시간(초). 0이면 안 지움
+    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private GameObject coinPrefab;
+    [SerializeField] private bool autoPickup = true;
+    [SerializeField] private float coinLifetime = 2f;
 
     [Header("상자 제거 설정")]
-    [Tooltip("보상 획득(자동지급 or 코인줍기) 후 몇 초 뒤 상자를 제거할지")]
     [SerializeField] private float chestVanishDelay = 2f;
-    [Tooltip("Destroy 대신 SetActive(false)로 숨길지")]
     [SerializeField] private bool disableInsteadOfDestroy = false;
 
     [Header("튜토리얼 연출")]
@@ -30,142 +39,140 @@ public class ChestInteractable : MonoBehaviour, IInteractable
 
     private bool isOpened;
     private bool vanishScheduled;
-
-    // 아이템 데이터 로더(한 번만 생성해서 공유)
+    private Coroutine warningCoroutine;
     private static Data_tableLoader dataLoader;
 
     private void Awake()
     {
-        if (animator == null)
-            animator = GetComponent<Animator>();
+        if (animator == null) animator = GetComponent<Animator>();
 
         if (dataLoader == null)
         {
-            try
-            {
-                dataLoader = new Data_tableLoader();
-                Debug.Log("[ChestInteractable] Data_tableLoader 생성 완료");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[ChestInteractable] Data_tableLoader 생성 실패: {e.Message}");
-            }
+            try { dataLoader = new Data_tableLoader(); }
+            catch (Exception e) { Debug.LogError($"Loader Error: {e.Message}"); }
         }
+
+        if (warningText != null) warningText.gameObject.SetActive(false);
     }
 
     public string GetInteractPrompt()
     {
-        if (openOnlyOnce && isOpened)
-            return string.Empty;
-
+        if (openOnlyOnce && isOpened) return string.Empty;
         return "Press [F]";
     }
 
     public void Interact(PlayerInteraction player)
     {
-        Debug.Log("[ChestInteractable] Interact 호출");
+        if (openOnlyOnce && isOpened) return;
 
-        if (openOnlyOnce && isOpened)
+        if (AreGuardiansAlive())
+        {
+            ShowWarningMessage("상자를 지키는 몬스터를 먼저 처치해야 합니다!");
             return;
+        }
 
+        if (guardMonsters.Count == 0 && CheckMonsterNearby())
+        {
+            ShowWarningMessage("주변에 몬스터가 있어 상자를 열 수 없습니다.");
+            return;
+        }
+
+        // --- 상자 열기 로직 ---
         isOpened = true;
-
-        if (animator != null)
-            animator.SetTrigger(openTriggerName);
-
+        if (animator != null) animator.SetTrigger(openTriggerName);
         GiveReward(player);
 
-        TutorialManager.Instance.ShowMoveForwardText();
+        if (TutorialManager.Instance != null)
+            TutorialManager.Instance.ShowMoveForwardText();
+    }
+
+    private bool AreGuardiansAlive()
+    {
+        if (guardMonsters == null || guardMonsters.Count == 0) return false;
+
+        foreach (GameObject monster in guardMonsters)
+        {
+            // 몬스터 오브젝트가 존재하고(Destroy 안됨), 활성화(Active) 상태라면 살아있는 것으로 간주
+            if (monster != null && monster.activeInHierarchy)
+            {
+                return true; // 하나라도 살아있으면 true
+            }
+        }
+        return false; // 모두 죽었거나 없으면 false
+    }
+
+    // 주변 감지 함수 (기존)
+    private bool CheckMonsterNearby()
+    {
+        return Physics.CheckSphere(transform.position, detectRadius, monsterLayer);
+    }
+
+    // 경고 메시지 출력 (메시지 내용 커스텀 가능하게 변경)
+    private void ShowWarningMessage(string message)
+    {
+        if (warningText == null) return;
+        if (warningCoroutine != null) StopCoroutine(warningCoroutine);
+        warningCoroutine = StartCoroutine(CoShowWarning(message));
+    }
+
+    private IEnumerator CoShowWarning(string message)
+    {
+        warningText.text = message;
+        warningText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2.0f);
+        warningText.gameObject.SetActive(false);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        // 가디언이 설정되어 있다면 선으로 연결해서 보여줌 (디버깅용)
+        if (guardMonsters != null && guardMonsters.Count > 0)
+        {
+            Gizmos.color = Color.yellow;
+            foreach (var monster in guardMonsters)
+            {
+                if (monster != null)
+                    Gizmos.DrawLine(transform.position, monster.transform.position);
+            }
+        }
+        else
+        {
+            // 가디언이 없으면 범위 표시
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, detectRadius);
+        }
     }
 
     private void GiveReward(PlayerInteraction player)
     {
-        if (dataLoader == null)
-        {
-            Debug.LogError("[ChestInteractable] Data_tableLoader 가 없어 아이템 데이터를 가져올 수 없습니다.");
-            return;
-        }
-
+        if (dataLoader == null) return;
         var data = dataLoader.GetByKey(rewardItemKey);
-        if (data == null)
-        {
-            Debug.LogWarning($"[ChestInteractable] rewardItemKey {rewardItemKey} 에 해당하는 데이터가 없습니다.");
-            return;
-        }
+        if (data == null) return;
 
-        // ✅ 1) autoPickup이면 즉시 지급 → 즉시 상자 제거 예약
         if (autoPickup && InventoryManager.Instance != null)
         {
             var item = new ItemInstance(data, rewardAmount);
             InventoryManager.Instance.AddItem(item);
-            Debug.Log($"[ChestInteractable] 인벤토리에 보상 추가 : {data.ItemName} x{rewardAmount}");
-
-            ScheduleVanish(); // ✅ 자동지급이면 지금이 "획득 완료" 시점
-        }
-        else if (autoPickup && InventoryManager.Instance == null)
-        {
-            Debug.LogWarning("[ChestInteractable] InventoryManager.Instance 가 없습니다.");
+            ScheduleVanish();
         }
 
-        // ✅ 2) 코인 프리팹 스폰 (연출/수동 줍기용)
         if (coinPrefab != null)
         {
             Transform baseTransform = spawnPoint != null ? spawnPoint : transform;
+            var coinObj = Instantiate(coinPrefab, baseTransform.position + Vector3.up * 0.5f, baseTransform.rotation);
+            if (coinLifetime > 0f) Destroy(coinObj, coinLifetime);
 
-            Vector3 pos = baseTransform.position + Vector3.up * 0.5f;
-            Quaternion rot = baseTransform.rotation;
-
-            var coinObj = Instantiate(coinPrefab, pos, rot);
-            Debug.Log($"[ChestInteractable] 코인 프리팹 스폰 : {coinObj.name}");
-
-            // 연출용 수명
-            if (coinLifetime > 0f)
-                Destroy(coinObj, coinLifetime);
-
-            // 코인에 pickup이 있으면 데이터 세팅
             var pickup = coinObj.GetComponent<ItemPickupFromTable>();
             if (pickup != null)
             {
                 pickup.itemKey = rewardItemKey;
                 pickup.quantity = rewardAmount;
-
-                // ✅ autoPickup=false일 때만 "코인 줍기" 순간을 감지해서 상자 제거 예약
-                if (!autoPickup)
-                {
-                    pickup.onPickedUp -= HandleCoinPickedUp; // 중복 방지
-                    pickup.onPickedUp += HandleCoinPickedUp;
-                }
-            }
-            else
-            {
-                if (!autoPickup)
-                {
-                    Debug.LogWarning("[ChestInteractable] autoPickup=false인데 coinPrefab에 ItemPickupFromTable이 없습니다. (줍기 감지 불가)");
-                }
+                if (!autoPickup) { pickup.onPickedUp -= HandleCoinPickedUp; pickup.onPickedUp += HandleCoinPickedUp; }
             }
         }
     }
 
-    private void HandleCoinPickedUp()
-    {
-        // ✅ 코인을 실제로 주운 순간
-        ScheduleVanish();
-    }
-
-    private void ScheduleVanish()
-    {
-        if (vanishScheduled) return;
-        vanishScheduled = true;
-        StartCoroutine(CoVanish());
-    }
-
-    private IEnumerator CoVanish()
-    {
-        yield return new WaitForSeconds(chestVanishDelay);
-
-        if (disableInsteadOfDestroy)
-            gameObject.SetActive(false);
-        else
-            Destroy(gameObject);
-    }
+    private void HandleCoinPickedUp() { ScheduleVanish(); }
+    private void ScheduleVanish() { if (!vanishScheduled) { vanishScheduled = true; StartCoroutine(CoVanish()); } }
+    private IEnumerator CoVanish() { yield return new WaitForSeconds(chestVanishDelay); if (disableInsteadOfDestroy) gameObject.SetActive(false); else Destroy(gameObject); }
 }
