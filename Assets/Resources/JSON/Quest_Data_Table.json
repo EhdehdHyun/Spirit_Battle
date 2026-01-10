@@ -1,17 +1,31 @@
 {
   "Items": [
     {
-      "QuestID": 1000,
+      "QuestID": 30000,
       "QuestType": "Main",
       "QuestName": "난파된 방랑자",
-      "Description": "폭풍에 휩쓸려 난파된 당신은 정체불명의 섬에서 눈을 뜬다.",
+      "Description": "폭풍에 휩쓸려 난파된 당신은 정체불명의 섬에서 눈을 뜬다. 무슨 일이 있던 걸까?",
       "NPC": 100000,
       "StartCondition": "Auto",
       "CompleteCondition": "마을의 촌장, 정령수호자와 대화하세요.",
       "TargetID": 3000,
       "TargetCount": 1,
+      "RewardGroupID": 30000,
+      "NextQuest": 30001
+    },
+    {
+      "QuestID": 30001,
+      "QuestType": "Main",
+      "QuestName": "섬의 이상",
+      "Description": "주민들을 위협하는 고블린을 처치하세요",
+      "NPC": 100000,
+      "StartCondition": "Auto",
+      "CompleteCondition": "고블린을 처치하세요.",
+      "TargetID": 10000,
+      "TargetCount": 3,
       "RewardGroupID": 30001,
-      "NextQuest": 1001
+      "NextQuest": 30002
     }
+    
   ]
 }

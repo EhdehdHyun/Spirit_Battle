@@ -22,7 +22,8 @@ public class QuestManager : MonoBehaviour
             .ItemsDict;
         
         // 테스트용 메인 퀘스트 1번 자동 수락
-        AcceptQuest(1000);
+        AcceptQuest(30000);
+        CompleteQuest(30000);        // 즉시 완료
     }
 
 
