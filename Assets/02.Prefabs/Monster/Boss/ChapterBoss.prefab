@@ -5543,8 +5543,6 @@ GameObject:
   - component: {fileID: 3511104567439868573}
   - component: {fileID: 2006314806887975386}
   - component: {fileID: 2590907532594969573}
-  - component: {fileID: 6026769751400498271}
-  - component: {fileID: 6503090908832316875}
   - component: {fileID: 4861395695151573165}
   - component: {fileID: 7274426218898712234}
   - component: {fileID: 4043811801274371270}
@@ -5638,8 +5636,8 @@ MonoBehaviour:
   manualRotation: 1
   repathInterval: 0.05
   patterns:
-  - {fileID: 6503090908832316875}
-  - {fileID: 6026769751400498271}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &2006314806887975386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5681,66 +5679,6 @@ MonoBehaviour:
   layerIndex: 0
   attackTag: Attack
   hitTag: Hit
---- !u!114 &6026769751400498271
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3602687304791287564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4dd0f6874daacd4396c9bb8ef9136e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  patterName: SlamX2
-  cooldown: 15
-  minUseDistance: 6
-  maxUseDistance: 12
-  minPhase: 2
-  maxPhase: 2
-  centerOverride: {fileID: 0}
-  damage: 20
-  radius: 25
-  hitMask:
-    serializedVersion: 2
-    m_Bits: 128
-  cooldownMin: 7
-  cooldownMax: 13
-  slowRatio: 0.3
-  slowDuration: 3
-  telegraphObject: {fileID: 6339424522104343235}
-  slamTriggerName: SlamX2
---- !u!114 &6503090908832316875
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3602687304791287564}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4dd0f6874daacd4396c9bb8ef9136e3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  patterName: Slam
-  cooldown: 15
-  minUseDistance: 6
-  maxUseDistance: 12
-  minPhase: 1
-  maxPhase: 1
-  centerOverride: {fileID: 0}
-  damage: 10
-  radius: 25
-  hitMask:
-    serializedVersion: 2
-    m_Bits: 128
-  cooldownMin: 5
-  cooldownMax: 13
-  slowRatio: 0.3
-  slowDuration: 3
-  telegraphObject: {fileID: 6339424522104343235}
-  slamTriggerName: Slam
 --- !u!114 &4861395695151573165
 MonoBehaviour:
   m_ObjectHideFlags: 0
