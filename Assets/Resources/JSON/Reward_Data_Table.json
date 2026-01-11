@@ -17,6 +17,14 @@
       "Notes": "고블린 처치 퀘스트"
     },
     {
+      "RewardGroupID": 30002,
+      "Exp": 40,
+      "Gold": 30,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "숲 조사 퀘스트"
+    },
+    {
       "RewardGroupID": 40000,
       "Exp": 20,
       "Gold": 0,

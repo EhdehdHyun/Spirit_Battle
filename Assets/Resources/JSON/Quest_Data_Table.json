@@ -20,11 +20,24 @@
       "Description": "정령 수호자의 말에 따르면, 섬 곳곳에서 불길한 기운이 감지되고 있다고 한다. 그 원인을 알아보기 위해 주변을 살피던 중, 섬에 서식하던 고블린들이 평소와 달리 난폭해졌다는 사실을 알게 되었다. 이상 현상과 관련이 있을지도 모른다. 위협이 되기 전에 고블린들을 처치하고 상황을 정리하자.",
       "NPC": 100000,
       "StartCondition": "Auto",
-      "CompleteCondition": "고블린을 처치하세요.",
+      "CompleteCondition": "KillMonster",
       "TargetID": 10000,
       "TargetCount": 3,
       "RewardGroupID": 30001,
       "NextQuest": 30002
+    },
+    {
+      "QuestID": 30002,
+      "QuestType": "Main",
+      "QuestName": "불안한 기척",
+      "Description": "??",
+      "NPC": 100000,
+      "StartCondition": "Auto",
+      "CompleteCondition": "KillMonster",
+      "TargetID": 10000,
+      "TargetCount": 3,
+      "RewardGroupID": 30002,
+      "NextQuest": 30003
     },
     {
       "QuestID": 40000,
