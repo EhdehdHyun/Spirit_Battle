@@ -16,16 +16,22 @@ public class QuestItemUI : MonoBehaviour
     }
     public void OnClick()
     {
+        Debug.Log($"[QuestItemUI] OnClick: {questData.QuestName}");
         if (currentSelected != null)
             currentSelected.SetSelected(false);
 
         currentSelected = this;
         SetSelected(true);
 
-        QuestDetailUI.Instance.SetQuest(questData);
+        QuestUIController.Instance.ShowQuestDetail(questData);
     }
     void SetSelected(bool selected)
     {
         // (나중에 텍스트 색, 아이콘등등 되면 추가
+    }
+    public static void ResetSelection()
+    {
+        Debug.Log("[QuestItemUI] ResetSelection");
+        currentSelected = null;
     }
 }

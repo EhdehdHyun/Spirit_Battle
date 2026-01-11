@@ -30,7 +30,15 @@ public class QuestCategoryUI : MonoBehaviour
     }
     public void SelectFirstQuest()
     {
-        if (questListParent.childCount == 0) return;
-        questListParent.GetChild(0).GetComponent<QuestItemUI>().OnClick();
+        if (questListParent.childCount == 0)
+        {
+            QuestUIController.Instance.ClearDetail();
+            return;
+        }
+
+        questListParent
+            .GetChild(0)
+            .GetComponent<QuestItemUI>()
+            .OnClick();
     }
 }

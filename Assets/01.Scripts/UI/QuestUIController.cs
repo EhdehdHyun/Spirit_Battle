@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class QuestUIController : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class QuestUIController : MonoBehaviour
     
     void Awake()
     {
+        Debug.Log($"[QuestUIController] Toggle isOpen={isOpen}, root={questCanvasRoot.name}, rootId={questCanvasRoot.GetInstanceID()}");
         Instance = this;
     }
     
@@ -23,10 +25,31 @@ public class QuestUIController : MonoBehaviour
     {
         questCanvasRoot.SetActive(false);
     }
+    
+    
+    public void ShowQuestDetail(Quest_Data_Table quest)
+    {
+        detailUI.SetQuest(quest);
+    }
+
+    public void ClearDetail()
+    {
+        detailUI.Clear();
+    }
     public void RefreshAll()
     {
+        detailUI.Clear();
         foreach (var category in categoryUIs)
             category.Refresh();
+        
+        QuestItemUI.ResetSelection();
+        StartCoroutine(SelectFirstQuestNextFrame());
+    }
+    
+    private IEnumerator SelectFirstQuestNextFrame()
+    {
+        yield return null; // 다음 프레임
+        mainCategoryUI.SelectFirstQuest();
     }
 
     void Update()
@@ -49,19 +72,16 @@ public class QuestUIController : MonoBehaviour
 
         if (isOpen)
         {
-            // 플레이어 입력 잠금
             if (playerInput != null)
                 playerInput.Lock();
 
-            // 마우스 UI용
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
 
-            mainCategoryUI.SelectFirstQuest();
+            RefreshAll(); // 여기서만 처리
         }
         else
         {
-            // 플레이어 입력 복구
             if (playerInput != null)
             {
                 playerInput.Unlock();
@@ -71,11 +91,7 @@ public class QuestUIController : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+    }
+    
 
-        Debug.Log("[QuestUIController] SetActive = " + isOpen);
-    }
-    public void SelectFirstQuest()
-    {
-        mainCategoryUI.SelectFirstQuest();
-    }
 }

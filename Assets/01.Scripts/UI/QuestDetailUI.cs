@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class QuestDetailUI : MonoBehaviour
 {
-    public static QuestDetailUI Instance;
 
     [Header("Texts")]
     [SerializeField] private TextMeshProUGUI questTitle;
@@ -15,20 +14,16 @@ public class QuestDetailUI : MonoBehaviour
     [SerializeField] private Sprite goldIconSprite;
     
     private Quest_Data_Table currentQuest;
-
-    void Awake()
-    {
-        Instance = this;
-    }
-
+    
     public void SetQuest(Quest_Data_Table quest)
     {
+        Debug.Log($"[QuestDetailUI] SetQuest({quest.QuestName}) on {gameObject.name}, id={GetInstanceID()}");
         currentQuest = quest;
         questTitle.text = quest.QuestName;
         questPurpose.text = quest.CompleteCondition;
         questDescription.text = quest.Description;
-        
         ShowRewardPreview(quest.RewardGroupID);
+        
     }
     void ShowRewardPreview(int rewardGroupId)
     {
@@ -48,12 +43,15 @@ public class QuestDetailUI : MonoBehaviour
     }
     public void OnClickClaimReward()
     {
+        if (currentQuest == null)
+            return;
+
         QuestManager.Instance.ClaimReward(currentQuest.QuestID);
         
-        QuestUIController.Instance.RefreshAll();
+        Clear();
 
-        // 다음 퀘스트 자동 선택
-        QuestUIController.Instance.SelectFirstQuest();
+        // 왼쪽 리스트 갱신
+        QuestUIController.Instance.RefreshAll();
     }
     
     void CreateRewardItem(Sprite icon, int amount)
@@ -61,5 +59,15 @@ public class QuestDetailUI : MonoBehaviour
         var ui = Instantiate(rewardItemPrefab, rewardGrid);
         ui.Set(icon, amount);
     }
+    public void Clear()
+    {
+        currentQuest = null;
 
+        questTitle.text = "";
+        questPurpose.text = "";
+        questDescription.text = "";
+
+        foreach (Transform child in rewardGrid)
+            Destroy(child.gameObject);
+    }
 }
