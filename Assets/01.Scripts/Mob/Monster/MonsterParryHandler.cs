@@ -74,6 +74,12 @@ public class MonsterParryHandler : MonoBehaviour, IParryable, IParryReceiver
         ParryPostFxPulse.Play();
 
         parryWindowOpen = false;
+        
+        QuestManager.Instance.ReportProgress(
+            CompleteCondition.UseSkill,
+            0,   // 패링은 TargetID 안 씀
+            1
+        );
     }
 
     // 공격 시작 시점

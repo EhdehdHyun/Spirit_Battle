@@ -26,11 +26,35 @@
     },
     {
       "RewardGroupID": 40000,
-      "Exp": 20,
-      "Gold": 0,
+      "Exp": 50,
+      "Gold": 30,
       "ItemID": 0,
       "ItemCount": 0,
-      "Notes": "패링 튜토리얼 성공보상"
+      "Notes": "패링 스킬 1회 성공"
+    },
+    {
+      "RewardGroupID": 40001,
+      "Exp": 70,
+      "Gold": 60,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "패링으로 고블린 처치"
+    },
+    {
+      "RewardGroupID": 40002,
+      "Exp": 80,
+      "Gold": 90,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "회피 3회 성공"
+    },
+    {
+      "RewardGroupID": 40003,
+      "Exp": 100,
+      "Gold": 100,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "회오리 스킬 3회 성공"
     }
   ]
 }
