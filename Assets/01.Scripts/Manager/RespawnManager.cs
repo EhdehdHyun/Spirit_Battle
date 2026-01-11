@@ -93,6 +93,8 @@ public class RespawnManager : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        
+        QuestManager.Instance.AcceptQuest(40000);
     }
 
     private void TeleportPlayerRoot(GameObject root, Vector3 pos)
