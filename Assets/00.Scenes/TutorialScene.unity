@@ -39799,6 +39799,7 @@ GameObject:
   - component: {fileID: 680367635}
   - component: {fileID: 680367636}
   - component: {fileID: 680367637}
+  - component: {fileID: 680367638}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -39953,6 +39954,7 @@ MonoBehaviour:
   weaponHitbox: {fileID: 50551004}
   vfx: {fileID: 0}
   whirlwindSkill: {fileID: 0}
+  tornadoSkill: {fileID: 0}
   weaponParent: {fileID: 787444772}
   handSourceIndex: 0
   sideSourceIndex: 1
@@ -39978,6 +39980,7 @@ MonoBehaviour:
   parry: {fileID: 0}
   ability: {fileID: 0}
   whirlwind: {fileID: 0}
+  tornado: {fileID: 0}
   faceTurnSpeed: 15
   isLocked: 0
   dashLocked: 0
@@ -40252,6 +40255,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: a5942d06-5a6f-4d9d-8643-56650980977d
     m_ActionName: Player/Whirlwind[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 680367625}
+        m_TargetAssemblyTypeName: PlayerInputController, Assembly-CSharp
+        m_MethodName: OnTornado
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 610680d4-a087-4ba8-bafa-ab7f18c332dd
+    m_ActionName: Player/Tornade[/Keyboard/c]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -40296,6 +40315,7 @@ Transform:
   - {fileID: 62826765}
   - {fileID: 1182335464}
   - {fileID: 49193748}
+  - {fileID: 1300317258}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &680367632
@@ -40410,15 +40430,54 @@ MonoBehaviour:
   damage: 25
   targetMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 768
   radius: 3
   centerOffset: {x: 0, y: 1, z: 0}
   maxHits: 32
-  vfxPrefab: {fileID: 0}
-  vfxSpawn: {fileID: 0}
+  vfxPrefab: {fileID: 3713291247566523986, guid: 5782e74b63118b1408d1451cbf86b651, type: 3}
+  vfxSpawn: {fileID: 1182335464}
   vfxObject: {fileID: 0}
   vfxAutoOffTime: 1
   lockMovementDuringCast: 1
+  animator: {fileID: 0}
+  whirlwindStateName: Whirlwind
+--- !u!114 &680367638
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680367618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef10cd77d0ca93e448925d7f8c5c80d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerAnim: {fileID: 0}
+  physicsCharacter: {fileID: 0}
+  playerInput: {fileID: 0}
+  combat: {fileID: 0}
+  parry: {fileID: 0}
+  projectilePrefab: {fileID: 5936187295949473540, guid: 797960f066804104d9b872b3cd76292f, type: 3}
+  spawnPoint: {fileID: 1182335464}
+  cooldown: 8
+  requireWeaponEquipped: 1
+  lockMovementDuringCast: 1
+  destroyProjectileOnCancelByDash: 1
+  targetMask:
+    serializedVersion: 2
+    m_Bits: 768
+  projectileSpeed: 10
+  maxDistance: 13
+  shrinkStartDistance: 2
+  centerOffset: {x: 0, y: 1, z: 0}
+  pullRadius: 4
+  damageRadius: 3
+  pullMaxSpeed: 8
+  pullAcceleration: 40
+  damagePerTick: 10
+  tickInterval: 0.5
+  maxHits: 32
 --- !u!1001 &680445110
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -74698,6 +74757,37 @@ Transform:
   - {fileID: 958307286}
   - {fileID: 76544150}
   m_Father: {fileID: 1253353085}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1300317257
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1300317258}
+  m_Layer: 7
+  m_Name: SkillVFXPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1300317258
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1300317257}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 680367631}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1302450834
 PrefabInstance:
