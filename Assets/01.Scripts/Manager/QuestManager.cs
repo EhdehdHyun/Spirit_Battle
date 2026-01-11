@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
-enum QuestState
+public enum QuestState
 {
     Active,
     Completed,        // 완료됨(보상 미수령)
@@ -64,6 +63,14 @@ public class QuestManager : MonoBehaviour
 
         if (quest.NextQuest > 0)
             AcceptQuest(quest.NextQuest);
+    }
+    
+    public QuestState GetQuestState(int questId)
+    {
+        if (!questStates.ContainsKey(questId))
+            return QuestState.Active;
+
+        return questStates[questId];
     }
 
     public IEnumerable<Quest_Data_Table> GetQuestsByType(string type)

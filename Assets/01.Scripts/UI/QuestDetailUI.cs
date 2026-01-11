@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QuestDetailUI : MonoBehaviour
 {
@@ -13,6 +14,11 @@ public class QuestDetailUI : MonoBehaviour
     [SerializeField] private Sprite expIconSprite;
     [SerializeField] private Sprite goldIconSprite;
     
+    [Header("Reward Button")]
+    [SerializeField] private Button claimButton;
+    [SerializeField] private TextMeshProUGUI claimButtonText;
+    [SerializeField] private Color claimedColor = Color.gray;
+    
     private Quest_Data_Table currentQuest;
     
     public void SetQuest(Quest_Data_Table quest)
@@ -22,8 +28,9 @@ public class QuestDetailUI : MonoBehaviour
         questTitle.text = quest.QuestName;
         questPurpose.text = quest.CompleteCondition;
         questDescription.text = quest.Description;
+
         ShowRewardPreview(quest.RewardGroupID);
-        
+        UpdateClaimButton();
     }
     void ShowRewardPreview(int rewardGroupId)
     {
@@ -47,11 +54,7 @@ public class QuestDetailUI : MonoBehaviour
             return;
 
         QuestManager.Instance.ClaimReward(currentQuest.QuestID);
-        
-        Clear();
-
-        // 왼쪽 리스트 갱신
-        QuestUIController.Instance.RefreshAll();
+        UpdateClaimButton();
     }
     
     void CreateRewardItem(Sprite icon, int amount)
@@ -70,4 +73,57 @@ public class QuestDetailUI : MonoBehaviour
         foreach (Transform child in rewardGrid)
             Destroy(child.gameObject);
     }
+    private void SetClaimedUI()
+    {
+        // 버튼 비활성화
+        claimButton.interactable = false;
+
+        // 텍스트 변경
+        claimButtonText.text = "수령 완료";
+
+        // 버튼 색 변경
+        var colors = claimButton.colors;
+        colors.normalColor = claimedColor;
+        colors.disabledColor = claimedColor;
+        claimButton.colors = colors;
+    }
+    private void ResetClaimButton()
+    {
+        claimButton.interactable = true;
+        claimButtonText.text = "수령하기";
+
+        var colors = claimButton.colors;
+        colors.normalColor = Color.white;   // 원래 색
+        colors.disabledColor = Color.gray;
+        claimButton.colors = colors;
+    }
+    void UpdateClaimButton()
+    {
+        if (currentQuest == null)
+            return;
+
+        var state = QuestManager.Instance.GetQuestState(currentQuest.QuestID);
+
+        switch (state)
+        {
+            case QuestState.Completed:
+                claimButton.interactable = true;
+                claimButtonText.text = "수령하기";
+                claimButton.image.color = Color.white;
+                break;
+
+            case QuestState.RewardClaimed:
+                claimButton.interactable = false;
+                claimButtonText.text = "수령 완료";
+                claimButton.image.color = Color.gray;
+                break;
+
+            default: // Active
+                claimButton.interactable = false;
+                claimButtonText.text = "진행 중";
+                claimButton.image.color = Color.gray;
+                break;
+        }
+    }
+
 }
