@@ -14,6 +14,7 @@ public class PlayerInputController : MonoBehaviour
     public PlayerParry parry;
     public PlayerAbility ability;
     [SerializeField] private PlayerWhirlwindSkill whirlwind;
+    [SerializeField] private PlayerTornadoSkill tornado;
 
 
     public float faceTurnSpeed = 18f;
@@ -47,6 +48,9 @@ public class PlayerInputController : MonoBehaviour
 
         if (whirlwind == null)
             whirlwind = GetComponent<PlayerWhirlwindSkill>();
+
+        if (tornado == null)
+            tornado = GetComponent<PlayerTornadoSkill>();
     }
 
     private void Update()
@@ -132,6 +136,7 @@ public class PlayerInputController : MonoBehaviour
         if (IsParrying()) return;
 
         whirlwind?.CancelByDash();
+        tornado?.CancelByDash();
 
         bool airDashAllowed = (ability != null && ability.Has(AbilityId.AirDash));
         if (!character.IsGrounded && !airDashAllowed) return;
@@ -182,6 +187,8 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext ctx)
     {
+        if (character != null && character.movementLock) return;
+
         if (isLocked) return;
 
         if (!ctx.started) return;
@@ -259,6 +266,8 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnSkill1(InputAction.CallbackContext ctx)
     {
+        if (character != null && character.movementLock) return;
+
         if (!ctx.performed) return;
         if (isLocked) return;
         if (IsParrying()) return;
@@ -274,5 +283,17 @@ public class PlayerInputController : MonoBehaviour
         if (IsParrying()) return;
 
         whirlwind?.OnSkillInput();
+    }
+
+    public void OnTornado(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+        if (isLocked) return;
+        if (IsParrying()) return;
+
+        if (character != null && character.IsDashing) return; // 대쉬 중엔 시전 시작 불가능하게 함
+        if (character != null && character.movementLock) return; // 시전 중 중복 입력 방지함
+
+        tornado?.OnSkillInput();
     }
 }

@@ -13,6 +13,7 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField] private GameObject weaponHitbox;
     [SerializeField] private PlayerVFXController vfx;
     [SerializeField] private PlayerWhirlwindSkill whirlwindSkill;
+    [SerializeField] private PlayerTornadoSkill tornadoSkill;
 
     [Header("무기")]
     [SerializeField] private ParentConstraint weaponParent;
@@ -47,6 +48,7 @@ public class PlayerAnimation : MonoBehaviour
     private static readonly int IsHitHash = Animator.StringToHash("IsHit");
 
     private static readonly int WhirlwindHash = Animator.StringToHash("Whirlwind");
+    private static readonly int TornadoHash = Animator.StringToHash("Tornado");
 
     private void Awake()
     {
@@ -56,6 +58,7 @@ public class PlayerAnimation : MonoBehaviour
         if (combat == null) combat = GetComponent<PlayerCombat>();
         if (vfx == null) vfx = GetComponent<PlayerVFXController>();
         if (whirlwindSkill == null) whirlwindSkill = GetComponent<PlayerWhirlwindSkill>();
+        if (tornadoSkill == null) tornadoSkill = GetComponent<PlayerTornadoSkill>();
     }
 
     private void Update()
@@ -273,6 +276,21 @@ public class PlayerAnimation : MonoBehaviour
     public void EvWhirlwind_End()
     {
         whirlwindSkill?.EvWhirlwind_End();
+    }
+
+    public void PlayTornado()
+    {
+        anim.SetTrigger(TornadoHash);
+    }
+
+    public void EvTornado_Fire()
+    {
+        tornadoSkill?.EvTornado_Fire();
+    }
+
+    public void EvTornado_End()
+    {
+        tornadoSkill?.EvTornado_End();
     }
 }
 
