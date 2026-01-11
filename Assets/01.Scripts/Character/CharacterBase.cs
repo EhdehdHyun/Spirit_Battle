@@ -6,7 +6,7 @@ using UnityEngine.Rendering;
 // 플레이어/몬스터 공통 사용 기본 클래스
 // 체력, 이동속도, 피격/사망 로직 기본형 제공
 
-public abstract class CharacterBase : MonoBehaviour, IDamageable
+public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
 {
     [Header("공통 스탯")]
     public float maxHp = 100f;
@@ -95,6 +95,20 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable
         OnHpChanged?.Invoke(currentHp, maxHp);
         OnDie(info);
         OnDied?.Invoke(info);
+    }
+
+    public void ApplyAoeDamage(float damage, Transform attacker)
+    {
+        DamageInfo info = MakeAoeDamageInfo(damage, attacker);
+        TakeDamage(info);
+    }
+
+    protected virtual DamageInfo MakeAoeDamageInfo(float damage, Transform attacker)
+    {
+        return new DamageInfo
+        {
+            amount = damage,
+        };
     }
 
     protected virtual void OnDamaged(DamageInfo info) { }

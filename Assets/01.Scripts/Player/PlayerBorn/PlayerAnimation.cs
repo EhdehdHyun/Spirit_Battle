@@ -9,12 +9,14 @@ public class PlayerAnimation : MonoBehaviour
     [Header("참조")]
     [SerializeField] private Rigidbody rb;
     [SerializeField] private PhysicsCharacter character;
-    [SerializeField] private PlayerCombat combat;   
+    [SerializeField] private PlayerCombat combat;
     [SerializeField] private GameObject weaponHitbox;
     [SerializeField] private PlayerVFXController vfx;
+    [SerializeField] private PlayerWhirlwindSkill whirlwindSkill;
+    [SerializeField] private PlayerTornadoSkill tornadoSkill;
 
     [Header("무기")]
-    [SerializeField] private ParentConstraint weaponParent; 
+    [SerializeField] private ParentConstraint weaponParent;
     [SerializeField] private int handSourceIndex = 0;   //손에 칼
     [SerializeField] private int sideSourceIndex = 1;   //옆에 칼
 
@@ -45,6 +47,9 @@ public class PlayerAnimation : MonoBehaviour
     private static readonly int IsAttackingHash = Animator.StringToHash("IsAttacking");
     private static readonly int IsHitHash = Animator.StringToHash("IsHit");
 
+    private static readonly int WhirlwindHash = Animator.StringToHash("Whirlwind");
+    private static readonly int TornadoHash = Animator.StringToHash("Tornado");
+
     private void Awake()
     {
         anim = GetComponent<Animator>();
@@ -52,6 +57,8 @@ public class PlayerAnimation : MonoBehaviour
         if (character == null) character = GetComponent<PhysicsCharacter>();
         if (combat == null) combat = GetComponent<PlayerCombat>();
         if (vfx == null) vfx = GetComponent<PlayerVFXController>();
+        if (whirlwindSkill == null) whirlwindSkill = GetComponent<PlayerWhirlwindSkill>();
+        if (tornadoSkill == null) tornadoSkill = GetComponent<PlayerTornadoSkill>();
     }
 
     private void Update()
@@ -254,6 +261,36 @@ public class PlayerAnimation : MonoBehaviour
     public void EvHitEnd()
     {
         anim.SetBool(IsHitHash, false);
+    }
+
+    public void PlayWhirlwind()
+    {
+        anim.SetTrigger(WhirlwindHash);
+    }
+
+    public void EvWhirlwind_Hit()
+    {
+        whirlwindSkill?.EvWhirlwind_Hit();
+    }
+
+    public void EvWhirlwind_End()
+    {
+        whirlwindSkill?.EvWhirlwind_End();
+    }
+
+    public void PlayTornado()
+    {
+        anim.SetTrigger(TornadoHash);
+    }
+
+    public void EvTornado_Fire()
+    {
+        tornadoSkill?.EvTornado_Fire();
+    }
+
+    public void EvTornado_End()
+    {
+        tornadoSkill?.EvTornado_End();
     }
 }
 

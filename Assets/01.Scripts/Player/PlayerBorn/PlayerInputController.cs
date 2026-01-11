@@ -13,6 +13,8 @@ public class PlayerInputController : MonoBehaviour
     public PlayerStat stat;
     public PlayerParry parry;
     public PlayerAbility ability;
+    [SerializeField] private PlayerWhirlwindSkill whirlwind;
+    [SerializeField] private PlayerTornadoSkill tornado;
 
 
     public float faceTurnSpeed = 18f;
@@ -43,6 +45,12 @@ public class PlayerInputController : MonoBehaviour
 
         moveAction = playerInput.actions["Move"];
         lookAction = playerInput.actions["Look"];
+
+        if (whirlwind == null)
+            whirlwind = GetComponent<PlayerWhirlwindSkill>();
+
+        if (tornado == null)
+            tornado = GetComponent<PlayerTornadoSkill>();
     }
 
     private void Update()
@@ -127,6 +135,9 @@ public class PlayerInputController : MonoBehaviour
         if (isLocked) return;
         if (IsParrying()) return;
 
+        whirlwind?.CancelByDash();
+        tornado?.CancelByDash();
+
         bool airDashAllowed = (ability != null && ability.Has(AbilityId.AirDash));
         if (!character.IsGrounded && !airDashAllowed) return;
 
@@ -142,14 +153,12 @@ public class PlayerInputController : MonoBehaviour
 
         combat?.CancelAttackForDash();
 
-        // 2번째 대쉬 (윈도우 안)
         if (stat.CanSecondDashNow)
         {
-            // 2번째는 "대쉬 중 재시작"이 가능해야 함 -> PlayerCombat/PhysicsCharacter 수정 필요(아래 참고)
             bool startedSecond = (combat != null) && combat.TryDash(dir, airDashAllowed, allowWhileDashing: true);
             if (!startedSecond) return;
 
-            stat.CommitSecondDashUsed(); // 여기서 1초 쿨 시작(스태미나 추가 소모 없음)
+            stat.CommitSecondDashUsed(); // 1초 쿨 시작(스태미나 추가 소모 없음)
             SetDashLock(character.dashDuration);
             return;
         }
@@ -178,6 +187,8 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext ctx)
     {
+        if (character != null && character.movementLock) return;
+
         if (isLocked) return;
 
         if (!ctx.started) return;
@@ -190,8 +201,6 @@ public class PlayerInputController : MonoBehaviour
         if (isLocked) return;
         if (IsParrying()) return;
 
-        // 입력 순간엔 "자세 시작"만.
-        // 실제 패링 판정은 PlayerParry.Anim_TryParryNow() (애니 이벤트)에서 함.
         combat?.TryStartParryStance();
     }
 
@@ -257,6 +266,8 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnSkill1(InputAction.CallbackContext ctx)
     {
+        if (character != null && character.movementLock) return;
+
         if (!ctx.performed) return;
         if (isLocked) return;
         if (IsParrying()) return;
@@ -264,4 +275,25 @@ public class PlayerInputController : MonoBehaviour
         combat?.OnSkill1Input();
     }
 
+    public void OnWhirlwind(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+        if (isLocked) return;
+        if (character != null && character.movementLock) return;
+        if (IsParrying()) return;
+
+        whirlwind?.OnSkillInput();
+    }
+
+    public void OnTornado(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed) return;
+        if (isLocked) return;
+        if (IsParrying()) return;
+
+        if (character != null && character.IsDashing) return; // 대쉬 중엔 시전 시작 불가능하게 함
+        if (character != null && character.movementLock) return; // 시전 중 중복 입력 방지함
+
+        tornado?.OnSkillInput();
+    }
 }
