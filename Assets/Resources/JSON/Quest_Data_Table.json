@@ -43,7 +43,7 @@
       "QuestID": 40000,
       "QuestType": "Tutorial",
       "QuestName": "패링 훈련",
-      "Description": "보스와의 전투에서 패배한 후, 당신은 마을에서 눈을 뜬다. 주민들의 도움을 받아 기본적인 행동을 다시 익혀보자.",
+      "Description": "보스와의 전투에서 패배한 후, 당신은 마을에서 눈을 뜬다. 주민들의 도움을 받아 기본적인 행동인 패링을 다시 익혀보자.",
       "CompleteCondition": "UseSkill",
       "TargetID": 0,          
       "TargetCount": 1,
@@ -54,13 +54,25 @@
       "QuestID": 40001,
       "QuestType": "Tutorial",
       "QuestName": "실전패링",
-      "Description": "실전에 응용을 해보자",
+      "Description": "실전에 응용을 해보자.",
       "StartCondition": "Auto",
       "CompleteCondition": "KillMonster",
-      "TargetID": 10001,
+      "TargetID": 10000, 
       "TargetCount": 1,
       "RewardGroupID": 40001,
       "NextQuest": 40002
+    },
+    {
+      "QuestID": 40002,
+      "QuestType": "Tutorial",
+      "QuestName": "정령스킬실습",
+      "Description": "회오리 스킬을 3회 시도해보자.",
+      "StartCondition": "Auto",
+      "CompleteCondition": "UseSkill",
+      "TargetID": 0,
+      "TargetCount": 1,
+      "RewardGroupID": 40002,
+      "NextQuest": 40003
     }
   ]
 }
