@@ -71744,7 +71744,7 @@ Transform:
   m_GameObject: {fileID: 1238334851}
   serializedVersion: 2
   m_LocalRotation: {x: 0.08223668, y: -0.7023102, z: 0.0057841176, w: 0.70708144}
-  m_LocalPosition: {x: 0.018463137, y: 0.9249182, z: 0.012512039}
+  m_LocalPosition: {x: 0.018432619, y: 0.9249184, z: 0.012451004}
   m_LocalScale: {x: 1, y: 0.99999994, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -121894,6 +121894,14 @@ PrefabInstance:
     - target: {fileID: 3602687304791287564, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
       propertyPath: m_Name
       value: ChapterBoss
+      objectReference: {fileID: 0}
+    - target: {fileID: 3726511240303982724, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.308
+      objectReference: {fileID: 0}
+    - target: {fileID: 3726511240303982724, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 5353177757156421738, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
       propertyPath: m_LocalPosition.x
