@@ -36,6 +36,9 @@ public class ChestInteractable : MonoBehaviour, IInteractable
 
     [Header("튜토리얼 연출")]
     [SerializeField] private WorldArrowController worldArrow;
+    
+    [Header("튜토리얼 전용")]
+    [SerializeField] private bool isTutorialChest = false;
 
     private bool isOpened;
     private bool vanishScheduled;
@@ -82,8 +85,10 @@ public class ChestInteractable : MonoBehaviour, IInteractable
         if (animator != null) animator.SetTrigger(openTriggerName);
         GiveReward(player);
 
-        if (TutorialManager.Instance != null)
+        if (isTutorialChest && TutorialManager.Instance != null)
+        {
             TutorialManager.Instance.ShowMoveForwardText();
+        }
     }
 
     private bool AreGuardiansAlive()
