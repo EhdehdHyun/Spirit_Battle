@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class QuestUIController : MonoBehaviour
 {
+    public static QuestUIController Instance;
     [SerializeField] private GameObject questCanvasRoot;
     [SerializeField] private QuestCategoryUI mainCategoryUI;
     
@@ -12,6 +13,12 @@ public class QuestUIController : MonoBehaviour
     
     private bool isOpen = false;
 
+    
+    void Awake()
+    {
+        Instance = this;
+    }
+    
     void Start()
     {
         questCanvasRoot.SetActive(false);
@@ -20,8 +27,6 @@ public class QuestUIController : MonoBehaviour
     {
         foreach (var category in categoryUIs)
             category.Refresh();
-
-        detailUI.Clear();
     }
 
     void Update()
@@ -69,5 +74,8 @@ public class QuestUIController : MonoBehaviour
 
         Debug.Log("[QuestUIController] SetActive = " + isOpen);
     }
-
+    public void SelectFirstQuest()
+    {
+        mainCategoryUI.SelectFirstQuest();
+    }
 }

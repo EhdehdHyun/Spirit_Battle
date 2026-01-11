@@ -52,21 +52,20 @@ public class QuestManager : MonoBehaviour
 
         var quest = questTable[questId];
 
-        // 1. 보상 지급 (지금은 로그만)
         var reward = GameManager.Instance
             .Data
             .Reward_Data_Loader
             .ItemsDict[quest.RewardGroupID];
 
+        // 임시 보상 처리 (로그)
         Debug.Log($"보상 지급: EXP {reward.Exp}, GOLD {reward.Gold}");
 
-        // 2. 상태 변경
         questStates[questId] = QuestState.RewardClaimed;
 
-        // 3. 다음 퀘스트 수락
         if (quest.NextQuest > 0)
             AcceptQuest(quest.NextQuest);
     }
+
     public IEnumerable<Quest_Data_Table> GetQuestsByType(string type)
     {
         return questStates

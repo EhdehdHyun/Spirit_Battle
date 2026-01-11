@@ -10,7 +10,9 @@ public class QuestDetailUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI questPurpose;
     [SerializeField] private TextMeshProUGUI questDescription;
     [SerializeField] private Transform rewardGrid;
-    [SerializeField] private TMP_Text rewardAmountText;
+    [SerializeField] private RewardItemUI rewardItemPrefab;
+    [SerializeField] private Sprite expIconSprite;
+    [SerializeField] private Sprite goldIconSprite;
     
     private Quest_Data_Table currentQuest;
 
@@ -33,29 +35,31 @@ public class QuestDetailUI : MonoBehaviour
         foreach (Transform child in rewardGrid)
             Destroy(child.gameObject);
 
-        var rewardTable = GameManager.Instance
+        var reward = GameManager.Instance
             .Data
             .Reward_Data_Loader
-            .ItemsDict;
+            .ItemsDict[rewardGroupId];
 
-        if (!rewardTable.ContainsKey(rewardGroupId))
-            return;
+        if (reward.Exp > 0)
+            CreateRewardItem(expIconSprite, reward.Exp);
 
-        var reward = rewardTable[rewardGroupId];
-
-        rewardAmountText.text =
-            $"EXP {reward.Exp} / GOLD {reward.Gold}";
+        if (reward.Gold > 0)
+            CreateRewardItem(goldIconSprite, reward.Gold);
     }
     public void OnClickClaimReward()
     {
         QuestManager.Instance.ClaimReward(currentQuest.QuestID);
+        
+        QuestUIController.Instance.RefreshAll();
+
+        // 다음 퀘스트 자동 선택
+        QuestUIController.Instance.SelectFirstQuest();
     }
-    public void Clear()
+    
+    void CreateRewardItem(Sprite icon, int amount)
     {
-        questTitle.text = "";
-        questPurpose.text = "";
-        questDescription.text = "";
-        rewardAmountText.text = "";
+        var ui = Instantiate(rewardItemPrefab, rewardGrid);
+        ui.Set(icon, amount);
     }
 
 }
