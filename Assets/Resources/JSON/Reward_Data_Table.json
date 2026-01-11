@@ -15,6 +15,14 @@
       "ItemID": 0,
       "ItemCount": 0,
       "Notes": "고블린 처치 퀘스트"
+    },
+    {
+      "RewardGroupID": 40000,
+      "Exp": 20,
+      "Gold": 0,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "패링 튜토리얼 성공보상"
     }
   ]
 }

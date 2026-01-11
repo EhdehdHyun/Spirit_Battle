@@ -25,6 +25,19 @@
       "TargetCount": 3,
       "RewardGroupID": 30001,
       "NextQuest": 30002
+    },
+    {
+      "QuestID": 40000,
+      "QuestType": "Tutorial",
+      "QuestName": "실전패링",
+      "Description": "보스와의 전투에서 패배한 후, 당신은 마을에서 눈을 뜬다. 주민들의 도움을 받아 기본적인 행동을 다시 익혀보자.",
+      "NPC": 100001,
+      "StartCondition": "AfterBossRespawn",
+      "CompleteCondition": "패링스킬 1회 성공",
+      "TargetID": 0,
+      "TargetCount": 1,
+      "RewardGroupID": 40000,
+      "NextQuest": 30001
     }
     
   ]
