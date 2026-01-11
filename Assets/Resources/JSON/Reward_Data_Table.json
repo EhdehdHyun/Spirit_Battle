@@ -1,0 +1,20 @@
+{
+  "Items": [
+    {
+      "RewardGroupID": 30000,
+      "Exp": 15,
+      "Gold": 10,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "튜토리얼 대화 보상"
+    },
+    {
+      "RewardGroupID": 30001,
+      "Exp": 30,
+      "Gold": 20,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "고블린 처치 퀘스트"
+    }
+  ]
+}

@@ -2,13 +2,19 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+enum QuestState
+{
+    Active,
+    Completed,        // 완료됨(보상 미수령)
+    RewardClaimed     // 보상 수령 완료
+}
+
 public class QuestManager : MonoBehaviour
 {
     public static QuestManager Instance;
 
+    private Dictionary<int, QuestState> questStates = new();
     private Dictionary<int, Quest_Data_Table> questTable;
-    private HashSet<int> activeQuests = new();
-    private HashSet<int> completedQuests = new();
 
     void Awake()
     {
@@ -25,31 +31,50 @@ public class QuestManager : MonoBehaviour
         AcceptQuest(30000);
         CompleteQuest(30000);        // 즉시 완료
     }
-
-
-    //퀘스트 수락
+    
+    //카테고리별 퀘스트 가져오기 (UI용)
     public void AcceptQuest(int questId)
     {
-        if (!activeQuests.Contains(questId))
-            activeQuests.Add(questId);
-    }
-
-    //카테고리별 퀘스트 가져오기 (UI용)
-    public IEnumerable<Quest_Data_Table> GetQuestsByType(string type)
-    {
-        return activeQuests
-            .Select(id => questTable[id])
-            .Where(q => q.QuestType == type);
+        if (!questStates.ContainsKey(questId))
+            questStates.Add(questId, QuestState.Active);
     }
 
     //퀘스트 완료
     public void CompleteQuest(int questId)
     {
-        activeQuests.Remove(questId);
-        completedQuests.Add(questId);
+        if (!questStates.ContainsKey(questId)) return;
+        questStates[questId] = QuestState.Completed;
+    }
+    public void ClaimReward(int questId)
+    {
+        if (!questStates.ContainsKey(questId)) return;
+        if (questStates[questId] != QuestState.Completed) return;
 
         var quest = questTable[questId];
+
+        // 1. 보상 지급 (지금은 로그만)
+        var reward = GameManager.Instance
+            .Data
+            .Reward_Data_Loader
+            .ItemsDict[quest.RewardGroupID];
+
+        Debug.Log($"보상 지급: EXP {reward.Exp}, GOLD {reward.Gold}");
+
+        // 2. 상태 변경
+        questStates[questId] = QuestState.RewardClaimed;
+
+        // 3. 다음 퀘스트 수락
         if (quest.NextQuest > 0)
             AcceptQuest(quest.NextQuest);
     }
+    public IEnumerable<Quest_Data_Table> GetQuestsByType(string type)
+    {
+        return questStates
+            .Where(kv =>
+                kv.Value == QuestState.Active ||
+                kv.Value == QuestState.Completed)
+            .Select(kv => questTable[kv.Key])
+            .Where(q => q.QuestType == type);
+    }
+
 }

@@ -4,6 +4,9 @@ public class NPCInteractable : MonoBehaviour, IInteractable
 {
     [Header("Dialogue")]
     [SerializeField] private string startDialogueID = "DLG_1001";
+    
+    [Header("Quest")]
+    [SerializeField] private int completeQuestID = 30000;
 
     private bool isTalking;
     public bool canInteract = true;
@@ -34,5 +37,10 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     private void OnDialogueEnd()
     {
         isTalking = false;
+        // 난파된 방랑자 퀘스트 완료시잠
+        if (completeQuestID > 0 && QuestManager.Instance != null)
+        {
+            QuestManager.Instance.CompleteQuest(completeQuestID);
+        }
     }
 }

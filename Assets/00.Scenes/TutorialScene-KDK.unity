@@ -24254,7 +24254,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 395482025}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1175213975}
+        m_TargetAssemblyTypeName: QuestDetailUI, Assembly-CSharp
+        m_MethodName: OnClickClaimReward
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &395482025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68949,6 +68961,8 @@ MonoBehaviour:
   questTitle: {fileID: 222415806}
   questPurpose: {fileID: 1739082683}
   questDescription: {fileID: 2031380369}
+  rewardGrid: {fileID: 104806794}
+  rewardAmountText: {fileID: 7997807}
 --- !u!1001 &1177149111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -88209,6 +88223,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questCanvasRoot: {fileID: 1556534148}
   mainCategoryUI: {fileID: 1067824752}
+  categoryUIs: []
+  detailUI: {fileID: 1175213975}
+  playerInput: {fileID: 680367625}
 --- !u!1 &1536873784
 GameObject:
   m_ObjectHideFlags: 0
@@ -90887,6 +90904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startDialogueID: DLG_1001
+  completeQuestID: 30000
   canInteract: 1
 --- !u!136 &1587823917
 CapsuleCollider:
@@ -115477,7 +115495,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000016634353}
+  m_AnchoredPosition: {x: 0, y: 0.00002757812}
   m_SizeDelta: {x: 0, y: 480}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2031380369
@@ -118696,7 +118714,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 972720988}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99999136
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

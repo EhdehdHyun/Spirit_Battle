@@ -9,6 +9,8 @@ public class DataManager
    public skill_Data_TableLoader Skill_Data_TableLoader { get; private set; }
    public DialogueTableLoader DialogueTableLoader { get; private set; }
    public Quest_Data_Loader Quest_Data_Loader { get; private set; }
+   
+   public Reward_Data_Loader Reward_Data_Loader { get; private set; }
 
     public void Initialize()
     {
@@ -18,5 +20,6 @@ public class DataManager
         DialogueTableLoader = new DialogueTableLoader();
         
         Quest_Data_Loader = new Quest_Data_Loader();
+        Reward_Data_Loader = new Reward_Data_Loader();
     }
 }
