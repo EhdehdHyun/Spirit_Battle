@@ -124,6 +124,8 @@ public class PlayerWhirlwindSkill : MonoBehaviour
     {
         if (!_isCasting) return;
 
+        _hitRootIds.Clear();  
+        
         SetVfxActive(true);
         _vfxOffAt = (vfxAutoOffTime > 0f) ? Time.time + vfxAutoOffTime : 0f;
 
@@ -150,7 +152,6 @@ public class PlayerWhirlwindSkill : MonoBehaviour
         _vfxOffAt = 0f;
         _hitRootIds.Clear();
     }
-
     private void DoAoeDamage()
     {
         Vector3 center = transform.position + centerOffset;
@@ -160,7 +161,7 @@ public class PlayerWhirlwindSkill : MonoBehaviour
             radius,
             _overlap,
             targetMask,
-            QueryTriggerInteraction.Ignore
+            QueryTriggerInteraction.Collide
         );
 
         for (int i = 0; i < count; i++)
@@ -168,27 +169,22 @@ public class PlayerWhirlwindSkill : MonoBehaviour
             Collider col = _overlap[i];
             if (col == null) continue;
 
-            Transform root = col.attachedRigidbody != null
-                ? col.attachedRigidbody.transform.root
-                : col.transform.root;
+            // 콜라이더 기준으로 데미지 대상 찾기
+            IAoeDamageable dmg = col.GetComponentInParent<IAoeDamageable>();
+            if (dmg == null) continue;
 
-            int id = root.GetInstanceID();
+            // 중복 히트 방지 (Damageable 기준)
+            int id = dmg.GetHashCode();
             if (_hitRootIds.Contains(id)) continue;
             _hitRootIds.Add(id);
 
-            var dmg = root.GetComponentInChildren<IAoeDamageable>();
-            if (dmg != null)
-            {
-                dmg.ApplyAoeDamage(damage, transform);
-                continue;
-            }
-
-            root.gameObject.SendMessage("TakeDamage", damage, SendMessageOptions.DontRequireReceiver);
-            root.gameObject.SendMessage("ApplyDamage", damage, SendMessageOptions.DontRequireReceiver);
+            dmg.ApplyAoeDamage(damage, transform);
         }
 
         Debug.Log($"[Whirlwind] Overlap count = {count}");
     }
+
+ 
 
     private void SetVfxActive(bool on)
     {

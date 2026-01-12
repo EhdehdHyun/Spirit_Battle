@@ -62,5 +62,6 @@ MonoBehaviour:
   categoryUIs:
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
   detailUI: {fileID: 0}
   playerInput: {fileID: 0}
