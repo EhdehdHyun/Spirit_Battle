@@ -6,7 +6,8 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     [SerializeField] private string startDialogueID = "DLG_1001";
     
     [Header("Quest")]
-    [SerializeField] private int completeQuestID = 30000;
+    [SerializeField] private int giveQuestID = -1;
+    [SerializeField] private int completeQuestID = -1;
 
     private bool isTalking;
     public bool canInteract = true;
@@ -37,10 +38,18 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     private void OnDialogueEnd()
     {
         isTalking = false;
-        // 난파된 방랑자 퀘스트 완료시잠
-        if (completeQuestID > 0 && QuestManager.Instance != null)
         {
-            QuestManager.Instance.CompleteQuest(completeQuestID);
+            isTalking = false;
+
+            var qm = QuestManager.Instance;
+            if (qm == null) return;
+
+            //퀘스트 지급 (Side)
+            if (giveQuestID > 0 && !qm.HasQuest(giveQuestID))
+            {
+                qm.AcceptQuest(giveQuestID);
+                Debug.Log($"퀘스트 제공: {giveQuestID}");
+            }
         }
     }
 }
