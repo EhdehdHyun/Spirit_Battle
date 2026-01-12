@@ -3852,6 +3852,7 @@ GameObject:
   - component: {fileID: 2311382519924423099}
   - component: {fileID: 105194280216652777}
   - component: {fileID: 4336502952168552597}
+  - component: {fileID: 3572661245035889626}
   m_Layer: 8
   m_Name: Goblin_Normal
   m_TagString: Untagged
@@ -3947,6 +3948,7 @@ MonoBehaviour:
   monsterAnim: {fileID: 0}
   damageFeedback: {fileID: 0}
   playHitOnDamaged: 1
+  monsterId: 10000
 --- !u!114 &5617319711150474419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3975,7 +3977,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fdea22fc79e7fc4f8fdda9e65a75ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 6
   attackCooldown: 2.3
   hitOrigin: {fileID: 5698787928298454839}
   hitRadius: 1.7
@@ -4073,6 +4075,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 80
   m_CollisionDetection: 0
+--- !u!114 &3572661245035889626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5444808687753951924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blocker: {fileID: 0}
+  worldArrow: {fileID: 0}
+  nextEnemyTarget: {fileID: 0}
+  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &5489275101410236367
 GameObject:
   m_ObjectHideFlags: 0
