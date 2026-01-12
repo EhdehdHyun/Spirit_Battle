@@ -68,7 +68,7 @@ public class PlayerCombat : MonoBehaviour
         if (sfx == null)
             sfx = GetComponent<PlayerSFX>();
 
-            parry = GetComponent<PlayerParry>();
+        parry = GetComponent<PlayerParry>();
 
         weaponHitBox.DamageAppliedOnce += () => sfx?.PlayAttackHit(currentCombo);
     }
@@ -105,6 +105,8 @@ public class PlayerCombat : MonoBehaviour
 
         if (bufferedNextInput) return;
         bufferedNextInput = true;
+
+        Debug.Log($"[ATK] Input  isAttacking={isAttacking} combo={currentCombo} buffered={bufferedNextInput}");
     }
 
     public void TryStartParryStance()
@@ -185,6 +187,7 @@ public class PlayerCombat : MonoBehaviour
         }
 
         currentCombo++;
+        Debug.Log(currentCombo);
         bufferedNextInput = false;
         lastAttackTime = Time.time;
 
