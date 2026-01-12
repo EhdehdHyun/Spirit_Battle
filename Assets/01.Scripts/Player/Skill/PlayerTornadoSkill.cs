@@ -63,6 +63,13 @@ public class PlayerTornadoSkill : MonoBehaviour
             physicsCharacter.SetMovementLocked(true);
 
         playerAnim?.PlayTornado(); // 애니 트리거
+        
+        //스킬3회사용 튜토리얼 
+        QuestManager.Instance.ReportProgress(
+            CompleteCondition.UseSkill,
+            0,   //TargetID
+            1
+        );
     }
 
     private bool CanCastNow()

@@ -1,0 +1,60 @@
+{
+  "Items": [
+    {
+      "RewardGroupID": 30000,
+      "Exp": 15,
+      "Gold": 10,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "튜토리얼 대화 보상"
+    },
+    {
+      "RewardGroupID": 30001,
+      "Exp": 30,
+      "Gold": 20,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "고블린 처치 퀘스트"
+    },
+    {
+      "RewardGroupID": 30002,
+      "Exp": 40,
+      "Gold": 30,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "숲 조사 퀘스트"
+    },
+    {
+      "RewardGroupID": 40000,
+      "Exp": 50,
+      "Gold": 30,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "패링 스킬 1회 성공"
+    },
+    {
+      "RewardGroupID": 40001,
+      "Exp": 70,
+      "Gold": 60,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "패링으로 고블린 처치"
+    },
+    {
+      "RewardGroupID": 40002,
+      "Exp": 80,
+      "Gold": 90,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "회피 3회 성공"
+    },
+    {
+      "RewardGroupID": 40003,
+      "Exp": 100,
+      "Gold": 100,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "회오리 스킬 3회 성공"
+    }
+  ]
+}
