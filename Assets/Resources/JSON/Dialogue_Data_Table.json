@@ -87,6 +87,30 @@
       "Text": "미안하지만 부탁하나만 하지. 저 불쾌해 보이는 성소좀 조사해줘.",
       "NextID": "",
       "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2000",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령",
+      "Text": "어유~~~!! 요즘 요리에 맛들렸는데, 재료 구하기가 어렵네",
+      "NextID": "DLG_2001",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2001",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령",
+      "Text": "너가 그 난파되서 왔다던 그 소녀인가?",
+      "NextID": "DLG_2002",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2002",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령",
+      "Text": "흠흠.. 보다시피 내 몸이 이래서, 버섯 3개만 구해줄 수 있겠어?",
+      "NextID": "DLG_2003",
+      "IsChoice": false
     }
   ]
 }

@@ -344,8 +344,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4589420467841949281}
   m_HandleRect: {fileID: 1910956945938959643}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.99957615
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1651,7 +1651,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000023348608}
+  m_AnchoredPosition: {x: 0, y: -0.000064779495}
   m_SizeDelta: {x: 484, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &7446856353009404956
@@ -1891,7 +1891,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1648205388137473196}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.99975944
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2314,6 +2314,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2924038481070038583}
   - component: {fileID: 3385574925531581746}
+  - component: {fileID: 1961627644942233403}
   m_Layer: 5
   m_Name: CategoryBlock_Growth
   m_TagString: Untagged
@@ -2368,6 +2369,21 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1961627644942233403
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3832799703334505716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a47143222598d469d9865abbf1a1bcbd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  questType: Side
+  questListParent: {fileID: 7212673395238182761}
+  questItemPrefab: {fileID: 3403014295483234670, guid: 35239e9c36d684b7bb85de82dad6f772, type: 3}
 --- !u!1 &3869101153216829980
 GameObject:
   m_ObjectHideFlags: 0
@@ -4087,7 +4103,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0000004172325}
+  m_AnchoredPosition: {x: 0, y: -0.000019572213}
   m_SizeDelta: {x: 0, y: 480}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &4260010685821186211
