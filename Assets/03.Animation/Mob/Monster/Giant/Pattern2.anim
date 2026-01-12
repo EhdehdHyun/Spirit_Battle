@@ -3957,14 +3957,14 @@ AnimationClip:
   m_HasMotionFloatCurves: 0
   m_Events:
   - time: 2.3
-    functionName: Anim_210_EndPattern
+    functionName: Anim_DoGatherHit
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 2.3166666
-    functionName: Anim_DoGatherHit
+    functionName: Anim_210_EndPattern
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
