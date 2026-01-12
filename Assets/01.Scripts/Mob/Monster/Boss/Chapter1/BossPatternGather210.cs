@@ -113,6 +113,7 @@ public class BossPatternGather210 : BossPatternBase
 
     public void Anim_DoGatherHit()
     {
+        Debug.Log("[Gather210] Anim_DoGatherHit fired!", this);
         DoDamage();
     }
 
