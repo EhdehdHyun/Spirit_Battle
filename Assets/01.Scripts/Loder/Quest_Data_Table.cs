@@ -59,6 +59,11 @@ public class Quest_Data_Table
     /// Next Quest ID
     /// </summary>
     public int NextQuest;
+    
+    /// <summary>
+    /// Quest Purpose
+    /// </summary>
+    public string ObjectiveText; 
 }
 
 public class Quest_Data_Loader

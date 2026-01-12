@@ -26,7 +26,7 @@ public class QuestDetailUI : MonoBehaviour
         Debug.Log($"[QuestDetailUI] SetQuest({quest.QuestName}) on {gameObject.name}, id={GetInstanceID()}");
         currentQuest = quest;
         questTitle.text = quest.QuestName;
-        questPurpose.text = quest.CompleteCondition;
+        questPurpose.text = quest.ObjectiveText; 
         questDescription.text = quest.Description;
 
         ShowRewardPreview(quest.RewardGroupID);
