@@ -10,7 +10,7 @@
       "CompleteCondition": "Auto.",
       "TargetID": 3000,
       "TargetCount": 1,
-      "ObjectiveText": "고블린을 3마리 처치하세요.",
+      "ObjectiveText": "눈을 뜨다.",
       "RewardGroupID": 30000,
       "NextQuest": 30001
     },
