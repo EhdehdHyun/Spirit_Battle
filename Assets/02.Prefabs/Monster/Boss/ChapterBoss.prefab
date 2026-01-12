@@ -5541,6 +5541,8 @@ GameObject:
   - component: {fileID: 5353177757156421738}
   - component: {fileID: 101523703184880867}
   - component: {fileID: 3511104567439868573}
+  - component: {fileID: 4012939175973782897}
+  - component: {fileID: 1940796973434554225}
   - component: {fileID: 2006314806887975386}
   - component: {fileID: 2590907532594969573}
   - component: {fileID: 4861395695151573165}
@@ -5636,8 +5638,84 @@ MonoBehaviour:
   manualRotation: 1
   repathInterval: 0.05
   patterns:
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 4012939175973782897}
+  - {fileID: 1940796973434554225}
+--- !u!114 &4012939175973782897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3602687304791287564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c552bed7f15056f419bcf7581f191c05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patterName: ShockwavePunch
+  cooldown: 5
+  minUseDistance: 0
+  maxUseDistance: 0
+  minPhase: 0
+  maxPhase: 99
+  cooldownMin: 3
+  cooldownMax: 6
+  prepareTriggerName: SlamPrepare
+  slamTriggerName: Slam
+  punchTriggerName: Punch
+  prepareDuration: 1.2
+  punchDelayAfterSlamImpact: 0.35
+  waitSlamImpactBeforePunch: 1
+  telegraphObject: {fileID: 0}
+  slamCenterOverride: {fileID: 5353177757156421738}
+  slamDamage: 20
+  slamRadius: 25
+  slamHitMask:
+    serializedVersion: 2
+    m_Bits: 128
+  punchOriginOverride: {fileID: 5139746172606967544}
+  punchDamage: 15
+  punchRadius: 3.5
+  punchArc: 90
+  punchHitMask:
+    serializedVersion: 2
+    m_Bits: 128
+  punchCenterOffset: {x: 0, y: 1, z: 0}
+  slamImpactTimeout: 2.5
+  patternTimeout: 8
+--- !u!114 &1940796973434554225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3602687304791287564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 247cb3fc72fa86d42814fb62cf0dbd99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patterName: Pattern
+  cooldown: 5
+  minUseDistance: 0
+  maxUseDistance: 0
+  minPhase: 1
+  maxPhase: 99
+  cooldownMin: 3
+  cooldownMax: 6
+  openTriggerName: GatherOpen
+  closeTriggerName: GatherClose
+  openDuration: 0.8
+  damage: 25
+  radius: 6
+  arcAngle: 210
+  hitMask:
+    serializedVersion: 2
+    m_Bits: 128
+  originOverride: {fileID: 0}
+  centerOffset: {x: 0, y: 1, z: 0}
+  maxHits: 16
+  patternTimeout: 6
 --- !u!114 &2006314806887975386
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10896,7 +10974,7 @@ Transform:
   m_GameObject: {fileID: 5502004075699397412}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.085, y: 0.374, z: 0}
+  m_LocalPosition: {x: -0.085, y: 0.308, z: -0}
   m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11039,7 +11117,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: cb3597929dcbd734a848d3e2074d7aba, type: 2}
+  - {fileID: 2100000, guid: 911e81b3fc72f2643bee79126ca1c998, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
