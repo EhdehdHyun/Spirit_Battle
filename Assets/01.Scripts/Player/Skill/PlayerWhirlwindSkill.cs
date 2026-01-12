@@ -96,6 +96,13 @@ public class PlayerWhirlwindSkill : MonoBehaviour
 
         // 애니메이션 시작
         playerAnim?.PlayWhirlwind();
+        
+        //스킬3회사용 튜토리얼 
+        QuestManager.Instance.ReportProgress(
+            CompleteCondition.UseSkill,
+            0,   //TargetID
+            1
+        );
     }
 
     private bool CanCastNow()

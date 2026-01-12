@@ -13,7 +13,8 @@ public enum CompleteCondition
     TalkToNPC,     // NPC 대화
     KillMonster,   // 몬스터 처치
     UseSkill,      // 스킬 사용 (튜토리얼 핵심)
-    Investigate    // 조사/상호작용
+    Investigate,    // 조사/상호작용
+    CollectItem  //아이템 수집
 }
 
 public class QuestManager : MonoBehaviour
@@ -51,6 +52,11 @@ public class QuestManager : MonoBehaviour
             questId,
             new QuestProgress(quest.TargetCount)
         );
+        //자동완료 퀘스트
+        if (quest.CompleteCondition == "Auto")
+        {
+            CompleteQuest(questId);
+        }
         Debug.Log($"[Quest] Accepted: {quest.QuestName}");
     }
 
@@ -90,6 +96,10 @@ public class QuestManager : MonoBehaviour
             return QuestState.Active;
 
         return questStates[questId];
+    }
+    public bool HasQuest(int questId)
+    {
+        return questStates.ContainsKey(questId);
     }
 
     public IEnumerable<Quest_Data_Table> GetQuestsByType(string type)
