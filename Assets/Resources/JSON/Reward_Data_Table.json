@@ -55,6 +55,14 @@
       "ItemID": 0,
       "ItemCount": 0,
       "Notes": "회오리 스킬 3회 성공"
+    },
+    {
+      "RewardGroupID": 50000,
+      "Exp": 100,
+      "Gold": 100,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "버섯 수집하기"
     }
   ]
 }

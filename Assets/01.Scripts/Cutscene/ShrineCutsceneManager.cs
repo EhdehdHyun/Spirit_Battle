@@ -89,6 +89,19 @@ public class ShrineCutsceneManager : MonoBehaviour
         TutorialManager.Instance?.EndTutorialUI();
         isCutscenePlaying = true;
 
+        realPlayer.ResetInputState();
+        realPlayer.Lock();
+        
+        Rigidbody rb = realPlayer.GetComponent<Rigidbody>();
+
+        //1. 먼저 물리 OFF
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true;
+
+        //2. 그 다음 숨김
+        realPlayer.transform.position = new Vector3(0, -1000f, 0);
+
         cutsceneRoutine = StartCoroutine(Co_PlayCutscene());
     }
     void Update()
@@ -200,14 +213,27 @@ public class ShrineCutsceneManager : MonoBehaviour
      * ======================= */
     IEnumerator Co_PlayCutscene()
     {
+        if (isExiting)
+            yield break;
+        
         isExiting = false;
         dialogueFinished = false;
+        
+        // 실제 플레이어 숨김 (비활성화 X)
+        realPlayer.ResetInputState();
+        realPlayer.Lock(); // 입력 잠금 
+       
 
-        // 실제 플레이어 비활성화
-        realPlayer.gameObject.SetActive(false);
+        Rigidbody rb = realPlayer.GetComponent<Rigidbody>();
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = true; //컷씬 동안 물리 OFF
+        yield return new WaitForFixedUpdate();
+
+        // 카메라 / UI 전환
         playerCamera.gameObject.SetActive(false);
-
         playerUIRoot.SetActive(false);
+        
         cutsceneUIRoot.SetActive(true);
         cutsceneCamera.gameObject.SetActive(true);
 
@@ -336,58 +362,67 @@ public class ShrineCutsceneManager : MonoBehaviour
      * ======================= */
     void OnCutsceneEnd()
     {
+        if (isExiting) return;
+        isExiting = true;
+        
+        if (cutsceneRoutine != null)
+        {
+            StopCoroutine(cutsceneRoutine);
+            cutsceneRoutine = null;
+        }
         StartCoroutine(Co_ExitCutscene());
     }
 
     IEnumerator Co_ExitCutscene()
     {
-        Vector3 finalPos = cutscenePlayer.transform.position;
-        float finalY = cutscenePlayer.transform.eulerAngles.y;
+        Debug.Log("[EXIT] spawnPos = " + walkEndPoint.position);
+
+        Vector3 spawnPos = walkEndPoint.position;
+        Quaternion spawnRot =
+            Quaternion.Euler(0, playerCamera.transform.eulerAngles.y, 0);
 
         Destroy(cutscenePlayer);
         Destroy(cutsceneNpc);
 
-        // 위치/회전 먼저
-        realPlayer.transform.SetPositionAndRotation(
-            finalPos,
-            Quaternion.Euler(0, finalY, 0)
-        );
-
-        realPlayer.gameObject.SetActive(true);
-
-        Animator anim = realPlayer.GetComponent<Animator>();
-        PhysicsCharacter phys = realPlayer.GetComponent<PhysicsCharacter>();
         Rigidbody rb = realPlayer.GetComponent<Rigidbody>();
+        PhysicsCharacter phys = realPlayer.GetComponent<PhysicsCharacter>();
+        Animator anim = realPlayer.GetComponent<Animator>();
 
-        // ===== 1단계: 즉시 정지 =====
+        //PhysicsCharacter 완전 중지
+        phys.enabled = false;
+
+        rb.isKinematic = true;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = true;
 
-        anim.Rebind();
-        anim.Update(0f);
-        anim.applyRootMotion = false;
+        //Physics 캐릭터는 rb.position으로 이동
+        rb.position = spawnPos;
+        rb.rotation = spawnRot;
 
-        phys.ResetMovementState();
-        realPlayer.ResetInputState();
-
-        yield return null; //1프레임 대기
-
-        // ===== 2단계: 물리 재개 =====
         rb.isKinematic = false;
 
-        realPlayer.Unlock();
+        // 한 프레임 안정화
+        yield return new WaitForFixedUpdate();
+
+        phys.ResetMovementState();
+        phys.enabled = true;
+
+        anim.Play("Idle", 0, 0f);
+        anim.Update(0f);
 
         StartCoroutine(Co_CloseLetterbox());
 
         cutsceneUIRoot.SetActive(false);
-        playerUIRoot.SetActive(true);
-
         cutsceneCamera.gameObject.SetActive(false);
+        playerUIRoot.SetActive(true);
         playerCamera.gameObject.SetActive(true);
-        
+
+        realPlayer.Unlock();
+
         isCutscenePlaying = false;
         isExiting = false;
+
+        Debug.Log("[EXIT END] player pos = " + realPlayer.transform.position);
     }
 
     /* =======================

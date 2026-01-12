@@ -62,6 +62,12 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
         {
             Debug.Log("[ItemPickupFromTable] InventoryManager.AddItem 호출 시도");
             InventoryManager.Instance.AddItem(instance);
+            
+            QuestManager.Instance.ReportProgress(
+                CompleteCondition.CollectItem,
+                itemKey,
+                quantity
+            );
         }
         else
         {

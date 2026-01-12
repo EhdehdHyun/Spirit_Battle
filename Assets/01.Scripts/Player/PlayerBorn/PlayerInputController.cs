@@ -296,4 +296,20 @@ public class PlayerInputController : MonoBehaviour
 
         tornado?.OnSkillInput();
     }
+    public void ForceIdle()
+    {
+        // 입력 완전 초기화
+        moveRaw = Vector2.zero;
+        lookRaw = Vector2.zero;
+        moveWorld = Vector3.zero;
+
+        // 이동 입력 제거
+        character.SetMoveInput(Vector2.zero);
+
+        // 회전 기준 현재 방향으로 고정
+        targetRot = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+
+        // 락 상태 해제
+        dashLocked = false;
+    }
 }
