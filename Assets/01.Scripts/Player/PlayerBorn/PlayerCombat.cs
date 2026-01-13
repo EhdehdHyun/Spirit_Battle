@@ -93,7 +93,9 @@ public class PlayerCombat : MonoBehaviour
     {
         if (!weaponEquipped) return;
         if (playerInput != null && playerInput.isLocked) return;
+
         if (IsDashing) return;
+
 
         if (parry != null && parry.isParryStance) return;
 
@@ -129,7 +131,7 @@ public class PlayerCombat : MonoBehaviour
         // 여기서 성공 이펙트/사운드/카메라/짧은 무적 등만 처리
         sfx.PlayParrySuccess();
 
-        // 예시) 잠깐 무적
+        //잠깐 무적
         var character = GetComponent<CharacterBase>();
         if (character != null)
             character.StartInvincible(0.15f);
