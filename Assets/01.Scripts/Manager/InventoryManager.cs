@@ -425,11 +425,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // =========================================================
-    // ✅ 장비 장착/해제 (단순화)
-    //  - EquipFromInventory(fromIndex): 장비 아이템이면 무조건 0번으로 이동
-    //  - UnequipWeapon(): 0번 -> WeaponPanel(1~25)로 복귀
-    // =========================================================
     public bool EquipFromInventory(int fromSlotIndex)
     {
         var from = GetSlot(fromSlotIndex);
@@ -497,7 +492,6 @@ public class InventoryManager : MonoBehaviour
         bool ok = AddItemToRange(equipped, WeaponInvStart, WeaponInvEnd);
         if (!ok)
         {
-            // 원복(증발 방지)
             equipped.equipped = true;
             equipSlot.item = equipped;
             Debug.LogWarning("[InventoryManager] UnequipWeapon FAIL -> reverted to slot0 (WeaponPanel full?)");

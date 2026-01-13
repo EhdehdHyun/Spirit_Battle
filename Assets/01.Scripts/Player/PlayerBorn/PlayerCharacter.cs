@@ -88,4 +88,17 @@ public class PlayerCharacter : CharacterBase
         input?.Unlock();
         if (physicsChar != null) physicsChar.SetMovementLocked(false);
     }
+    public void Rest()
+    {
+        RestoreFullHp(notify: true);
+
+        var rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        Debug.Log("플레이어 휴식: 체력이 모두 회복되었습니다.");
+    }
 }
