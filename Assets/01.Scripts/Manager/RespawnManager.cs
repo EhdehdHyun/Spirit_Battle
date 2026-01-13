@@ -9,6 +9,9 @@ public class RespawnManager : MonoBehaviour
     [Header("Player Root GameObject (비워두면 Tag=Player로 탐색)")]
     [SerializeField] private GameObject playerRoot;
 
+    [Header("Tutorial Settings")]
+    [SerializeField] private bool isFirstDeath = true;
+
     public Transform CurrentRespawnPoint => respawnPoint;
 
     private IEnumerator Start()
@@ -56,12 +59,20 @@ public class RespawnManager : MonoBehaviour
         // 이동(텔레포트)
         TeleportPlayerRoot(playerRoot, respawnPoint.position);
 
-        //인벤토리 비우기
-        if (InventoryManager.Instance != null)
+        if (isFirstDeath)
         {
-            // 0번 슬롯 = EquipWeaponIndex
-            InventoryManager.Instance.ClearSlot(InventoryManager.EquipWeaponIndex);
+            //인벤토리 비우기
+            if (InventoryManager.Instance != null)
+            {
+                // 0번 슬롯 = EquipWeaponIndex
+                InventoryManager.Instance.ClearSlot(InventoryManager.EquipWeaponIndex);
+                Debug.Log("[RespawnManager] 튜토리얼 강제 사망: 무기가 제거되었습니다.");
+            }
+
+            QuestManager.Instance.AcceptQuest(40000);
+            isFirstDeath = false;
         }
+
 
         // HP 풀회복 + 입력/이동락 해제
         var baseChar = playerRoot.GetComponentInParent<CharacterBase>();
@@ -89,8 +100,6 @@ public class RespawnManager : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
-        QuestManager.Instance.AcceptQuest(40000);
     }
 
     private void TeleportPlayerRoot(GameObject root, Vector3 pos)
