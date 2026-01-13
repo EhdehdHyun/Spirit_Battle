@@ -33732,29 +33732,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4278095055462613790, guid: 7cecbe29e99bd294c9a647a40b34ef24, type: 3}
   m_PrefabInstance: {fileID: 562043767}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &562725223 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7709814281809239402, guid: b96b4eda295e4574da3faacaf1b03ebf, type: 3}
-  m_PrefabInstance: {fileID: 6321152302221660043}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &562725224 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1751543453332998831, guid: b96b4eda295e4574da3faacaf1b03ebf, type: 3}
   m_PrefabInstance: {fileID: 6321152302221660043}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &562725225
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562725223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19ce7f3e2690a6143b992aa53bba91be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  linkedMapIcon: {fileID: 1770442960}
 --- !u!1 &563711114
 GameObject:
   m_ObjectHideFlags: 0
@@ -40144,6 +40126,14 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: b3451841-799a-450d-9e13-438c13a7b796
     m_ActionName: Player/Skill01[/Keyboard/r]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: a5942d06-5a6f-4d9d-8643-56650980977d
+    m_ActionName: Player/Whirlwind[/Keyboard/e]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 610680d4-a087-4ba8-bafa-ab7f18c332dd
+    m_ActionName: Player/Tornade[/Keyboard/r]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player
@@ -40275,9 +40265,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxSource: {fileID: 49193749}
   attackHitClips:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 80502e18f68bb734b9dded7bb8d2e750, type: 3}
+  - {fileID: 8300000, guid: 80dbcb231e1605542bba4f6ba7269548, type: 3}
+  - {fileID: 8300000, guid: 3005c2aee967e624ea1e0101b4b37f32, type: 3}
   parrySuccessClip: {fileID: 8300000, guid: c5955b1ca51d47245ae5e5e10395d910, type: 3}
   volume: 0.4
 --- !u!1001 &680445110
@@ -90537,6 +90527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startDialogueID: DLG_1001
+  giveQuestID: -1
   completeQuestID: 30000
   canInteract: 1
 --- !u!136 &1587823917
@@ -100088,7 +100079,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -128498,10 +128489,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 410036009235472482, guid: b96b4eda295e4574da3faacaf1b03ebf, type: 3}
+      propertyPath: m_Radius
+      value: 0.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 410036009235472482, guid: b96b4eda295e4574da3faacaf1b03ebf, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3475223893005064110, guid: b96b4eda295e4574da3faacaf1b03ebf, type: 3}
       propertyPath: m_Layer
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 4479043487759322348, guid: b96b4eda295e4574da3faacaf1b03ebf, type: 3}
+      propertyPath: linkedMapIcon
+      value: 
+      objectReference: {fileID: 1770442960}
     - target: {fileID: 5108694373998329685, guid: b96b4eda295e4574da3faacaf1b03ebf, type: 3}
       propertyPath: m_Layer
       value: 12
@@ -128565,10 +128568,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7709814281809239402, guid: b96b4eda295e4574da3faacaf1b03ebf, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 562725225}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b96b4eda295e4574da3faacaf1b03ebf, type: 3}
 --- !u!4 &6362610991972798003
 Transform:
