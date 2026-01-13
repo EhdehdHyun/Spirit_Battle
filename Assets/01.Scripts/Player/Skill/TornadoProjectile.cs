@@ -141,13 +141,18 @@ public class TornadoProjectile : MonoBehaviour
             pullRadius,
             _overlap,
             targetMask,
-            QueryTriggerInteraction.Ignore
+            QueryTriggerInteraction.Collide
         );
-
+        
+        Debug.Log($"[Whirlwind] count = {count}");
+        
         float now = Time.time;
 
         for (int i = 0; i < count; i++)
         {
+            Debug.Log(
+                $"Hit: {_overlap[i].name}, Layer={LayerMask.LayerToName(_overlap[i].gameObject.layer)}"
+            );
             Collider col = _overlap[i];
             if (!col) continue;
 
@@ -173,9 +178,14 @@ public class TornadoProjectile : MonoBehaviour
                 {
                     _nextTickAt[id] = now + tickInterval;
 
-                    var dmg = root.GetComponentInChildren<IAoeDamageable>();
+                    var dmg = col.GetComponentInParent<IAoeDamageable>();
                     if (dmg != null)
-                        dmg.ApplyAoeDamage(damagePerTick, _owner != null ? _owner : transform);
+                    {
+                        dmg.ApplyAoeDamage(
+                            damagePerTick,
+                            _owner != null ? _owner : transform
+                        );
+                    }
                 }
             }
         }

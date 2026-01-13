@@ -302,11 +302,7 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
-    // =========================
-    // Use (소비 아이템) - ✅ 사용 시 체력 회복까지 적용
-    // 정책:
-    //  - 회복 적용 성공했을 때만 수량 감소 (체력 풀/메서드 못찾음이면 소비 안 함)
-    // =========================
+
     public bool UseItemFromSlot(int slotIndex, int amount = 1)
     {
         var slot = GetSlot(slotIndex);
@@ -321,7 +317,6 @@ public class InventoryManager : MonoBehaviour
 
         int useAmount = Mathf.Clamp(amount, 1, slot.item.quantity);
 
-        // ✅ 1) 효과 적용 먼저 (성공해야 소비)
         bool applied = TryApplyConsumableEffect(data, useAmount);
         if (!applied)
         {
@@ -329,7 +324,6 @@ public class InventoryManager : MonoBehaviour
             return false;
         }
 
-        // ✅ 2) 적용 성공 -> 수량 감소
         slot.item.quantity -= useAmount;
         if (slot.item.quantity <= 0) slot.item = null;
 
@@ -337,9 +331,6 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
-    // =========================================================
-    // ✅ 소비 아이템 효과 적용 (현재는 "회복"만)
-    // =========================================================
     private bool TryApplyConsumableEffect(Data_table data, int amount)
     {
         if (data == null || amount <= 0) return false;

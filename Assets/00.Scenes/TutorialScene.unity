@@ -4244,6 +4244,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 1243196507222386175, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (6)
@@ -4288,44 +4296,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 90925588}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &90925586 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 90925585}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &90925587 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 90925585}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &90925588
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 90925587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &91391528
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9835,6 +9815,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (5)
@@ -9879,44 +9863,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
+    - target: {fileID: 7625937913536218491, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 167550731}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &167550729 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 167550728}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &167550730 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 167550728}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &167550731
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 167550730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &168814345
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12567,6 +12527,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (12)
@@ -12611,44 +12575,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
+    - target: {fileID: 9178650119123241949, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 213438991}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &213438989 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 213438988}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &213438990 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 213438988}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &213438991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 213438990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &214002864
 GameObject:
   m_ObjectHideFlags: 0
@@ -13227,6 +13167,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 739572101608972498, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (18)
@@ -13271,44 +13219,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 230391152}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &230391150 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 230391149}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &230391151 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 230391149}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &230391152
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 230391151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &233955562
 GameObject:
   m_ObjectHideFlags: 0
@@ -14130,6 +14050,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 747502536973746300, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (27)
@@ -14174,44 +14102,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 246177289}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &246177287 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 246177286}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &246177288 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 246177286}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &246177289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 246177288}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &246897837
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14466,7 +14366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000034456058
+      value: 0.00094707846
       objectReference: {fileID: 0}
     - target: {fileID: 6736991074344240082, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchorMax.y
@@ -15077,6 +14977,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3799275590936445829, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (8)
@@ -15121,44 +15029,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 252427356}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &252427354 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 252427353}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &252427355 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 252427353}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &252427356
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 252427355}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &252727036
 GameObject:
   m_ObjectHideFlags: 0
@@ -21834,6 +21714,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3391807380859336087, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (16)
@@ -21878,44 +21766,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 359111423}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &359111421 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 359111420}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &359111422 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 359111420}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &359111423
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 359111422}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &361066930
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -22620,6 +22480,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (23)
@@ -22664,44 +22528,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
+    - target: {fileID: 7351484784972321770, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 378053505}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &378053503 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 378053502}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &378053504 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 378053502}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &378053505
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 378053504}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &382009519
 GameObject:
   m_ObjectHideFlags: 0
@@ -29613,6 +29453,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 840348318604684733, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (22)
@@ -29657,44 +29505,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 493187701}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &493187699 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 493187698}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &493187700 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 493187698}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &493187701
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 493187700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &494794719
 GameObject:
   m_ObjectHideFlags: 0
@@ -32095,10 +31915,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (17)
       objectReference: {fileID: 0}
+    - target: {fileID: 6024356245941852565, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalPosition.x
       value: 843.9969
@@ -32139,44 +31967,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 544525244}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &544525242 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 544525241}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &544525243 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 544525241}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &544525244
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 544525243}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &547692809
 GameObject:
   m_ObjectHideFlags: 0
@@ -34652,6 +34452,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 1023398920964258872, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (25)
@@ -34696,44 +34504,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 588062112}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &588062110 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 588062109}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &588062111 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 588062109}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &588062112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588062111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &588133109
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -34742,6 +34522,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4740606869365043373, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (14)
@@ -34786,44 +34574,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 588133112}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &588133110 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 588133109}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &588133111 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 588133109}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &588133112
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588133111}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &588739290
 GameObject:
   m_ObjectHideFlags: 0
@@ -36308,6 +36068,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4023375415277628832, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (13)
@@ -36352,44 +36120,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 622926897}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &622926895 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 622926894}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &622926896 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 622926894}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &622926897
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 622926896}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &624820644
 GameObject:
   m_ObjectHideFlags: 0
@@ -49384,6 +49124,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5102267953434782826, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (29)
@@ -49428,44 +49176,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 861544382}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &861544380 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 861544379}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &861544381 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 861544379}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &861544382
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 861544381}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &861953066
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -55995,6 +55715,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5023544475400303526, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (11)
@@ -56039,44 +55767,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 986684209}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &986684207 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 986684206}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &986684208 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 986684206}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &986684209
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 986684208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &987887715
 GameObject:
   m_ObjectHideFlags: 0
@@ -56763,10 +56463,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (19)
       objectReference: {fileID: 0}
+    - target: {fileID: 5450985046460838568, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalPosition.x
       value: 761.31
@@ -56807,44 +56515,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 997944981}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &997944979 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 997944978}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &997944980 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 997944978}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &997944981
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 997944980}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!114 &998581749 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2979266274630559004, guid: 94963edd97c495a4b914cac02ebed714, type: 3}
@@ -61114,6 +60794,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 2398494548136523629, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (26)
@@ -61158,44 +60846,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1078556139}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &1078556137 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 1078556136}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1078556138 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 1078556136}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1078556139
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1078556138}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &1080815474
 GameObject:
   m_ObjectHideFlags: 0
@@ -65579,10 +65239,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (9)
       objectReference: {fileID: 0}
+    - target: {fileID: 6299088535825897340, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalPosition.x
       value: 717.2
@@ -65623,44 +65291,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1172913757}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &1172913755 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 1172913754}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1172913756 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 1172913754}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1172913757
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1172913756}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &1177149111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67766,6 +67406,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (3)
@@ -67810,44 +67454,20 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
+    - target: {fileID: 9218735648796802215, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1217165482}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &1217165480 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 1217165479}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1217165481 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 1217165479}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1217165482
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1217165481}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &1218024627
 GameObject:
   m_ObjectHideFlags: 0
@@ -68724,10 +68344,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 5900404534889862968, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalPosition.x
       value: 839.4495
@@ -68768,44 +68396,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1239105664}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &1239105662 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 1239105661}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1239105663 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 1239105661}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1239105664
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1239105663}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &1239119370
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -80120,6 +79720,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 1093160769219113, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (21)
@@ -80164,44 +79772,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1448043961}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &1448043959 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 1448043958}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1448043960 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 1448043958}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1448043961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1448043960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &1453218191
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -84330,6 +83910,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 2611231219206021279, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (4)
@@ -84374,44 +83962,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1531384605}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &1531384603 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 1531384602}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1531384604 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 1531384602}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1531384605
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531384604}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &1532984395
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -94784,6 +94344,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 2928983999800384523, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (10)
@@ -94798,7 +94366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 882.18976
+      value: 451.95
       objectReference: {fileID: 0}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalRotation.w
@@ -94828,44 +94396,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1745129243}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &1745129241 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 1745129240}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1745129242 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 1745129240}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1745129243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1745129242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &1745650782
 GameObject:
   m_ObjectHideFlags: 0
@@ -95538,10 +95078,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (20)
       objectReference: {fileID: 0}
+    - target: {fileID: 6345976939166984728, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
     - target: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_LocalPosition.x
       value: 702.51
@@ -95582,44 +95130,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1757127595}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &1757127593 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 1757127592}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1757127594 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 1757127592}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1757127595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1757127594}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &1757949851
 GameObject:
   m_ObjectHideFlags: 0
@@ -100625,6 +100145,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 1189234527910704430, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (28)
@@ -100669,44 +100197,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1865861961}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &1865861959 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 1865861958}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1865861960 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 1865861958}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1865861961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1865861960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &1866513516
 GameObject:
   m_ObjectHideFlags: 0
@@ -106185,6 +105685,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 828178906579459994, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (15)
@@ -106229,44 +105737,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1971874111}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &1971874109 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 1971874108}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1971874110 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 1971874108}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1971874111
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1971874110}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1001 &1972028761
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -110661,6 +110141,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 5604953913120567212}
     m_Modifications:
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: worldArrow
+      value: 
+      objectReference: {fileID: 1801946940}
+    - target: {fileID: 3572661245035889626, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
+      propertyPath: onClearMessage
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
       propertyPath: m_Name
       value: Goblin_Normal (24)
@@ -110705,44 +110193,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7704699259523899462, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      propertyPath: damage
-      value: 6
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2058919492}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
 --- !u!4 &2058919490 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6620239039154712948, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
   m_PrefabInstance: {fileID: 2058919489}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2058919491 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5444808687753951924, guid: 871a6abc05cc7654a9e5e0c772f48e94, type: 3}
-  m_PrefabInstance: {fileID: 2058919489}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &2058919492
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2058919491}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d281769dd7b54321a27bde9a083e707, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  blocker: {fileID: 0}
-  worldArrow: {fileID: 1801946940}
-  nextEnemyTarget: {fileID: 0}
-  onClearMessage: "\uC55E\uC73C\uB85C \uC774\uB3D9\uD558\uC138\uC694."
 --- !u!1 &2059782795
 GameObject:
   m_ObjectHideFlags: 0
@@ -116395,7 +115855,10 @@ PrefabInstance:
       propertyPath: onClearMessage
       value: 
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1907039993070950835, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+    - {fileID: 4002564724703150105, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+    - {fileID: 2733362831555342676, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
     m_RemovedGameObjects:
     - {fileID: 4827699236404599712, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
     - {fileID: 420890796695206574, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
