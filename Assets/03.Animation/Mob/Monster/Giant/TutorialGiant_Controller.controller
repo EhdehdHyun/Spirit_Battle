@@ -414,7 +414,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 1
+  m_ExitTime: 0.95
   m_HasExitTime: 0
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -449,10 +449,7 @@ AnimatorStateTransition:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: 
-  m_Conditions:
-  - m_ConditionMode: 1
-    m_ConditionEvent: 3Phase_2
-    m_EventTreshold: 0
+  m_Conditions: []
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -47480812108159891}
   m_Solo: 0
@@ -461,7 +458,7 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 1
+  m_ExitTime: 0.97
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
@@ -604,12 +601,6 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: 3Phase_2
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
   - m_Name: Phase3Finale_To3
     m_Type: 9
     m_DefaultFloat: 0
@@ -673,10 +664,10 @@ AnimatorStateMachine:
     m_Position: {x: 230, y: -540, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -47480812108159891}
-    m_Position: {x: 340, y: -490, z: 0}
+    m_Position: {x: 340, y: -480, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 3174454386196573473}
-    m_Position: {x: 450, y: -440, z: 0}
+    m_Position: {x: 450, y: -420, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4581206308965023946}
     m_Position: {x: 510, y: -30, z: 0}

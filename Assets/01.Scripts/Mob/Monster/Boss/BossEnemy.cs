@@ -34,6 +34,10 @@ public class BossEnemy : EnemyBase
     [SerializeField] private bool isTutorialBoss = false;
     [SerializeField] private string phase3FinaleTriggerName = "Phase3Finale";
 
+    [Header("튜토보스 사망 연출 후 정리")]
+    [SerializeField] private float tutorialBossDestroyDelayAfterKill = 3f;
+    private Coroutine tutorialBossDestroyCo;
+
     [Header("3페이즈 연출 길게 (3Phase_2 루프 후 3Phase_3로)")]
     [Tooltip("3Phase_2를 몇 초 동안 반복할지(실시간). 0이면 즉시 트리거.")]
     [SerializeField] private float phase3Phase2LoopSeconds = 3f;
@@ -87,7 +91,7 @@ public class BossEnemy : EnemyBase
         if (coreObject != null)
             coreObject.SetActive(false);
 
-        // 보스 attackRange 동기화(원하면 유지)
+        // 보스 attackRange 동기화
         if (meleeAttack != null)
             attackRange = meleeAttack.hitRadius;
     }
@@ -271,7 +275,6 @@ public class BossEnemy : EnemyBase
 
     public void Anim_Phase3Finale_KillPlayer()
     {
-        Debug.Log("[BossEnemy] Anim_Phase3Finale_KillPlayer CALLED", this);
 
         if (!phase3FinaleStarted) return;
         if (phase3FinaleKillDone) return;
@@ -291,5 +294,22 @@ public class BossEnemy : EnemyBase
         );
 
         player.TakeDamage(info);
+
+        if (isTutorialBoss && tutorialBossDestroyCo == null)
+        {
+            tutorialBossDestroyCo = StartCoroutine(CoDestroyTutorialBossAfterKill());
+        }
+    }
+
+    private IEnumerator CoDestroyTutorialBossAfterKill()
+    {
+        // timescale 0 이어도 진행되게 realtime
+        yield return new WaitForSecondsRealtime(Mathf.Max(0f, tutorialBossDestroyDelayAfterKill));
+
+        // 혹시 이미 죽었으면 그냥 종료
+        if (this == null || gameObject == null) yield break;
+
+        Destroy(gameObject);
+        tutorialBossDestroyCo = null;
     }
 }
