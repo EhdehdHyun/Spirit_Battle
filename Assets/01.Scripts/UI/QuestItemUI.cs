@@ -24,6 +24,7 @@ public class QuestItemUI : MonoBehaviour
         SetSelected(true);
 
         QuestUIController.Instance.ShowQuestDetail(questData);
+        QuestManager.Instance.SetTrackedQuest(questData.QuestID);
     }
     void SetSelected(bool selected)
     {

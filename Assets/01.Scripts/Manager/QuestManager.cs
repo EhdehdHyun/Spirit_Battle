@@ -24,7 +24,11 @@ public class QuestManager : MonoBehaviour
     private Dictionary<int, QuestState> questStates = new();
     private Dictionary<int, Quest_Data_Table> questTable;
     private Dictionary<int, QuestProgress> questProgress = new();
-
+    
+    [SerializeField] private QuestTrackerUI trackerUI;  
+    
+    private int trackedQuestId = -1;
+    
     void Awake()
     {
         Instance = this;
@@ -48,17 +52,43 @@ public class QuestManager : MonoBehaviour
             questStates.Add(questId, QuestState.Active);
 
         var quest = questTable[questId];
+
         questProgress.Add(
             questId,
             new QuestProgress(quest.TargetCount)
         );
-        //자동완료 퀘스트
-        if (quest.CompleteCondition == "Auto")
+
+        trackedQuestId = questId;
+
+        if (!TryGetCondition(quest.CompleteCondition, out var condition))
+        {
+            Debug.LogError($"Invalid CompleteCondition: {quest.CompleteCondition}");
+            return;
+        }
+
+        if (trackerUI != null)
+        {
+            if (ShouldShowProgress(condition))
+            {
+                var progress = questProgress[questId];
+                trackerUI.gameObject.SetActive(true);
+                trackerUI.SetProgress(progress.Current, progress.Target); // ⭐ 핵심
+            }
+            else
+            {
+                trackerUI.gameObject.SetActive(false);
+            }
+        }
+
+        if (condition == CompleteCondition.Auto)
         {
             CompleteQuest(questId);
         }
+
         Debug.Log($"[Quest] Accepted: {quest.QuestName}");
     }
+
+
 
     //퀘스트 완료
     public void CompleteQuest(int questId)
@@ -117,6 +147,13 @@ public class QuestManager : MonoBehaviour
         int amount = 1
     )
     {
+        // 진행도 HUD 대상이 아니면 아예 무시
+        if (!ShouldShowProgress(condition))
+            return;
+        
+        if (trackedQuestId == -1)
+            return;
+
         foreach (var questId in questStates.Keys.ToList())
         {
             if (questStates[questId] != QuestState.Active)
@@ -124,18 +161,31 @@ public class QuestManager : MonoBehaviour
 
             var quest = questTable[questId];
 
-            // 조건 타입 불일치
             if (quest.CompleteCondition != condition.ToString())
                 continue;
 
-            // 타겟 불일치
             if (quest.TargetID != targetId)
                 continue;
 
             var progress = questProgress[questId];
             progress.Current += amount;
+            
+            Debug.Log(
+                $"[QuestProgress] questId={questId}, " +
+                $"questName={quest.QuestName}, " +
+                $"condition={quest.CompleteCondition}, " +
+                $"current={progress.Current}/{progress.Target}, " +
+                $"trackedQuestId={trackedQuestId}"
+            );
+            
+            var trackedQuest = questTable[trackedQuestId];
+            if (!TryGetCondition(trackedQuest.CompleteCondition, out var trackedCondition))
+                continue;
 
-            Debug.Log($"[Quest] {quest.QuestName} progress: {progress.Current}/{progress.Target}");
+            if (questId == trackedQuestId && condition == trackedCondition)
+            {
+                trackerUI.SetProgress(progress.Current, progress.Target);
+            }
 
             if (progress.IsComplete)
             {
@@ -143,32 +193,50 @@ public class QuestManager : MonoBehaviour
             }
         }
     }
+    public void SetTrackedQuest(int questId)
+    {
+        if (!questStates.ContainsKey(questId)) return;
+        trackedQuestId = questId;
+
+        var quest = questTable[questId];
+        if (!TryGetCondition(quest.CompleteCondition, out var cond))
+            return;
+
+        if (trackerUI == null) return;
+
+        if (!ShouldShowProgress(cond))
+        {
+            trackerUI.gameObject.SetActive(false);
+            return;
+        }
+
+        trackerUI.gameObject.SetActive(true);
+
+        var p = questProgress[questId];
+        trackerUI.SetProgress(p.Current, p.Target);
+
+        Debug.Log($"[Quest] 퀘스트 Tracke변경-> {questId} ({quest.QuestName})");
+    }
     public void OnMonsterKilled(int monsterId)
     {
-        Debug.Log($"[QuestManager] OnMonsterKilled called, monsterId={monsterId}");
-        foreach (var questId in questStates.Keys.ToList())
-        {
-            if (questStates[questId] != QuestState.Active)
-                continue;
+        ReportProgress(CompleteCondition.KillMonster, monsterId, 1);
+    }
+    private bool ShouldShowProgress(CompleteCondition condition)
+    {
+        return condition == CompleteCondition.KillMonster
+               || condition == CompleteCondition.CollectItem
+               || condition == CompleteCondition.UseSkill;
+    }
+    private bool TryGetCondition(string raw, out CompleteCondition condition)
+    {
+        condition = CompleteCondition.Auto;
 
-            var quest = questTable[questId];
+        if (string.IsNullOrEmpty(raw))
+            return false;
 
-            if (quest.CompleteCondition != "KillMonster")
-                continue;
+        string normalized = raw.Trim().TrimEnd('.');
 
-            if (quest.TargetID != monsterId)
-                continue;
-
-            var progress = questProgress[questId];
-            progress.Current++;
-
-            Debug.Log($"[Quest] {quest.QuestName} {progress.Current}/{progress.Target}");
-
-            if (progress.IsComplete)
-            {
-                CompleteQuest(questId);
-            }
-        }
+        return System.Enum.TryParse(normalized, out condition);
     }
 
 }

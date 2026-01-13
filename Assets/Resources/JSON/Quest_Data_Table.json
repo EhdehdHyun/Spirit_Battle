@@ -7,7 +7,7 @@
       "Description": "폭풍에 휩쓸려 난파된 당신은 정체불명의 섬에서 눈을 뜬다. 무슨 일이 있던 걸까?",
       "NPC": 100000,
       "StartCondition": "Auto",
-      "CompleteCondition": "Auto.",
+      "CompleteCondition": "Auto",
       "TargetID": 3000,
       "TargetCount": 1,
       "ObjectiveText": "눈을 뜨다.",
@@ -91,7 +91,8 @@
       "TargetID": 2002,
       "TargetCount": 3,
       "ObjectiveText": "주변에 자원을 재취해보자",
-      "RewardGroupID": 50000
+      "RewardGroupID": 50000,
+      "NextQuest": 50001
     }
   ]
 }
