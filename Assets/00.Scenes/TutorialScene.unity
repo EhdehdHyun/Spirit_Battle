@@ -14366,7 +14366,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00002883082
+      value: 0.00009626781
       objectReference: {fileID: 0}
     - target: {fileID: 6736991074344240082, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchorMax.y
@@ -29637,6 +29637,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 2193856122507231066, guid: 6be9c560f6de20841925e69349e9904d, type: 3}
+    - {fileID: 6644629717521198606, guid: 6be9c560f6de20841925e69349e9904d, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6be9c560f6de20841925e69349e9904d, type: 3}
@@ -39203,9 +39204,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxSource: {fileID: 49193749}
   attackHitClips:
-  - {fileID: 8300000, guid: 80502e18f68bb734b9dded7bb8d2e750, type: 3}
-  - {fileID: 8300000, guid: fc2e32796ec46dc49a895cd03564a3e3, type: 3}
-  - {fileID: 8300000, guid: 3005c2aee967e624ea1e0101b4b37f32, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   parrySuccessClip: {fileID: 8300000, guid: c5955b1ca51d47245ae5e5e10395d910, type: 3}
   volume: 0.4
 --- !u!114 &680367637
