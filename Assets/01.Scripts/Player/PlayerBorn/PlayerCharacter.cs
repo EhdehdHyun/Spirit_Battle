@@ -36,6 +36,10 @@ public class PlayerCharacter : CharacterBase
 
     protected override void OnDie(DamageInfo info)
     {
+        //게임오버 됐을 때 게임오버 화면 제외 모든 UI 숨기는 기능
+        UIVisibilityManager.Instance?.HideAllExceptGameOver();
+
+
         // 입력 / 이동 락, 죽음 애니메이션
         input?.Lock();
         physicsChar.SetMovementLocked(true);

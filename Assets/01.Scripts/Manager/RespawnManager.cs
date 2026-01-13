@@ -51,11 +51,7 @@ public class RespawnManager : MonoBehaviour
             return;
         }
 
-        // 보스 HP바 등 끄기
-        if (BossUIStatus.Instance != null)
-        {
-            BossUIStatus.Instance.SetVisible(false);
-        }
+        UIVisibilityManager.Instance?.RestoreAll();
 
         // 이동(텔레포트)
         TeleportPlayerRoot(playerRoot, respawnPoint.position);
@@ -93,7 +89,7 @@ public class RespawnManager : MonoBehaviour
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        
+
         QuestManager.Instance.AcceptQuest(40000);
     }
 
