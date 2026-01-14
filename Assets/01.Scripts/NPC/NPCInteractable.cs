@@ -52,18 +52,26 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     private void OnDialogueEnd()
     {
         isTalking = false;
+
+        var qm = QuestManager.Instance;
+        if (qm == null) return;
+
+        //퀘스트 보고(완료) 먼저 처리
+        if (completeQuestID > 0 &&
+            qm.GetQuestState(completeQuestID) == QuestState.Active &&
+            qm.CanTurnIn(completeQuestID, npcID))
         {
-            isTalking = false;
+            qm.CompleteQuest(completeQuestID);
+            Debug.Log($"퀘스트 보고 완료: {completeQuestID}");
+            return; // 보고 완료가 우선
+        }
 
-            var qm = QuestManager.Instance;
-            if (qm == null) return;
-
-            //퀘스트 지급 (Side)
-            if (giveQuestID > 0 && !qm.HasQuest(giveQuestID))
-            {
-                qm.AcceptQuest(giveQuestID, npcID);
-                Debug.Log($"퀘스트 제공: {giveQuestID}");
-            }
+        //퀘스트 지급 (completeQuestID와 무관)
+        if (giveQuestID > 0 && !qm.HasQuest(giveQuestID))
+        {
+            qm.AcceptQuest(giveQuestID, npcID);
+            Debug.Log($"퀘스트 제공: {giveQuestID}");
         }
     }
+
 }

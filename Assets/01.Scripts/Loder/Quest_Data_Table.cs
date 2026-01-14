@@ -64,6 +64,11 @@ public class Quest_Data_Table
     /// Quest Purpose
     /// </summary>
     public string ObjectiveText; 
+    
+    /// <summary>
+    /// NPC에게 보고해야 완료
+    /// </summary>
+    public bool RequireTurnIn;
 }
 
 public class Quest_Data_Loader

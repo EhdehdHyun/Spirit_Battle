@@ -88,11 +88,56 @@
       "NPC": 100003,
       "StartCondition": "TalkToNPC",
       "CompleteCondition": "CollectItem",
+      "RequireTurnIn": true,
       "TargetID": 2002,
       "TargetCount": 3,
       "ObjectiveText": "주변에 자원을 재취해보자",
       "RewardGroupID": 50000,
       "NextQuest": 50001
+    },
+    {
+      "QuestID": 50001,
+      "QuestType": "Side",
+      "QuestName": "마을의 위협",
+      "Description": "최근들어 늑대가 난폭해지면서 식량이 줄고 있다. 마을의 골칫거리인 늑대를 처치해주자. ",
+      "NPC": 100003,
+      "StartCondition": "TalkToNPC",
+      "CompleteCondition": "KillMonster",
+      "RequireTurnIn": true,
+      "TargetID": 10002,
+      "TargetCount": 2,
+      "ObjectiveText": "마을 주민을 도와서 늑대를 처치하자",
+      "RewardGroupID": 50001,
+      "NextQuest": 50002
+    },
+    {
+      "QuestID": 50002,
+      "QuestType": "Side",
+      "QuestName": "상처 입은 사냥꾼",
+      "Description": "최근 사냥꾼 한명이 산으로 갔다가 며칠동안 오지 않아서 몬스터에게 피해를 입었을거라 생각이 된다. 산으로 가서 사냥꾼을 찾아서 체력물약을 직접 건네주어야 할것 같다.",
+      "NPC": 100003,
+      "StartCondition": "TalkToNPC",
+      "CompleteCondition": "CollectItem",
+      "RequireTurnIn": true,
+      "TargetID": 1001,
+      "TargetCount": 2,
+      "ObjectiveText": "사냥꾼에게 체력 물약을 건네주자",
+      "RewardGroupID": 50002,
+      "NextQuest": 50003
+    },
+    {
+      "QuestID": 50003,
+      "QuestType": "Side",
+      "QuestName": "숲의 경고",
+      "Description": "이 섬에 난파된 이후로 마을 주민들에 의해 차차 적응이 되어가고 있다. 하지만 이것은 빙산의 일각이었을뿐, 앞으로 어떤일이 벌어질지 주인공은 모르고 있다. ",
+      "NPC": 100003,
+      "StartCondition": "TalkToNPC",
+      "CompleteCondition": "Investigate",
+      "RequireTurnIn": true,
+      "TargetID": 6001,
+      "TargetCount": 1,
+      "ObjectiveText": "이 섬은 내가 예상했던 것보다 훨씬 넓다.",
+      "RewardGroupID": 50003
     }
   ]
 }

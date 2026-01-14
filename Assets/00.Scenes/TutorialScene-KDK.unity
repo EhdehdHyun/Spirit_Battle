@@ -108948,7 +108948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startDialogueID: DLG_2000
   giveQuestID: 50000
-  completeQuestID: 0
+  completeQuestID: 50000
   canInteract: 1
 --- !u!114 &1920895749
 MonoBehaviour:
@@ -121884,7 +121884,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0001000169
+      value: 0.0004122105
       objectReference: {fileID: 0}
     - target: {fileID: 6139193805597264252, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_SortingOrder

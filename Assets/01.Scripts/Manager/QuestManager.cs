@@ -178,7 +178,14 @@ public class QuestManager : MonoBehaviour
 
             if (progress.IsComplete)
             {
-                CompleteQuest(questId);
+                if (!quest.RequireTurnIn)
+                {
+                    CompleteQuest(questId);
+                }
+                else
+                {
+                    Debug.Log($"[Quest] 수집 완료, NPC에게 보고 필요");
+                }
             }
         }
     }
@@ -205,6 +212,20 @@ public class QuestManager : MonoBehaviour
         trackerUI.SetProgress(p.Current, p.Target);
 
         Debug.Log($"[Quest] 퀘스트 Tracke변경-> {questId} ({quest.QuestName})");
+    }
+    public bool CanTurnIn(int questId, int npcID)
+    {
+        if (!questStates.ContainsKey(questId)) return false;
+        if (questStates[questId] != QuestState.Active) return false;
+
+        var quest = questTable[questId];
+
+        // 이 NPC가 보고 NPC인지 확인
+        if (quest.NPC != npcID) return false;
+
+        // 진행도 완료 여부 확인
+        if (!questProgress.TryGetValue(questId, out var progress)) return false;
+        return progress.IsComplete;
     }
     public void OnMonsterKilled(int monsterId)
     {
