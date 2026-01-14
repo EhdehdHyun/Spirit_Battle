@@ -115,7 +115,6 @@ public class PlayerParry : MonoBehaviour
         bestTransform = null;
 
         int count = Physics.OverlapSphereNonAlloc(origin.position, range, hits, parryableMask, QueryTriggerInteraction.Collide);
-        Debug.Log($"[PLY] Overlap count = {count}", this);
         if (count <= 0) return null;
 
         IParryReceiver best = null;
