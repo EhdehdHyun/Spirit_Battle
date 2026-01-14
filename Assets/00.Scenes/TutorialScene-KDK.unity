@@ -90526,7 +90526,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 677894c5557bd4808bf2d566ba38c2de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  questDialogues: []
+  questDialogues:
+  - questID: 30001
+    startDialogueID: 
+  - questID: 30002
+    startDialogueID: 
+  - questID: 30003
+    startDialogueID: 
+  - questID: 30004
+    startDialogueID: 
+  - questID: 30005
+    startDialogueID: 
+  - questID: 30006
+    startDialogueID: 
+  - questID: 30007
+    startDialogueID: 
   startDialogueID: DLG_1001
   giveQuestID: -1
   completeQuestID: 30000
@@ -90584,7 +90598,7 @@ Transform:
   m_GameObject: {fileID: 1587823914}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 369.3, y: 5.35, z: 338.96}
+  m_LocalPosition: {x: 116, y: 26.74, z: 33.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -100481,7 +100495,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   questDialogues: []
-  startDialogueID: DLG_2050
+  startDialogueID: DLG_10050
   giveQuestID: -1
   completeQuestID: -1
   canInteract: 1
@@ -109499,13 +109513,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questDialogues:
   - questID: 50000
-    startDialogueID: DLG_2000
+    startDialogueID: DLG_10000
   - questID: 50001
-    startDialogueID: DLG_2010
+    startDialogueID: DLG_10010
   - questID: 50002
-    startDialogueID: DLG_2020
+    startDialogueID: DLG_10020
   - questID: 50003
-    startDialogueID: DLG_2030
+    startDialogueID: DLG_10030
   startDialogueID: DLG_2000
   giveQuestID: 50000
   completeQuestID: -1
@@ -122638,7 +122652,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00031020833
+      value: 0.00003579908
       objectReference: {fileID: 0}
     - target: {fileID: 6139193805597264252, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_SortingOrder

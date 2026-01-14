@@ -65,6 +65,70 @@
       "IsChoice": false
     },
     {
+      "DialogueID": "DLG_1031",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "정신이 드는가. 다행이군..",
+      "NextID": "DLG_1033",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1033",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그래, 자네는 패배했네. 그리고 이곳으로 돌아왔지.",
+      "NextID": "DLG_1034",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1034",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "섬의 균형을 좀먹는 오염의 근원… ‘정화되지 못한 핵’이었지",
+      "NextID": "DLG_1035",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1035",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "보통 인간이라면 그 자리에서 정신조차 남기지 못했을 걸세",
+      "NextID": "DLG_1037",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1037",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그래, 자네는 패배했네. 그리고 이곳으로 돌아왔지.",
+      "NextID": "DLG_1037",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1037",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그래, 자네는 패배했네. 그리고 이곳으로 돌아왔지.",
+      "NextID": "DLG_1038",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1038",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그래, 자네는 패배했네. 그리고 이곳으로 돌아왔지.",
+      "NextID": "DLG_1039",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1039",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그래, 자네는 패배했네. 그리고 이곳으로 돌아왔지.",
+      "NextID": "DLG_1040",
+      "IsChoice": false
+    },
+    {
       "DialogueID": "DLG_SHRINE_01",
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
@@ -89,46 +153,46 @@
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2000",
+      "DialogueID": "DLG_10000",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "어유~~~!! 요즘 요리에 맛들렸는데, 재료 구하기가 어렵네",
-      "NextID": "DLG_2001",
+      "NextID": "DLG_10001",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2001",
+      "DialogueID": "DLG_10001",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "너가 그 난파되서 왔다던 그 소녀인가?",
-      "NextID": "DLG_2002",
+      "NextID": "DLG_10002",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2002",
+      "DialogueID": "DLG_10002",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "흠흠.. 보다시피 내 몸이 이래서, 버섯 3개만 구해줄 수 있겠어?",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2010",
-      "SpeakerID": "100003",
+      "DialogueID": "DLG_10010",
+      "SpeakerID": "10003",
       "SpeakerName": "정령",
       "Text": "그런데 말이야… 요즘 숲 근처가 시끄러워졌어.",
-      "NextID": "DLG_2011",
+      "NextID": "DLG_10011",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2011",
+      "DialogueID": "DLG_10011",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "원래 안 그랬던 늑대들이 더 흉폭해지고 사나워져서 주민들이 모두 겁에 먹었더라고..",
-      "NextID":"DLG_2012",
+      "NextID":"DLG_10012",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2012",
+      "DialogueID": "DLG_10012",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "미안하지만 나를 도와서 늑대들을 더 처리해줄 수 있겠어?",
@@ -136,47 +200,47 @@
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2020",
+      "DialogueID": "DLG_10020",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "흠.. 올 때가 됐는데 왜 안 오지??",
-      "NextID": "DLG_2021",
+      "NextID": "DLG_10021",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2021",
+      "DialogueID": "DLG_10021",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "안녕 모험가 또 보네~ 그나저나 정말 큰일이야.",
-      "NextID": "DLG_2022",
+      "NextID": "DLG_10022",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2022",
+      "DialogueID": "DLG_10022",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "요즘 몬스터들이 난폭해져서 무슨일이 생긴건가?",
-      "NextID": "DLG_2023",
+      "NextID": "DLG_10023",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2023",
+      "DialogueID": "DLG_10023",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "최근에 산으로 가서 사냥을 하겠다던 주민 한명이 돌아오지 않고있어.",
-      "NextID": "DLG_2024",
+      "NextID": "DLG_10024",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2024",
+      "DialogueID": "DLG_10024",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "그에게 무슨일이 생긴건지 한번 봐야겠는걸. 나 대신 체력물약을 들고 가줄 수 있겠어?",
-      "NextID": "DLG_2025",
+      "NextID": "DLG_10025",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2025",
+      "DialogueID": "DLG_10025",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "가는길에 몬스터가 있을 수 있으니 몸조심 하고, 이번에도 부탁할게~",
@@ -184,39 +248,39 @@
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2030",
+      "DialogueID": "DLG_10030",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "너 덕분에 섬이 다시 평화를 찾고있어.",
-      "NextID": "DLG_2031",
+      "NextID": "DLG_10031",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2031",
+      "DialogueID": "DLG_10031",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "아직 할 일이 산더미처럼 쌓여 있지만..",
-      "NextID": "DLG_2032",
+      "NextID": "DLG_10032",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2032",
+      "DialogueID": "DLG_10032",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "다른곳에서도 널 필요로 하는 곳이 많이 있을거야.",
-      "NextID": "DLG_2033",
+      "NextID": "DLG_10033",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2033",
+      "DialogueID": "DLG_10033",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "너는 특별하니까 어디서든 잘 해낼 수 있을거야.",
-      "NextID": "DLG_2034",
+      "NextID": "DLG_10034",
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2034",
+      "DialogueID": "DLG_10034",
       "SpeakerID": "100003",
       "SpeakerName": "정령",
       "Text": "내가 지도를 더 넓혀줄테니 다른곳도 다 돌아다니면서 모험을 즐겨봐.",
@@ -224,7 +288,7 @@
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2050",
+      "DialogueID": "DLG_10050",
       "SpeakerID": "100004",
       "SpeakerName": "사냥꾼",
       "Text": "윽.. 몬스터 때문에 움직이질 못했는데.. 자넨 누구인가? 처음 보는 얼굴이군",
@@ -232,7 +296,7 @@
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2051",
+      "DialogueID": "DLG_10051",
       "SpeakerID": "100004",
       "SpeakerName": "사냥꾼",
       "Text": "그렇군.. 내가 없는 사이에 자네가 여기에 발을 디뎠구만..",
@@ -240,7 +304,7 @@
       "IsChoice": false
     },
     {
-      "DialogueID": "DLG_2052",
+      "DialogueID": "DLG_10052",
       "SpeakerID": "100004",
       "SpeakerName": "사냥꾼",
       "Text": "어쨌든 이렇게 나를 위해서 체력 물약을 갖다 주다니, 고마울 따름이야.. 어쨌든 자네 덕분에 몸이 괜찮아 졌으니 얼른 마을로 돌아가야겠어.",
