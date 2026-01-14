@@ -5543,6 +5543,8 @@ GameObject:
   - component: {fileID: 3511104567439868573}
   - component: {fileID: 4012939175973782897}
   - component: {fileID: 1940796973434554225}
+  - component: {fileID: 6604222195718906217}
+  - component: {fileID: 1704864622966005654}
   - component: {fileID: 2006314806887975386}
   - component: {fileID: 2590907532594969573}
   - component: {fileID: 4861395695151573165}
@@ -5595,7 +5597,7 @@ MonoBehaviour:
   heavyHit: 25
   detectRange: 16.9
   attackRange: 8.94
-  useBreakSystem: 0
+  useBreakSystem: 1
   breakHitThreshold: 2
   breakGroggyDuration: 5
   groggyExtraDamageRatio: 5
@@ -5613,8 +5615,9 @@ MonoBehaviour:
   bossBreakGroggyDuration: 5
   bossGroggyExtraDamageRatio: 0.2
   bossBreakGroggyTriggerName: BreakGroggy
-  isTutorialBoss: 1
+  isTutorialBoss: 0
   phase3FinaleTriggerName: Phase3Finale
+  tutorialBossDestroyDelayAfterKill: 3
   phase3Phase2LoopSeconds: 5
   phase3Phase2To3TriggerName: Phase3Finale_To3
   phase3State2Name: 3Phase_2
@@ -5640,6 +5643,7 @@ MonoBehaviour:
   patterns:
   - {fileID: 4012939175973782897}
   - {fileID: 1940796973434554225}
+  - {fileID: 6604222195718906217}
 --- !u!114 &4012939175973782897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5716,6 +5720,79 @@ MonoBehaviour:
   centerOffset: {x: 0, y: 1, z: 0}
   maxHits: 16
   patternTimeout: 6
+--- !u!114 &6604222195718906217
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3602687304791287564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b3d0238c2f0ed340bc7d3fec6e67965, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patterName: Pattern
+  cooldown: 5
+  minUseDistance: 0
+  maxUseDistance: 0
+  minPhase: 1
+  maxPhase: 99
+  cooldownMin: 3
+  cooldownMax: 6
+  slamTriggerName: SlamUppercut
+  uppercutTriggerName: Uppercut
+  uppercutDelay: 0
+  telegraphObject: {fileID: 0}
+  centerOverride: {fileID: 0}
+  slamRadius: 8
+  slamDamage: 20
+  slamHitMask:
+    serializedVersion: 2
+    m_Bits: 128
+  tornadoPrefab: {fileID: 5365367604049353390, guid: 1da34fc41fed3554282727742fcb089d, type: 3}
+  tornadoSpawn: {fileID: 5353177757156421738}
+  tornadoDamage: 25
+  tornadoHitMask:
+    serializedVersion: 2
+    m_Bits: 128
+  tornadoSpeed: 10
+  tornadoDistance: 6
+  patternTimeout: 8
+--- !u!114 &1704864622966005654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3602687304791287564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2de746456d0f8bb42bf8d718a75fa2b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  patterName: Pattern
+  cooldown: 5
+  minUseDistance: 0
+  maxUseDistance: 0
+  minPhase: 1
+  maxPhase: 99
+  cooldownMin: 3
+  cooldownMax: 6
+  slam2TriggerName: SlamX2
+  telegraphObject: {fileID: 0}
+  centerOverride: {fileID: 0}
+  slam1Damage: 20
+  slam1Radius: 8
+  slam1HitMask:
+    serializedVersion: 2
+    m_Bits: 0
+  slam2Damage: 25
+  slam2Radius: 9
+  slam2HitMask:
+    serializedVersion: 2
+    m_Bits: 0
+  patternTimeout: 10
 --- !u!114 &2006314806887975386
 MonoBehaviour:
   m_ObjectHideFlags: 0
