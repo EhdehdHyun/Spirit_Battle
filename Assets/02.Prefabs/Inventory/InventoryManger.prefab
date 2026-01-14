@@ -53,9 +53,9 @@ MonoBehaviour:
   - itemKey: 1001
     prefab: {fileID: 7709453454447007937, guid: 08993e4c20abc154981ade8797b99c37, type: 3}
   - itemKey: 2001
-    prefab: {fileID: 6618062954455593845, guid: 4b4f7e8e5f578f143a5db0e017c4971b, type: 3}
+    prefab: {fileID: 5530206894091626544, guid: 6b815e2496648d24a8022c7fd0d05ea4, type: 3}
   - itemKey: 2002
-    prefab: {fileID: 723085354614441825, guid: 2d1fa913456bf8643828393ff146a5d9, type: 3}
+    prefab: {fileID: 7678246143749016240, guid: 492571c390f7d614dafe5f7ec558469c, type: 3}
   - itemKey: 2003
     prefab: {fileID: 2136707441161788966, guid: f2065d3b29ef6fa4295cb878affb9109, type: 3}
   - itemKey: 2004
@@ -64,6 +64,8 @@ MonoBehaviour:
     prefab: {fileID: 3580968226293983027, guid: afccde2187f35bc4aa5e8271050b4de7, type: 3}
   defaultDropPrefab: {fileID: 2913128437352123816, guid: 75337b806e466e2449091c86a351af82, type: 3}
   WeaponEquipStartIndex: 0
+  healConsumables: []
+  playerTag: Player
 --- !u!114 &3464042237868613026
 MonoBehaviour:
   m_ObjectHideFlags: 0
