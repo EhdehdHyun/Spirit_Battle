@@ -152,6 +152,19 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
+--- !u!114 &-6128966406063078005
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9d29a35995989540a5c85cf72cf112c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  particleName: StunEffect
 --- !u!1102 &-6029893466284566181
 AnimatorState:
   serializedVersion: 6
@@ -926,7 +939,8 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -1244684219117641352}
-  m_StateMachineBehaviours: []
+  m_StateMachineBehaviours:
+  - {fileID: -6128966406063078005}
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1
@@ -935,7 +949,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: d5720149c2f7abf4f876b2623c6c7e7d, type: 2}
+  m_Motion: {fileID: 7400000, guid: 880faada1e597694c90ce0a00e0e079f, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

@@ -31,7 +31,8 @@ public class StunEffectState : StateMachineBehaviour
     {
         if (stunParticle != null)
         {
-            stunParticle.Stop();
+            stunParticle.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+
         }
     }
 }
