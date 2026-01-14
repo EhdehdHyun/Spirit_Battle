@@ -109,6 +109,4 @@ public class NPCInteractable : MonoBehaviour, IInteractable
             Debug.Log($"퀘스트 제공: {giveQuestID}");
         }
     }
-
-
 }

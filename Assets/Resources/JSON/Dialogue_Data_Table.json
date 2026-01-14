@@ -134,6 +134,54 @@
       "Text": "미안하지만 나를 도와서 늑대들을 더 처리해줄 수 있겠어?",
       "NextID": null,
       "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2020",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "흠.. 올 때가 됐는데 왜 안 오지??",
+      "NextID": "DLG_2021",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2021",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "안녕 모험가 또 보네~ 그나저나 정말 큰일이야.",
+      "NextID": "DLG_2022",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2022",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "요즘 몬스터들이 난폭해져서 무슨일이 생긴건가?",
+      "NextID": "DLG_2023",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2023",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "최근에 산으로 가서 사냥을 하겠다던 주민 한명이 돌아오지 않고있어.",
+      "NextID": "DLG_2024",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2024",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "그에게 무슨일이 생긴건지 한번 봐야겠는걸. 나 대신 체력물약을 들고 가줄 수 있겠어?",
+      "NextID": "DLG_2025",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2025",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "가는길에 몬스터가 있을 수 있으니 몸조심 하고, 이번에도 부탁할게~",
+      "NextID": null,
+      "IsChoice": false
     }
   ]
 }
