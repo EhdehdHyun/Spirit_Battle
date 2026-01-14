@@ -53,8 +53,8 @@ public class QuestManager : MonoBehaviour
 
         var quest = questTable[questId];
 
-        // alkToNPC 조건일 때만 NPC 검사
-        if (quest.StartCondition == "TalkToNPC")
+        //TalkToNPC 조건 및ㅊ npcID가 유효할 때만 검사
+        if (quest.StartCondition == "TalkToNPC" && npcID != -1)
         {
             if (quest.NPC != npcID)
             {
@@ -68,16 +68,9 @@ public class QuestManager : MonoBehaviour
 
         trackedQuestId = questId;
 
-        if (TryGetCondition(quest.CompleteCondition, out var condition))
-        {
-            if (condition == CompleteCondition.Auto)
-            {
-                CompleteQuest(questId);
-            }
-        }
-
         Debug.Log($"[Quest] Accepted: {quest.QuestName}");
     }
+
     
     //퀘스트 완료
     public void CompleteQuest(int questId)
@@ -104,9 +97,6 @@ public class QuestManager : MonoBehaviour
         Debug.Log($"보상 지급: EXP {reward.Exp}, GOLD {reward.Gold}");
 
         questStates[questId] = QuestState.RewardClaimed;
-
-        if (quest.NextQuest > 0)
-            AcceptQuest(quest.NextQuest);
     }
     
     public QuestState GetQuestState(int questId)
@@ -247,6 +237,22 @@ public class QuestManager : MonoBehaviour
         string normalized = raw.Trim().TrimEnd('.');
 
         return System.Enum.TryParse(normalized, out condition);
+    }
+    public Quest_Data_Table GetQuestData(int questId)
+    {
+        if (questTable == null)
+        {
+            Debug.LogError("QuestTable이 초기화되지 않았습니다.");
+            return null;
+        }
+
+        if (!questTable.TryGetValue(questId, out var quest))
+        {
+            Debug.LogError($"Quest 데이터 없음: {questId}");
+            return null;
+        }
+
+        return quest;
     }
 
 }

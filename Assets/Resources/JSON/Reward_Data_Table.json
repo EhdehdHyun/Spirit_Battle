@@ -34,16 +34,16 @@
     },
     {
       "RewardGroupID": 40001,
-      "Exp": 70,
-      "Gold": 60,
+      "Exp": 40,
+      "Gold": 20,
       "ItemID": 0,
       "ItemCount": 0,
       "Notes": "패링으로 고블린 처치"
     },
     {
       "RewardGroupID": 40002,
-      "Exp": 80,
-      "Gold": 90,
+      "Exp": 60,
+      "Gold": 50,
       "ItemID": 0,
       "ItemCount": 0,
       "Notes": "회피 3회 성공"
@@ -58,11 +58,35 @@
     },
     {
       "RewardGroupID": 50000,
+      "Exp": 15,
+      "Gold": 10,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "버섯 수집하기"
+    },
+    {
+      "RewardGroupID": 50001,
+      "Exp": 40,
+      "Gold": 25,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "늑대처치하기"
+    },
+    {
+      "RewardGroupID": 50002,
+      "Exp": 40,
+      "Gold": 30,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "포션 전달하기"
+    },
+    {
+      "RewardGroupID": 50003,
       "Exp": 100,
       "Gold": 100,
       "ItemID": 0,
       "ItemCount": 0,
-      "Notes": "버섯 수집하기"
+      "Notes": "지역 확장하기"
     }
   ]
 }
