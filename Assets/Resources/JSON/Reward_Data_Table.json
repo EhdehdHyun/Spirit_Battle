@@ -18,11 +18,51 @@
     },
     {
       "RewardGroupID": 30002,
-      "Exp": 40,
+      "Exp": 50,
       "Gold": 30,
       "ItemID": 0,
       "ItemCount": 0,
       "Notes": "숲 조사 퀘스트"
+    },
+    {
+      "RewardGroupID": 30003,
+      "Exp": 60,
+      "Gold": 40,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "정령 전투 퀘스트"
+    },
+    {
+      "RewardGroupID": 30004,
+      "Exp": 70,
+      "Gold": 50,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "오염 핵 제거 퀘스트"
+    },
+    {
+      "RewardGroupID": 30005,
+      "Exp": 80,
+      "Gold": 60,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "보스 전투 전 대화 퀘스트"
+    },
+    {
+      "RewardGroupID": 30006,
+      "Exp": 90,
+      "Gold": 70,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "보스 처치 퀘스트"
+    },
+    {
+      "RewardGroupID": 30007,
+      "Exp": 100,
+      "Gold": 80,
+      "ItemID": 0,
+      "ItemCount": 0,
+      "Notes": "보스 클리어 퀘스트"
     },
     {
       "RewardGroupID": 40000,
