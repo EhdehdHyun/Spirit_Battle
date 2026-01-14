@@ -109063,6 +109063,8 @@ MonoBehaviour:
     startDialogueID: DLG_2000
   - questID: 50001
     startDialogueID: DLG_2010
+  - questID: 50002
+    startDialogueID: DLG_2020
   startDialogueID: DLG_2000
   giveQuestID: 50000
   completeQuestID: -1
@@ -122195,7 +122197,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00001872871
+      value: 0.000008900176
       objectReference: {fileID: 0}
     - target: {fileID: 6139193805597264252, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_SortingOrder
