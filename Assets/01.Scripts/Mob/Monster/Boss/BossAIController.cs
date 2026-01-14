@@ -146,6 +146,9 @@ public class BossAIController : MonoBehaviour
             case BossState.Idle:
             case BossState.BasicAttack:
             case BossState.Pattern:
+                SetCanMove(false);
+                StopAgent();
+                break;
             case BossState.Down:
                 SetCanMove(false);
                 break;

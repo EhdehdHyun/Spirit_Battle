@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.GameCenter;
+using UnityEngine.AI;
 
 public class BossPatternShockwave : BossPatternBase
 {
@@ -40,6 +41,7 @@ public class BossPatternShockwave : BossPatternBase
         nextReadyTime = Time.time + Random.Range(cooldownMin, cooldownMax);
 
         animator = GetComponentInChildren<Animator>();
+
 
         if (!string.IsNullOrEmpty(slamTriggerName))
             slamTriggerHash = Animator.StringToHash(slamTriggerName);
