@@ -102,11 +102,19 @@ public class NPCInteractable : MonoBehaviour, IInteractable
         var qm = QuestManager.Instance;
         if (qm == null) return;
 
-        // 아직 안 받은 현재 퀘스트면 지급 (첫 퀘스트 받을 때 용)
+        // 1.보고 / 전달 퀘스트 처리 (있으면 여기서 끝)
+        if (qm.TryCompleteTalkToNPCQuest(npcID))
+        {
+            // 보고가 우선이므로 새 퀘스트는 주지 않음
+            return;
+        }
+
+        // 2.아직 안 받은 퀘스트면 지급
         if (giveQuestID > 0 && !qm.HasQuest(giveQuestID))
         {
             qm.AcceptQuest(giveQuestID, npcID);
             Debug.Log($"퀘스트 제공: {giveQuestID}");
         }
     }
+
 }

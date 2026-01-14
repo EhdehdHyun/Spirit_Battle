@@ -115,9 +115,10 @@
       "Description": "최근 사냥꾼 한명이 산으로 갔다가 며칠동안 오지 않아서 몬스터에게 피해를 입었을거라 생각이 된다. 산으로 가서 사냥꾼을 찾아서 체력물약을 직접 건네주어야 할것 같다.",
       "NPC": 100003,
       "StartCondition": "TalkToNPC",
-      "CompleteCondition": "CollectItem",
-      "TargetID": 1001,
-      "TargetCount": 2,
+      "CompleteCondition": "TalkToNPC",
+      "TargetID": 10004,
+      "DeliverItemID": 2004,     
+      "TargetCount": 1,
       "ObjectiveText": "사냥꾼에게 체력 물약을 건네주자",
       "RewardGroupID": 50002,
       "NextQuest": 50003

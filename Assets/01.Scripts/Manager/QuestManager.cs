@@ -20,7 +20,7 @@ public enum CompleteCondition
 public class QuestManager : MonoBehaviour
 {
     public static QuestManager Instance;
-
+    
     private Dictionary<int, QuestState> questStates = new();
     private Dictionary<int, Quest_Data_Table> questTable;
     private Dictionary<int, QuestProgress> questProgress = new();
@@ -53,7 +53,7 @@ public class QuestManager : MonoBehaviour
 
         var quest = questTable[questId];
 
-        //TalkToNPC 조건 및ㅊ npcID가 유효할 때만 검사
+        // TalkToNPC 시작 조건 검사
         if (quest.StartCondition == "TalkToNPC" && npcID != -1)
         {
             if (quest.NPC != npcID)
@@ -65,11 +65,23 @@ public class QuestManager : MonoBehaviour
 
         questStates.Add(questId, QuestState.Active);
         questProgress.Add(questId, new QuestProgress(quest.TargetCount));
-
         trackedQuestId = questId;
+        
+        if (quest.DeliverItemID > 0 && quest.TargetCount > 0)
+        {
+            var itemData = GameManager.Instance
+                .Data
+                .Data_TableLoader
+                .ItemsDict[quest.DeliverItemID];
+
+            InventoryManager.Instance.AddItem(itemData, quest.TargetCount);
+
+            Debug.Log($"[Quest] 전달 아이템 지급: {itemData.ItemName} x{quest.TargetCount}");
+        }
 
         Debug.Log($"[Quest] Accepted: {quest.QuestName}");
     }
+
 
     
     //퀘스트 완료
@@ -98,6 +110,53 @@ public class QuestManager : MonoBehaviour
 
         questStates[questId] = QuestState.RewardClaimed;
     }
+    
+    // 퀘스트 완료 조건이 Talk To NPC인지 확인
+    public bool TryCompleteTalkToNPCQuest(int npcID)
+    {
+        foreach (var kv in questStates)
+        {
+            int questId = kv.Key;
+
+            if (kv.Value != QuestState.Active)
+                continue;
+
+            var quest = questTable[questId];
+
+            // 완료 조건 검사
+            if (quest.CompleteCondition != "TalkToNPC")
+                continue;
+
+            // 이 NPC가 대상 NPC인지
+            if (quest.TargetID != npcID)
+                continue;
+
+            // 전달 아이템이 있다면 검사
+            if (quest.DeliverItemID > 0)
+            {
+                if (!InventoryManager.Instance.HasItem(
+                        quest.DeliverItemID,
+                        quest.TargetCount))
+                {
+                    Debug.Log("아이템이 부족합니다.");
+                    return false;
+                }
+
+                InventoryManager.Instance.RemoveItem(
+                    quest.DeliverItemID,
+                    quest.TargetCount
+                );
+            }
+
+            // 퀘스트 완료
+            CompleteQuest(questId);
+            Debug.Log($"[Quest] 전달 완료: {questId}");
+            return true;
+        }
+
+        return false;
+    }
+
     
     public QuestState GetQuestState(int questId)
     {

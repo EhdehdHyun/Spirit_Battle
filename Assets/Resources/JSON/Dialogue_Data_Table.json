@@ -182,6 +182,70 @@
       "Text": "가는길에 몬스터가 있을 수 있으니 몸조심 하고, 이번에도 부탁할게~",
       "NextID": null,
       "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2030",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "너 덕분에 섬이 다시 평화를 찾고있어.",
+      "NextID": "DLG_2031",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2031",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "아직 할 일이 산더미처럼 쌓여 있지만..",
+      "NextID": "DLG_2032",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2032",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "다른곳에서도 널 필요로 하는 곳이 많이 있을거야.",
+      "NextID": "DLG_2033",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2033",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "너는 특별하니까 어디서든 잘 해낼 수 있을거야.",
+      "NextID": "DLG_2034",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2034",
+      "SpeakerID": "100003",
+      "SpeakerName": "정령",
+      "Text": "내가 지도를 더 넓혀줄테니 다른곳도 다 돌아다니면서 모험을 즐겨봐.",
+      "NextID": null,
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2050",
+      "SpeakerID": "100004",
+      "SpeakerName": "사냥꾼",
+      "Text": "윽.. 몬스터 때문에 움직이질 못했는데.. 자넨 누구인가? 처음 보는 얼굴이군",
+      "NextID": "DLG_2051",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2051",
+      "SpeakerID": "100004",
+      "SpeakerName": "사냥꾼",
+      "Text": "그렇군.. 내가 없는 사이에 자네가 여기에 발을 디뎠구만..",
+      "NextID": "DLG_2052",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2052",
+      "SpeakerID": "100004",
+      "SpeakerName": "사냥꾼",
+      "Text": "어쨌든 이렇게 나를 위해서 체력 물약을 갖다 주다니, 고마울 따름이야.. 어쨌든 자네 덕분에 몸이 괜찮아 졌으니 얼른 마을로 돌아가야겠어.",
+      "NextID": null,
+      "IsChoice": false
     }
   ]
 }

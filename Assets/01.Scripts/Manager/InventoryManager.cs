@@ -528,4 +528,64 @@ public class InventoryManager : MonoBehaviour
         Debug.Log($"[InventoryManager] ClearSlot: 슬롯 {slotIndex}번 아이템이 삭제되었습니다.");
         OnInventoryChanged?.Invoke();
     }
+    
+    public bool HasItem(int itemKey, int amount)
+    {
+        if (amount <= 0) return true;
+
+        int total = 0;
+
+        // 아이템 인벤 슬롯 범위만 검사 (26~50)
+        for (int i = ItemInvStart; i <= ItemInvEnd; i++)
+        {
+            var slot = slots[i];
+            if (slot == null || slot.IsEmpty || slot.item == null)
+                continue;
+
+            if (slot.item.data.key != itemKey)
+                continue;
+
+            total += slot.item.quantity;
+            if (total >= amount)
+                return true;
+        }
+
+        return false;
+    }
+
+    public bool RemoveItem(int itemKey, int amount)
+    {
+        if (!HasItem(itemKey, amount))
+            return false;
+
+        int remain = amount;
+
+        // 아이템 인벤 슬롯에서만 제거
+        for (int i = ItemInvStart; i <= ItemInvEnd; i++)
+        {
+            var slot = slots[i];
+            if (slot == null || slot.IsEmpty || slot.item == null)
+                continue;
+
+            if (slot.item.data.key != itemKey)
+                continue;
+
+            int take = Mathf.Min(slot.item.quantity, remain);
+            slot.item.quantity -= take;
+            remain -= take;
+
+            if (slot.item.quantity <= 0)
+                slot.item = null;
+
+            if (remain <= 0)
+            {
+                OnInventoryChanged?.Invoke();
+                return true;
+            }
+        }
+
+        OnInventoryChanged?.Invoke();
+        return true;
+    }
+
 }
