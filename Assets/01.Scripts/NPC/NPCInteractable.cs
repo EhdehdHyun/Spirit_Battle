@@ -12,6 +12,20 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     private bool isTalking;
     public bool canInteract = true;
 
+    private int npcID = -1;
+
+    private void Awake()
+    {
+        NPCIdentity identity = GetComponent<NPCIdentity>();
+        if (identity != null)
+        {
+            npcID = identity.NPCID;
+        }
+        else
+        {
+            Debug.LogError($"{name} : NPCIdentity가 없습니다.");
+        }
+    }
     // PlayerInteraction에서 조준 중일 때 호출
     public string GetInteractPrompt()
     {
@@ -47,7 +61,7 @@ public class NPCInteractable : MonoBehaviour, IInteractable
             //퀘스트 지급 (Side)
             if (giveQuestID > 0 && !qm.HasQuest(giveQuestID))
             {
-                qm.AcceptQuest(giveQuestID);
+                qm.AcceptQuest(giveQuestID, npcID);
                 Debug.Log($"퀘스트 제공: {giveQuestID}");
             }
         }

@@ -46,50 +46,39 @@ public class QuestManager : MonoBehaviour
     }
     
     //카테고리별 퀘스트 가져오기 (UI용)
-    public void AcceptQuest(int questId)
+    public void AcceptQuest(int questId, int npcID = -1)
     {
-        if (!questStates.ContainsKey(questId))
-            questStates.Add(questId, QuestState.Active);
+        if (questStates.ContainsKey(questId))
+            return;
 
         var quest = questTable[questId];
 
-        questProgress.Add(
-            questId,
-            new QuestProgress(quest.TargetCount)
-        );
+        // alkToNPC 조건일 때만 NPC 검사
+        if (quest.StartCondition == "TalkToNPC")
+        {
+            if (quest.NPC != npcID)
+            {
+                Debug.Log($"[Quest] NPC {npcID}는 퀘스트 {questId}를 줄 수 없음");
+                return;
+            }
+        }
+
+        questStates.Add(questId, QuestState.Active);
+        questProgress.Add(questId, new QuestProgress(quest.TargetCount));
 
         trackedQuestId = questId;
 
-        if (!TryGetCondition(quest.CompleteCondition, out var condition))
+        if (TryGetCondition(quest.CompleteCondition, out var condition))
         {
-            Debug.LogError($"Invalid CompleteCondition: {quest.CompleteCondition}");
-            return;
-        }
-
-        if (trackerUI != null)
-        {
-            if (ShouldShowProgress(condition))
+            if (condition == CompleteCondition.Auto)
             {
-                var progress = questProgress[questId];
-                trackerUI.gameObject.SetActive(true);
-                trackerUI.SetProgress(progress.Current, progress.Target); // ⭐ 핵심
+                CompleteQuest(questId);
             }
-            else
-            {
-                trackerUI.gameObject.SetActive(false);
-            }
-        }
-
-        if (condition == CompleteCondition.Auto)
-        {
-            CompleteQuest(questId);
         }
 
         Debug.Log($"[Quest] Accepted: {quest.QuestName}");
     }
-
-
-
+    
     //퀘스트 완료
     public void CompleteQuest(int questId)
     {
