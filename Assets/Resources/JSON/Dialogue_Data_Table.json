@@ -217,6 +217,486 @@
       "IsChoice": false
     },
     {
+      "DialogueID": "DLG_2008",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "고블린들조차 영향을 받을 만큼, 섬의 균형이 흐트러지고 있다는 뜻이네.",
+      "NextID": "DLG_2009",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2009",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "아직 작은 징후일 뿐이지만, 방심할 수는 없겠지.",
+      "NextID": "DLG_2010",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2010",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "계속해서 섬을 살피며 이상한 기운의 근원을 찾아야 하네.",
+      "NextID": "DLG_2100",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2100",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "고블린들의 이상한 행동은 끝이 아니네.",
+      "NextID": "DLG_2101",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2101",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "숲 쪽에서 불길한 기운이 느껴지고 있지.",
+      "NextID": "DLG_2102",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2102",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "아직 형체는 보이지 않지만, 섬이 분명 경고하고 있네.",
+      "NextID": "DLG_2103",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2103",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "숲을 조사해 보게. 무언가 흔적이 남아 있을 걸세.",
+      "NextID": "DLG_2108",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2108",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "...느껴졌네.",
+      "NextID": "DLG_2109",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2109",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "숲 깊은 곳에서, 섬의 흐름이 끊긴 지점이 있군.",
+      "NextID": "DLG_2110",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2110",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "아직은 작은 균열이지만, 방치하면 커질 걸세.",
+      "NextID": "DLG_2111",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2111",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "다음엔 그 근원을 직접 마주하게 될지도 모르겠군.",
+      "NextID": "DLG_2112",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2112",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "역시나 예상대로였네.",
+      "NextID": "DLG_2113",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2113",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "섬 어딘가에 오염의 근원이 존재하고 있어.",
+      "NextID": "DLG_2114",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2114",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "지금은 숲에 남은 흔적만 보였을 뿐이지만…",
+      "NextID": "DLG_2115",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2115",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "곧 모습을 드러낼 걸세. 준비를 해야겠군.",
+      "NextID": "DLG_2200",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2200",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "숲에서 느껴지던 불안한 기척이, 이제 형태를 갖추기 시작했네.",
+      "NextID": "DLG_2201",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2201",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "섬의 흐름을 따라 살아가던 존재가, 오염에 휩쓸린 모양이군.",
+      "NextID": "DLG_2202",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2202",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이 상태로 두면, 주변까지 망가뜨릴 걸세.",
+      "NextID": "DLG_2203",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2203",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그 존재를 멈추게 해 주게. 방법이 무엇이든 말일세.",
+      "NextID": "DLG_2209",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2209",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "섬의 흐름이 다시 이어지고 있군.",
+      "NextID": "DLG_2210",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2210",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "파괴한 것이 아니라, 멈춘 것에 가깝네.",
+      "NextID": "DLG_2211",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2211",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "자네가 처리한 존재 역시 피해자일지도 모르지.",
+      "NextID": "DLG_2212",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2212",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "오염은 생명을 가리지 않네.",
+      "NextID": "DLG_2213",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2213",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "하지만 이번 일로 확실해졌어.",
+      "NextID": "DLG_2214",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2214",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "섬 어딘가에, 이 모든 혼란의 근원이 존재하고 있다는 걸.",
+      "NextID": "DLG_2300",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2300",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "...잠깐만.",
+      "NextID": "DLG_2301",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2301",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "방금 멈춘 그 존재 너머에서, 더 짙은 기운이 느껴지는군.",
+      "NextID": "DLG_2302",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2302",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이곳이 아니네. 근원은 조금 더 안쪽에 있어.",
+      "NextID": "DLG_2305",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2305",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그래… 이곳이 오염의 핵이네.",
+      "NextID": "DLG_2306",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2306",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "형태는 없지만, 분명히 존재하고 있지.",
+      "NextID": "DLG_2307",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2307",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "지금 자네가 할 일은 파괴가 아니라—",
+      "NextID": "DLG_2308",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2308",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이 흐름을 끊는 것이네.",
+      "NextID": "DLG_2311",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2311",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "흐름이… 안정되고 있군.",
+      "NextID": "DLG_2312",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2312",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "완전히 사라진 것은 아니네.",
+      "NextID": "DLG_2313",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2313",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "하지만 최소한, 더 퍼지는 건 막아냈어.",
+      "NextID": "DLG_2314",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2314",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이건 시작에 불과하네.",
+      "NextID": "DLG_2315",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2315",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "섬 어딘가에, 이 핵을 만들어낸 근원이 따로 존재할 걸세.",
+      "NextID": "DLG_2316",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2316",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이제 자네는, 되돌릴 수 없는 길에 들어섰네.",
+      "NextID": "DLG_2400",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2400",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "...성소가 모습을 드러냈군.",
+      "NextID": "DLG_2401",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2401",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "저곳이 바로, 섬의 균형이 무너진 시작점이네.",
+      "NextID": "DLG_2403",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2403",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그래. 이제까지와는 차원이 다를 걸세.",
+      "NextID": "DLG_2404",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2404",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "성소 안에는 오염의 핵을 지키는 존재가 기다리고 있지.",
+      "NextID": "DLG_2405",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2405",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이 성소에 들어가는 순간, 되돌아올 수는 없네.",
+      "NextID": "DLG_2407",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2407",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그렇다면 가게.",
+      "NextID": "DLG_2408",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2408",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "섬의 첫 번째 시험이, 자네를 기다리고 있네.",
+      "NextID": "DLG_2411",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2411",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "느껴지는가.",
+      "NextID": "DLG_2412",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2412",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "저 안쪽에, 이 모든 오염을 끌어당기는 중심이 있다.",
+      "NextID": "DLG_2414",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2414",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그래.",
+      "NextID": "DLG_2415",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2415",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "성소의 심장, 그리고 오염의 수호자지.",
+      "NextID": "DLG_2416",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2416",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "기억하게. 쓰러뜨리는 것만이 답은 아닐 수도 있네.",
+      "NextID": "DLG_2418",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2418",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "아니. 이제부터가 진짜지.",
+      "NextID": "DLG_2419",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2419",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "자네가 쓰러뜨린 것은, 오염에 잠식된 껍데기일 뿐.",
+      "NextID": "DLG_2420",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2420",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이제 성소에 남은 흐름을 바로잡아야 하네.",
+      "NextID": "DLG_2422",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2422",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이미 하고 있네.",
+      "NextID": "DLG_2423",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2423",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "흐름이… 돌아오고 있군.",
+      "NextID": "DLG_2424",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2424",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이 섬에 처음으로, 진정한 정화가 이루어졌네.",
+      "NextID": "DLG_2426",
+      "IsChoice": false 
+    },
+    {
+      "DialogueID": "DLG_2426",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "예리하군.",
+      "NextID": "DLG_2427",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2427",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "이건 첫 번째에 불과하네.",
+      "NextID": "DLG_2428",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2428",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "섬 바깥에서도, 비슷한 기운이 꿈틀대고 있어.",
+      "NextID": "DLG_2429",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2429",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "자네의 여정은 이제 시작일 뿐이지.",
+      "NextID": "DLG_2426",
+      "IsChoice": false
+    },
+    {
       "DialogueID": "DLG_SHRINE_01",
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
