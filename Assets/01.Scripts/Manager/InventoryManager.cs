@@ -553,6 +553,7 @@ public class InventoryManager : MonoBehaviour
                 return true;
             }
         }
+        return  false;
     }
 
     public void SaveToData(SaveData data)
@@ -609,8 +610,6 @@ public class InventoryManager : MonoBehaviour
                 Debug.LogWarning($"[InventoryManager] Load Fail: Unknown Item Key {savedItem.itemKey}");
             }
         }
-
         OnInventoryChanged?.Invoke();
-        return true;
     }
 }
