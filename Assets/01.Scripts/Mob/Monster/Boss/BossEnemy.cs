@@ -293,7 +293,7 @@ public class BossEnemy : EnemyBase
             reason: DamageReason.TutorialBossPhase3Finale
         );
 
-        player.TakeDamage(info);
+        player.ForceKill(info);
 
         if (isTutorialBoss && tutorialBossDestroyCo == null)
         {

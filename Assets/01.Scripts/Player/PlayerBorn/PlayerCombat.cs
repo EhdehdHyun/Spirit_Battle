@@ -44,6 +44,9 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float skill1Cooldown = 10f;
     [SerializeField] private float skill1DamageMultiplier = 1.5f;
 
+    [SerializeField] private bool isEquipping = false;
+    public bool IsEquipping => isEquipping;
+
 
     private float _nextSkill1Time = 0f;
 
@@ -142,6 +145,31 @@ public class PlayerCombat : MonoBehaviour
 
     void ClearAttackBuffer() => bufferedNextInput = false;
 
+    // ----장착 관련 메서드들 ----
+
+    private void BeginEquipLock()
+    {
+        isEquipping = true;
+
+        // 입력 정지
+        if (playerInput != null) playerInput.Lock();
+
+        // 이동도 정지
+        physicsCharacter?.SetMovementLocked(true);
+
+        if (isAttacking) CancelAttackCommon();
+    }
+
+    public void Anim_EquipLockEnd()
+    {
+        isEquipping = false;
+
+        physicsCharacter?.SetMovementLocked(false);
+        if (playerInput != null) playerInput.Unlock();
+
+        Debug.Log($"[INPUT STATE] isLocked={playerInput.isLocked} dashLocked={playerInput.dashLocked} isDashing={physicsCharacter.IsDashing} movementLock={physicsCharacter.movementLock} isEquipping={isEquipping}");
+    }
+
     public void OnToggleWeaponInput()
     {
         if (inventoryManager == null)
@@ -156,6 +184,11 @@ public class PlayerCombat : MonoBehaviour
             Debug.Log("[PlayerCombat] 장착된 무기가 없어 무기를 꺼낼 수 없습니다.");
             return;
         }
+
+        if (isEquipping) return;
+
+        BeginEquipLock();
+
         weaponEquipped = !weaponEquipped;
         playerAnim?.SetWeaponEquipped(weaponEquipped);
 
@@ -164,7 +197,6 @@ public class PlayerCombat : MonoBehaviour
         if (!weaponEquipped && isAttacking)
             ForceStopAttack();
     }
-
 
     void StartFirstAttack()
     {

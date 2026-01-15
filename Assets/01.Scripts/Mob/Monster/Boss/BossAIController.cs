@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BossAIController : MonoBehaviour
+public class BossAIController : MonoBehaviour, IParryGroggyController
 {
     public enum BossState
     {
@@ -35,6 +35,14 @@ public class BossAIController : MonoBehaviour
     [Header("패턴 시스템 ")]
     public BossPatternBase[] patterns;
 
+    [Header("Parry Groggy")]
+    [SerializeField] private float loseTargetDistance = 20f;
+    [SerializeField] private string defaultParryGroggyTrigger = "ParryGroggy";
+    private Coroutine groggyCo;
+
+    public bool IsParryImmune =>
+        (boss != null && boss.IsDead) || state == BossState.Down || state == BossState.Dead;
+
     private BossPatternBase currentPattern;
     private BossEnemy boss;
     private Transform target;
@@ -51,7 +59,6 @@ public class BossAIController : MonoBehaviour
     private float stateTimer = 0f;
 
     public bool HasTarget => target != null && boss != null && !boss.IsDead;
-    private Coroutine downCo;
 
     private float nextRepathTime = 0f;
 
@@ -74,11 +81,13 @@ public class BossAIController : MonoBehaviour
             GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
             if (playerObj != null) target = playerObj.transform;
         }
-
-        agent.updateRotation = !manualRotation;
-        agent.speed = boss != null ? boss.moveSpeed : agent.speed;
-        agent.stoppingDistance = stopDistance;
-        agent.autoBraking = true;
+        if (agent != null)
+        {
+            agent.updateRotation = !manualRotation;
+            agent.speed = boss != null ? boss.moveSpeed : agent.speed;
+            agent.stoppingDistance = stopDistance;
+            agent.autoBraking = true;
+        }
 
         if (HasTarget)
             ChangeState(BossState.Chase);
@@ -101,6 +110,8 @@ public class BossAIController : MonoBehaviour
             case BossState.Chase: UpdateChase(); break;
             case BossState.BasicAttack: UpdateBasicAttack(); break;
             case BossState.Pattern: UpdatePattern(); break;
+            case BossState.Down: UpdateDown(); break;
+            case BossState.Dead: break;
         }
 
         UpdateAnimation();
@@ -151,6 +162,7 @@ public class BossAIController : MonoBehaviour
                 break;
             case BossState.Down:
                 SetCanMove(false);
+                StopAgent();
                 break;
 
             case BossState.Chase:
@@ -260,49 +272,61 @@ public class BossAIController : MonoBehaviour
         return false;
     }
 
+    // -----그로기 관련 메써드들 -----
+
+    private void UpdateDown()
+    {
+        StopAgent();
+    }
     public void EnterBreakGroggy(float duration, string triggerName)
     {
-        StopAllCoroutines();
-        ChangeState(BossState.Down);
-
-        var anim = GetComponentInChildren<Animator>();
-        if (anim != null && !string.IsNullOrEmpty(triggerName))
-        {
-            anim.ResetTrigger(triggerName);
-            anim.SetTrigger(triggerName);
-        }
-
-        downCo = StartCoroutine(DownTimer(duration));
+        EnterParryGroggy(duration, triggerName);
     }
-
-    private IEnumerator DownTimer(float duration)
-    {
-        float t = 0f;
-        while (t < duration)
-        {
-            t += Time.deltaTime;
-            yield return null;
-        }
-
-        if (!HasTarget) ChangeState(BossState.Idle);
-        else ChangeState(BossState.Chase);
-    }
-
-    public bool IsDownState => state == BossState.Down;
 
     public void EnterParryGroggy(float duration, string triggerName)
     {
-        StopAllCoroutines();
+        if (boss == null || boss.IsDead) return;
+
+        if (groggyCo != null) StopCoroutine(groggyCo);
+
         ChangeState(BossState.Down);
 
         var anim = GetComponentInChildren<Animator>();
-        if (anim != null && !string.IsNullOrEmpty(triggerName))
+        string trig = string.IsNullOrEmpty(triggerName) ? defaultParryGroggyTrigger : triggerName;
+        if (anim != null && !string.IsNullOrEmpty(trig))
         {
-            anim.ResetTrigger(triggerName);
-            anim.SetTrigger(triggerName);
+            anim.ResetTrigger(trig);
+            anim.SetTrigger(trig);
         }
 
-        downCo = StartCoroutine(DownTimer(duration));
+        groggyCo = StartCoroutine(GroggyRoutine(Mathf.Max(0.05f, duration)));
+    }
+
+    private IEnumerator GroggyRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        groggyCo = null;
+
+        if (!HasTarget)
+        {
+            ChangeState(BossState.Idle);
+            yield break;
+        }
+
+        float dist = Vector3.Distance(transform.position, target.position);
+        if (dist > loseTargetDistance)
+        {
+            ChangeState(BossState.Idle);
+            yield break;
+        }
+
+        float atkRange = GetBasicAttackRange();
+        float distAtk = DistToTargetFromAttackOrigin();
+
+        if (distAtk <= atkRange)
+            ChangeState(BossState.BasicAttack);
+        else
+            ChangeState(BossState.Chase);
     }
 
     private void MoveTowardsTarget_Nav(float stopDist)
