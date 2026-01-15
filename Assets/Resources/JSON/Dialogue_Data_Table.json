@@ -149,7 +149,7 @@
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
       "Text": "하지만 지금의 힘으로는 부족하네.섬 곳곳을 돌아다니며 스스로를 단련하게.힘과 경험이 쌓이면, 다시 성소가 자네를 부를 걸세.",
-      "NextID": "DLG_1046",
+      "NextID": null,
       "IsChoice": false
     },
     {
@@ -237,7 +237,7 @@
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
       "Text": "계속해서 섬을 살피며 이상한 기운의 근원을 찾아야 하네.",
-      "NextID": "DLG_2100",
+      "NextID": null,
       "IsChoice": false
     },
     {
@@ -333,7 +333,7 @@
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
       "Text": "곧 모습을 드러낼 걸세. 준비를 해야겠군.",
-      "NextID": "DLG_2200",
+      "NextID": null,
       "IsChoice": false
     },
     {
@@ -517,7 +517,7 @@
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
       "Text": "이제 자네는, 되돌릴 수 없는 길에 들어섰네.",
-      "NextID": "DLG_2400",
+      "NextID": null,
       "IsChoice": false
     },
     {
@@ -573,7 +573,7 @@
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
       "Text": "섬의 첫 번째 시험이, 자네를 기다리고 있네.",
-      "NextID": "DLG_2411",
+      "NextID": null,
       "IsChoice": false
     },
     {
@@ -613,7 +613,7 @@
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
       "Text": "기억하게. 쓰러뜨리는 것만이 답은 아닐 수도 있네.",
-      "NextID": "DLG_2418",
+      "NextID": null,
       "IsChoice": false
     },
     {
