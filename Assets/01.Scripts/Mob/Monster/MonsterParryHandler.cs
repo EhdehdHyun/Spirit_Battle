@@ -24,7 +24,6 @@ public class MonsterParryHandler : MonoBehaviour, IParryable, IParryReceiver
         if (character == null) character = GetComponentInParent<CharacterBase>();
         if (groggy == null) groggy = GetComponentInParent<IParryGroggyController>();
 
-        // 텔레그래프 자동 탐색(인스펙터에 안 넣어도 되게)
         if (telegraph == null) telegraph = GetComponentInChildren<ParryTelegraphShrinkRing>(true);
     }
 
@@ -57,24 +56,25 @@ public class MonsterParryHandler : MonoBehaviour, IParryable, IParryReceiver
 
     public void OnParried(ParryInfo info)
     {
+        Debug.Log($"[BOSS PARRY] Groggy to {groggy} duration={info.stunTime}", this);
         CacheRefs();
         if (groggy == null) return;
 
         float duration = (info.stunTime > 0f) ? info.stunTime : defaultParryGroggyDuration;
         groggy.EnterParryGroggy(duration, parryGroggyTriggerName);
 
-        // 패링 성공 연출: 즉시 원 제거
+        // 패링 성공 연출 즉시 원 제거
         telegraph?.ParrySuccessHide();
 
-        // 타임 슬로우 (네가 이미 쓰는 거)
+        // 타임 슬로우 
         ParryTimeSlow.Play();
-        
+
         ParryPostFxPulse.Play();
 
         ParryPostFxPulse.Play();
 
         parryWindowOpen = false;
-        
+
         QuestManager.Instance.ReportProgress(
             CompleteCondition.UseSkill,
             0,   // 패링은 TargetID 안 씀

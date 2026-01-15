@@ -36,6 +36,10 @@ public class PlayerCharacter : CharacterBase
 
     protected override void OnDie(DamageInfo info)
     {
+        //게임오버 됐을 때 게임오버 화면 제외 모든 UI 숨기는 기능
+        UIVisibilityManager.Instance?.HideAllExceptGameOver();
+
+
         // 입력 / 이동 락, 죽음 애니메이션
         input?.Lock();
         physicsChar.SetMovementLocked(true);
@@ -83,5 +87,18 @@ public class PlayerCharacter : CharacterBase
         // 다시 조작 가능
         input?.Unlock();
         if (physicsChar != null) physicsChar.SetMovementLocked(false);
+    }
+    public void Rest()
+    {
+        RestoreFullHp(notify: true);
+
+        var rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
+
+        Debug.Log("플레이어 휴식: 체력이 모두 회복되었습니다.");
     }
 }

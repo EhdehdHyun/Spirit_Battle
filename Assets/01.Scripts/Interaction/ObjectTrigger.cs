@@ -1,15 +1,12 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class ObjectTrigger : MonoBehaviour, IInteractable
 {
-    [Header("¿¬°á")]
-    public MapIconUI linkedMapIcon; // Áöµµ»óÀÇ UI ¹öÆ° ¿¬°á
+    [Header("ì—°ê²°")]
+    public MapIconUI linkedMapIcon;
 
     private bool isActivated = false;
 
-    private void Start()
-    {
-    }
     public void Interact(PlayerInteraction playerInteraction)
     {
         if (!isActivated)
@@ -18,7 +15,14 @@ public class ObjectTrigger : MonoBehaviour, IInteractable
         }
         else
         {
-            Debug.Log("ÀÌ¹Ì È°¼ºÈ­µÈ Ãàº¹ÀÔ´Ï´Ù.");
+            Debug.Log("ì´ë¯¸ í™œì„±í™”ëœ ì¶•ë³µì…ë‹ˆë‹¤. (íœ´ì‹)");
+        }
+
+        PlayerCharacter player = playerInteraction.GetComponent<PlayerCharacter>();
+
+        if (player != null)
+        {
+            player.Rest();
         }
     }
 
@@ -31,11 +35,11 @@ public class ObjectTrigger : MonoBehaviour, IInteractable
             linkedMapIcon.UnlockIcon();
         }
 
-        Debug.Log("Ãàº¹ ¹ß°ß!");
+        Debug.Log("ì¶•ë³µ ë°œê²¬! ì§€ë„ ì•„ì´ì½˜ í•´ê¸ˆë¨.");
     }
 
     public string GetInteractPrompt()
     {
-        return "[F] »óÈ£ÀÛ¿ë";
+        return "[F] ì¶•ë³µì—ì„œ íœ´ì‹";
     }
 }

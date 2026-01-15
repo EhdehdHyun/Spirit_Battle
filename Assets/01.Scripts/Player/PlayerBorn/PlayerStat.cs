@@ -255,9 +255,6 @@ public class PlayerStat : MonoBehaviour
         ui.UpdateLevel(level);
     }
 
-    // =======================
-    // 체력회복
-    // =======================
     public bool TryHeal(int amount)
     {
         if (amount <= 0) return false;
@@ -266,7 +263,6 @@ public class PlayerStat : MonoBehaviour
         float before = character.currentHp;
         character.currentHp = Mathf.Min(character.maxHp, character.currentHp + amount);
 
-        // 체력이 이미 풀이라 변화가 없으면 false
         if (Mathf.Approximately(character.currentHp, before))
             return false;
 
@@ -274,5 +270,42 @@ public class PlayerStat : MonoBehaviour
             ui.UpdateHp(character.currentHp, character.maxHp);
 
         return true;
+    }
+    public void SaveToData(SaveData data)
+    {
+        data.level = this.level;
+        data.currentExp = this.currentExp;
+
+        if (character != null)
+        {
+            data.currentHp = character.currentHp;
+        }
+
+        data.playerPosition = transform.position;
+    }
+
+    public void LoadFromData(SaveData data)
+    {
+        this.level = data.level;
+        this.currentExp = data.currentExp;
+
+        CharacterController cc = GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
+
+        transform.position = data.playerPosition;
+
+        Physics.SyncTransforms();
+
+        if (cc != null) cc.enabled = true;
+
+        Debug.Log($"로드 완료: 레벨 {level}, 위치 {transform.position}");
+
+        ApplyLevelData();
+        if (character != null)
+        {
+            character.currentHp = Mathf.Min(data.currentHp, character.maxHp);
+        }
+
+        UpdateAllUI();
     }
 }

@@ -183,11 +183,10 @@ public class PlayerInputController : MonoBehaviour
         SetDashLock(character.dashDuration);
     }
 
-
-
     public void OnAttack(InputAction.CallbackContext ctx)
     {
-        if (character != null && character.movementLock) return;
+        if (character != null && character.movementLock && (combat == null || !combat.IsAttacking))
+            return;
 
         if (isLocked) return;
 

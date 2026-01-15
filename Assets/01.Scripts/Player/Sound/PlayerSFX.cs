@@ -19,6 +19,8 @@ public class PlayerSFX : MonoBehaviour
 
     public void PlayAttackHit(int comboIndex1to3)
     {
+        Debug.Log($"[Sound] 공격 소리 재생 시도! 인덱스: {comboIndex1to3}");
+
         if (!sfxSource) return;
         int idx = Mathf.Clamp(comboIndex1to3 - 1, 0, 2);
         var clip = (attackHitClips != null && attackHitClips.Length > idx) ? attackHitClips[idx] : null;

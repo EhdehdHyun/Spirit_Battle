@@ -3,26 +3,32 @@ using UnityEngine.UI;
 
 public class MapIconUI : MonoBehaviour
 {
-    [Header("설정")]
-    public Transform teleportTarget; // 이동할 실제 월드 위치 (축복 오브젝트)
-    public Image iconImage;          // 아이콘 이미지 컴포넌트
-    public Button btn;               // 버튼 컴포넌트
+    [Header("UI 컴포넌트 연결")]
+    [SerializeField] private Image iconImage;       // 지도에 표시될 아이콘 이미지
+    [SerializeField] private Button btn;            // 클릭할 버튼
 
-    private bool isUnlocked = false; // 현재 활성화 상태
+    [Header("텔레포트 설정")]
+    [SerializeField] private Transform teleportTarget; // 이동할 목적지 (축복 위치)
+
+    [Header("전투 제한 (몬스터 감지)")]
+    [SerializeField] private float checkRadius = 20.0f; // 이 반경 안에 몬스터가 있으면 이동 불가
+    [SerializeField] private LayerMask monsterLayer;    // 몬스터가 속한 레이어 (Monster)
+
+    private bool isUnlocked = false;
 
     private void Start()
     {
-        LockIcon();
+        if (iconImage != null)
+        {
+            iconImage.color = Color.gray;
+        }
 
-        btn.onClick.AddListener(TeleportPlayer);
-    }
-
-    // 아이콘 잠금 (회색, 클릭 불가)
-    public void LockIcon()
-    {
-        isUnlocked = false;
-        iconImage.color = Color.gray;
-        btn.interactable = false;
+        if (btn != null)
+        {
+            btn.interactable = false;
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(TeleportPlayer);
+        }
     }
 
     public void UnlockIcon()
@@ -30,10 +36,16 @@ public class MapIconUI : MonoBehaviour
         if (isUnlocked) return;
 
         isUnlocked = true;
-        iconImage.color = Color.white;
-        btn.interactable = true;
 
-        Debug.Log("지도 아이콘이 활성화되었습니다!");
+        if (iconImage != null)
+        {
+            iconImage.color = Color.white; 
+        }
+
+        if (btn != null)
+        {
+            btn.interactable = true;
+        }
     }
 
     public void TeleportPlayer()
@@ -41,40 +53,55 @@ public class MapIconUI : MonoBehaviour
         if (!isUnlocked) return;
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        if (player == null)
         {
-            CharacterController cc = player.GetComponent<CharacterController>();
-            if (cc != null) cc.enabled = false;
+            Debug.LogError("Player 태그를 가진 오브젝트를 찾을 수 없습니다!");
+            return;
+        }
 
-            UnityEngine.AI.NavMeshAgent agent = player.GetComponent<UnityEngine.AI.NavMeshAgent>();
-            if (agent != null)
-            {
-                agent.Warp(teleportTarget.position);
-            }
-            else
-            {
-                player.transform.position = teleportTarget.position;
-            }
-            if (cc != null) cc.enabled = true;
+        Collider[] nearbyEnemies = Physics.OverlapSphere(player.transform.position, checkRadius, monsterLayer);
 
-            Rigidbody rb = player.GetComponent<Rigidbody>();
-            if (rb != null)
-            {
-                rb.velocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-                rb.position = teleportTarget.position;
-            }
+        if (nearbyEnemies.Length > 0)
+        {
+            Debug.Log($"[이동 실패] 주변에 적이 {nearbyEnemies.Length}마리 있습니다! (전투 중 이동 불가)");
 
-            MapController mapController = FindObjectOfType<MapController>();
-            if (mapController != null)
-            {
-            }
+            return;
+        }
 
-            Debug.Log("순간이동 완료!");
+        CharacterController cc = player.GetComponent<CharacterController>();
+        if (cc != null) cc.enabled = false;
+
+        UnityEngine.AI.NavMeshAgent agent = player.GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.Warp(teleportTarget.position);
         }
         else
         {
-            Debug.LogError("Player 태그를 찾을 수 없습니다!");
+            player.transform.position = teleportTarget.position;
         }
+
+        Rigidbody rb = player.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.position = teleportTarget.position;
+        }
+
+        if (cc != null) cc.enabled = true;
+
+        Debug.Log("축복으로 이동했습니다.");
+
+        MapController mapController = FindObjectOfType<MapController>();
+        if (mapController != null)
+        {
+            mapController.SendMessage("ToggleMap", SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = new Color(1, 0, 0, 0.3f);
     }
 }

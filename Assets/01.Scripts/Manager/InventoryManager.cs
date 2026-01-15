@@ -122,29 +122,18 @@ public class InventoryManager : MonoBehaviour
         return slots[index];
     }
 
-    // =========================
-    // 아이템 분류
-    // =========================
     public bool IsEquipItem(Data_table data)
     {
         if (data == null) return false;
-        // 3000번대 = 장비(무기)
         return data.key >= 3000 && data.key < 4000;
     }
 
     public bool IsConsumableItem(Data_table data)
     {
         if (data == null) return false;
-        // 2000번대 = 아이템(재료/소비)
         return data.key >= 2000 && data.key < 3000;
     }
 
-    // =========================================================
-    // ✅ AddItem: 타입에 따라 들어갈 패널 범위를 강제
-    //  - 장비(무기): WeaponPanel(1~25)
-    //  - 소비/재료: ItemPanel(26~50)
-    //  - 0번 장비칸에는 AddItem이 절대 들어가지 않음
-    // =========================================================
     public void AddItem(Data_table data, int quantity)
     {
         if (data == null || quantity <= 0)
@@ -231,9 +220,6 @@ public class InventoryManager : MonoBehaviour
         return false;
     }
 
-    // =========================
-    // 드랍(버리기)
-    // =========================
     public bool DropItemFromSlot(int slotIndex, int amount = 1)
     {
         Debug.Log($"[InventoryManager] DropItemFromSlot slotIndex={slotIndex}, amount={amount}");
@@ -247,7 +233,6 @@ public class InventoryManager : MonoBehaviour
 
         int dropAmount = Mathf.Clamp(amount, 1, itemInstance.quantity);
 
-        // 1) 프리팹 결정
         GameObject prefabToUse = null;
         if (dropPrefabs != null)
         {
@@ -263,7 +248,6 @@ public class InventoryManager : MonoBehaviour
         }
         if (prefabToUse == null) prefabToUse = defaultDropPrefab;
 
-        // 2) 생성 위치(플레이어 기준)
         if (prefabToUse != null)
         {
             Vector3 spawnPos = Vector3.zero;
@@ -293,7 +277,6 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        // 3) 수량 감소
         itemInstance.quantity -= dropAmount;
         if (itemInstance.quantity <= 0)
             slot.item = null;
@@ -335,7 +318,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (data == null || amount <= 0) return false;
 
-        // 1) 회복 테이블에서 찾기
         int healPerOne = 0;
         for (int i = 0; i < healConsumables.Count; i++)
         {
@@ -348,13 +330,11 @@ public class InventoryManager : MonoBehaviour
 
         if (healPerOne <= 0)
         {
-            // 등록 안 된 소비템이면 여기서는 효과 없음(원하면 true로 바꿔서 "소비만" 가능)
             return false;
         }
 
         int totalHeal = healPerOne * amount;
 
-        // 2) 플레이어/힐 메서드 바인딩
         if (_playerObj == null || _healMethod == null || _healTarget == null)
             BindPlayerAndHealMethod();
 
@@ -364,15 +344,12 @@ public class InventoryManager : MonoBehaviour
             return false;
         }
 
-        // 3) 호출
         object ret = _healParamIsInt
             ? _healMethod.Invoke(_healTarget, new object[] { totalHeal })
             : _healMethod.Invoke(_healTarget, new object[] { (float)totalHeal });
 
-        // bool 반환이면 그 값 사용(예: 체력 풀이면 false 구현 가능)
         if (ret is bool b) return b;
 
-        // void면 성공으로 간주
         return true;
     }
 
@@ -387,7 +364,6 @@ public class InventoryManager : MonoBehaviour
 
         _playerObj = p;
 
-        // 플레이어에 붙은 컴포넌트들에서 힐 메서드 자동 탐색
         var comps = p.GetComponents<MonoBehaviour>();
         foreach (var c in comps)
         {
@@ -425,11 +401,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    // =========================================================
-    // ✅ 장비 장착/해제 (단순화)
-    //  - EquipFromInventory(fromIndex): 장비 아이템이면 무조건 0번으로 이동
-    //  - UnequipWeapon(): 0번 -> WeaponPanel(1~25)로 복귀
-    // =========================================================
     public bool EquipFromInventory(int fromSlotIndex)
     {
         var from = GetSlot(fromSlotIndex);
@@ -497,7 +468,6 @@ public class InventoryManager : MonoBehaviour
         bool ok = AddItemToRange(equipped, WeaponInvStart, WeaponInvEnd);
         if (!ok)
         {
-            // 원복(증발 방지)
             equipped.equipped = true;
             equipSlot.item = equipped;
             Debug.LogWarning("[InventoryManager] UnequipWeapon FAIL -> reverted to slot0 (WeaponPanel full?)");
@@ -528,7 +498,7 @@ public class InventoryManager : MonoBehaviour
         Debug.Log($"[InventoryManager] ClearSlot: 슬롯 {slotIndex}번 아이템이 삭제되었습니다.");
         OnInventoryChanged?.Invoke();
     }
-    
+
     public bool HasItem(int itemKey, int amount)
     {
         if (amount <= 0) return true;
@@ -583,9 +553,64 @@ public class InventoryManager : MonoBehaviour
                 return true;
             }
         }
+    }
+
+    public void SaveToData(SaveData data)
+    {
+        // 1. 기존 저장된 아이템 리스트 비우기
+        data.inventoryItems.Clear();
+
+        // 2. 0번부터 50번까지 모든 슬롯 검사
+        for (int i = 0; i < slots.Count; i++)
+        {
+            InventorySlot slot = slots[i];
+
+            // 아이템이 있는 슬롯만 저장
+            if (slot != null && !slot.IsEmpty && slot.item != null && slot.item.data != null)
+            {
+                ItemSaveData saveData = new ItemSaveData();
+                saveData.slotIndex = i;                 // 몇 번째 칸인지 중요!
+                saveData.itemKey = slot.item.data.key;  // 무슨 아이템인지
+                saveData.amount = slot.item.quantity;   // 몇 개인지
+
+                data.inventoryItems.Add(saveData);
+            }
+        }
+
+        Debug.Log($"[InventoryManager] Saved {data.inventoryItems.Count} items.");
+    }
+
+    public void LoadFromData(SaveData data)
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i] != null) slots[i].item = null;
+        }
+
+        foreach (ItemSaveData savedItem in data.inventoryItems)
+        {
+            if (savedItem.slotIndex < 0 || savedItem.slotIndex >= slots.Count) continue;
+
+            Data_table itemInfo = GameManager.Instance.Data.Data_TableLoader.GetByKey(savedItem.itemKey);
+
+            if (itemInfo != null)
+            {
+                ItemInstance newItem = new ItemInstance(itemInfo, savedItem.amount);
+
+                slots[savedItem.slotIndex].item = newItem;
+
+                if (savedItem.slotIndex == EquipWeaponIndex)
+                {
+                    newItem.equipped = true;
+                }
+            }
+            else
+            {
+                Debug.LogWarning($"[InventoryManager] Load Fail: Unknown Item Key {savedItem.itemKey}");
+            }
+        }
 
         OnInventoryChanged?.Invoke();
         return true;
     }
-
 }
