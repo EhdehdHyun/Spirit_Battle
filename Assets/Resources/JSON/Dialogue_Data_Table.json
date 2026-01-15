@@ -84,7 +84,7 @@
       "DialogueID": "DLG_1034",
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
-      "Text": "섬의 균형을 좀먹는 오염의 근원… ‘정화되지 못한 핵’이었지",
+      "Text": "그 성소는 단순한 성소가 아니었네.",
       "NextID": "DLG_1035",
       "IsChoice": false
     },
@@ -92,23 +92,15 @@
       "DialogueID": "DLG_1035",
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
+      "Text": "섬의 균형을 좀먹는 오염의 근원… ‘정화되지 못한 핵’이었지",
+      "NextID": "DLG_1037",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1037",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
       "Text": "보통 인간이라면 그 자리에서 정신조차 남기지 못했을 걸세",
-      "NextID": "DLG_1037",
-      "IsChoice": false
-    },
-    {
-      "DialogueID": "DLG_1037",
-      "SpeakerID": "100000",
-      "SpeakerName": "정령 수호자",
-      "Text": "그래, 자네는 패배했네. 그리고 이곳으로 돌아왔지.",
-      "NextID": "DLG_1037",
-      "IsChoice": false
-    },
-    {
-      "DialogueID": "DLG_1037",
-      "SpeakerID": "100000",
-      "SpeakerName": "정령 수호자",
-      "Text": "그래, 자네는 패배했네. 그리고 이곳으로 돌아왔지.",
       "NextID": "DLG_1038",
       "IsChoice": false
     },
@@ -116,7 +108,7 @@
       "DialogueID": "DLG_1038",
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
-      "Text": "그래, 자네는 패배했네. 그리고 이곳으로 돌아왔지.",
+      "Text": "하지만 자네는 살아 돌아왔고, 기억하고 있지.",
       "NextID": "DLG_1039",
       "IsChoice": false
     },
@@ -124,8 +116,104 @@
       "DialogueID": "DLG_1039",
       "SpeakerID": "100000",
       "SpeakerName": "정령 수호자",
-      "Text": "그래, 자네는 패배했네. 그리고 이곳으로 돌아왔지.",
-      "NextID": "DLG_1040",
+      "Text": "섬이 자네를 선택했다는 증거일지도 모르겠군.",
+      "NextID": "DLG_1042",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1042",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그래, 서두르지는 말게.",
+      "NextID": "DLG_1043",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1043",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "성소를 정화하기 위해서는 힘뿐만 아니라, 섬의 흐름을 이해해야 하네.",
+      "NextID": "DLG_1044",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1044",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "준비가 되면 다시 성소로 향하게 그것이 자네의 첫 번째 정화가 될 테니.",
+      "NextID": "DLG_1045",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_1045",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "하지만 지금의 힘으로는 부족하네.섬 곳곳을 돌아다니며 스스로를 단련하게.힘과 경험이 쌓이면, 다시 성소가 자네를 부를 걸세.",
+      "NextID": "DLG_1046",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2000",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "섬의 기운이 심상치 않네.",
+      "NextID": "DLG_2001",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2001",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "원래 이 근처의 고블린들은 사람을 피하며 살아가던 존재들이었지.",
+      "NextID": "DLG_2002",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2002",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "하지만 최근 들어 이유 없이 날뛰고 있네.",
+      "NextID": "DLG_2003",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2003",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "섬에 무언가 이상이 생겼다는 증거일지도 모르지.",
+      "NextID": "DLG_2004",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2004",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "주변의 고블린들을 처치하고, 무슨 일이 벌어지고 있는지 확인해 주겠나?",
+      "NextID": "DLG_2005",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2005",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "고블린들의 움직임이 예전과 다르지 않은가?",
+      "NextID": "DLG_2006",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2006",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "그들이 난폭해진 이유를 그냥 넘겨서는 안 되네.",
+      "NextID": "DLG_2007",
+      "IsChoice": false
+    },
+    {
+      "DialogueID": "DLG_2007",
+      "SpeakerID": "100000",
+      "SpeakerName": "정령 수호자",
+      "Text": "기운이 조금 가라앉은 것 같군.",
+      "NextID": "DLG_2008",
       "IsChoice": false
     },
     {

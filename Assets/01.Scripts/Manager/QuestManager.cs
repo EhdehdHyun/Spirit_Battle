@@ -280,11 +280,16 @@ public class QuestManager : MonoBehaviour
     {
         ReportProgress(CompleteCondition.KillMonster, monsterId, 1);
     }
+    public void OnInvestigate(int investigateID)
+    {
+        ReportProgress(CompleteCondition.Investigate, investigateID, 1);
+    }
     private bool ShouldShowProgress(CompleteCondition condition)
     {
         return condition == CompleteCondition.KillMonster
                || condition == CompleteCondition.CollectItem
-               || condition == CompleteCondition.UseSkill;
+               || condition == CompleteCondition.UseSkill
+               || condition == CompleteCondition.Investigate;
     }
     private bool TryGetCondition(string raw, out CompleteCondition condition)
     {
