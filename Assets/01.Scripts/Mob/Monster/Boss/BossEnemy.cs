@@ -113,7 +113,7 @@ public class BossEnemy : EnemyBase
         bossUI?.UpdateHp(currentHp, maxHp);
         damageFeedback?.Play();
 
-        TryAccumulateBreak();
+        bossTryAccumulateBreak();
 
         if (CurrentPhase == 1 && maxPhase >= 2 && hpRatio <= phase2HpRatio)
         {
