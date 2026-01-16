@@ -207,7 +207,7 @@ public class PhysicsCharacter : MonoBehaviour
         ApplyGravity(dt);
         UpdateExternalImpulse(dt);
 
-        UpdateAnimatorParams();
+        //UpdateAnimatorParams();
     }
 
     // ================== 외부 API ================== //
@@ -621,17 +621,17 @@ public class PhysicsCharacter : MonoBehaviour
         _rb.velocity = v;
     }
 
-    // 착지했을 때 애니메이터 파라미터 업데이트
-    private void UpdateAnimatorParams()
-    {
-        if (animator == null) return;
+    // // 착지했을 때 애니메이터 파라미터 업데이트
+    // private void UpdateAnimatorParams()
+    // {
+    //     if (animator == null) return;
 
-        animator.SetBool(_hashGrounded, _isGrounded);
+    //     animator.SetBool(_hashGrounded, _isGrounded);
 
-        Vector3 hv = _rb.velocity;
-        hv.y = 0f;
-        animator.SetFloat(_hashSpeed, hv.magnitude);
-    }
+    //     Vector3 hv = _rb.velocity;
+    //     hv.y = 0f;
+    //     animator.SetFloat(_hashSpeed, hv.magnitude);
+    // }
 
     void ApplyGravity(float dt)
     {
