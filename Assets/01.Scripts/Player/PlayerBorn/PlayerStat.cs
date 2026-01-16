@@ -288,17 +288,21 @@ public class PlayerStat : MonoBehaviour
     {
         this.level = data.level;
         this.currentExp = data.currentExp;
+        if (data.playerPosition == Vector3.zero && !data.isTutorialClear)
+        {
+            Debug.Log("[PlayerStat] 새 게임 감지: 위치 이동을 건너뛰고 씬의 초기 위치를 유지합니다.");
+        }
+        else
+        {
+            CharacterController cc = GetComponent<CharacterController>();
+            if (cc != null) cc.enabled = false;
 
-        CharacterController cc = GetComponent<CharacterController>();
-        if (cc != null) cc.enabled = false;
+            transform.position = data.playerPosition;
+            Physics.SyncTransforms();
+            if (cc != null) cc.enabled = true;
 
-        transform.position = data.playerPosition;
-
-        Physics.SyncTransforms();
-
-        if (cc != null) cc.enabled = true;
-
-        Debug.Log($"로드 완료: 레벨 {level}, 위치 {transform.position}");
+            Debug.Log($"[PlayerStat] 위치 로드 완료: {data.playerPosition}");
+        }
 
         ApplyLevelData();
         if (character != null)

@@ -132,4 +132,17 @@ public class GameManager : MonoBehaviour
     {
         IsUIBlocked = blocked;
     }
+    public void CompleteTutorial()
+    {
+        if (Data.CurrentData != null)
+        {
+            if (playerStat != null)
+            {
+                playerStat.SaveToData(Data.CurrentData);
+            }
+            Data.CurrentData.isTutorialClear = true;
+            Data.Save();
+            Debug.Log("[GameManager] 튜토리얼 완료! 현재 위치와 함께 저장되었습니다.");
+        }
+    }
 }
