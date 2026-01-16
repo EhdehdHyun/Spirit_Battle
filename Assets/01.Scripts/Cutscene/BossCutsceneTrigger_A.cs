@@ -139,7 +139,6 @@ public class BossCutsceneTrigger_A : MonoBehaviour
 
     private IEnumerator CoPlay()
     {
-        //GlobalInputBlocker.SetKeyboardBlocked(true, allowEsc: false);
         try
         {
             // 0) 컷씬 딜레이(보스 생성 타이밍 맞추기)

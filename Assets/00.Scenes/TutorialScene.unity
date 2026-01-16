@@ -14651,7 +14651,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000023452401
+      value: 0.0008682544
       objectReference: {fileID: 0}
     - target: {fileID: 6736991074344240082, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchorMax.y
@@ -77513,7 +77513,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   volume: {fileID: 1369278474}
   peakWeight: 1
-  rampIn: 0.02
+  rampIn: 0.2
   hold: 0.2
   rampOut: 0.1
   ignoreWhenPaused: 1
@@ -77533,7 +77533,7 @@ MonoBehaviour:
   priority: 0
   blendDistance: 0
   weight: 0
-  sharedProfile: {fileID: 11400000, guid: 2a4dad1ed7ec60248b557bd3a639ab72, type: 2}
+  sharedProfile: {fileID: 11400000, guid: 308e3d9728cdc654fba339a5dfe7384d, type: 2}
 --- !u!4 &1369278475
 Transform:
   m_ObjectHideFlags: 0

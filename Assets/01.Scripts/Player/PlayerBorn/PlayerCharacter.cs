@@ -39,6 +39,11 @@ public class PlayerCharacter : CharacterBase
         //게임오버 됐을 때 게임오버 화면 제외 모든 UI 숨기는 기능
         UIVisibilityManager.Instance?.HideAllExceptGameOver();
 
+        GlobalInputBlocker.SetKeyboardBlocked(false);
+
+        //탭, M키 입력 차단
+        GlobalInputBlocker.SetKeyBlocked(KeyCode.Tab, true);
+        GlobalInputBlocker.SetKeyBlocked(KeyCode.M, true);
 
         // 입력 / 이동 락, 죽음 애니메이션
         input?.Lock();
@@ -87,6 +92,9 @@ public class PlayerCharacter : CharacterBase
         // 다시 조작 가능
         input?.Unlock();
         if (physicsChar != null) physicsChar.SetMovementLocked(false);
+        GlobalInputBlocker.SetKeyBlocked(KeyCode.Tab, false);
+        GlobalInputBlocker.SetKeyBlocked(KeyCode.M, false);
+
     }
     public void Rest()
     {
