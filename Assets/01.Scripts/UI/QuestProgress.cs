@@ -10,4 +10,4 @@ public class QuestProgress
     }
 
     public bool IsComplete => Current >= Target;
-}
+} 

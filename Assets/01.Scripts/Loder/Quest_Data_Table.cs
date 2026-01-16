@@ -64,6 +64,16 @@ public class Quest_Data_Table
     /// Quest Purpose
     /// </summary>
     public string ObjectiveText; 
+    
+    /// <summary>
+    /// NPC에게 보고해야 완료
+    /// </summary>
+    public bool RequireTurnIn;
+    
+    /// <summary>
+    /// 전달퀘스트 아이템 아이디
+    /// </summary>
+    public int DeliverItemID; 
 }
 
 public class Quest_Data_Loader
