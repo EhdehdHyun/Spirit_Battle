@@ -10,7 +10,7 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
 
     [Header("피격 시 Hit 트리거 사용")]
     [SerializeField] private bool playHitOnDamaged = true;
-    
+
     public int monsterId = 10000; //몬스터 ID
 
     protected override void Awake()
@@ -43,7 +43,7 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
 
         // 죽는 애니 트리거
         monsterAnim?.PlayDie();
-        
+
         QuestManager.Instance.OnMonsterKilled(monsterId);
 
     }

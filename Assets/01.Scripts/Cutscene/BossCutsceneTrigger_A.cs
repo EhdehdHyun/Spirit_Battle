@@ -69,6 +69,9 @@ public class BossCutsceneTrigger_A : MonoBehaviour
     [Tooltip("컷씬 보스가 켜질 때, AI/전투 스크립트가 있으면 같이 꺼버리기(원치 않는 행동 방지)")]
     [SerializeField] private MonoBehaviour[] cutsceneBossScriptsToDisable;
 
+    [Header("Spawn Bridge (스킵 시 즉시 소환)")]
+    [SerializeField] private BossSpawnInteratableOnce bossPortal;
+
     // ===================== Letterbox(컷씬에서만 켜짐) =====================
     [Header("Letterbox UI (컷씬에서만 켜짐)")]
     [Tooltip("LetterBar 루트(부모 오브젝트). 없으면 Top/Bottom만으로도 동작함")]
@@ -130,156 +133,165 @@ public class BossCutsceneTrigger_A : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         played = true;
+
         StartCoroutine(CoPlay());
     }
 
     private IEnumerator CoPlay()
     {
-        // 0) 컷씬 딜레이(보스 생성 타이밍 맞추기)
-        if (cutsceneDelay > 0f)
+        //GlobalInputBlocker.SetKeyboardBlocked(true, allowEsc: false);
+        try
         {
-            float t0 = 0f;
-            while (t0 < cutsceneDelay)
+            // 0) 컷씬 딜레이(보스 생성 타이밍 맞추기)
+            if (cutsceneDelay > 0f)
             {
-                t0 += Time.deltaTime;
-                yield return null;
-            }
-        }
-
-        if (!mainCamera) mainCamera = Camera.main;
-
-        if (!mainCamera || !cutsceneCamera || points == null || points.Length < 2)
-        {
-            Debug.LogError("[BossCutsceneTrigger_A] 세팅 누락(mainCamera/cutsceneCamera/points>=2)");
-            yield break;
-        }
-
-        // 1) 보스 BGM 시작 (컷씬 시작부터)
-        if (bossBgmClip != null)
-        {
-            yield return StartCoroutine(CoPlayBossBgm());
-            bossBgmStarted = true;
-
-            // “testboss 비활성화될 때까지” 자동 감시 시작
-            if (bossEndWatchCo == null)
-                bossEndWatchCo = StartCoroutine(CoWatchBossEndAndStopBgm());
-        }
-
-        // 2) 입력 잠금(스크립트 비활성화)
-        if (disableWhileCutscene != null)
-        {
-            foreach (var s in disableWhileCutscene)
-                if (s) s.enabled = false;
-        }
-
-        // 3) UI 끄기
-        if (uiToDisableWhileCutscene != null)
-        {
-            foreach (var go in uiToDisableWhileCutscene)
-                if (go) go.SetActive(false);
-        }
-
-        // 4) Letterbox ON
-        if (letterboxPreRoll > 0f)
-            yield return WaitUnscaled(letterboxPreRoll);
-
-        yield return AnimateLetterbox(true);
-
-        // 5) TimeScale 조절(0~1)
-        prevTimeScale = Time.timeScale;
-        Time.timeScale = Mathf.Clamp01(cutsceneTimeScale);
-
-        // 6) 컷씬 카메라 전환
-        mainCamera.gameObject.SetActive(false);
-        cutsceneCamera.gameObject.SetActive(true);
-
-        // 시작 포인트
-        cutsceneCamera.transform.position = points[0].position;
-        cutsceneCamera.transform.rotation = points[0].rotation;
-
-        // 7) 컷씬 보스 연출 시작(동시에 진행)
-        Coroutine bossCo = null;
-        if (cutsceneBossRoot != null)
-            bossCo = StartCoroutine(CoPlayCutsceneBoss());
-
-        // 시작 포인트 홀드
-        yield return HoldAtPoint(0);
-
-        // 8) 카메라 경로 이동
-        for (int seg = 0; seg < points.Length - 1; seg++)
-        {
-            float dur = GetMoveDuration(seg);
-            Transform a = points[seg];
-            Transform b = points[seg + 1];
-
-            float t = 0f;
-            while (t < dur)
-            {
-                t += Time.unscaledDeltaTime;
-                float lerp = Mathf.Clamp01(t / Mathf.Max(0.01f, dur));
-
-                cutsceneCamera.transform.position = Vector3.Lerp(a.position, b.position, lerp);
-
-                if (lookTarget)
+                float t0 = 0f;
+                while (t0 < cutsceneDelay)
                 {
-                    Vector3 dir = (lookTarget.position - cutsceneCamera.transform.position);
-                    if (dir.sqrMagnitude > 0.0001f)
+                    t0 += Time.deltaTime;
+                    yield return null;
+                }
+            }
+
+            if (!mainCamera) mainCamera = Camera.main;
+
+            if (!mainCamera || !cutsceneCamera || points == null || points.Length < 2)
+            {
+                Debug.LogError("[BossCutsceneTrigger_A] 세팅 누락(mainCamera/cutsceneCamera/points>=2)");
+                yield break;
+            }
+
+            // 1) 보스 BGM 시작 (컷씬 시작부터)
+            if (bossBgmClip != null)
+            {
+                yield return StartCoroutine(CoPlayBossBgm());
+                bossBgmStarted = true;
+
+                // “testboss 비활성화될 때까지” 자동 감시 시작
+                if (bossEndWatchCo == null)
+                    bossEndWatchCo = StartCoroutine(CoWatchBossEndAndStopBgm());
+            }
+
+            // 2) 입력 잠금(스크립트 비활성화)
+            if (disableWhileCutscene != null)
+            {
+                foreach (var s in disableWhileCutscene)
+                    if (s) s.enabled = false;
+            }
+
+            // 3) UI 끄기
+            if (uiToDisableWhileCutscene != null)
+            {
+                foreach (var go in uiToDisableWhileCutscene)
+                    if (go) go.SetActive(false);
+            }
+
+            // 4) Letterbox ON
+            if (letterboxPreRoll > 0f)
+                yield return WaitUnscaled(letterboxPreRoll);
+
+            yield return AnimateLetterbox(true);
+
+            // 5) TimeScale 조절(0~1)
+            prevTimeScale = Time.timeScale;
+            Time.timeScale = Mathf.Clamp01(cutsceneTimeScale);
+
+            // 6) 컷씬 카메라 전환
+            mainCamera.gameObject.SetActive(false);
+            cutsceneCamera.gameObject.SetActive(true);
+
+            // 시작 포인트
+            cutsceneCamera.transform.position = points[0].position;
+            cutsceneCamera.transform.rotation = points[0].rotation;
+
+            // 7) 컷씬 보스 연출 시작(동시에 진행)
+            Coroutine bossCo = null;
+            if (cutsceneBossRoot != null)
+                bossCo = StartCoroutine(CoPlayCutsceneBoss());
+
+            // 시작 포인트 홀드
+            yield return HoldAtPoint(0);
+
+            // 8) 카메라 경로 이동
+            for (int seg = 0; seg < points.Length - 1; seg++)
+            {
+                float dur = GetMoveDuration(seg);
+                Transform a = points[seg];
+                Transform b = points[seg + 1];
+
+                float t = 0f;
+                while (t < dur)
+                {
+                    t += Time.unscaledDeltaTime;
+                    float lerp = Mathf.Clamp01(t / Mathf.Max(0.01f, dur));
+
+                    cutsceneCamera.transform.position = Vector3.Lerp(a.position, b.position, lerp);
+
+                    if (lookTarget)
                     {
-                        Quaternion lookRot = Quaternion.LookRotation(dir.normalized, Vector3.up);
-                        cutsceneCamera.transform.rotation =
-                            Quaternion.Slerp(cutsceneCamera.transform.rotation, lookRot, 0.25f);
+                        Vector3 dir = (lookTarget.position - cutsceneCamera.transform.position);
+                        if (dir.sqrMagnitude > 0.0001f)
+                        {
+                            Quaternion lookRot = Quaternion.LookRotation(dir.normalized, Vector3.up);
+                            cutsceneCamera.transform.rotation =
+                                Quaternion.Slerp(cutsceneCamera.transform.rotation, lookRot, 0.25f);
+                        }
                     }
-                }
-                else
-                {
-                    cutsceneCamera.transform.rotation = Quaternion.Slerp(a.rotation, b.rotation, lerp);
+                    else
+                    {
+                        cutsceneCamera.transform.rotation = Quaternion.Slerp(a.rotation, b.rotation, lerp);
+                    }
+
+                    if (Input.GetKeyDown(skipKey))
+                    {
+                        // 스킵 시 컷씬 보스도 정리
+                        if (cutsceneBossRoot) cutsceneBossRoot.SetActive(false);
+                        seg = points.Length;
+                        break;
+                    }
+
+                    yield return null;
                 }
 
-                if (Input.GetKeyDown(skipKey))
-                {
-                    // 스킵 시 컷씬 보스도 정리
-                    if (cutsceneBossRoot) cutsceneBossRoot.SetActive(false);
-                    seg = points.Length;
-                    break;
-                }
-
-                yield return null;
+                yield return HoldAtPoint(seg + 1);
             }
 
-            yield return HoldAtPoint(seg + 1);
+            // 9) 컷씬 보스 코루틴이 아직 돌고 있으면 기다려줌(선택)
+            if (bossCo != null)
+                yield return bossCo;
+
+            // 10) 원복
+            cutsceneCamera.gameObject.SetActive(false);
+            mainCamera.gameObject.SetActive(true);
+
+            Time.timeScale = prevTimeScale;
+
+            // 11) Letterbox OFF
+            if (letterboxPostRoll > 0f)
+                yield return WaitUnscaled(letterboxPostRoll);
+
+            yield return AnimateLetterbox(false);
+
+            // 12) UI/입력 복구
+            if (uiToDisableWhileCutscene != null)
+            {
+                foreach (var go in uiToDisableWhileCutscene)
+                    if (go) go.SetActive(true);
+            }
+
+            if (disableWhileCutscene != null)
+            {
+                foreach (var s in disableWhileCutscene)
+                    if (s) s.enabled = true;
+            }
+
+            // BGM은 여기서 끄지 않음!
+            // “testBossRoot가 비활성화될 때” CoWatchBossEndAndStopBgm이 끈다.
         }
-
-        // 9) 컷씬 보스 코루틴이 아직 돌고 있으면 기다려줌(선택)
-        if (bossCo != null)
-            yield return bossCo;
-
-        // 10) 원복
-        cutsceneCamera.gameObject.SetActive(false);
-        mainCamera.gameObject.SetActive(true);
-
-        Time.timeScale = prevTimeScale;
-
-        // 11) Letterbox OFF
-        if (letterboxPostRoll > 0f)
-            yield return WaitUnscaled(letterboxPostRoll);
-
-        yield return AnimateLetterbox(false);
-
-        // 12) UI/입력 복구
-        if (uiToDisableWhileCutscene != null)
+        finally
         {
-            foreach (var go in uiToDisableWhileCutscene)
-                if (go) go.SetActive(true);
+            GlobalInputBlocker.SetKeyboardBlocked(false);
         }
-
-        if (disableWhileCutscene != null)
-        {
-            foreach (var s in disableWhileCutscene)
-                if (s) s.enabled = true;
-        }
-
-        // BGM은 여기서 끄지 않음!
-        // “testBossRoot가 비활성화될 때” CoWatchBossEndAndStopBgm이 끈다.
     }
 
     private IEnumerator CoPlayCutsceneBoss()
@@ -557,4 +569,5 @@ public class BossCutsceneTrigger_A : MonoBehaviour
         img.color = c;
         img.enabled = true;
     }
+
 }
