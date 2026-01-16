@@ -5,7 +5,7 @@ public class InventoryToggleController : MonoBehaviour
     [Header("Inventory UI Root")]
     public GameObject inventoryRoot;
 
-    [Header("ÀÎº¥ ¿­·ÈÀ» ¶§ ²¨µÑ ÇÃ·¹ÀÌ¾î ÂÊ ½ºÅ©¸³Æ®µé")]
+    [Header("ï¿½Îºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®ï¿½ï¿½")]
     public MonoBehaviour[] gameplayScriptsToDisable;
 
     private bool isInventoryOpen = false;
@@ -22,6 +22,8 @@ public class InventoryToggleController : MonoBehaviour
 
     private void Update()
     {
+        if (GlobalInputBlocker.BlockKeyboard) return;
+
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             if (isInventoryOpen)
@@ -35,7 +37,7 @@ public class InventoryToggleController : MonoBehaviour
     {
         isInventoryOpen = true;
 
-        // ÀÎº¥Åä¸® UI ÄÑ±â
+        // ï¿½Îºï¿½ï¿½ä¸® UI ï¿½Ñ±ï¿½
         if (inventoryRoot != null)
             inventoryRoot.SetActive(true);
 
@@ -54,7 +56,7 @@ public class InventoryToggleController : MonoBehaviour
             }
         }
 
-        Debug.Log("[InventoryToggleController] ÀÎº¥Åä¸® ¿­±â");
+        Debug.Log("[InventoryToggleController] ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½");
     }
 
     private void CloseInventory()
@@ -80,6 +82,6 @@ public class InventoryToggleController : MonoBehaviour
             }
         }
 
-        Debug.Log("[InventoryToggleController] ÀÎº¥Åä¸® ´Ý±â");
+        Debug.Log("[InventoryToggleController] ï¿½Îºï¿½ï¿½ä¸® ï¿½Ý±ï¿½");
     }
 }

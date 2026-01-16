@@ -40,9 +40,9 @@ public class GameOverUI : MonoBehaviour
     {
         Hidden,
         Fading,
-        WaitFirstAnyKey,     // (일반) 타이틀 뜬 뒤 첫 입력 -> 힌트 표시
-        Dialogue,            // (튜토) 대사 진행 중
-        WaitRespawnAnyKey    // (일반/튜토 공통) 힌트 표시 중 -> 입력 시 부활
+        WaitFirstAnyKey,
+        Dialogue,
+        WaitRespawnAnyKey
     }
 
     private Phase phase = Phase.Hidden;
@@ -78,7 +78,6 @@ public class GameOverUI : MonoBehaviour
         switch (phase)
         {
             case Phase.WaitFirstAnyKey:
-                // 첫 입력 -> 힌트 보여주기 (깜빡임 없음)
                 ShowRespawnHint();
                 phase = Phase.WaitRespawnAnyKey;
                 inputBlockUntil = Time.unscaledTime + inputBlockSeconds;
@@ -181,7 +180,7 @@ public class GameOverUI : MonoBehaviour
         else
         {
             dialogueMode = false;
-            phase = Phase.WaitFirstAnyKey; // (일반) 첫 입력 대기
+            phase = Phase.WaitFirstAnyKey;
         }
 
         inputBlockUntil = Time.unscaledTime + inputBlockSeconds;
@@ -200,7 +199,6 @@ public class GameOverUI : MonoBehaviour
 
         if (dialogueIndex >= dialogueLines.Length)
         {
-            // 대사 끝 -> 패널 끄고 "부활 안내"로
             dialogueMode = false;
             SetTutorialPanelVisible(false);
 
@@ -228,11 +226,8 @@ public class GameOverUI : MonoBehaviour
 
         HideRespawnHint();
 
-        // RespawnManager가 이 이벤트를 구독해서 부활 처리
         OnRetryPressed?.Invoke();
     }
-
-    // ====== Hint (No Blink) ======
 
     private void ShowRespawnHint()
     {
@@ -248,8 +243,6 @@ public class GameOverUI : MonoBehaviour
         if (respawnHintText != null)
             respawnHintText.gameObject.SetActive(false);
     }
-
-    // ====== Utility ======
 
     private void SetTutorialPanelVisible(bool visible)
     {

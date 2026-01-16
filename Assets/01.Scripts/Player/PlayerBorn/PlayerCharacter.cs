@@ -73,7 +73,7 @@ public class PlayerCharacter : CharacterBase
         // 위치 이동
         transform.position = position;
 
-        // 물리 리셋(있으면)
+        // 물리 리셋
         var rb = GetComponent<Rigidbody>();
         if (rb != null)
         {

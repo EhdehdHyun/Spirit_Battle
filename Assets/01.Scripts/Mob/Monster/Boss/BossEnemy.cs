@@ -312,4 +312,10 @@ public class BossEnemy : EnemyBase
         Destroy(gameObject);
         tutorialBossDestroyCo = null;
     }
+
+    //브레이크, 그로기, 누적치 초기화
+    public void ResetForRetry()
+    {
+        RestoreFullHp(true);
+    }
 }

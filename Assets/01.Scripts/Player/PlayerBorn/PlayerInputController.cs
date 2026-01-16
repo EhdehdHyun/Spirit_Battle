@@ -131,6 +131,7 @@ public class PlayerInputController : MonoBehaviour
 
     public void OnDash(InputAction.CallbackContext ctx)
     {
+        if (isLocked) return;
         if (!ctx.performed) return;
         if (isLocked) return;
         if (IsParrying()) return;
