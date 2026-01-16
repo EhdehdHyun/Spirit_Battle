@@ -22,7 +22,7 @@ public class InventoryToggleController : MonoBehaviour
 
     private void Update()
     {
-        if (GlobalInputBlocker.BlockKeyboard) return;
+        if (GlobalInputBlocker.IsKeyBlocked(KeyCode.Tab)) return;
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {

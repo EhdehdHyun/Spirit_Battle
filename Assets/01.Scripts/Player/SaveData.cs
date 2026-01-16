@@ -18,12 +18,13 @@ public class SaveData
     public Vector3 playerPosition;
 
     public List<ItemSaveData> inventoryItems = new List<ItemSaveData>();
-
+    public bool isTutorialClear = false;
     public SaveData()
     {
         level = 1;
         currentExp = 0;
         currentHp = 100;
         playerPosition = Vector3.zero;
+        isTutorialClear = false;
     }
 }

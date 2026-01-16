@@ -16,6 +16,7 @@ public class MapController : MonoBehaviour
 
     void Update()
     {
+        if (GlobalInputBlocker.IsKeyBlocked(KeyCode.M)) return;
         if (Input.GetKeyDown(KeyCode.M))
         {
             ToggleMap();

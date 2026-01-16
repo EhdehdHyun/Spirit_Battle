@@ -14,6 +14,10 @@ public class RespawnManager : MonoBehaviour
 
     public Transform CurrentRespawnPoint => respawnPoint;
 
+    private static readonly int HashWeaponEquipped = Animator.StringToHash("WeaponEquipped");
+    private static readonly int HashRespawn = Animator.StringToHash("Respawn");
+    private static readonly int HashIdle = Animator.StringToHash("Idle");
+
     private IEnumerator Start()
     {
         if (playerRoot == null)
@@ -59,22 +63,22 @@ public class RespawnManager : MonoBehaviour
         // 이동(텔레포트)
         TeleportPlayerRoot(playerRoot, respawnPoint.position);
 
-        if (isFirstDeath)
-        {
-            //인벤토리 비우기
-            if (InventoryManager.Instance != null)
-            {
-                // 0번 슬롯 = EquipWeaponIndex
-                InventoryManager.Instance.ClearSlot(InventoryManager.EquipWeaponIndex);
-                Debug.Log("[RespawnManager] 튜토리얼 강제 사망: 무기가 제거되었습니다.");
-            }
+        // if (isFirstDeath)
+        // {
+        //     //인벤토리 비우기
+        //     if (InventoryManager.Instance != null)
+        //     {
+        //         // 0번 슬롯 = EquipWeaponIndex
+        //         InventoryManager.Instance.ClearSlot(InventoryManager.EquipWeaponIndex);
+        //         Debug.Log("[RespawnManager] 튜토리얼 강제 사망: 무기가 제거되었습니다.");
+        //     }
 
-            QuestManager.Instance.AcceptQuest(40000);
-            isFirstDeath = false;
-        }
+        //     QuestManager.Instance.AcceptQuest(40000);
+        //     isFirstDeath = false;
+        // }
 
 
-        // HP 풀회복 + 입력/이동락 해제
+        // HP 풀회복 + 입력,이동락 해제
         var baseChar = playerRoot.GetComponentInParent<CharacterBase>();
         if (baseChar != null)
             baseChar.RestoreFullHp();
@@ -87,16 +91,22 @@ public class RespawnManager : MonoBehaviour
             phy.SetMovementLocked(false);
 
         // 애니메이션 “처음으로”
-        var animator = playerRoot.GetComponentInChildren<Animator>();
-        if (animator != null)
-        {
-            animator.Rebind();
-            animator.Update(0f);
-        }
+        // var animator = playerRoot.GetComponentInChildren<Animator>();
+        // if (animator != null)
+        // {
+        //     animator.Rebind();
+        //     animator.Update(0f);
 
-        // 게임오버 UI 닫기(시간 복구는 GameOverUI.Hide가 한다고 가정)
+        //     ResetAnimatorForRespawn(animator);
+        // }
+        var animator = playerRoot.GetComponentInChildren<Animator>();
+        ResetAnimatorForRespawn(animator);
+
         if (GameOverUI.Instance != null)
             GameOverUI.Instance.Hide();
+
+        GlobalInputBlocker.SetKeyBlocked(KeyCode.Tab, false);
+        GlobalInputBlocker.SetKeyBlocked(KeyCode.M, false);
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
@@ -104,7 +114,7 @@ public class RespawnManager : MonoBehaviour
 
     private void TeleportPlayerRoot(GameObject root, Vector3 pos)
     {
-        // Rigidbody가 있으면 rb.position으로 이동 (스냅백 방지)
+        // Rigidbody가 있으면 rb.position으로 이동
         var rb = root.GetComponent<Rigidbody>()
               ?? root.GetComponentInChildren<Rigidbody>()
               ?? root.GetComponentInParent<Rigidbody>();
@@ -114,11 +124,26 @@ public class RespawnManager : MonoBehaviour
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.position = pos;
-            root.transform.position = pos; // 동기화(안전)
+            root.transform.position = pos;
         }
         else
         {
             root.transform.position = pos;
         }
+    }
+
+    private void ResetAnimatorForRespawn(Animator animator)
+    {
+        if (animator == null) return;
+
+        // foreach (var p in animator.parameters)
+        // {
+        //     if (p.type == AnimatorControllerParameterType.Trigger)
+        //         animator.ResetTrigger(p.name);
+        // }
+
+        // animator.SetBool(HashWeaponEquipped, false);
+
+        animator.SetTrigger(HashRespawn);
     }
 }
