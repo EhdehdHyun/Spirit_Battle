@@ -11,7 +11,7 @@ public class DataManager
     public Quest_Data_Loader Quest_Data_Loader { get; private set; }
     public Reward_Data_Loader Reward_Data_Loader { get; private set; }
 
-    public SaveData CurrentData { get; private set; }
+    public SaveData CurrentData { get; set; }
 
     private string savePath;
 
