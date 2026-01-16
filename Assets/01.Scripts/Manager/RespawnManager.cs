@@ -26,7 +26,6 @@ public class RespawnManager : MonoBehaviour
             if (p != null) playerRoot = p;
         }
 
-        // GameOverUI.Instance가 준비될 때까지 기다렸다가 구독
         while (GameOverUI.Instance == null) yield return null;
         GameOverUI.Instance.OnRetryPressed += Retry;
     }
@@ -47,7 +46,6 @@ public class RespawnManager : MonoBehaviour
         }
 
         respawnPoint = newPoint;
-        // Debug.Log($"[RespawnManager] RespawnPoint changed => {newPoint.name}");
     }
 
     public void Retry()
@@ -63,21 +61,6 @@ public class RespawnManager : MonoBehaviour
         // 이동(텔레포트)
         TeleportPlayerRoot(playerRoot, respawnPoint.position);
 
-        // if (isFirstDeath)
-        // {
-        //     //인벤토리 비우기
-        //     if (InventoryManager.Instance != null)
-        //     {
-        //         // 0번 슬롯 = EquipWeaponIndex
-        //         InventoryManager.Instance.ClearSlot(InventoryManager.EquipWeaponIndex);
-        //         Debug.Log("[RespawnManager] 튜토리얼 강제 사망: 무기가 제거되었습니다.");
-        //     }
-
-        //     QuestManager.Instance.AcceptQuest(40000);
-        //     isFirstDeath = false;
-        // }
-
-
         // HP 풀회복 + 입력,이동락 해제
         var baseChar = playerRoot.GetComponentInParent<CharacterBase>();
         if (baseChar != null)
@@ -90,15 +73,6 @@ public class RespawnManager : MonoBehaviour
         if (phy != null)
             phy.SetMovementLocked(false);
 
-        // 애니메이션 “처음으로”
-        // var animator = playerRoot.GetComponentInChildren<Animator>();
-        // if (animator != null)
-        // {
-        //     animator.Rebind();
-        //     animator.Update(0f);
-
-        //     ResetAnimatorForRespawn(animator);
-        // }
         var animator = playerRoot.GetComponentInChildren<Animator>();
         ResetAnimatorForRespawn(animator);
 
@@ -135,14 +109,6 @@ public class RespawnManager : MonoBehaviour
     private void ResetAnimatorForRespawn(Animator animator)
     {
         if (animator == null) return;
-
-        // foreach (var p in animator.parameters)
-        // {
-        //     if (p.type == AnimatorControllerParameterType.Trigger)
-        //         animator.ResetTrigger(p.name);
-        // }
-
-        // animator.SetBool(HashWeaponEquipped, false);
 
         animator.SetTrigger(HashRespawn);
     }
