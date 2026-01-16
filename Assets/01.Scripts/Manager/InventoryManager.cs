@@ -14,13 +14,6 @@ public class InventoryManager : MonoBehaviour
 {
     public static InventoryManager Instance { get; private set; }
 
-    // =========================================================
-    // ✅ 슬롯 인덱스 규칙 (고정)
-    //  - 장비칸(무기 장착): 0
-    //  - WeaponPanel(무기 인벤): 1 ~ 25
-    //  - ItemPanel(아이템 인벤): 26 ~ 50
-    //  - 총 슬롯: 0 ~ 50 (51개)
-    // =========================================================
     public const int EquipWeaponIndex = 0;
 
     public const int WeaponInvStart = 1;
@@ -29,11 +22,15 @@ public class InventoryManager : MonoBehaviour
 
     public const int ItemInvStart = 26;
     public const int ItemInvCount = 25;
-    public const int ItemInvEnd = ItemInvStart + ItemInvCount - 1;       // 50
+    public const int ItemInvEnd = ItemInvStart + ItemInvCount - 1;        // 50
 
     public const int TotalSlotCount = 51; // 0~50
 
-    [Header("Grid Size (기존 변수 유지용, 실제 슬롯 수는 TotalSlotCount로 고정)")]
+    [Header("UI 참조 (필수 연결)")]
+    [Tooltip("인벤토리 전체 UI 패널 또는 캔버스 (켜고 끄기용)")]
+    public GameObject inventoryUI;
+
+    [Header("Grid Size (기존 변수 유지용)")]
     public int rows = 5;
     public int columns = 5;
 
@@ -51,15 +48,8 @@ public class InventoryManager : MonoBehaviour
     [Header("장착 슬롯 인덱스(고정)")]
     public int WeaponEquipStartIndex = EquipWeaponIndex;
 
-    /// <summary>인벤토리가 바뀔 때마다 UI가 구독하는 이벤트</summary>
     public event Action OnInventoryChanged;
 
-    // =========================================================
-    // ✅ 소비 아이템(예: Apple) 회복 설정
-    //  - itemKey: Data_table.key
-    //  - healAmount: 1개 사용 시 회복량
-    //  - 회복 적용은 PlayerTag("Player") 대상에서 Heal/TryHeal/AddHp 등 메서드를 찾아 호출
-    // =========================================================
     [Serializable]
     public class HealConsumableEntry
     {
@@ -78,6 +68,9 @@ public class InventoryManager : MonoBehaviour
     private MethodInfo _healMethod;
     private bool _healParamIsInt;
 
+    // 인벤토리 열림/닫힘 상태 추적 변수
+    private bool isOpen = false;
+
     private static readonly string[] HealMethodCandidates =
     {
         "TryHeal", "Heal", "AddHp", "RecoverHp", "RestoreHp", "RestoreHP"
@@ -87,19 +80,68 @@ public class InventoryManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(Instance.gameObject);
         }
+
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         WeaponEquipStartIndex = EquipWeaponIndex;
 
         InitSlots();
         BindPlayerAndHealMethod();
-
-        Debug.Log($"[InventoryManager] Awake: slot count = {slots.Count} (expected {TotalSlotCount})");
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.inventoryManager = this;
+        }
+        Debug.Log($"[InventoryManager] Awake 완료. 연결된 UI: {inventoryUI}");
     }
+
+    private void Start()
+    {
+        if (inventoryUI != null)
+        {
+            inventoryUI.SetActive(false);
+        }
+
+        isOpen = false;
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
+    public void ToggleInventory()
+    {
+        isOpen = !isOpen; // 상태 반전
+
+        if (inventoryUI != null)
+        {
+            inventoryUI.SetActive(isOpen);
+        }
+
+        if (isOpen)
+        {
+            // 열렸을 때: 게임 일시정지(선택사항), 마우스 보이기
+            // Time.timeScale = 0f; 
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            // 닫혔을 때: 게임 재개, 마우스 숨기기
+            // Time.timeScale = 1f; 
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
+    // 탭 키 입력 처리 (Update에 추가)
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            ToggleInventory();
+        }
+    }
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     private void InitSlots()
     {
@@ -169,7 +211,6 @@ public class InventoryManager : MonoBehaviour
             Debug.LogWarning($"[InventoryManager] AddItem: 범위({start}~{end})가 가득 찼습니다.");
     }
 
-    // ✅ 범위 지정 추가(성공/실패 반환)
     private bool AddItemToRange(ItemInstance newItem, int start, int end)
     {
         if (newItem == null || newItem.data == null || newItem.quantity <= 0) return false;
@@ -340,7 +381,7 @@ public class InventoryManager : MonoBehaviour
 
         if (_playerObj == null || _healMethod == null || _healTarget == null)
         {
-            Debug.LogWarning("[InventoryManager] TryApplyConsumableEffect: 플레이어 회복 메서드를 찾지 못했습니다. (TryHeal/Heal/AddHp/RecoverHp...)");
+            Debug.LogWarning("[InventoryManager] TryApplyConsumableEffect: 플레이어 회복 메서드를 찾지 못했습니다.");
             return false;
         }
 
@@ -553,7 +594,7 @@ public class InventoryManager : MonoBehaviour
                 return true;
             }
         }
-        return  false;
+        return false;
     }
 
     public void SaveToData(SaveData data)
