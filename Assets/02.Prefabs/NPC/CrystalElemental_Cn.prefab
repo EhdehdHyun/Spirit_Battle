@@ -987,7 +987,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 677894c5557bd4808bf2d566ba38c2de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questDialogues: []
   startDialogueID: DLG_1001
+  giveQuestID: -1
+  completeQuestID: -1
+  canInteract: 1
 --- !u!114 &349883920023172259
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -289,6 +289,7 @@ GameObject:
   - component: {fileID: 8707725663232677794}
   - component: {fileID: 199234287953367555}
   - component: {fileID: 4079054645493482080}
+  - component: {fileID: 3332004088807882336}
   m_Layer: 12
   m_Name: CutSceneNPC
   m_TagString: Untagged
@@ -371,7 +372,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 677894c5557bd4808bf2d566ba38c2de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  questDialogues: []
   startDialogueID: DLG_1001
+  giveQuestID: -1
+  completeQuestID: -1
   canInteract: 1
 --- !u!114 &4079054645493482080
 MonoBehaviour:
@@ -386,6 +390,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeed: 5
+--- !u!114 &3332004088807882336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1396499156349498841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 921b281d8bdf34fb1a9771f6d783a257, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  npcID: -1
 --- !u!1 &1881508185653832109
 GameObject:
   m_ObjectHideFlags: 0

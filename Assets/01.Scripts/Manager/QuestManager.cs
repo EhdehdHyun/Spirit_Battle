@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 public enum QuestState
 {
-    Active,
+    Active,           // 진행중 
     Completed,        // 완료됨(보상 미수령)
     RewardClaimed     // 보상 수령 완료
 }
@@ -13,8 +13,9 @@ public enum CompleteCondition
     TalkToNPC,     // NPC 대화
     KillMonster,   // 몬스터 처치
     UseSkill,      // 스킬 사용 (튜토리얼 핵심)
-    Investigate,    // 조사/상호작용
-    CollectItem  //아이템 수집
+    Investigate,   // 조사/상호작용
+    CollectItem ,  //아이템 수집
+    DestroyObject  //오브젝트 파괴
 }
 
 public class QuestManager : MonoBehaviour
@@ -289,7 +290,8 @@ public class QuestManager : MonoBehaviour
         return condition == CompleteCondition.KillMonster
                || condition == CompleteCondition.CollectItem
                || condition == CompleteCondition.UseSkill
-               || condition == CompleteCondition.Investigate;
+               || condition == CompleteCondition.Investigate
+               || condition == CompleteCondition.DestroyObject;
     }
     private bool TryGetCondition(string raw, out CompleteCondition condition)
     {
