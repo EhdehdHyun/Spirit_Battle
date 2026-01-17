@@ -23,19 +23,14 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null)
+        if (Instance != null && Instance != this)
         {
-            Destroy(gameObject);
-            return;
+            Destroy(Instance.gameObject);
         }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
 
+        Instance = this;
         Data = new DataManager();
         Data.Initialize();
-
-        if (menuPanel != null) menuPanel.SetActive(false);
-        if (saveMessageText != null) saveMessageText.SetActive(false);
     }
 
     void Start()
