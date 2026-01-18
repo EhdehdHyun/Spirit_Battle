@@ -29,6 +29,9 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private bool weaponEquipped = false;
     public bool WeaponEquipped => weaponEquipped;
 
+    [SerializeField] private bool equipRequestPending;
+    [SerializeField] private bool requestedEquipState; // true=장착, false=해제
+
     [Header("공격 상태")]
     [SerializeField] private bool isAttacking = false;
     public bool IsAttacking => isAttacking;
@@ -172,12 +175,14 @@ public class PlayerCombat : MonoBehaviour
 
     public void OnToggleWeaponInput()
     {
+        if (IsDashing) return;
         if (inventoryManager == null)
         {
             Debug.LogWarning("[PlayerCombat] inventoryManager 가 없습니다.");
             return;
         }
-
+        if (IsDashing) return;
+        if (playerInput != null && playerInput.isLocked) return;
         var equippedWeapon = inventoryManager.GetEquippedWeapon();
         if (equippedWeapon == null)
         {
@@ -185,7 +190,8 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
-        if (isEquipping) return;
+        requestedEquipState = !weaponEquipped;
+        equipRequestPending = true;
 
         BeginEquipLock();
 

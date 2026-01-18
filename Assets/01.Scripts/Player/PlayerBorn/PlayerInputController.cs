@@ -181,7 +181,7 @@ public class PlayerInputController : MonoBehaviour
             return;
         }
 
-        SetDashLock(character.dashDuration);
+        SetDashLock(character.dashDuration + 0.1f);
     }
 
     public void OnAttack(InputAction.CallbackContext ctx)
@@ -210,8 +210,11 @@ public class PlayerInputController : MonoBehaviour
         if (isLocked) return;
         if (IsParrying()) return;
         if (!ctx.started) return;
+
+        if (anime != null && anime.IsDashAnimOrExit()) return;
         if (character.IsDashing) return;
         if (dashLocked) return;
+
         combat?.OnToggleWeaponInput();
     }
 

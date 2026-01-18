@@ -107,6 +107,21 @@ public class PlayerAnimation : MonoBehaviour
         anim.SetTrigger(DashHash);
     }
 
+    // 대쉬 애니메이션 탈출 헬퍼
+    public bool IsDashAnimOrExit()
+    {
+        if (anim == null) return false;
+
+        if (anim.IsInTransition(0))
+        {
+            var cur = anim.GetCurrentAnimatorStateInfo(0);
+            var nxt = anim.GetNextAnimatorStateInfo(0);
+            return cur.IsTag("Dash") || nxt.IsTag("Dash");
+        }
+
+        return anim.GetCurrentAnimatorStateInfo(0).IsTag("Dash");
+    }
+
     public void PlayParry()
     {
         anim.SetTrigger(ParryHash);
