@@ -281,6 +281,15 @@ public class QuestManager : MonoBehaviour
     {
         ReportProgress(CompleteCondition.KillMonster, monsterId, 1);
     }
+    private void OnEnable()
+    {
+        MonsterKillEvent.OnMonsterKilled += OnMonsterKilled;
+    }
+
+    private void OnDisable()
+    {
+        MonsterKillEvent.OnMonsterKilled -= OnMonsterKilled;
+    }
     public void OnInvestigate(int investigateID)
     {
         ReportProgress(CompleteCondition.Investigate, investigateID, 1);
