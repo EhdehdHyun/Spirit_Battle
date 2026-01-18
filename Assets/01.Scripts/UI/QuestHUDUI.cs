@@ -24,19 +24,32 @@ public class QuestHUDUI : MonoBehaviour
         }
 
         var quest = QuestManager.Instance.GetQuestData(trackedId);
-        var target = QuestManager.Instance.GetQuestTarget(trackedId);
-
-        if (quest == null || target == null)
+        if (quest == null)
             return;
 
         gameObject.SetActive(true);
 
+        // 제목
         titleText.text = quest.QuestName;
 
+        // 진행도 (target 없어도 항상 갱신)
         var progress = QuestManager.Instance.GetProgress(trackedId);
-        progressText.text = $"진행도 ( {progress.Current} / {progress.Target} )";
+        if (progress != null)
+        {
+            progressText.text = $"진행도 ( {progress.Current} / {progress.Target} )";
+        }
 
-        float dist = Vector3.Distance(player.position, target.position);
-        distanceText.text = $"{Mathf.FloorToInt(dist)}m";
+        // 거리 (target 있을 때만)
+        var target = QuestManager.Instance.GetQuestTarget(trackedId);
+        if (target != null)
+        {
+            float dist = Vector3.Distance(player.position, target.position);
+            distanceText.text = $"{Mathf.FloorToInt(dist)}m";
+        }
+        else
+        {
+            distanceText.text = ""; // 또는 "완료"
+        }
     }
+
 }
