@@ -29,6 +29,7 @@ public class QuestManager : MonoBehaviour
     [SerializeField] private QuestTrackerUI trackerUI;  
     
     private int trackedQuestId = -1;
+    public Transform PlayerTransform { get; private set; }
     
     void Awake()
     {
@@ -41,7 +42,7 @@ public class QuestManager : MonoBehaviour
             .Quest_Data_Loader
             .ItemsDict;
         
-       
+        PlayerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
         AcceptQuest(30000); //Main 퀘스트 바로 시작
         CompleteQuest(30000); // 즉시 완료
         AcceptQuest(40000); //Tutorial 퀘스트 바로 시작
@@ -186,9 +187,11 @@ public class QuestManager : MonoBehaviour
         {
             case "KillMonster":
             {
-                var player = GameObject.FindGameObjectWithTag("Player").transform;
+                if (PlayerTransform == null)
+                    return null;
+                
                 return QuestTargetRegistry.Instance
-                    .GetClosestTarget(quest.TargetID, player.position);
+                    .GetClosestTarget(quest.TargetID, PlayerTransform.position);
             }
 
             case "Investigate":
@@ -199,8 +202,7 @@ public class QuestManager : MonoBehaviour
 
         return null;
     }
-
-
+    
     
     public QuestState GetQuestState(int questId)
     {

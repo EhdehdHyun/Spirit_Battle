@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[DefaultExecutionOrder(-100)]
 public class QuestTargetRegistry : MonoBehaviour
 {
     public static QuestTargetRegistry Instance;
@@ -9,6 +10,12 @@ public class QuestTargetRegistry : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
     }
     public Transform GetAnyTarget(int id)
@@ -24,6 +31,7 @@ public class QuestTargetRegistry : MonoBehaviour
 
     public void Register(int id, Transform t)
     {
+        Debug.Log($"[Registry] Register id={id} name={t.name}");
         if (!targets.ContainsKey(id))
             targets[id] = new List<Transform>();
 
@@ -44,14 +52,25 @@ public class QuestTargetRegistry : MonoBehaviour
     public Transform GetClosestTarget(int id, Vector3 from)
     {
         if (!targets.ContainsKey(id))
+        {
+            Debug.Log($"[Registry] No key for id={id}");
             return null;
+        }
+
+        Debug.Log($"[Registry] id={id} count={targets[id].Count}");
 
         Transform closest = null;
         float minDist = float.MaxValue;
 
         foreach (var t in targets[id])
         {
-            if (t == null) continue;
+            if (t == null)
+            {
+                Debug.Log("[Registry] target is null");
+                continue;
+            }
+
+            Debug.Log($"[Registry] check {t.name} active={t.gameObject.activeInHierarchy}");
 
             float d = Vector3.Distance(from, t.position);
             if (d < minDist)
@@ -61,6 +80,7 @@ public class QuestTargetRegistry : MonoBehaviour
             }
         }
 
+        Debug.Log($"[Registry] closest={(closest ? closest.name : "NULL")}");
         return closest;
     }
 }
