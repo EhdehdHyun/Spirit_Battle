@@ -132,7 +132,8 @@ public class PlayerCombat : MonoBehaviour
     public void OnParrySuccess(Transform attacker, Vector3 hitPoint)
     {
         // 여기서 성공 이펙트/사운드/카메라/짧은 무적 등만 처리
-        sfx.PlayParrySuccess();
+        if (sfx != null)
+            sfx.PlayParrySuccess();
 
         //잠깐 무적
         var character = GetComponent<CharacterBase>();

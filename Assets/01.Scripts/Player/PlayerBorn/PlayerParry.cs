@@ -58,6 +58,12 @@ public class PlayerParry : MonoBehaviour
         lastAttacker = attackerTr;
         lastHitPoint = hitPoint;
 
+        if (lastAttacker == null)
+        {
+            Debug.LogWarning("[Parry] attackerTransform is null");
+            return;
+        }
+        
         combat.OnParrySuccess(lastAttacker, lastHitPoint);
     }
 
@@ -158,6 +164,23 @@ public class PlayerParry : MonoBehaviour
             }
         }
         return best;
+    }
+    public void OnParrySuccess(Transform attacker, Vector3 hitPoint)
+    {
+        if (attacker == null)
+        {
+            Debug.LogWarning("[Parry] OnParrySuccess called with null attacker");
+            return;
+        }
+
+        var enemy = attacker.GetComponentInParent<EnemyBase>();
+        if (enemy == null)
+        {
+            Debug.LogWarning("[Parry] EnemyBase not found");
+            return;
+        }
+
+        // 안전한 이후 처리
     }
 
 }
