@@ -46,6 +46,10 @@ public class QuestManager : MonoBehaviour
         CompleteQuest(30000); // 즉시 완료
         AcceptQuest(40000); //Tutorial 퀘스트 바로 시작
     }
+    public int GetTrackedQuestId()
+    {
+        return trackedQuestId;
+    }
     
     //카테고리별 퀘스트 가져오기 (UI용)
     public void AcceptQuest(int questId, int npcID = -1)
@@ -170,6 +174,22 @@ public class QuestManager : MonoBehaviour
         }
 
         return false;
+    }
+    public Transform GetQuestTarget(int questId)
+    {
+        if (!questTable.ContainsKey(questId))
+            return null;
+
+        var quest = questTable[questId];
+
+        switch (quest.CompleteCondition)
+        {
+            case "Investigate":
+            case "DestroyObject":
+                return QuestTargetRegistry.Instance.GetTargetTransform(quest.TargetID);
+        }
+
+        return null;
     }
 
     
@@ -343,5 +363,11 @@ public class QuestManager : MonoBehaviour
 
         return quest;
     }
+    public QuestProgress GetProgress(int questId)
+    {
+        if (!questProgress.ContainsKey(questId))
+            return null;
 
+        return questProgress[questId];
+    }
 }

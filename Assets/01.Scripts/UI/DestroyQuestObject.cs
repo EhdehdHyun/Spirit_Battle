@@ -10,6 +10,10 @@ public class DestroyQuestObject : MonoBehaviour, IInteractable
     
     [SerializeField] private string interactPrompt = "오염된 핵을 파괴한다";
 
+    private void Awake()
+    {
+        QuestTargetRegistry.Instance.Register(destroyTargetID, transform);
+    }
     public void Interact(PlayerInteraction player)
     {
         if (isDestroyed) return;
@@ -33,5 +37,10 @@ public class DestroyQuestObject : MonoBehaviour, IInteractable
     public string GetInteractPrompt()
     {
         return interactPrompt;
+    }
+    private void OnDestroy()
+    {
+        if (QuestTargetRegistry.Instance != null)
+            QuestTargetRegistry.Instance.Unregister(destroyTargetID);
     }
 }
