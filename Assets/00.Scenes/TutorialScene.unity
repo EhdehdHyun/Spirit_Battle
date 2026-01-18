@@ -1556,6 +1556,17 @@ Transform:
   - {fileID: 318805501}
   m_Father: {fileID: 1700575090}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &34267621 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1577121522322506380, guid: 954d5f9ff04f01a42b0a4d0912f5dc39, type: 3}
+  m_PrefabInstance: {fileID: 1089864943}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &34926351
 GameObject:
   m_ObjectHideFlags: 0
@@ -6427,6 +6438,17 @@ Transform:
   - {fileID: 780385743}
   m_Father: {fileID: 514353825}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &119313277 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 529165700329970307, guid: 954d5f9ff04f01a42b0a4d0912f5dc39, type: 3}
+  m_PrefabInstance: {fileID: 1089864943}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &119489515
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -21543,6 +21565,10 @@ PrefabInstance:
       propertyPath: bossUI
       value: 
       objectReference: {fileID: 741513506}
+    - target: {fileID: 101523703184880867, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: monsterId
+      value: 11002
+      objectReference: {fileID: 0}
     - target: {fileID: 3511104567439868573, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
       propertyPath: patterns.Array.size
       value: 4
@@ -45837,9 +45863,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1089864945}
     - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
+      propertyPath: exitButton
+      value: 
+      objectReference: {fileID: 119313277}
+    - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
       propertyPath: playerStat
       value: 
       objectReference: {fileID: 680367622}
+    - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
+      propertyPath: saveButton
+      value: 
+      objectReference: {fileID: 34267621}
     - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
       propertyPath: saveMessageText
       value: 
@@ -45848,6 +45882,10 @@ PrefabInstance:
       propertyPath: inventoryManager
       value: 
       objectReference: {fileID: 1443625936}
+    - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
+      propertyPath: enemyLayer.m_Bits
+      value: 256
+      objectReference: {fileID: 0}
     - target: {fileID: 3819492679630894987, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1330

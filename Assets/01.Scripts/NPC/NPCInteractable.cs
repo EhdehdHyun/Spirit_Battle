@@ -32,7 +32,7 @@ public class NPCInteractable : MonoBehaviour, IInteractable
         }
         else
         {
-            Debug.LogError($"{name} : NPCIdentity가 없습니다.");
+                 Debug.LogError($"{name} : NPCIdentity가 없습니다.");
         }
     }
     // PlayerInteraction에서 조준 중일 때 호출

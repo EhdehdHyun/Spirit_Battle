@@ -50,6 +50,9 @@ public class BossEnemy : EnemyBase
 
     [Tooltip("Animator 레이어 인덱스(보통 0)")]
     [SerializeField] private int animatorLayerIndex = 0;
+    
+    [Header("퀘스트 / 데이터 ID")]
+    [SerializeField] private int monsterId;
 
     public event Action<int, int> bossOnBreakHitChanged;
     public event Action<bool> BossOnGroggyChanged;
@@ -256,6 +259,12 @@ public class BossEnemy : EnemyBase
     {
         base.OnDie(info);
 
+        //보스 킬 이벤트 추가 ( 퀘스트와 연동중 )
+        if (!isTutorialBoss)
+        {
+            MonsterKillEvent.Raise(monsterId); 
+        }
+        
         if (phase3FinaleCo != null)
         {
             StopCoroutine(phase3FinaleCo);

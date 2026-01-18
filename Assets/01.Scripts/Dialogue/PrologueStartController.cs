@@ -70,7 +70,6 @@ public class PrologueStartController : MonoBehaviour
     {
         Debug.Log("[Prologue] 대화 종료. 상태 복구 및 저장.");
 
-        // ▼▼▼ [F키 먹통 해결] NPC 상호작용 다시 켜주기 ▼▼▼
         if (npcInteractable != null)
         {
             npcInteractable.canInteract = true;
@@ -82,7 +81,7 @@ public class PrologueStartController : MonoBehaviour
         // 튜토리얼 완료 저장 (GameManager 호출)
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.CompleteTutorial();
+            Debug.Log("프롤로그 대화 종료");
         }
 
         // 다음 튜토리얼(이동 가이드) 시작

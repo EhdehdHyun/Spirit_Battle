@@ -3,7 +3,7 @@ using System.Linq;
 using UnityEngine;
 public enum QuestState
 {
-    Active,
+    Active,           // 진행중 
     Completed,        // 완료됨(보상 미수령)
     RewardClaimed     // 보상 수령 완료
 }
@@ -13,8 +13,9 @@ public enum CompleteCondition
     TalkToNPC,     // NPC 대화
     KillMonster,   // 몬스터 처치
     UseSkill,      // 스킬 사용 (튜토리얼 핵심)
-    Investigate,    // 조사/상호작용
-    CollectItem  //아이템 수집
+    Investigate,   // 조사/상호작용
+    CollectItem ,  //아이템 수집
+    DestroyObject  //오브젝트 파괴
 }
 
 public class QuestManager : MonoBehaviour
@@ -28,6 +29,7 @@ public class QuestManager : MonoBehaviour
     [SerializeField] private QuestTrackerUI trackerUI;  
     
     private int trackedQuestId = -1;
+    public Transform PlayerTransform { get; private set; }
     
     void Awake()
     {
@@ -40,9 +42,14 @@ public class QuestManager : MonoBehaviour
             .Quest_Data_Loader
             .ItemsDict;
         
-        // 테스트용 메인 퀘스트 1번 자동 수락
-        AcceptQuest(30000);
-        CompleteQuest(30000);   // 즉시 완료
+        PlayerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
+        AcceptQuest(30000); //Main 퀘스트 바로 시작
+        CompleteQuest(30000); // 즉시 완료
+        AcceptQuest(40000); //Tutorial 퀘스트 바로 시작
+    }
+    public int GetTrackedQuestId()
+    {
+        return trackedQuestId;
     }
     
     //카테고리별 퀘스트 가져오기 (UI용)
@@ -89,9 +96,22 @@ public class QuestManager : MonoBehaviour
     {
         if (!questStates.ContainsKey(questId)) return;
         questStates[questId] = QuestState.Completed;
-        
-        questStates[questId] = QuestState.Completed;
         Debug.Log($"[Quest] Completed: {questTable[questId].QuestName}");
+        
+        var quest = questTable[questId];
+
+        // 다음 퀘스트 자동 시작
+        if (quest.NextQuest > 0 && !questStates.ContainsKey(quest.NextQuest))
+        {
+            var nextQuest = questTable[quest.NextQuest];
+
+            // Auto / TalkToNPC는 여기서 처리
+            if (nextQuest.StartCondition == "Auto")
+            {
+                AcceptQuest(nextQuest.QuestID);
+                SetTrackedQuest(nextQuest.QuestID);
+            }
+        }
     }
     public void ClaimReward(int questId)
     {
@@ -156,7 +176,33 @@ public class QuestManager : MonoBehaviour
 
         return false;
     }
+    public Transform GetQuestTarget(int questId)
+    {
+        if (!questTable.ContainsKey(questId))
+            return null;
 
+        var quest = questTable[questId];
+
+        switch (quest.CompleteCondition)
+        {
+            case "KillMonster":
+            {
+                if (PlayerTransform == null)
+                    return null;
+                
+                return QuestTargetRegistry.Instance
+                    .GetClosestTarget(quest.TargetID, PlayerTransform.position);
+            }
+
+            case "Investigate":
+            case "DestroyObject":
+                return QuestTargetRegistry.Instance
+                    .GetAnyTarget(quest.TargetID);
+        }
+
+        return null;
+    }
+    
     
     public QuestState GetQuestState(int questId)
     {
@@ -280,6 +326,15 @@ public class QuestManager : MonoBehaviour
     {
         ReportProgress(CompleteCondition.KillMonster, monsterId, 1);
     }
+    private void OnEnable()
+    {
+        MonsterKillEvent.OnMonsterKilled += OnMonsterKilled;
+    }
+
+    private void OnDisable()
+    {
+        MonsterKillEvent.OnMonsterKilled -= OnMonsterKilled;
+    }
     public void OnInvestigate(int investigateID)
     {
         ReportProgress(CompleteCondition.Investigate, investigateID, 1);
@@ -289,7 +344,8 @@ public class QuestManager : MonoBehaviour
         return condition == CompleteCondition.KillMonster
                || condition == CompleteCondition.CollectItem
                || condition == CompleteCondition.UseSkill
-               || condition == CompleteCondition.Investigate;
+               || condition == CompleteCondition.Investigate
+               || condition == CompleteCondition.DestroyObject;
     }
     private bool TryGetCondition(string raw, out CompleteCondition condition)
     {
@@ -318,5 +374,11 @@ public class QuestManager : MonoBehaviour
 
         return quest;
     }
+    public QuestProgress GetProgress(int questId)
+    {
+        if (!questProgress.ContainsKey(questId))
+            return null;
 
+        return questProgress[questId];
+    }
 }

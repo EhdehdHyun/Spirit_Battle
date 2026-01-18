@@ -23,6 +23,13 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
         if (damageFeedback == null)
             damageFeedback = GetComponentInChildren<DamageFeedback>(true);
     }
+    private void OnEnable()
+    {
+        if (monsterId > 0 && QuestTargetRegistry.Instance != null)
+        {
+            QuestTargetRegistry.Instance.Register(monsterId, transform);
+        }
+    }
 
     protected override void OnDamaged(DamageInfo info)
     {
@@ -43,9 +50,13 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
 
         // 죽는 애니 트리거
         monsterAnim?.PlayDie();
-
-        QuestManager.Instance.OnMonsterKilled(monsterId);
-
+        
+        if (monsterId > 0)
+        {
+            QuestManager.Instance.OnMonsterKilled(monsterId);
+            QuestTargetRegistry.Instance?.Unregister(monsterId, transform);
+            Debug.Log($"[Registry] Unregister monsterId={monsterId} name={name}");
+        }
     }
 
     // Die 애니메이션 마지막 프레임에 Animation Event로 호출
