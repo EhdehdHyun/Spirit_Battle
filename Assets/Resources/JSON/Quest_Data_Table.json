@@ -94,6 +94,7 @@
       "StartCondition": "TalkToNPC",
       "CompleteCondition": "KillMonster",
       "TargetID": 11002,
+      "HUDTargetID": 50002,
       "TargetCount": 1,
       "ObjectiveText": "보스 몬스터를 처치하세요",
       "RewardGroupID": 30006,

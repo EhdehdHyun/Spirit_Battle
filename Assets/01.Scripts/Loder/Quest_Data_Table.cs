@@ -74,6 +74,11 @@ public class Quest_Data_Table
     /// 전달퀘스트 아이템 아이디
     /// </summary>
     public int DeliverItemID; 
+    
+    /// <summary>
+    /// Target ID 우선권
+    /// </summary>
+    public int HUDTargetID;
 }
 
 public class Quest_Data_Loader
