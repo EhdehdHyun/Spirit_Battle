@@ -149,7 +149,7 @@
       "TargetCount": 1,
       "ObjectiveText": "E, R키로 스킬을 사용할 수 있습니다",
       "RewardGroupID": 40002,
-      "NextQuest": 40003
+      "NextQuest": null
     },
     {
       "QuestID": 50000,

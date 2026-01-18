@@ -53,11 +53,8 @@ public class QuestTargetRegistry : MonoBehaviour
     {
         if (!targets.ContainsKey(id))
         {
-            Debug.Log($"[Registry] No key for id={id}");
             return null;
         }
-
-        Debug.Log($"[Registry] id={id} count={targets[id].Count}");
 
         Transform closest = null;
         float minDist = float.MaxValue;
@@ -66,11 +63,8 @@ public class QuestTargetRegistry : MonoBehaviour
         {
             if (t == null)
             {
-                Debug.Log("[Registry] target is null");
                 continue;
             }
-
-            Debug.Log($"[Registry] check {t.name} active={t.gameObject.activeInHierarchy}");
 
             float d = Vector3.Distance(from, t.position);
             if (d < minDist)
