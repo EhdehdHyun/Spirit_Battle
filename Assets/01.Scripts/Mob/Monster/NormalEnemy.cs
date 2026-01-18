@@ -25,6 +25,7 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
     }
     private void OnEnable()
     {
+        Debug.Log($"[Enemy] OnEnable {name} IsDead={IsDead}");
         if (monsterId > 0 && QuestTargetRegistry.Instance != null)
         {
             QuestTargetRegistry.Instance.Register(monsterId, transform);
@@ -35,7 +36,7 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
     {
         base.OnDamaged(info);
         if (IsDead) return;
-
+        
         damageFeedback?.Play();
 
         TryAccumulateBreak();
