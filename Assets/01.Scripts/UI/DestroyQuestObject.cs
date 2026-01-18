@@ -41,6 +41,6 @@ public class DestroyQuestObject : MonoBehaviour, IInteractable
     private void OnDestroy()
     {
         if (QuestTargetRegistry.Instance != null)
-            QuestTargetRegistry.Instance.Unregister(destroyTargetID);
+            QuestTargetRegistry.Instance.Unregister(destroyTargetID, transform);
     }
 }

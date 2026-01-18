@@ -23,6 +23,11 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
         if (damageFeedback == null)
             damageFeedback = GetComponentInChildren<DamageFeedback>(true);
     }
+    private void OnEnable()
+    {
+        //퀘스트 위치 등록
+        QuestTargetRegistry.Instance?.Register(monsterId, transform);
+    }
 
     protected override void OnDamaged(DamageInfo info)
     {
@@ -45,6 +50,8 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
         monsterAnim?.PlayDie();
 
         QuestManager.Instance.OnMonsterKilled(monsterId);
+        // (다음 몬스터로 자동 전환)
+        QuestTargetRegistry.Instance?.Unregister(monsterId, transform);
 
     }
 

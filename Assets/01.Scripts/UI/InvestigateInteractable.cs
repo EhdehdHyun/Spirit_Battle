@@ -27,7 +27,7 @@ public class InvestigateInteractable : MonoBehaviour, IInteractable
 
         QuestManager.Instance.OnInvestigate(investigateID);
         // 조사 완료 후 더 이상 목표 아님 H(UDUI)
-        QuestTargetRegistry.Instance.Unregister(investigateID);
+        QuestTargetRegistry.Instance.Unregister(investigateID, transform);
 
         Debug.Log($"[Investigate] 조사 완료 ID={investigateID}");
         // 선택: 조사 후 비활성화

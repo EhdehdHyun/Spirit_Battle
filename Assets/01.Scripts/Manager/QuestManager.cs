@@ -184,13 +184,22 @@ public class QuestManager : MonoBehaviour
 
         switch (quest.CompleteCondition)
         {
+            case "KillMonster":
+            {
+                var player = GameObject.FindGameObjectWithTag("Player").transform;
+                return QuestTargetRegistry.Instance
+                    .GetClosestTarget(quest.TargetID, player.position);
+            }
+
             case "Investigate":
             case "DestroyObject":
-                return QuestTargetRegistry.Instance.GetTargetTransform(quest.TargetID);
+                return QuestTargetRegistry.Instance
+                    .GetAnyTarget(quest.TargetID);
         }
 
         return null;
     }
+
 
     
     public QuestState GetQuestState(int questId)
