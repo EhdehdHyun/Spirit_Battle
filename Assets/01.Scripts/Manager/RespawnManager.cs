@@ -73,6 +73,17 @@ public class RespawnManager : MonoBehaviour
         if (phy != null)
             phy.SetMovementLocked(false);
 
+        if (isFirstDeath)
+        {
+            isFirstDeath = false;
+
+            if (GameManager.Instance != null)
+            {
+                Debug.Log("[RespawnManager] 첫 부활 성공! 저장 기능 해금.");
+                GameManager.Instance.CompleteTutorial();
+            }
+        }
+
         var animator = playerRoot.GetComponentInChildren<Animator>();
         ResetAnimatorForRespawn(animator);
 
