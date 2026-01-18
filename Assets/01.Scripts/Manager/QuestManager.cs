@@ -41,9 +41,10 @@ public class QuestManager : MonoBehaviour
             .Quest_Data_Loader
             .ItemsDict;
         
-        // 테스트용 메인 퀘스트 1번 자동 수락
-        AcceptQuest(30000);
-        CompleteQuest(30000);   // 즉시 완료
+       
+        AcceptQuest(30000); //Main 퀘스트 바로 시작
+        CompleteQuest(30000); // 즉시 완료
+        AcceptQuest(40000); //Tutorial 퀘스트 바로 시작
     }
     
     //카테고리별 퀘스트 가져오기 (UI용)
