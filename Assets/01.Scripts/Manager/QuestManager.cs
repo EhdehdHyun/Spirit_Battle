@@ -91,9 +91,22 @@ public class QuestManager : MonoBehaviour
     {
         if (!questStates.ContainsKey(questId)) return;
         questStates[questId] = QuestState.Completed;
-        
-        questStates[questId] = QuestState.Completed;
         Debug.Log($"[Quest] Completed: {questTable[questId].QuestName}");
+        
+        var quest = questTable[questId];
+
+        // 다음 퀘스트 자동 시작
+        if (quest.NextQuest > 0 && !questStates.ContainsKey(quest.NextQuest))
+        {
+            var nextQuest = questTable[quest.NextQuest];
+
+            // Auto / TalkToNPC는 여기서 처리
+            if (nextQuest.StartCondition == "Auto")
+            {
+                AcceptQuest(nextQuest.QuestID);
+                SetTrackedQuest(nextQuest.QuestID);
+            }
+        }
     }
     public void ClaimReward(int questId)
     {

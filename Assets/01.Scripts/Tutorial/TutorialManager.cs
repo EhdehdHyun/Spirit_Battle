@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class TutorialManager : MonoBehaviour
 {
@@ -142,6 +143,20 @@ public class TutorialManager : MonoBehaviour
     {
         if (string.IsNullOrEmpty(message)) return;
         tutorialUI.Show(message);
+    }
+    public void ShowSimpleMessage(string message, float duration)
+    {
+        if (string.IsNullOrEmpty(message)) return;
+
+        StopAllCoroutines();          // 이전 메시지 타이머 정리
+        tutorialUI.Show(message);
+        StartCoroutine(AutoHideRoutine(duration));
+    }
+
+    private IEnumerator AutoHideRoutine(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        tutorialUI.Hide();
     }
     public void EndTutorialUI()
     {

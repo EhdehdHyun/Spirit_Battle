@@ -21,10 +21,9 @@ public class TutorialEnemy : MonoBehaviour
 
         blocker?.Open();
         
-        //  문구 출력 (있을 때만)
         if (!string.IsNullOrEmpty(onClearMessage))
         {
-            TutorialManager.Instance.ShowSimpleMessage(onClearMessage);
+            TutorialManager.Instance.ShowSimpleMessage(onClearMessage, 3f);
         }
         // 다음 몬스터 방향 화살표
         if (worldArrow != null && nextEnemyTarget != null)
@@ -37,4 +36,5 @@ public class TutorialEnemy : MonoBehaviour
             worldArrow?.ClearTarget();
         }
     }
+
 }
