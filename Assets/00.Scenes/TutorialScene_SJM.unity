@@ -44777,6 +44777,8 @@ MonoBehaviour:
   - 0
   - 0
   weaponEquipped: 0
+  equipRequestPending: 0
+  requestedEquipState: 0
   isAttacking: 0
   dashInvincibleExtra: 0.05
   groundSlashPrefab: {fileID: 5825312301595452699, guid: 0859d6890eba3084ea5484b85cb36dba, type: 3}
@@ -124047,6 +124049,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
+      propertyPath: mapPanel
+      value: 
+      objectReference: {fileID: 515240184}
+    - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
       propertyPath: menuPanel
       value: 
       objectReference: {fileID: 37499842}
@@ -124062,6 +124068,10 @@ PrefabInstance:
       propertyPath: saveButton
       value: 
       objectReference: {fileID: 467942543062373084}
+    - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
+      propertyPath: inventoryPanel
+      value: 
+      objectReference: {fileID: 409440283}
     - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
       propertyPath: saveMessageText
       value: 

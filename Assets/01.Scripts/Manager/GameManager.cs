@@ -1,9 +1,9 @@
 using System.Collections;
 using UnityEngine;
-using TMPro; // UI 텍스트 관련
-using UnityEngine.UI; // [필수] 버튼 제어를 위해 추가
-using System.IO; // 파일 삭제를 위해 필수
-using UnityEngine.SceneManagement; // 씬 재시작을 위해 필수
+using TMPro;
+using UnityEngine.UI;
+using System.IO;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -19,9 +19,13 @@ public class GameManager : MonoBehaviour
     public GameObject menuPanel;
     public GameObject saveMessageText;
 
+    [Header("Other UI Panels (중복 방지용 연결 필수)")]
+    public GameObject inventoryPanel;
+    public GameObject mapPanel;
+
     [Header("Menu Buttons (Inspector 연결 필수)")]
-    public Button saveButton;  // 저장 버튼
-    public Button exitButton;  // 종료 버튼
+    public Button saveButton;
+    public Button exitButton;
 
     [Header("전투 감지 설정 (저장 금지)")]
     public float saveCheckRadius = 15f;
@@ -30,9 +34,25 @@ public class GameManager : MonoBehaviour
     public bool IsUIBlocked { get; private set; }
     private bool isMenuOpen = false;
 
+    public bool IsAnyPopupOpen
+    {
+        get
+        {
+            // 1. 저장 메뉴가 열려있는가?
+            bool isSaveMenuOpen = (menuPanel != null && menuPanel.activeSelf);
+
+            // 2. 인벤토리가 열려있는가?
+            bool isInvOpen = (inventoryPanel != null && inventoryPanel.activeSelf);
+
+            // 3. 지도가 열려있는가?
+            bool isMapOpen = (mapPanel != null && mapPanel.activeSelf);
+
+            // 셋 중 하나라도 참이면 true 반환
+            return isSaveMenuOpen || isInvOpen || isMapOpen;
+        }
+    }
     void Awake()
     {
-        // 좀비 매니저 방지 (씬 재시작 시 기존 매니저 파괴)
         if (Instance != null && Instance != this)
         {
             Destroy(Instance.gameObject);
@@ -78,7 +98,10 @@ public class GameManager : MonoBehaviour
     {
         if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.P) && Input.GetKeyDown(KeyCode.P))
         {
-            ToggleMenu();
+            if (isMenuOpen || !IsAnyPopupOpen)
+            {
+                ToggleMenu();
+            }
         }
 
         // 2. F1 키로 데이터 초기화 및 재시작
@@ -87,8 +110,6 @@ public class GameManager : MonoBehaviour
             ResetDataAndRestart();
         }
     }
-
-    // 초기화 및 재시작 함수
     private void ResetDataAndRestart()
     {
         Debug.Log("[GameManager] F1 눌림: 데이터 초기화 진행");
@@ -180,6 +201,7 @@ public class GameManager : MonoBehaviour
         if (playerStat == null) return false;
         return Physics.CheckSphere(playerStat.transform.position, saveCheckRadius, enemyLayer);
     }
+
     void OnDrawGizmosSelected()
     {
         if (playerStat != null)
