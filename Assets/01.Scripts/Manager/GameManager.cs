@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (!IsUIBlocked && Input.GetKeyDown(KeyCode.P))
+        if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.P) && Input.GetKeyDown(KeyCode.P))
         {
             ToggleMenu();
         }
