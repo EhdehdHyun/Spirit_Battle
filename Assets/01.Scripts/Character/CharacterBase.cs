@@ -15,6 +15,8 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
     public event Action<DamageInfo> OnDied;
 
     public event Action<float, float> OnHpChanged;
+    protected bool isDead = false;
+    public bool IsDead => isDead;
 
     //무적
     private float _invincibleUntil = -1f;
@@ -37,7 +39,14 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
 
     protected virtual void Awake()
     {
-        currentHp = maxHp;
+        if (currentHp <= 0f)
+            currentHp = maxHp;
+
+        isDead = false;
+    }
+    private void OnEnable()
+    {
+        Debug.Log($"[CHAR Enable] {name} HP={currentHp} isDead={isDead}");
     }
 
     protected virtual float GetIncomingDamageMultiplier(DamageInfo info) => 1f;
@@ -52,13 +61,19 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
     {
         SetHp(maxHp, notify);
     }
+    public void ResetCharacter()
+    {
+        isDead = false;
+        currentHp = maxHp;
+        OnHpChanged?.Invoke(currentHp, maxHp);
+    }
 
     //데미지 받았을 때 호출
     public void TakeDamage(DamageInfo info)
     {
         Debug.Log($"[DMG] TakeDamage called amount={info.amount} inv={IsInvincible}", this);
 
-        if (!IsAlive) return;
+        if (isDead) return;
 
         if (IsInvincible)
         {
@@ -75,6 +90,10 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
 
         if (currentHp <= 0)
         {
+            if (isDead) return;  
+
+            isDead = true;
+            
             currentHp = 0;
             OnHpChanged?.Invoke(currentHp, maxHp);
             OnDie(info);

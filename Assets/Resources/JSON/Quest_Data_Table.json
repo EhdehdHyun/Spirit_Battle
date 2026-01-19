@@ -94,6 +94,7 @@
       "StartCondition": "TalkToNPC",
       "CompleteCondition": "KillMonster",
       "TargetID": 11002,
+      "HUDTargetID": 50002,
       "TargetCount": 1,
       "ObjectiveText": "보스 몬스터를 처치하세요",
       "RewardGroupID": 30006,
@@ -149,7 +150,7 @@
       "TargetCount": 1,
       "ObjectiveText": "E, R키로 스킬을 사용할 수 있습니다",
       "RewardGroupID": 40002,
-      "NextQuest": 40003
+      "NextQuest": null
     },
     {
       "QuestID": 50000,
