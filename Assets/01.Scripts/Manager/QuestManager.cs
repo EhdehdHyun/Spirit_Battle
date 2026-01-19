@@ -203,6 +203,7 @@ public class QuestManager : MonoBehaviour
 
             case "Investigate":
             case "DestroyObject":
+            case "CollectItem":
                 return QuestTargetRegistry.Instance
                     .GetAnyTarget(quest.TargetID);
         }
@@ -255,8 +256,18 @@ public class QuestManager : MonoBehaviour
             if (quest.CompleteCondition != condition.ToString())
                 continue;
 
-            if (quest.TargetID != targetId)
-                continue;
+            switch (condition)
+            {
+                case CompleteCondition.CollectItem:
+                    if (quest.CollectItemID != targetId)
+                        continue;
+                    break;
+
+                default:
+                    if (quest.TargetID != targetId)
+                        continue;
+                    break;
+            }
 
             var progress = questProgress[questId];
             progress.Current += amount;

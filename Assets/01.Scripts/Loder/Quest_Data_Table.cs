@@ -79,6 +79,11 @@ public class Quest_Data_Table
     /// Target ID 우선권
     /// </summary>
     public int HUDTargetID;
+    
+    /// <summary>
+    /// Invest퀘스트시에 Item ID말고 CollectItemID를 추적
+    /// </summary>
+    public int CollectItemID;
 }
 
 public class Quest_Data_Loader
