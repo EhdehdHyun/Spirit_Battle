@@ -10023,6 +10023,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 1955208070129572423, guid: c0e407b489e246a4c80f6d526866dbab, type: 3}
+      propertyPath: questTargetId
+      value: 90001
+      objectReference: {fileID: 0}
     - target: {fileID: 6959347291286265643, guid: c0e407b489e246a4c80f6d526866dbab, type: 3}
       propertyPath: m_LocalPosition.x
       value: -9.518494
@@ -38867,6 +38871,10 @@ PrefabInstance:
     - target: {fileID: 1002648788956148940, guid: c0e407b489e246a4c80f6d526866dbab, type: 3}
       propertyPath: m_Layer
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1955208070129572423, guid: c0e407b489e246a4c80f6d526866dbab, type: 3}
+      propertyPath: questTargetId
+      value: 90001
       objectReference: {fileID: 0}
     - target: {fileID: 6959347291286265643, guid: c0e407b489e246a4c80f6d526866dbab, type: 3}
       propertyPath: m_LocalPosition.x
@@ -78342,6 +78350,10 @@ PrefabInstance:
     - target: {fileID: 1002648788956148940, guid: c0e407b489e246a4c80f6d526866dbab, type: 3}
       propertyPath: m_Layer
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1955208070129572423, guid: c0e407b489e246a4c80f6d526866dbab, type: 3}
+      propertyPath: questTargetId
+      value: 90001
       objectReference: {fileID: 0}
     - target: {fileID: 6959347291286265643, guid: c0e407b489e246a4c80f6d526866dbab, type: 3}
       propertyPath: m_LocalPosition.x

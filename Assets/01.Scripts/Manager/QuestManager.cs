@@ -183,6 +183,13 @@ public class QuestManager : MonoBehaviour
 
         var quest = questTable[questId];
 
+        // HUD 전용 타겟 ID 
+        if (quest.TargetID > 0)
+        {
+            return QuestTargetRegistry.Instance
+                .GetAnyTarget(quest.TargetID);
+        }
+        
         switch (quest.CompleteCondition)
         {
             case "KillMonster":
