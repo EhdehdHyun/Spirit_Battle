@@ -137,6 +137,7 @@ public class PlayerCombat : MonoBehaviour
         // 여기서 성공 이펙트/사운드/카메라/짧은 무적 등만 처리
         if (sfx != null)
             sfx.PlayParrySuccess();
+        ParryPostFxPulse.Play();
 
         //잠깐 무적
         var character = GetComponent<CharacterBase>();
