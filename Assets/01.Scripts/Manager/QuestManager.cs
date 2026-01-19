@@ -363,7 +363,8 @@ public class QuestManager : MonoBehaviour
                || condition == CompleteCondition.CollectItem
                || condition == CompleteCondition.UseSkill
                || condition == CompleteCondition.Investigate
-               || condition == CompleteCondition.DestroyObject;
+               || condition == CompleteCondition.DestroyObject
+               || condition == CompleteCondition.TalkToNPC; 
     }
     private bool TryGetCondition(string raw, out CompleteCondition condition)
     {
