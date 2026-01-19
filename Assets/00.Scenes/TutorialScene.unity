@@ -19567,6 +19567,18 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 680367631}
+    - target: {fileID: 5455887715698068666, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5455887715698068666, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5778233489628238366, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c4b3d3f775baf8244a704644ffa5f980, type: 3}
     - target: {fileID: 7591560303940374651, guid: 361ec533cd3554b46876b47bbe15a57d, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -40118,9 +40130,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxSource: {fileID: 49193749}
   attackHitClips:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 405edd85ee425644c81c582b7bae4acf, type: 3}
+  - {fileID: 8300000, guid: 17f1da0d7e0cc824c9cae12dd24b5160, type: 3}
+  - {fileID: 8300000, guid: 55d007e5d266c834983f30879c09737c, type: 3}
   parrySuccessClip: {fileID: 8300000, guid: c5955b1ca51d47245ae5e5e10395d910, type: 3}
   volume: 0.4
 --- !u!114 &680367637
