@@ -4,47 +4,49 @@ using UnityEngine.UI;
 public class MapIconUI : MonoBehaviour
 {
     [Header("UI 컴포넌트 연결")]
-    [SerializeField] private Image iconImage;       // 지도에 표시될 아이콘 이미지
-    [SerializeField] private Button btn;            // 클릭할 버튼
+    [SerializeField] private Image iconImage;
+    [SerializeField] private Button btn;
 
     [Header("텔레포트 설정")]
-    [SerializeField] private Transform teleportTarget; // 이동할 목적지 (축복 위치)
+    [SerializeField] private Transform teleportTarget;
 
     [Header("전투 제한 (몬스터 감지)")]
-    [SerializeField] private float checkRadius = 20.0f; // 이 반경 안에 몬스터가 있으면 이동 불가
-    [SerializeField] private LayerMask monsterLayer;    // 몬스터가 속한 레이어 (Monster)
+    [SerializeField] private float checkRadius = 20.0f;
+    [SerializeField] private LayerMask monsterLayer;
 
     private bool isUnlocked = false;
 
     private void Start()
     {
-        if (iconImage != null)
+        if (!isUnlocked)
         {
-            iconImage.color = Color.gray;
+            this.gameObject.SetActive(false);
         }
-
-        if (btn != null)
+        else
         {
-            btn.interactable = false;
-            btn.onClick.RemoveAllListeners();
-            btn.onClick.AddListener(TeleportPlayer);
+            UpdateVisualState();
         }
     }
 
     public void UnlockIcon()
     {
         if (isUnlocked) return;
-
         isUnlocked = true;
-
+        this.gameObject.SetActive(true);
+        UpdateVisualState();
+    }
+    private void UpdateVisualState()
+    {
         if (iconImage != null)
         {
-            iconImage.color = Color.white; 
+            iconImage.color = Color.white;
         }
 
         if (btn != null)
         {
             btn.interactable = true;
+            btn.onClick.RemoveAllListeners();
+            btn.onClick.AddListener(TeleportPlayer);
         }
     }
 
@@ -58,13 +60,11 @@ public class MapIconUI : MonoBehaviour
             Debug.LogError("Player 태그를 가진 오브젝트를 찾을 수 없습니다!");
             return;
         }
-
         Collider[] nearbyEnemies = Physics.OverlapSphere(player.transform.position, checkRadius, monsterLayer);
 
         if (nearbyEnemies.Length > 0)
         {
             Debug.Log($"[이동 실패] 주변에 적이 {nearbyEnemies.Length}마리 있습니다! (전투 중 이동 불가)");
-
             return;
         }
 
@@ -88,7 +88,6 @@ public class MapIconUI : MonoBehaviour
             rb.angularVelocity = Vector3.zero;
             rb.position = teleportTarget.position;
         }
-
         if (cc != null) cc.enabled = true;
 
         Debug.Log("축복으로 이동했습니다.");
@@ -99,9 +98,9 @@ public class MapIconUI : MonoBehaviour
             mapController.SendMessage("ToggleMap", SendMessageOptions.DontRequireReceiver);
         }
     }
-
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = new Color(1, 0, 0, 0.3f);
+        Gizmos.DrawWireSphere(transform.position, checkRadius);
     }
 }
