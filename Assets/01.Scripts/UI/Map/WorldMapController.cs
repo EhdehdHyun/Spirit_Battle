@@ -19,7 +19,11 @@ public class MapController : MonoBehaviour
         if (GlobalInputBlocker.IsKeyBlocked(KeyCode.M)) return;
         if (Input.GetKeyDown(KeyCode.M))
         {
-            ToggleMap();
+            bool amIOpen = worldMapPanel != null && worldMapPanel.activeSelf;
+            if (amIOpen || !GameManager.Instance.IsAnyPopupOpen)
+            {
+                ToggleMap();
+            }
         }
     }
 
