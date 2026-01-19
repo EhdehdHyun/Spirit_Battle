@@ -76,8 +76,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // 1. ESC 메뉴 토글
-        if (!IsUIBlocked && Input.GetKeyDown(KeyCode.Escape))
+        if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.P) && Input.GetKeyDown(KeyCode.P))
         {
             ToggleMenu();
         }
@@ -156,10 +155,6 @@ public class GameManager : MonoBehaviour
         {
             canSave = false;
             Debug.Log("주변에 몬스터가 있어 저장할 수 없습니다.");
-        }
-        else
-        {
-
         }
 
         // 3. 버튼 상태 적용

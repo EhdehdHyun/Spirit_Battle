@@ -40130,9 +40130,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sfxSource: {fileID: 49193749}
   attackHitClips:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 405edd85ee425644c81c582b7bae4acf, type: 3}
+  - {fileID: 8300000, guid: 17f1da0d7e0cc824c9cae12dd24b5160, type: 3}
+  - {fileID: 8300000, guid: 55d007e5d266c834983f30879c09737c, type: 3}
   parrySuccessClip: {fileID: 8300000, guid: c5955b1ca51d47245ae5e5e10395d910, type: 3}
   volume: 0.4
 --- !u!114 &680367637

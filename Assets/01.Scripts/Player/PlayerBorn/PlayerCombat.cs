@@ -50,6 +50,8 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private bool isEquipping = false;
     public bool IsEquipping => isEquipping;
 
+    //sfx용 bool 변수
+    private bool attackSfxPlayedThisAttack = false;
 
     private float _nextSkill1Time = 0f;
 
@@ -76,7 +78,7 @@ public class PlayerCombat : MonoBehaviour
 
         parry = GetComponent<PlayerParry>();
 
-        weaponHitBox.DamageAppliedOnce += () => sfx?.PlayAttackHit(currentCombo);
+        //weaponHitBox.DamageAppliedOnce += () => sfx?.PlayAttackHit(currentCombo);
     }
 
     public bool TryDash(Vector3 dir, bool allowAirDash, bool allowWhileDashing)
@@ -214,6 +216,8 @@ public class PlayerCombat : MonoBehaviour
         currentCombo = 1;
         lastAttackTime = Time.time;
 
+        attackSfxPlayedThisAttack = false;
+
         physicsCharacter.SetMovementLocked(true);
 
         playerAnim?.Attack(currentCombo);
@@ -232,6 +236,8 @@ public class PlayerCombat : MonoBehaviour
         Debug.Log(currentCombo);
         bufferedNextInput = false;
         lastAttackTime = Time.time;
+
+        attackSfxPlayedThisAttack = false;
 
         physicsCharacter.SetMovementLocked(true);
         playerAnim?.Attack(currentCombo);
@@ -335,6 +341,12 @@ public class PlayerCombat : MonoBehaviour
     {
         if (weaponHitBox == null) return;
         if (currentCombo <= 0) return;
+
+        if (!attackSfxPlayedThisAttack)
+        {
+            sfx?.PlayAttackHit(currentCombo);  // 1combo/2combo/3combo
+            attackSfxPlayedThisAttack = true;
+        }
 
         int idx = Mathf.Clamp(currentCombo - 1, 0, comboDamages.Length - 1);
         float multiplier = comboDamages[idx];
