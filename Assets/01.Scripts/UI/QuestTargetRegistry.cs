@@ -58,7 +58,7 @@ public class QuestTargetRegistry : MonoBehaviour
 
         Transform closest = null;
         float minDist = float.MaxValue;
-
+        
         foreach (var t in targets[id])
         {
             if (t == null)

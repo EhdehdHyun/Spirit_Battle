@@ -6,6 +6,8 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
     [Header("Data_table 의 key (엑셀/JSON 아이템 ID)")]
     public int itemKey;
     public int quantity = 1;
+    [Header("Quest Target (HUD 거리 표시용)")]
+    [SerializeField] private int questTargetId; 
 
     private bool isCollected = false;
 
@@ -33,6 +35,24 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
     private void Awake()
     {
         EnsureLoader();
+    }
+    
+    private void OnEnable()
+    {
+        if (questTargetId > 0 && QuestTargetRegistry.Instance != null)
+        {
+            QuestTargetRegistry.Instance.Register(questTargetId, transform);
+            Debug.Log($"[Registry] Register CollectItem target={questTargetId}");
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (questTargetId > 0 && QuestTargetRegistry.Instance != null)
+        {
+            QuestTargetRegistry.Instance.Unregister(questTargetId, transform);
+            Debug.Log($"[Registry] Unregister CollectItem target={questTargetId}");
+        }
     }
 
     public void Interact(PlayerInteraction player)

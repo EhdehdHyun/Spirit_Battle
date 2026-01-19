@@ -183,6 +183,13 @@ public class QuestManager : MonoBehaviour
 
         var quest = questTable[questId];
 
+        // HUD 전용 타겟 ID 
+        if (quest.TargetID > 0)
+        {
+            return QuestTargetRegistry.Instance
+                .GetAnyTarget(quest.TargetID);
+        }
+        
         switch (quest.CompleteCondition)
         {
             case "KillMonster":
@@ -196,6 +203,7 @@ public class QuestManager : MonoBehaviour
 
             case "Investigate":
             case "DestroyObject":
+            case "CollectItem":
                 return QuestTargetRegistry.Instance
                     .GetAnyTarget(quest.TargetID);
         }
@@ -248,8 +256,18 @@ public class QuestManager : MonoBehaviour
             if (quest.CompleteCondition != condition.ToString())
                 continue;
 
-            if (quest.TargetID != targetId)
-                continue;
+            switch (condition)
+            {
+                case CompleteCondition.CollectItem:
+                    if (quest.CollectItemID != targetId)
+                        continue;
+                    break;
+
+                default:
+                    if (quest.TargetID != targetId)
+                        continue;
+                    break;
+            }
 
             var progress = questProgress[questId];
             progress.Current += amount;
@@ -345,7 +363,8 @@ public class QuestManager : MonoBehaviour
                || condition == CompleteCondition.CollectItem
                || condition == CompleteCondition.UseSkill
                || condition == CompleteCondition.Investigate
-               || condition == CompleteCondition.DestroyObject;
+               || condition == CompleteCondition.DestroyObject
+               || condition == CompleteCondition.TalkToNPC; 
     }
     private bool TryGetCondition(string raw, out CompleteCondition condition)
     {
