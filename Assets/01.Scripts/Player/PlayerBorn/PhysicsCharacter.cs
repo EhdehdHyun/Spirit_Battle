@@ -188,7 +188,7 @@ public class PhysicsCharacter : MonoBehaviour
             _runAfterDash = false;
 
         UpdateGroundCheck();
-        UpdateDashTimers(dt);
+        UpdateDashTimers(dt); // 약간 여유 주기
 
         bool wantsRunMode = !_isDashing && !movementLock && _moveInput.sqrMagnitude > 0.001f && (_weaponEquipped || _runAfterDash);
         if (_weaponEquipped && _stat != null)
@@ -428,7 +428,7 @@ public class PhysicsCharacter : MonoBehaviour
         if (_isDashing)
         {
             _dashTimer -= dt;
-            if (_dashTimer <= 0f)
+            if (_dashTimer < 0f)
                 _isDashing = false;
         }
     }

@@ -29,6 +29,9 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private bool weaponEquipped = false;
     public bool WeaponEquipped => weaponEquipped;
 
+    [SerializeField] private bool equipRequestPending;
+    [SerializeField] private bool requestedEquipState; // true=장착, false=해제
+
     [Header("공격 상태")]
     [SerializeField] private bool isAttacking = false;
     public bool IsAttacking => isAttacking;
@@ -134,6 +137,7 @@ public class PlayerCombat : MonoBehaviour
         // 여기서 성공 이펙트/사운드/카메라/짧은 무적 등만 처리
         if (sfx != null)
             sfx.PlayParrySuccess();
+        ParryPostFxPulse.Play();
 
         //잠깐 무적
         var character = GetComponent<CharacterBase>();
@@ -173,12 +177,14 @@ public class PlayerCombat : MonoBehaviour
 
     public void OnToggleWeaponInput()
     {
+        if (IsDashing) return;
         if (inventoryManager == null)
         {
             Debug.LogWarning("[PlayerCombat] inventoryManager 가 없습니다.");
             return;
         }
-
+        if (IsDashing) return;
+        if (playerInput != null && playerInput.isLocked) return;
         var equippedWeapon = inventoryManager.GetEquippedWeapon();
         if (equippedWeapon == null)
         {
@@ -186,7 +192,8 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
-        if (isEquipping) return;
+        requestedEquipState = !weaponEquipped;
+        equipRequestPending = true;
 
         BeginEquipLock();
 
