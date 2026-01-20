@@ -27,7 +27,7 @@ public class EliteEnemy : EnemyBase
             monsterAnim?.TryPlayHit();
     }
 
-    protected override void OnDie(DamageInfo info)
+    public override void OnDie(DamageInfo info)
     {
         base.OnDie(info);
         monsterAnim?.PlayDie();
