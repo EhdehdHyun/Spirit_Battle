@@ -39969,6 +39969,7 @@ GameObject:
   - component: {fileID: 680367636}
   - component: {fileID: 680367637}
   - component: {fileID: 680367638}
+  - component: {fileID: 680367639}
   m_Layer: 7
   m_Name: Player
   m_TagString: Player
@@ -40650,6 +40651,34 @@ MonoBehaviour:
   damagePerTick: 10
   tickInterval: 0.5
   maxHits: 32
+--- !u!114 &680367639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 680367618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fd4da081a22ae24daf47c81ede450a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enable: 1
+  safeDropHeight: 3
+  damagePerMeter: 10
+  lethalDropHeight: 25
+  minDamage: 1
+  maxDamage: 9999
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  probeUpOffset: 0.2
+  probeRadius: 0.25
+  probeMaxDistance: 5
+  minAirTime: 0.12
+  minFallSpeed: 6
+  ignoreIfDashedOnTakeoff: 1
+  debugLog: 0
 --- !u!1001 &680445110
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -130570,6 +130599,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 22616659687815834, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 844
+      objectReference: {fileID: 0}
+    - target: {fileID: 22616659687815834, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 151.56
+      objectReference: {fileID: 0}
+    - target: {fileID: 22616659687815834, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 435.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 288880181701511124, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 839.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 288880181701511124, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 150.85
+      objectReference: {fileID: 0}
+    - target: {fileID: 288880181701511124, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 437.34
+      objectReference: {fileID: 0}
     - target: {fileID: 577885600110971645, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: hideOnDisable
       value: 0
@@ -130649,6 +130702,18 @@ PrefabInstance:
     - target: {fileID: 1485342934196419071, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: onClearMessage
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1632618186148833100, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 841.459
+      objectReference: {fileID: 0}
+    - target: {fileID: 1632618186148833100, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 151.15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1632618186148833100, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 440.482
       objectReference: {fileID: 0}
     - target: {fileID: 1801602164576387003, guid: d081454a71c5ecd4ab50e1f745035b43, type: 3}
       propertyPath: worldArrow

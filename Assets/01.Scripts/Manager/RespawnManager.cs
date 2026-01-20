@@ -64,14 +64,17 @@ public class RespawnManager : MonoBehaviour
         // HP 풀회복 + 입력,이동락 해제
         var baseChar = playerRoot.GetComponentInParent<CharacterBase>();
         if (baseChar != null)
-            baseChar.RestoreFullHp();
+            baseChar.ResetCharacter();
 
         var input = playerRoot.GetComponentInParent<PlayerInputController>();
         input?.Unlock();
 
         var phy = playerRoot.GetComponentInParent<PhysicsCharacter>();
         if (phy != null)
+        {
+            phy.ResetMovementState();
             phy.SetMovementLocked(false);
+        }
 
         if (isFirstDeath)
         {
@@ -115,6 +118,8 @@ public class RespawnManager : MonoBehaviour
         {
             root.transform.position = pos;
         }
+
+        root.GetComponentInParent<PlayerFallDamage>()?.ResetTracking();
     }
 
     private void ResetAnimatorForRespawn(Animator animator)
