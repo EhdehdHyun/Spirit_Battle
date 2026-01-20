@@ -28,7 +28,7 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
     [Header("옵션")]
     [SerializeField] private bool linkBossUIOnSpawn = true;
     [SerializeField] private bool disableColliderOnUse = true;
-    
+
     [Header("퀘스트 ID HUD")]
     [SerializeField] private int shrineHudTargetId = 50002;
 
@@ -121,12 +121,12 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         if (shrineHudTargetId > 0)
         {
             QuestTargetRegistry.Instance?.Unregister(shrineHudTargetId, transform);
-            
+
             QuestHUDUI.Instance?.ClearCurrentTarget();
-            
+
             Debug.Log($"[Shrine] HUD target removed id={shrineHudTargetId}");
         }
-        
+
         if (isTutorialBossPortal && usedTutorial)
             return;
 
@@ -366,6 +366,8 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
             playerTf.position = pos;
             if (matchRotation) playerTf.rotation = rot;
             cc.enabled = true;
+
+            playerTf.GetComponentInParent<PlayerFallDamage>()?.ResetTracking();
             return;
         }
 
@@ -377,11 +379,15 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
             rb.position = pos;
             if (matchRotation) rb.rotation = rot;
+
+            playerTf.GetComponentInParent<PlayerFallDamage>()?.ResetTracking();
             return;
         }
 
         playerTf.position = pos;
         if (matchRotation) playerTf.rotation = rot;
+
+        playerTf.GetComponentInParent<PlayerFallDamage>()?.ResetTracking();
     }
 
 }

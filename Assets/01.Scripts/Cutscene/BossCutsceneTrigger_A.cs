@@ -48,6 +48,13 @@ public class BossCutsceneTrigger_A : MonoBehaviour
     [SerializeField] private float bossBgmFadeIn = 0.5f;
     [SerializeField] private float bossBgmFadeOutPrev = 0.3f;
 
+    [Header("컷씬 보스 SFX")]
+    [SerializeField] private AudioSource cutsceneBossSfxSource;
+    [SerializeField] private AudioClip bossArmsOpenClip;
+
+    [Range(0f, 1f)][SerializeField] private float bossArmsOpenVolume = 1f;
+    [SerializeField] private float bossArmsOpenDelay = 0.0f;
+
     [Header("보스전 BGM 종료 조건(필수)")]
     [Tooltip("실제 전투 보스(TestBoss) 루트 오브젝트. 이 오브젝트가 비활성화되면 BGM을 끕니다.")]
     [SerializeField] private GameObject testBossRoot;
@@ -316,6 +323,7 @@ public class BossCutsceneTrigger_A : MonoBehaviour
         yield return WaitUnscaled(bossWalkSeconds);
 
         cutsceneBossAnimator.Play(phase2StateName, 0, 0f);
+        StartCoroutine(CoPlayBossArmsOpenSfx());
         yield return WaitUnscaled(bossPhase2Seconds);
 
         cutsceneBossRoot.SetActive(false);
@@ -569,4 +577,32 @@ public class BossCutsceneTrigger_A : MonoBehaviour
         img.enabled = true;
     }
 
+    private AudioSource GetBossSfxSource()
+    {
+        if (cutsceneBossSfxSource) return cutsceneBossSfxSource;
+        if (!cutsceneBossRoot) return null;
+
+        cutsceneBossSfxSource = cutsceneBossRoot.GetComponentInChildren<AudioSource>(true);
+        if (!cutsceneBossSfxSource)
+        {
+            cutsceneBossSfxSource = cutsceneBossRoot.AddComponent<AudioSource>();
+            cutsceneBossSfxSource.playOnAwake = false;
+            // 필요하면 3D로:
+            // cutsceneBossSfxSource.spatialBlend = 1f;
+        }
+        return cutsceneBossSfxSource;
+    }
+
+    private IEnumerator CoPlayBossArmsOpenSfx()
+    {
+        if (!bossArmsOpenClip) yield break;
+
+        if (bossArmsOpenDelay > 0f)
+            yield return WaitUnscaled(bossArmsOpenDelay);
+
+        var src = GetBossSfxSource();
+        if (!src) yield break;
+
+        src.PlayOneShot(bossArmsOpenClip, bossArmsOpenVolume);
+    }
 }

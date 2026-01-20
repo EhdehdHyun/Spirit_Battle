@@ -88,6 +88,9 @@ public class ShrineCutsceneManager : MonoBehaviour
     {
         GlobalInputBlocker.SetKeyboardBlocked(true, allowEsc: true);
 
+        var fall = realPlayer.GetComponentInParent<PlayerFallDamage>(); //낙뎀 방지를 위해 끄기
+        if (fall != null) fall.enabled = false;
+
         TutorialManager.Instance?.EndTutorialUI();
         isCutscenePlaying = true;
 
@@ -414,6 +417,14 @@ public class ShrineCutsceneManager : MonoBehaviour
 
         phys.ResetMovementState();
         phys.enabled = true;
+
+        var fall = realPlayer.GetComponentInParent<PlayerFallDamage>(); //낙뎀 끈 거 다시 키기
+        if (fall != null)
+        {
+            fall.enabled = true;
+            fall.ResetTracking();
+        }
+
 
         anim.Play("Idle", 0, 0f);
         anim.Update(0f);
