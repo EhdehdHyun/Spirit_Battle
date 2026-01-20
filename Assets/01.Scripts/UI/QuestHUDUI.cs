@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class QuestHUDUI : MonoBehaviour
 {
+    public static QuestHUDUI Instance;
+    
     [Header("UI")]
     [SerializeField] private Image backgroundImage;
     [SerializeField] private TextMeshProUGUI titleText;
@@ -16,6 +18,11 @@ public class QuestHUDUI : MonoBehaviour
 
     private Transform player;
     private Transform currentTarget; 
+    
+    private void Awake()
+    {
+        Instance = this;
+    }
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -82,5 +89,10 @@ public class QuestHUDUI : MonoBehaviour
         }
 
         Debug.Log($"[HUD] trackedQuestId={trackedId}, TargetID={quest.TargetID}, Condition={quest.CompleteCondition}");
+    }
+    public void ClearCurrentTarget()
+    {
+        currentTarget = null;
+        distanceText.text = "";
     }
 }

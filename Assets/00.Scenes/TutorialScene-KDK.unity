@@ -37834,6 +37834,7 @@ MonoBehaviour:
   matchRotation: 1
   linkBossUIOnSpawn: 1
   disableColliderOnUse: 1
+  shrineHudTargetId: 0
   sfxObjectToDisable: {fileID: 641113052}
   sfxAudioSourceToStop: {fileID: 0}
   loadingOverlay: {fileID: 1733616117}
@@ -53305,6 +53306,7 @@ MonoBehaviour:
   matchRotation: 1
   linkBossUIOnSpawn: 1
   disableColliderOnUse: 1
+  shrineHudTargetId: 50002
   sfxObjectToDisable: {fileID: 896751376}
   sfxAudioSourceToStop: {fileID: 0}
   loadingOverlay: {fileID: 0}
