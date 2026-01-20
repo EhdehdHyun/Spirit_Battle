@@ -202,7 +202,10 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         {
             usedTutorial = true;
 
-            gameObject.SetActive(false);
+            if (disableColliderOnUse && col != null)
+                col.enabled = false;
+
+            //gameObject.SetActive(false);
         }
 
         co = null;
@@ -288,6 +291,9 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
         if (bossRoot != null)
             bossRoot.SetActive(false);
+
+        if (BossUIStatus.Instance != null)
+            BossUIStatus.Instance.SetVisible(false);
 
         if (isTutorialBossPortal)
         {
