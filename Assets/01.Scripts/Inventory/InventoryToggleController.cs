@@ -5,7 +5,7 @@ public class InventoryToggleController : MonoBehaviour
     [Header("Inventory UI Root")]
     public GameObject inventoryRoot;
 
-    [Header("�κ� ������ �� ���� �÷��̾� �� ��ũ��Ʈ��")]
+    [Header("Inventory")]
     public MonoBehaviour[] gameplayScriptsToDisable;
 
     private bool isInventoryOpen = false;
@@ -37,7 +37,7 @@ public class InventoryToggleController : MonoBehaviour
     {
         isInventoryOpen = true;
 
-        // �κ��丮 UI �ѱ�
+
         if (inventoryRoot != null)
             inventoryRoot.SetActive(true);
 
@@ -55,8 +55,6 @@ public class InventoryToggleController : MonoBehaviour
                     comp.enabled = false;
             }
         }
-
-        Debug.Log("[InventoryToggleController] �κ��丮 ����");
     }
 
     private void CloseInventory()

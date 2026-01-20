@@ -39157,6 +39157,14 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6325169664097541195, guid: 739f97032cd62ed4d9d5f6749898421a, type: 3}
+      propertyPath: inventoryUI
+      value: 
+      objectReference: {fileID: 409440283}
+    - target: {fileID: 6325169664097541195, guid: 739f97032cd62ed4d9d5f6749898421a, type: 3}
+      propertyPath: playerInput
+      value: 
+      objectReference: {fileID: 680367625}
+    - target: {fileID: 6325169664097541195, guid: 739f97032cd62ed4d9d5f6749898421a, type: 3}
       propertyPath: playerInteraction
       value: 
       objectReference: {fileID: 680367620}
