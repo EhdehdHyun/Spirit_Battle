@@ -41,30 +41,36 @@ public class QuestHUDUI : MonoBehaviour
         titleText.text = quest.QuestName;
 
         // 진행도
+        var state = QuestManager.Instance.GetQuestState(trackedId);
+        bool isCompleted =
+            state == QuestState.Completed ||
+            state == QuestState.RewardClaimed;
+        if (isCompleted)
+        {
+            backgroundImage.color = completedColor;
+            progressText.text = "보상 수령 가능";
+            distanceText.text = "";
+            currentTarget = null;
+            return;
+        }
+
+        // 진행 중 상태
+        backgroundImage.color = normalColor;
+
         var progress = QuestManager.Instance.GetProgress(trackedId);
         if (progress != null)
         {
             progressText.text = $"진행도 ( {progress.Current} / {progress.Target} )";
-            
-            if (progress.IsComplete)
-            {
-                backgroundImage.color = completedColor;
-                currentTarget = null;
-                distanceText.text = "보상수령가능";
-                return;
-            }
-            backgroundImage.color = normalColor;
-            progressText.text = $"진행도 ( {progress.Current} / {progress.Target} )";
         }
 
-        //타겟 갱신 시도
+        // 타겟 갱신 시도
         var target = QuestManager.Instance.GetQuestTarget(trackedId);
         if (target != null)
         {
             currentTarget = target;
         }
 
-        //마지막으로 유효했던 타겟 기준으로 거리 표시
+        // 거리 표시
         if (currentTarget != null)
         {
             float dist = Vector3.Distance(player.position, currentTarget.position);
@@ -72,7 +78,7 @@ public class QuestHUDUI : MonoBehaviour
         }
         else
         {
-            distanceText.text = ""; // 아직 못 찾았을 때만
+            distanceText.text = "";
         }
 
         Debug.Log($"[HUD] trackedQuestId={trackedId}, TargetID={quest.TargetID}, Condition={quest.CompleteCondition}");
