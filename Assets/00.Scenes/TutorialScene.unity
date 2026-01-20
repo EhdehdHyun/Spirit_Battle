@@ -38067,6 +38067,10 @@ PrefabInstance:
       propertyPath: bossRespawnPoint
       value: 
       objectReference: {fileID: 106415178}
+    - target: {fileID: 3728202565177328362, guid: 301257378781c9440b658a128eccf9a4, type: 3}
+      propertyPath: shrineHudTargetId
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4284226751721798857, guid: 301257378781c9440b658a128eccf9a4, type: 3}
       propertyPath: m_Name
       value: Tutorial_Obelisk
@@ -127314,6 +127318,7 @@ MonoBehaviour:
   matchRotation: 1
   linkBossUIOnSpawn: 1
   disableColliderOnUse: 1
+  shrineHudTargetId: 50002
   sfxObjectToDisable: {fileID: 2097077363}
   sfxAudioSourceToStop: {fileID: 0}
   loadingOverlay: {fileID: 1733616117}
