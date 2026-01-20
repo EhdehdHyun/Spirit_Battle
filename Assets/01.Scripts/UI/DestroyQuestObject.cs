@@ -5,6 +5,9 @@ public class DestroyQuestObject : MonoBehaviour, IInteractable
     [Header("Quest Target")]
     [SerializeField] private int destroyTargetID = 72;
     [SerializeField] private float destroyDelay = 0.3f;
+    
+    [SerializeField] private GameObject idleVfx;          // 오염 상태 파티클
+    [SerializeField] private ParticleSystem destroyVfx;   // 파괴 연출
 
     private bool isDestroyed = false;
     
@@ -27,7 +30,20 @@ public class DestroyQuestObject : MonoBehaviour, IInteractable
         );
 
         // 연출 (이펙트, 사운드)
+        // 상시 오염 파티클 끄기
+        if (idleVfx != null)
+            idleVfx.SetActive(false);
 
+        //파괴 연출 파티클
+        if (destroyVfx != null)
+        {
+            destroyVfx.transform.SetParent(null); 
+            destroyVfx.Play();
+            Destroy(
+                destroyVfx.gameObject,
+                destroyVfx.main.duration + 1f
+            );
+        }
         // 오브젝트 파괴
         Destroy(gameObject, destroyDelay);
 

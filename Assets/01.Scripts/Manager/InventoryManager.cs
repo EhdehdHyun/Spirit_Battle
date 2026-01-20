@@ -108,6 +108,7 @@ public class InventoryManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
+
     public void ToggleInventory()
     {
         isOpen = !isOpen; // 상태 반전
@@ -119,29 +120,30 @@ public class InventoryManager : MonoBehaviour
 
         if (isOpen)
         {
-            // 열렸을 때: 게임 일시정지(선택사항), 마우스 보이기
-            // Time.timeScale = 0f; 
+            // 열렸을 때
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         else
         {
-            // 닫혔을 때: 게임 재개, 마우스 숨기기
-            // Time.timeScale = 1f; 
+            // 닫혔을 때
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
     }
 
-    // 탭 키 입력 처리 (Update에 추가)
     private void Update()
     {
+        if (GlobalInputBlocker.IsKeyBlocked(KeyCode.Tab)) return;
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            ToggleInventory();
+            bool amIOpen = isOpen;
+            if (amIOpen || !GameManager.Instance.IsAnyPopupOpen)
+            {
+                ToggleInventory();
+            }
         }
     }
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     private void InitSlots()
     {

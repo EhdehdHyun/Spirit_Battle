@@ -28,6 +28,9 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
     [Header("옵션")]
     [SerializeField] private bool linkBossUIOnSpawn = true;
     [SerializeField] private bool disableColliderOnUse = true;
+    
+    [Header("퀘스트 ID HUD")]
+    [SerializeField] private int shrineHudTargetId = 50002;
 
     [Header("SFX (한 번 쓰면 끄기)")]
     [Tooltip("이 오브젝트 자체를 꺼버림(가장 확실)")]
@@ -114,6 +117,16 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
     {
         if (co != null) return;
 
+        // 성소를 향하여 퀘스트 HUD거리 제거
+        if (shrineHudTargetId > 0)
+        {
+            QuestTargetRegistry.Instance?.Unregister(shrineHudTargetId, transform);
+            
+            QuestHUDUI.Instance?.ClearCurrentTarget();
+            
+            Debug.Log($"[Shrine] HUD target removed id={shrineHudTargetId}");
+        }
+        
         if (isTutorialBossPortal && usedTutorial)
             return;
 
