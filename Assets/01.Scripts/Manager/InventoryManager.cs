@@ -30,6 +30,11 @@ public class InventoryManager : MonoBehaviour
     [Tooltip("인벤토리 전체 UI 패널 또는 캔버스 (켜고 끄기용)")]
     public GameObject inventoryUI;
 
+    // ▼▼▼ [추가] 플레이어 입력(카메라/이동) 제어용 ▼▼▼
+    [Header("Input Controller (필수 연결)")]
+    public PlayerInputController playerInput;
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
     [Header("Grid Size (기존 변수 유지용)")]
     public int rows = 5;
     public int columns = 5;
@@ -93,7 +98,6 @@ public class InventoryManager : MonoBehaviour
         {
             GameManager.Instance.inventoryManager = this;
         }
-        Debug.Log($"[InventoryManager] Awake 완료. 연결된 UI: {inventoryUI}");
     }
 
     private void Start()
@@ -104,11 +108,9 @@ public class InventoryManager : MonoBehaviour
         }
 
         isOpen = false;
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
-
     public void ToggleInventory()
     {
         isOpen = !isOpen; // 상태 반전
@@ -120,28 +122,39 @@ public class InventoryManager : MonoBehaviour
 
         if (isOpen)
         {
-            // 열렸을 때
+            Time.timeScale = 0f;
+
+            if (playerInput != null) playerInput.Lock();
+
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         else
         {
-            // 닫혔을 때
+            Time.timeScale = 1f; 
+
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+            if (playerInput != null)
+            {
+                playerInput.ResetInputState();
+                playerInput.Unlock();
+            }
         }
     }
 
     private void Update()
     {
         if (GlobalInputBlocker.IsKeyBlocked(KeyCode.Tab)) return;
+
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            bool amIOpen = isOpen;
-            if (amIOpen || !GameManager.Instance.IsAnyPopupOpen)
+            if (!isOpen && GameManager.Instance.IsAnyPopupOpen)
             {
-                ToggleInventory();
+                return; 
             }
+            ToggleInventory();
         }
     }
 
@@ -182,7 +195,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (data == null || quantity <= 0)
         {
-            Debug.LogWarning("[InventoryManager] AddItem(Data_table): 잘못된 인자");
             return;
         }
         AddItem(new ItemInstance(data, quantity));
@@ -192,7 +204,6 @@ public class InventoryManager : MonoBehaviour
     {
         if (newItem == null || newItem.data == null || newItem.quantity <= 0)
         {
-            Debug.LogWarning("[InventoryManager] AddItem(ItemInstance): 잘못된 아이템");
             return;
         }
 
@@ -209,8 +220,6 @@ public class InventoryManager : MonoBehaviour
         }
 
         bool ok = AddItemToRange(newItem, start, end);
-        if (!ok)
-            Debug.LogWarning($"[InventoryManager] AddItem: 범위({start}~{end})가 가득 찼습니다.");
     }
 
     private bool AddItemToRange(ItemInstance newItem, int start, int end)
@@ -258,15 +267,11 @@ public class InventoryManager : MonoBehaviour
                 return true;
             }
         }
-
-        Debug.LogWarning($"[InventoryManager] AddItemToRange FAIL: 범위({start}~{end}) 가득 참");
         return false;
     }
 
     public bool DropItemFromSlot(int slotIndex, int amount = 1)
     {
-        Debug.Log($"[InventoryManager] DropItemFromSlot slotIndex={slotIndex}, amount={amount}");
-
         var slot = GetSlot(slotIndex);
         if (slot == null || slot.IsEmpty || slot.item == null || slot.item.data == null)
             return false;
@@ -310,7 +315,6 @@ public class InventoryManager : MonoBehaviour
             }
 
             GameObject worldObj = Instantiate(prefabToUse, spawnPos, Quaternion.identity);
-            Debug.Log($"[InventoryManager] Dropped: {worldObj.name} at {spawnPos}");
 
             var pickup = worldObj.GetComponent<ItemPickupFromTable>();
             if (pickup != null)
@@ -346,7 +350,6 @@ public class InventoryManager : MonoBehaviour
         bool applied = TryApplyConsumableEffect(data, useAmount);
         if (!applied)
         {
-            Debug.Log($"[InventoryManager] UseItemFromSlot: 효과 적용 실패(체력 풀/미등록/대상 없음) key={data.key}");
             return false;
         }
 
@@ -383,7 +386,6 @@ public class InventoryManager : MonoBehaviour
 
         if (_playerObj == null || _healMethod == null || _healTarget == null)
         {
-            Debug.LogWarning("[InventoryManager] TryApplyConsumableEffect: 플레이어 회복 메서드를 찾지 못했습니다.");
             return false;
         }
 
@@ -425,11 +427,9 @@ public class InventoryManager : MonoBehaviour
                     _healTarget = c;
                     _healMethod = mInt;
                     _healParamIsInt = true;
-                    Debug.Log($"[InventoryManager] Heal method bound: {t.Name}.{name}(int)");
                     return;
                 }
 
-                // float 파라미터
                 var mFloat = t.GetMethod(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
                     null, new[] { typeof(float) }, null);
                 if (mFloat != null)
@@ -437,7 +437,6 @@ public class InventoryManager : MonoBehaviour
                     _healTarget = c;
                     _healMethod = mFloat;
                     _healParamIsInt = false;
-                    Debug.Log($"[InventoryManager] Heal method bound: {t.Name}.{name}(float)");
                     return;
                 }
             }
@@ -453,19 +452,16 @@ public class InventoryManager : MonoBehaviour
         var data = from.item.data;
         if (!IsEquipItem(data))
         {
-            Debug.LogWarning($"[InventoryManager] EquipFromInventory: 장비 아이템이 아님 key={data.key}");
             return false;
         }
 
         int equipIdx = EquipWeaponIndex;
         var equipSlot = GetSlot(equipIdx);
 
-        // 이미 장착 중이면 해제 먼저 (실패하면 장착 중단)
         if (equipSlot != null && !equipSlot.IsEmpty && equipSlot.item != null)
         {
             if (!UnequipWeapon())
             {
-                Debug.LogWarning("[InventoryManager] EquipFromInventory: 기존 무기 해제 실패(WeaponPanel 가득 참?)");
                 return false;
             }
         }
@@ -488,7 +484,6 @@ public class InventoryManager : MonoBehaviour
         if (equipSlot != null)
             equipSlot.item = toEquip;
 
-        Debug.Log($"[InventoryManager] Equipped -> slot0 : {data.ItemName} (from={fromSlotIndex})");
         OnInventoryChanged?.Invoke();
         return true;
     }
@@ -502,28 +497,20 @@ public class InventoryManager : MonoBehaviour
             return false;
 
         ItemInstance equipped = equipSlot.item;
-
-        // 먼저 장착칸 비우기
         equipSlot.item = null;
         equipped.equipped = false;
 
-        // 무기는 WeaponPanel로만 되돌림 (1~25)
         bool ok = AddItemToRange(equipped, WeaponInvStart, WeaponInvEnd);
         if (!ok)
         {
             equipped.equipped = true;
             equipSlot.item = equipped;
-            Debug.LogWarning("[InventoryManager] UnequipWeapon FAIL -> reverted to slot0 (WeaponPanel full?)");
             OnInventoryChanged?.Invoke();
             return false;
         }
-
-        Debug.Log("[InventoryManager] UnequipWeapon: 무기 해제 완료 (0 -> WeaponPanel)");
         OnInventoryChanged?.Invoke();
         return true;
     }
-
-    /// <summary>현재 장착된 무기(0번 슬롯)를 가져옴</summary>
     public ItemInstance GetEquippedWeapon()
     {
         var equipSlot = GetSlot(EquipWeaponIndex);
@@ -538,7 +525,6 @@ public class InventoryManager : MonoBehaviour
         if (slot == null || slot.IsEmpty || slot.item == null)
             return;
         slot.item = null;
-        Debug.Log($"[InventoryManager] ClearSlot: 슬롯 {slotIndex}번 아이템이 삭제되었습니다.");
         OnInventoryChanged?.Invoke();
     }
 
@@ -548,7 +534,6 @@ public class InventoryManager : MonoBehaviour
 
         int total = 0;
 
-        // 아이템 인벤 슬롯 범위만 검사 (26~50)
         for (int i = ItemInvStart; i <= ItemInvEnd; i++)
         {
             var slot = slots[i];
@@ -573,7 +558,6 @@ public class InventoryManager : MonoBehaviour
 
         int remain = amount;
 
-        // 아이템 인벤 슬롯에서만 제거
         for (int i = ItemInvStart; i <= ItemInvEnd; i++)
         {
             var slot = slots[i];
@@ -601,21 +585,16 @@ public class InventoryManager : MonoBehaviour
 
     public void SaveToData(SaveData data)
     {
-        // 1. 기존 저장된 아이템 리스트 비우기
         data.inventoryItems.Clear();
-
-        // 2. 0번부터 50번까지 모든 슬롯 검사
         for (int i = 0; i < slots.Count; i++)
         {
             InventorySlot slot = slots[i];
-
-            // 아이템이 있는 슬롯만 저장
             if (slot != null && !slot.IsEmpty && slot.item != null && slot.item.data != null)
             {
                 ItemSaveData saveData = new ItemSaveData();
-                saveData.slotIndex = i;                 // 몇 번째 칸인지 중요!
-                saveData.itemKey = slot.item.data.key;  // 무슨 아이템인지
-                saveData.amount = slot.item.quantity;   // 몇 개인지
+                saveData.slotIndex = i;
+                saveData.itemKey = slot.item.data.key;
+                saveData.amount = slot.item.quantity;
 
                 data.inventoryItems.Add(saveData);
             }
