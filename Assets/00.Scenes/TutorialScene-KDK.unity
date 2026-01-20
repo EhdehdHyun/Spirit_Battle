@@ -62979,9 +62979,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 115c82e6e2d2b49fab12853df9d4390a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  backgroundImage: {fileID: 1062424554}
   titleText: {fileID: 1960933616}
   progressText: {fileID: 733209705}
   distanceText: {fileID: 303116027}
+  normalColor: {r: 0, g: 0, b: 0, a: 0.8235294}
+  completedColor: {r: 0.2460395, g: 0.9150943, b: 0.3553622, a: 0.93333334}
 --- !u!1001 &1063326728
 PrefabInstance:
   m_ObjectHideFlags: 0

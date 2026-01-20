@@ -1,11 +1,18 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class QuestHUDUI : MonoBehaviour
 {
+    [Header("UI")]
+    [SerializeField] private Image backgroundImage;
     [SerializeField] private TextMeshProUGUI titleText;
     [SerializeField] private TextMeshProUGUI progressText;
     [SerializeField] private TextMeshProUGUI distanceText;
+    
+    [Header("Colors")]
+    [SerializeField] private Color normalColor = new Color(0f, 0f, 0f, 0.6f);
+    [SerializeField] private Color completedColor = new Color(0.2f, 0.8f, 0.3f, 0.8f);
 
     private Transform player;
     private Transform currentTarget; 
@@ -41,10 +48,13 @@ public class QuestHUDUI : MonoBehaviour
             
             if (progress.IsComplete)
             {
+                backgroundImage.color = completedColor;
                 currentTarget = null;
                 distanceText.text = "보상수령가능";
                 return;
             }
+            backgroundImage.color = normalColor;
+            progressText.text = $"진행도 ( {progress.Current} / {progress.Target} )";
         }
 
         //타겟 갱신 시도
