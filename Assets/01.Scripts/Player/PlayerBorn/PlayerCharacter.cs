@@ -34,7 +34,7 @@ public class PlayerCharacter : CharacterBase
         return 1f;
     }
 
-    protected override void OnDie(DamageInfo info)
+    public override void OnDie(DamageInfo info)
     {
         //게임오버 됐을 때 게임오버 화면 제외 모든 UI 숨기는 기능
         UIVisibilityManager.Instance?.HideAllExceptGameOver();

@@ -17,6 +17,9 @@ public class PlayerStat : MonoBehaviour
     public float regenPerSecond = 1f;
     private float regenTimer = 0f;
 
+    // [추가] 스태미나 회복 차단 플래그
+    private bool isStaminaRegenBlocked = false;
+
     [Header("Dash Count")]
     public int maxDashCount = 2;
     public int curDashCount;
@@ -28,14 +31,14 @@ public class PlayerStat : MonoBehaviour
     public float dashUseStaminaCost = 15f;
 
     [Header("Dash Burst")]
-    public float secondDashWindow = 0.45f;   // 일정 시간
+    public float secondDashWindow = 0.45f;
     public float secondDashCooldown = 1f;
 
     private float _secondWindowRemain = 0f;
     private bool _secondDashUsed = false;
     private float _dashCooldownRemain = 0f;
 
-    public float maxExp; // 다음 레벨 필요 경험치
+    public float maxExp;
 
     private CharacterBase character;
     private Level_Data_Loader levelTable;
@@ -77,7 +80,10 @@ public class PlayerStat : MonoBehaviour
     {
         float dt = Time.deltaTime;
 
-        AutoRegenStamina(dt);
+        if (!isStaminaRegenBlocked)
+        {
+            AutoRegenStamina(dt);
+        }
 
         if (_dashCooldownRemain > 0f)
         {
@@ -85,13 +91,11 @@ public class PlayerStat : MonoBehaviour
             if (_dashCooldownRemain < 0f) _dashCooldownRemain = 0f;
         }
 
-        // 2번째 대쉬 입력 윈도우
         if (_secondWindowRemain > 0f)
         {
             _secondWindowRemain -= dt;
             if (_secondWindowRemain <= 0f)
             {
-                // 2번째 안 썼으면 종료
                 _secondWindowRemain = 0f;
                 _secondDashUsed = false;
             }
@@ -102,7 +106,6 @@ public class PlayerStat : MonoBehaviour
     {
         if (maxStamina <= 0f) return;
 
-        // 이미 풀스태면 타이머 정리
         if (currentStamina >= maxStamina)
         {
             currentStamina = maxStamina;
@@ -111,7 +114,6 @@ public class PlayerStat : MonoBehaviour
         }
 
         regenTimer += dt;
-
         float before = currentStamina;
 
         while (regenTimer >= 1f)
@@ -123,7 +125,11 @@ public class PlayerStat : MonoBehaviour
 
         if (!Mathf.Approximately(before, currentStamina))
             ui?.UpdateStamina(currentStamina, maxStamina);
+    }
 
+    public void SetStaminaRegenBlock(bool blocked)
+    {
+        isStaminaRegenBlocked = blocked;
     }
 
     public bool CanStartDashUse()
@@ -178,13 +184,9 @@ public class PlayerStat : MonoBehaviour
             ui?.UpdateStamina(currentStamina, maxStamina);
             return false;
         }
-
         return currentStamina > 0f;
     }
 
-    // =======================
-    // 레벨 데이터 적용
-    // =======================
     private void ApplyLevelData()
     {
         var data = levelTable.GetByLevel(level);
@@ -194,27 +196,19 @@ public class PlayerStat : MonoBehaviour
             return;
         }
 
-        Debug.Log($"[PlayerStat] Apply Level {level} | HP:{data.MaxHP} | Stamina:{data.Stamina}");
-
-        // HP
         character.maxHp = data.MaxHP;
         character.currentHp = character.maxHp;
 
-        // Stamina
         maxStamina = data.Stamina;
         currentStamina = maxStamina;
 
-        // EXP
         var nextLevel = levelTable.GetByLevel(level + 1);
         maxExp = nextLevel != null ? nextLevel.RequiredExp : 0;
     }
 
-    // =======================
-    // 경험치 추가
-    // =======================
     public void AddExp(float amount)
     {
-        if (maxExp <= 0) return; // MaxLevel
+        if (maxExp <= 0) return;
 
         currentExp += amount;
 
@@ -223,7 +217,6 @@ public class PlayerStat : MonoBehaviour
             currentExp -= maxExp;
             LevelUp();
         }
-
         UpdateExpUI();
     }
 
@@ -232,15 +225,9 @@ public class PlayerStat : MonoBehaviour
         level++;
         ApplyLevelData();
         character.currentHp = character.maxHp;
-
         UpdateAllUI();
-
-        Debug.Log($"LEVEL UP → {level}");
     }
 
-    // =======================
-    // UI
-    // =======================
     private void UpdateAllUI()
     {
         ui.UpdateHp(character.currentHp, character.maxHp);
@@ -271,16 +258,12 @@ public class PlayerStat : MonoBehaviour
 
         return true;
     }
+
     public void SaveToData(SaveData data)
     {
         data.level = this.level;
         data.currentExp = this.currentExp;
-
-        if (character != null)
-        {
-            data.currentHp = character.currentHp;
-        }
-
+        if (character != null) data.currentHp = character.currentHp;
         data.playerPosition = transform.position;
     }
 
@@ -290,18 +273,15 @@ public class PlayerStat : MonoBehaviour
         this.currentExp = data.currentExp;
         if (data.playerPosition == Vector3.zero && !data.isTutorialClear)
         {
-            Debug.Log("[PlayerStat] 새 게임 감지: 위치 이동을 건너뛰고 씬의 초기 위치를 유지합니다.");
+            Debug.Log("[PlayerStat] 새 게임 감지: 초기 위치 유지");
         }
         else
         {
             CharacterController cc = GetComponent<CharacterController>();
             if (cc != null) cc.enabled = false;
-
             transform.position = data.playerPosition;
             Physics.SyncTransforms();
             if (cc != null) cc.enabled = true;
-
-            Debug.Log($"[PlayerStat] 위치 로드 완료: {data.playerPosition}");
         }
 
         ApplyLevelData();
@@ -309,7 +289,25 @@ public class PlayerStat : MonoBehaviour
         {
             character.currentHp = Mathf.Min(data.currentHp, character.maxHp);
         }
-
         UpdateAllUI();
+    }
+
+    public void ApplyDrowningDamage(float amount)
+    {
+        if (character == null) return;
+
+        character.currentHp -= amount;
+
+        if (character.currentHp <= 0)
+        {
+            character.currentHp = 0;
+            if (!character.IsDead)
+            {
+                character.ForceKill();
+            }
+        }
+
+        if (ui != null)
+            ui.UpdateHp(character.currentHp, character.maxHp);
     }
 }
