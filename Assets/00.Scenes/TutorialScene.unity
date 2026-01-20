@@ -21533,6 +21533,38 @@ PrefabInstance:
       propertyPath: monsterId
       value: 11002
       objectReference: {fileID: 0}
+    - target: {fileID: 101523703184880867, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: breakHitThreshold
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 101523703184880867, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: groggyExtraDamageRatio
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1704864622966005654, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: cooldownMax
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1704864622966005654, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: cooldownMin
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1704864622966005654, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: slam1HitMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 1704864622966005654, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: slam2HitMask.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 1940796973434554225, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: cooldownMax
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 1940796973434554225, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: cooldownMin
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 3511104567439868573, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
       propertyPath: patterns.Array.size
       value: 4
@@ -21548,6 +21580,14 @@ PrefabInstance:
     - target: {fileID: 3602687304791287564, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4012939175973782897, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: cooldownMax
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 4012939175973782897, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: cooldownMin
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5353177757156421738, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
       propertyPath: m_LocalPosition.x
@@ -21588,6 +21628,14 @@ PrefabInstance:
     - target: {fileID: 5353177757156421738, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6604222195718906217, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: cooldownMax
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 6604222195718906217, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
+      propertyPath: cooldownMin
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

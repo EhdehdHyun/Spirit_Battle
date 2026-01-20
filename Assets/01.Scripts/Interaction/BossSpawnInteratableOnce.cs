@@ -239,9 +239,7 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
         if (boss != null)
         {
-            boss.RestoreFullHp(true);
-
-            boss.ResetForRetry_IfExists();
+            boss.ResetForRetry();
         }
     }
 
