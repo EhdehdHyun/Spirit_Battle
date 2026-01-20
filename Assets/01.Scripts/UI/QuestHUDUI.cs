@@ -38,6 +38,13 @@ public class QuestHUDUI : MonoBehaviour
         if (progress != null)
         {
             progressText.text = $"진행도 ( {progress.Current} / {progress.Target} )";
+            
+            if (progress.IsComplete)
+            {
+                currentTarget = null;
+                distanceText.text = "보상수령가능";
+                return;
+            }
         }
 
         //타겟 갱신 시도

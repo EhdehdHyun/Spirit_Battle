@@ -39834,7 +39834,7 @@ MonoBehaviour:
   currentExp: 0
   maxStamina: 100
   currentStamina: 100
-  regenPerSecond: 1
+  regenPerSecond: 100
   maxDashCount: 2
   curDashCount: 0
   combatRunStaminaPerSec: 10
