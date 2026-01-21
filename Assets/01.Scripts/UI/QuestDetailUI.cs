@@ -23,7 +23,6 @@ public class QuestDetailUI : MonoBehaviour
     
     public void SetQuest(Quest_Data_Table quest)
     {
-        Debug.Log($"[QuestDetailUI] SetQuest({quest.QuestName}) on {gameObject.name}, id={GetInstanceID()}");
         currentQuest = quest;
         questTitle.text = quest.QuestName;
         questPurpose.text = quest.ObjectiveText; 

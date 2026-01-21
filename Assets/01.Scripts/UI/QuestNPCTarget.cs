@@ -6,12 +6,14 @@ public class QuestNpcTarget : MonoBehaviour
 {
     [SerializeField] private int npcId;
 
+    
+    private void Awake()
+    {
+        TryRegister();
+    }
     private void OnEnable()
     {
-        if (npcId > 0 && QuestTargetRegistry.Instance != null)
-        {
-            QuestTargetRegistry.Instance.Register(npcId, transform);
-        }
+        TryRegister();
     }
 
     private void OnDisable()
@@ -19,6 +21,13 @@ public class QuestNpcTarget : MonoBehaviour
         if (npcId > 0 && QuestTargetRegistry.Instance != null)
         {
             QuestTargetRegistry.Instance.Unregister(npcId, transform);
+        }
+    }
+    private void TryRegister()
+    {
+        if (npcId > 0 && QuestTargetRegistry.Instance != null)
+        {
+            QuestTargetRegistry.Instance.Register(npcId, transform);
         }
     }
 }

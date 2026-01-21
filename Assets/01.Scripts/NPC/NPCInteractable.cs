@@ -16,6 +16,7 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     
     [Header("Quest")]
     [SerializeField] private int giveQuestID = -1;
+    [SerializeField] private int completeQuestID = -1;
 
     private bool isTalking;
     public bool canInteract = true;
@@ -62,7 +63,6 @@ public class NPCInteractable : MonoBehaviour, IInteractable
                 if (!qm.HasQuest(giveQuestID))
                 {
                     qm.AcceptQuest(giveQuestID, npcID);
-                    Debug.Log($"다음 퀘스트 즉시 제공(대화 시작 전): {giveQuestID}");
                 }
             }
         }
@@ -73,8 +73,7 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     {
         if (isTalking) return;
         PreAdvanceIfFinished();
-
-        Debug.Log("NPC INTERACT CALLED");
+        
         isTalking = true;
 
         DialogueManager.Instance.StartDialogue(
@@ -91,7 +90,6 @@ public class NPCInteractable : MonoBehaviour, IInteractable
                 return pair.startDialogueID;
         }
 
-        Debug.LogWarning($"퀘스트 {questID}에 대한 Dialogue가 없습니다.");
         return startDialogueID; // fallback
     }
     private void OnDialogueEnd()
@@ -112,7 +110,6 @@ public class NPCInteractable : MonoBehaviour, IInteractable
         if (giveQuestID > 0 && !qm.HasQuest(giveQuestID))
         {
             qm.AcceptQuest(giveQuestID, npcID);
-            Debug.Log($"퀘스트 제공: {giveQuestID}");
         }
     }
 
