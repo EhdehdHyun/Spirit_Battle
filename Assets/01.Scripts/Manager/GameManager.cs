@@ -32,9 +32,6 @@ public class GameManager : MonoBehaviour
     public float saveCheckRadius = 15f;
     public LayerMask enemyLayer;
 
-    
-
-
     public bool IsUIBlocked { get; private set; }
     private bool isMenuOpen = false;
 
@@ -50,6 +47,7 @@ public class GameManager : MonoBehaviour
             return isSaveMenuOpen || isInvOpen || isMapOpen || isQuestOpen;
         }
     }
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -79,13 +77,11 @@ public class GameManager : MonoBehaviour
 
         if (Data.CurrentData != null)
         {
-            Debug.Log("[GameManager] 저장된 데이터 로드 시작...");
             if (playerStat != null)
             {
                 playerStat.LoadFromData(Data.CurrentData);
             }
 
-            // 인벤토리 아이템 로드
             if (inventoryManager != null)
             {
                 inventoryManager.LoadFromData(Data.CurrentData);
@@ -102,38 +98,6 @@ public class GameManager : MonoBehaviour
                 ToggleMenu();
             }
         }
-
-        // 2. F1 키로 데이터 초기화 및 재시작
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            ResetDataAndRestart();
-        }
-    }
-    private void ResetDataAndRestart()
-    {
-        Debug.Log("[GameManager] F1 눌림: 데이터 초기화 진행");
-
-        // 1. 저장 파일 경로
-        string path = Path.Combine(Application.persistentDataPath, "savefile.json");
-
-        // 2. 파일 삭제
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-            Debug.Log("세이브 파일이 삭제되었습니다.");
-        }
-
-        // 3. 메모리 상의 데이터 초기화
-        if (Data != null)
-        {
-            Data.CurrentData = new SaveData();
-        }
-
-        // 4. 시간 스케일 복구
-        Time.timeScale = 1f;
-
-        // 5. 현재 씬 재시작
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void ToggleMenu()
@@ -174,7 +138,6 @@ public class GameManager : MonoBehaviour
         if (enemiesNearby)
         {
             canSave = false;
-            Debug.Log("주변에 몬스터가 있어 저장할 수 없습니다.");
         }
 
         // 3. 버튼 상태 적용
