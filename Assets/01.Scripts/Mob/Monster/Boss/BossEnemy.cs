@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BossEnemy : EnemyBase
 {
@@ -50,7 +51,7 @@ public class BossEnemy : EnemyBase
 
     [Tooltip("Animator 레이어 인덱스(보통 0)")]
     [SerializeField] private int animatorLayerIndex = 0;
-    
+
     [Header("퀘스트 / 데이터 ID")]
     [SerializeField] private int monsterId;
 
@@ -255,16 +256,16 @@ public class BossEnemy : EnemyBase
         bossUI?.SetGroggy(false);
     }
 
-    protected override void OnDie(DamageInfo info)
+    public override void OnDie(DamageInfo info)
     {
         base.OnDie(info);
 
         //보스 킬 이벤트 추가 ( 퀘스트와 연동중 )
         if (!isTutorialBoss)
         {
-            MonsterKillEvent.Raise(monsterId); 
+            MonsterKillEvent.Raise(monsterId);
         }
-        
+
         if (phase3FinaleCo != null)
         {
             StopCoroutine(phase3FinaleCo);
@@ -325,6 +326,74 @@ public class BossEnemy : EnemyBase
     //브레이크, 그로기, 누적치 초기화
     public void ResetForRetry()
     {
-        RestoreFullHp(true);
+        // 코루틴/연출 플래그 정리
+        if (phase3FinaleCo != null) { StopCoroutine(phase3FinaleCo); phase3FinaleCo = null; }
+        if (tutorialBossDestroyCo != null) { StopCoroutine(tutorialBossDestroyCo); tutorialBossDestroyCo = null; }
+
+        phase3FinaleStarted = false;
+        phase3FinaleKillDone = false;
+
+        // 체력/사망/무적 리셋 (중요)
+        ResetCharacter();
+
+
+        if (baseMoveSpeed <= 0.0001f)
+            baseMoveSpeed = Mathf.Max(0.0001f, moveSpeed);
+        // 페이즈/스탯 초기화
+        CurrentPhase = 1;
+        moveSpeed = baseMoveSpeed;
+
+        // 브레이크/그로기 초기화 
+        breakHitCount = 0;
+        isGroggy = false;
+        bossOnBreakHitChanged?.Invoke(breakHitCount, breakHitThreshold);
+        BossOnGroggyChanged?.Invoke(false);
+
+        // 코어 끄기
+        if (coreObject != null)
+            coreObject.SetActive(false);
+
+        // Nav Agent 정리
+        if (ai != null)
+            ai.enabled = true;
+
+        var nav = GetComponent<UnityEngine.AI.NavMeshAgent>();
+        if (nav != null && nav.isActiveAndEnabled)
+        {
+            {
+                NavMeshHit hit;
+                if (NavMesh.SamplePosition(transform.position, out hit, 2f, NavMesh.AllAreas))
+                {
+                    nav.Warp(hit.position);
+                }
+                else
+                {
+                    if (bossUI != null) bossUI.UpdateHp(currentHp, maxHp);
+                    return;
+                }
+            }
+
+            nav.isStopped = true;
+            nav.ResetPath();
+        }
+
+        // Animator 초기화(죽음 상태,트랜지션 꼬임 방지)
+        if (anim != null)
+        {
+            anim.Rebind();
+            anim.Update(0f);
+        }
+
+        // UI 리셋/표시
+        if (bossUI == null) bossUI = BossUIStatus.Instance;
+        if (bossUI != null)
+        {
+            bossUI.SetBoss(this);
+            bossUI.SetVisible(true);
+            bossUI.UpdateHp(currentHp, maxHp);
+            bossUI.SetGroggy(false);
+            bossUI.UpdateBreak(breakHitCount, breakHitThreshold);
+            bossUI.SetBreakVisible(CurrentPhase >= breakEnableFromPhase);
+        }
     }
 }

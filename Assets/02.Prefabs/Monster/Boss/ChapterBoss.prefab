@@ -5559,7 +5559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5353177757156421738
 Transform:
   m_ObjectHideFlags: 0
@@ -5622,6 +5622,7 @@ MonoBehaviour:
   phase3Phase2To3TriggerName: Phase3Finale_To3
   phase3State2Name: 3Phase_2
   animatorLayerIndex: 0
+  monsterId: 11002
 --- !u!114 &3511104567439868573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5644,6 +5645,9 @@ MonoBehaviour:
   - {fileID: 4012939175973782897}
   - {fileID: 1940796973434554225}
   - {fileID: 6604222195718906217}
+  - {fileID: 1704864622966005654}
+  loseTargetDistance: 20
+  defaultParryGroggyTrigger: ParryGroggy
 --- !u!114 &4012939175973782897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5657,13 +5661,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   patterName: ShockwavePunch
-  cooldown: 5
+  cooldown: 0
   minUseDistance: 0
   maxUseDistance: 0
   minPhase: 0
   maxPhase: 99
-  cooldownMin: 3
-  cooldownMax: 6
+  cooldownMin: 5
+  cooldownMax: 13
   prepareTriggerName: SlamPrepare
   slamTriggerName: Slam
   punchTriggerName: Punch
@@ -5705,18 +5709,18 @@ MonoBehaviour:
   maxUseDistance: 0
   minPhase: 1
   maxPhase: 99
-  cooldownMin: 3
-  cooldownMax: 6
+  cooldownMin: 10
+  cooldownMax: 15
   openTriggerName: GatherOpen
   closeTriggerName: GatherClose
   openDuration: 0.8
   damage: 25
-  radius: 6
+  radius: 40
   arcAngle: 210
   hitMask:
     serializedVersion: 2
     m_Bits: 128
-  originOverride: {fileID: 0}
+  originOverride: {fileID: 5139746172606967544}
   centerOffset: {x: 0, y: 1, z: 0}
   maxHits: 16
   patternTimeout: 6
@@ -5733,13 +5737,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   patterName: Pattern
-  cooldown: 5
+  cooldown: 4
   minUseDistance: 0
   maxUseDistance: 0
   minPhase: 1
   maxPhase: 99
-  cooldownMin: 3
-  cooldownMax: 6
+  cooldownMin: 11
+  cooldownMax: 16
   slamTriggerName: SlamUppercut
   uppercutTriggerName: Uppercut
   uppercutDelay: 0
@@ -5757,7 +5761,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   tornadoSpeed: 10
-  tornadoDistance: 6
+  tornadoDistance: 30
   patternTimeout: 8
 --- !u!114 &1704864622966005654
 MonoBehaviour:
@@ -5777,21 +5781,21 @@ MonoBehaviour:
   maxUseDistance: 0
   minPhase: 1
   maxPhase: 99
-  cooldownMin: 3
-  cooldownMax: 6
+  cooldownMin: 12
+  cooldownMax: 20
   slam2TriggerName: SlamX2
   telegraphObject: {fileID: 0}
-  centerOverride: {fileID: 0}
+  centerOverride: {fileID: 5353177757156421738}
   slam1Damage: 20
-  slam1Radius: 8
+  slam1Radius: 25
   slam1HitMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   slam2Damage: 25
-  slam2Radius: 9
+  slam2Radius: 25
   slam2HitMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   patternTimeout: 10
 --- !u!114 &2006314806887975386
 MonoBehaviour:

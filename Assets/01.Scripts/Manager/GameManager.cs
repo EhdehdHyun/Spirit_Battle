@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     [Header("Other UI Panels (중복 방지용 연결 필수)")]
     public GameObject inventoryPanel;
     public GameObject mapPanel;
+    public GameObject questPanel;
 
     [Header("Menu Buttons (Inspector 연결 필수)")]
     public Button saveButton;
@@ -31,6 +32,9 @@ public class GameManager : MonoBehaviour
     public float saveCheckRadius = 15f;
     public LayerMask enemyLayer;
 
+    
+
+
     public bool IsUIBlocked { get; private set; }
     private bool isMenuOpen = false;
 
@@ -38,17 +42,12 @@ public class GameManager : MonoBehaviour
     {
         get
         {
-            // 1. 저장 메뉴가 열려있는가?
             bool isSaveMenuOpen = (menuPanel != null && menuPanel.activeSelf);
-
-            // 2. 인벤토리가 열려있는가?
             bool isInvOpen = (inventoryPanel != null && inventoryPanel.activeSelf);
-
-            // 3. 지도가 열려있는가?
             bool isMapOpen = (mapPanel != null && mapPanel.activeSelf);
+            bool isQuestOpen = (questPanel != null && questPanel.activeInHierarchy);
 
-            // 셋 중 하나라도 참이면 true 반환
-            return isSaveMenuOpen || isInvOpen || isMapOpen;
+            return isSaveMenuOpen || isInvOpen || isMapOpen || isQuestOpen;
         }
     }
     void Awake()

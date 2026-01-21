@@ -45,7 +45,7 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
             monsterAnim?.TryPlayHit();
     }
 
-    protected override void OnDie(DamageInfo info)
+    public override void OnDie(DamageInfo info)
     {
         base.OnDie(info);
 

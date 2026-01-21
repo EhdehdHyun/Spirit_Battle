@@ -548,7 +548,8 @@ public class PhysicsCharacter : MonoBehaviour
         // 바닥 붙이기
         if (_isGrounded && !_isDashing && !_jumpRequested)
         {
-            _rb.AddForce(-_groundNormal * groundStickForce, ForceMode.Acceleration);
+            float stick = _isDashing ? groundStickForce * 0.6f : groundStickForce;
+            _rb.AddForce(-_groundNormal * stick, ForceMode.Acceleration);
         }
     }
 

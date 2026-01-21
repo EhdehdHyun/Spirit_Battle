@@ -183,11 +183,11 @@ public class QuestManager : MonoBehaviour
 
         var quest = questTable[questId];
 
-        // HUD 전용 타겟 ID 
-        if (quest.TargetID > 0)
+        // HUDTargetID가 있으면 그걸 최우선으로 표시 (성소/포탈/지점)
+        if (quest.HUDTargetID > 0)
         {
             return QuestTargetRegistry.Instance
-                .GetAnyTarget(quest.TargetID);
+                ?.GetAnyTarget(quest.HUDTargetID);
         }
         
         switch (quest.CompleteCondition)

@@ -29,6 +29,9 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
     [SerializeField] private bool linkBossUIOnSpawn = true;
     [SerializeField] private bool disableColliderOnUse = true;
 
+    [Header("퀘스트 ID HUD")]
+    [SerializeField] private int shrineHudTargetId = 50002;
+
     [Header("SFX (한 번 쓰면 끄기)")]
     [Tooltip("이 오브젝트 자체를 꺼버림(가장 확실)")]
     [SerializeField] private GameObject sfxObjectToDisable;
@@ -114,6 +117,16 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
     {
         if (co != null) return;
 
+        // 성소를 향하여 퀘스트 HUD거리 제거
+        if (shrineHudTargetId > 0)
+        {
+            QuestTargetRegistry.Instance?.Unregister(shrineHudTargetId, transform);
+
+            QuestHUDUI.Instance?.ClearCurrentTarget();
+
+            Debug.Log($"[Shrine] HUD target removed id={shrineHudTargetId}");
+        }
+
         if (isTutorialBossPortal && usedTutorial)
             return;
 
@@ -189,7 +202,10 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         {
             usedTutorial = true;
 
-            gameObject.SetActive(false);
+            if (disableColliderOnUse && col != null)
+                col.enabled = false;
+
+            //gameObject.SetActive(false);
         }
 
         co = null;
@@ -223,9 +239,7 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
         if (boss != null)
         {
-            boss.RestoreFullHp(true);
-
-            boss.ResetForRetry_IfExists();
+            boss.ResetForRetry();
         }
     }
 
@@ -275,6 +289,9 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
         if (bossRoot != null)
             bossRoot.SetActive(false);
+
+        if (BossUIStatus.Instance != null)
+            BossUIStatus.Instance.SetVisible(false);
 
         if (isTutorialBossPortal)
         {
@@ -353,6 +370,8 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
             playerTf.position = pos;
             if (matchRotation) playerTf.rotation = rot;
             cc.enabled = true;
+
+            playerTf.GetComponentInParent<PlayerFallDamage>()?.ResetTracking();
             return;
         }
 
@@ -364,11 +383,15 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
             rb.position = pos;
             if (matchRotation) rb.rotation = rot;
+
+            playerTf.GetComponentInParent<PlayerFallDamage>()?.ResetTracking();
             return;
         }
 
         playerTf.position = pos;
         if (matchRotation) playerTf.rotation = rot;
+
+        playerTf.GetComponentInParent<PlayerFallDamage>()?.ResetTracking();
     }
 
 }

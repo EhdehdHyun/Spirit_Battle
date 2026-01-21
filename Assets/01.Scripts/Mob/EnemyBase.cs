@@ -106,7 +106,7 @@ public abstract class EnemyBase : CharacterBase
         return mul;
     }
 
-    protected override void OnDie(DamageInfo info)
+    public override void OnDie(DamageInfo info)
     {
         base.OnDie(info);
 

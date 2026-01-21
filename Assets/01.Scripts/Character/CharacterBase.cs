@@ -1,10 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Rendering;
-
-// 플레이어/몬스터 공통 사용 기본 클래스
-// 체력, 이동속도, 피격/사망 로직 기본형 제공
 
 public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
 {
@@ -12,13 +7,14 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
     public float maxHp = 100f;
     public float currentHp;
     public float moveSpeed = 3f;
-    public event Action<DamageInfo> OnDied;
 
+    // 외부(UI 등)에서 사망 소식을 듣기 위한 이벤트
+    public event Action<DamageInfo> OnDied;
     public event Action<float, float> OnHpChanged;
+
     protected bool isDead = false;
     public bool IsDead => isDead;
 
-    //무적
     private float _invincibleUntil = -1f;
     public bool IsInvincible => Time.time < _invincibleUntil;
 
@@ -27,7 +23,6 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
 
     protected float LastFinalDamage { get; private set; }
     protected bool LastHeavyHit { get; private set; }
-
 
     public void StartInvincible(float duration)
     {
@@ -39,11 +34,10 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
 
     protected virtual void Awake()
     {
-        if (currentHp <= 0f)
-            currentHp = maxHp;
-
+        if (currentHp <= 0f) currentHp = maxHp;
         isDead = false;
     }
+
     private void OnEnable()
     {
         Debug.Log($"[CHAR Enable] {name} HP={currentHp} isDead={isDead}");
@@ -61,6 +55,7 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
     {
         SetHp(maxHp, notify);
     }
+
     public void ResetCharacter()
     {
         isDead = false;
@@ -68,17 +63,9 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
         OnHpChanged?.Invoke(currentHp, maxHp);
     }
 
-    //데미지 받았을 때 호출
     public void TakeDamage(DamageInfo info)
     {
-        Debug.Log($"[DMG] TakeDamage called amount={info.amount} inv={IsInvincible}", this);
-
-        if (isDead) return;
-
-        if (IsInvincible)
-        {
-            return;
-        }
+        if (isDead || IsInvincible) return;
 
         float multiplier = Mathf.Max(0f, GetIncomingDamageMultiplier(info));
         float finalDamage = info.amount * multiplier;
@@ -90,12 +77,14 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
 
         if (currentHp <= 0)
         {
-            if (isDead) return;  
+            if (isDead) return;
 
+            // 일반적인 피격 사망 처리
             isDead = true;
-            
             currentHp = 0;
+
             OnHpChanged?.Invoke(currentHp, maxHp);
+
             OnDie(info);
             OnDied?.Invoke(info);
         }
@@ -108,12 +97,20 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
 
     public void ForceKill(DamageInfo info)
     {
-        if (!IsAlive) return;
+        if (isDead) return; 
 
+        isDead = true;
         currentHp = 0;
+
         OnHpChanged?.Invoke(currentHp, maxHp);
+
         OnDie(info);
         OnDied?.Invoke(info);
+    }
+
+    public void ForceKill()
+    {
+        ForceKill(new DamageInfo());
     }
 
     public void ApplyAoeDamage(float damage, Transform attacker)
@@ -124,13 +121,16 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
 
     protected virtual DamageInfo MakeAoeDamageInfo(float damage, Transform attacker)
     {
-        return new DamageInfo
-        {
-            amount = damage,
-        };
+        return new DamageInfo { amount = damage };
     }
 
     protected virtual void OnDamaged(DamageInfo info) { }
-    protected virtual void OnDie(DamageInfo info) { }
+    public virtual void OnDie(DamageInfo info)
+    {
+    }
 
+    public virtual void OnDie()
+    {
+        OnDie(new DamageInfo());
+    }
 }
