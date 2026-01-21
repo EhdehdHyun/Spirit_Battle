@@ -192,7 +192,6 @@ public class PlayerStat : MonoBehaviour
         var data = levelTable.GetByLevel(level);
         if (data == null)
         {
-            Debug.LogWarning($"Level data not found : {level}");
             return;
         }
 
@@ -273,7 +272,6 @@ public class PlayerStat : MonoBehaviour
         this.currentExp = data.currentExp;
         if (data.playerPosition == Vector3.zero && !data.isTutorialClear)
         {
-            Debug.Log("[PlayerStat] 새 게임 감지: 초기 위치 유지");
         }
         else
         {

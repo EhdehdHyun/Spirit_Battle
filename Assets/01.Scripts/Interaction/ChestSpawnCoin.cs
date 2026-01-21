@@ -21,12 +21,10 @@ public class ChestSpawnCoin : MonoBehaviour, IInteractable
 
         try
         {
-            loader = new Data_tableLoader();   // "JSON/Data_table"
-            Debug.Log("[ChestSpawnCoin] Data_tableLoader 생성 완료");
+            loader = new Data_tableLoader();;
         }
         catch (System.Exception e)
         {
-            Debug.LogError($"[ChestSpawnCoin] Data_tableLoader 생성 중 예외 발생: {e.Message}");
             loader = null;
         }
     }
@@ -44,33 +42,26 @@ public class ChestSpawnCoin : MonoBehaviour, IInteractable
         EnsureLoader();
         if (loader == null)
         {
-            Debug.LogError("[ChestSpawnCoin] Data_tableLoader 가 없음");
             return;
         }
 
-        // 1) 테이블에서 데이터 가져오기
         Data_table data = loader.GetByKey(itemKey);
         if (data == null)
         {
-            Debug.LogWarning($"[ChestSpawnCoin] itemKey [{itemKey}] 에 해당하는 아이템을 찾지 못했습니다.");
         }
         else
         {
-            // 2) ItemInstance 생성 후 인벤토리에 추가
             ItemInstance inst = new ItemInstance(data, amount);
 
             if (InventoryManager.Instance != null)
             {
                 InventoryManager.Instance.AddItem(inst);
-                Debug.Log($"[ChestSpawnCoin] {data.ItemName} x{amount} 인벤토리에 추가됨");
             }
             else
             {
-                Debug.LogWarning("[ChestSpawnCoin] InventoryManager.Instance 가 없습니다.");
             }
         }
 
-        // 3) 연출용 코인 프리팹 스폰 (선택)
         if (coinPrefab != null)
         {
             Vector3 pos = spawnPoint != null
@@ -80,11 +71,8 @@ public class ChestSpawnCoin : MonoBehaviour, IInteractable
             Instantiate(coinPrefab, pos, Quaternion.identity);
         }
 
-        // 4) 다시 상호작용 안 되게 Collider 끄기
         Collider col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
-
-        // 필요하면 Destroy(gameObject); 로 상자를 없애도 됨.
     }
 
     public string GetInteractPrompt()

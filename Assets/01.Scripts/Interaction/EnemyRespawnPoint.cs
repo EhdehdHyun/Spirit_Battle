@@ -23,14 +23,11 @@ public class EnemyRespawnPoint : MonoBehaviour
 
     private void Update()
     {
-        // 1) Destroy 되어 null이면 리스폰 예약
         if (current == null)
         {
             TryQueueRespawn();
             return;
         }
-
-        // 2) 안 죽고 남아있지만 HP=0 상태면(애니 이벤트 누락 같은 케이스)도 리스폰 예약
         var cb = current.GetComponent<CharacterBase>();
         if (cb != null && !cb.IsAlive)
         {
@@ -49,7 +46,6 @@ public class EnemyRespawnPoint : MonoBehaviour
     {
         yield return new WaitForSeconds(respawnDelay);
 
-        // 혹시 시체가 남아있으면 치워주기
         if (current != null)
             Destroy(current);
 
@@ -61,7 +57,6 @@ public class EnemyRespawnPoint : MonoBehaviour
     {
         if (enemyPrefab == null)
         {
-            Debug.LogWarning("[EnemyRespawnPoint] enemyPrefab이 비어있음");
             return;
         }
 

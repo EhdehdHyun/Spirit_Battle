@@ -24,15 +24,10 @@ public class PlayerConsumableHandler : MonoBehaviour
     {
         CacheHealMethod();
     }
-
-    /// <summary>
-    /// 소비 아이템 효과 적용. 성공하면 true(그때만 인벤에서 수량 감소)
-    /// </summary>
     public bool TryApplyConsumable(Data_table data, int amount)
     {
         if (data == null || amount <= 0) return false;
 
-        // 1) 이 아이템이 회복 아이템인지 확인
         int healPerOne = 0;
         for (int i = 0; i < healItems.Count; i++)
         {
@@ -44,30 +39,23 @@ public class PlayerConsumableHandler : MonoBehaviour
         }
 
         if (healPerOne <= 0)
-            return false; // 회복 아이템이 아니면 여기서 처리 안 함
+            return false;
 
         int totalHeal = healPerOne * amount;
-
-        // 2) 플레이어 HP 컴포넌트에서 Heal/TryHeal/AddHp 류 메서드를 찾아 호출
         if (_healMethod == null || _healTarget == null)
             CacheHealMethod();
 
         if (_healMethod == null || _healTarget == null)
         {
-            Debug.LogWarning("[PlayerConsumableHandler] HP 회복 메서드를 찾지 못했습니다. (TryHeal/Heal/AddHp/RecoverHp 등)");
             return false;
         }
 
         object ret;
         if (_healParamType == typeof(int))
             ret = _healMethod.Invoke(_healTarget, new object[] { totalHeal });
-        else // float
+        else
             ret = _healMethod.Invoke(_healTarget, new object[] { (float)totalHeal });
-
-        // 반환값이 bool이면 그걸 신뢰(예: 체력 꽉 차면 false 같은 구현)
         if (ret is bool b) return b;
-
-        // void면 성공으로 간주
         return true;
     }
 
@@ -96,7 +84,6 @@ public class PlayerConsumableHandler : MonoBehaviour
                     _healTarget = c;
                     _healMethod = mInt;
                     _healParamType = typeof(int);
-                    Debug.Log($"[PlayerConsumableHandler] Heal method bound: {t.Name}.{name}(int)");
                     return;
                 }
 
@@ -108,7 +95,6 @@ public class PlayerConsumableHandler : MonoBehaviour
                     _healTarget = c;
                     _healMethod = mFloat;
                     _healParamType = typeof(float);
-                    Debug.Log($"[PlayerConsumableHandler] Heal method bound: {t.Name}.{name}(float)");
                     return;
                 }
             }

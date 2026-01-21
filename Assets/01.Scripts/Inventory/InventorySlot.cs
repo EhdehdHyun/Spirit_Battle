@@ -4,7 +4,7 @@ using UnityEngine;
 [Serializable]
 public class InventorySlot
 {
-    public ItemInstance item;   // nullÀÌ¸é ºó ½½·Ô
+    public ItemInstance item;
 
     public bool IsEmpty => item == null || item.quantity <= 0;
 

@@ -79,7 +79,5 @@ public class InventoryToggleController : MonoBehaviour
                     comp.enabled = true;
             }
         }
-
-        Debug.Log("[InventoryToggleController] �κ��丮 �ݱ�");
     }
 }
