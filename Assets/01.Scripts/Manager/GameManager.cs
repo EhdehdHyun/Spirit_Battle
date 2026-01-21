@@ -15,20 +15,25 @@ public class GameManager : MonoBehaviour
     public PlayerStat playerStat;
     public InventoryManager inventoryManager;
 
+    // ▼▼▼ [설정] 튜토리얼~보스전 직전까지 나올 음악 ▼▼▼
+    [Header("Audio")]
+    public AudioClip mainBgm;
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+
     [Header("UI Objects")]
     public GameObject menuPanel;
     public GameObject saveMessageText;
 
-    [Header("Other UI Panels (중복 방지용 연결 필수)")]
+    [Header("Other UI Panels")]
     public GameObject inventoryPanel;
     public GameObject mapPanel;
     public GameObject questPanel;
 
-    [Header("Menu Buttons (Inspector 연결 필수)")]
+    [Header("Menu Buttons")]
     public Button saveButton;
     public Button exitButton;
 
-    [Header("전투 감지 설정 (저장 금지)")]
+    [Header("전투 감지 설정")]
     public float saveCheckRadius = 15f;
     public LayerMask enemyLayer;
 
@@ -50,17 +55,12 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(Instance.gameObject);
-        }
-
+        if (Instance != null && Instance != this) Destroy(Instance.gameObject);
         Instance = this;
 
         Data = new DataManager();
         Data.Initialize();
 
-        // UI 초기화
         if (menuPanel != null) menuPanel.SetActive(false);
         if (saveMessageText != null) saveMessageText.SetActive(false);
     }
@@ -68,6 +68,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         StartCoroutine(LoadGameCo());
+        if (SoundManager.Instance != null && mainBgm != null)
+        {
+            SoundManager.Instance.PlayBGM(mainBgm);
+        }
     }
 
     IEnumerator LoadGameCo()
@@ -77,15 +81,9 @@ public class GameManager : MonoBehaviour
 
         if (Data.CurrentData != null)
         {
-            if (playerStat != null)
-            {
-                playerStat.LoadFromData(Data.CurrentData);
-            }
-
-            if (inventoryManager != null)
-            {
-                inventoryManager.LoadFromData(Data.CurrentData);
-            }
+            Debug.Log("[GameManager] 데이터 로드 완료");
+            if (playerStat != null) playerStat.LoadFromData(Data.CurrentData);
+            if (inventoryManager != null) inventoryManager.LoadFromData(Data.CurrentData);
         }
     }
 
@@ -93,19 +91,14 @@ public class GameManager : MonoBehaviour
     {
         if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.P) && Input.GetKeyDown(KeyCode.P))
         {
-            if (isMenuOpen || !IsAnyPopupOpen)
-            {
-                ToggleMenu();
-            }
+            if (isMenuOpen || !IsAnyPopupOpen) ToggleMenu();
         }
     }
 
     public void ToggleMenu()
     {
         isMenuOpen = !isMenuOpen;
-
-        if (menuPanel != null)
-            menuPanel.SetActive(isMenuOpen);
+        if (menuPanel != null) menuPanel.SetActive(isMenuOpen);
 
         if (isMenuOpen)
         {
@@ -122,30 +115,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 버튼 활성화 여부 결정
     private void UpdateMenuButtons()
     {
         bool canSave = false;
+        if (Data != null && Data.CurrentData != null) canSave = Data.CurrentData.isTutorialClear;
 
-        // 1. 튜토리얼 완료 여부 확인
-        if (Data != null && Data.CurrentData != null)
-        {
-            canSave = Data.CurrentData.isTutorialClear;
-        }
-
-        // 2. 주변 몬스터 감지
         bool enemiesNearby = CheckEnemiesNearby();
-        if (enemiesNearby)
-        {
-            canSave = false;
-        }
+        if (enemiesNearby) canSave = false;
 
-        // 3. 버튼 상태 적용
         if (saveButton != null)
         {
             saveButton.interactable = canSave;
-
-            // (옵션) 버튼 텍스트 변경 기능
             TextMeshProUGUI btnText = saveButton.GetComponentInChildren<TextMeshProUGUI>();
             if (btnText != null)
             {
@@ -157,7 +137,6 @@ public class GameManager : MonoBehaviour
         if (exitButton != null) exitButton.interactable = canSave;
     }
 
-    // 주변 몬스터 감지 로직
     private bool CheckEnemiesNearby()
     {
         if (playerStat == null) return false;
@@ -175,18 +154,9 @@ public class GameManager : MonoBehaviour
 
     public void OnSaveButtonClick()
     {
-        if (playerStat != null)
-        {
-            playerStat.SaveToData(Data.CurrentData);
-        }
-
-        if (inventoryManager != null)
-        {
-            inventoryManager.SaveToData(Data.CurrentData);
-        }
-
+        if (playerStat != null) playerStat.SaveToData(Data.CurrentData);
+        if (inventoryManager != null) inventoryManager.SaveToData(Data.CurrentData);
         Data.Save();
-
         StartCoroutine(ShowSaveMessageRoutine());
     }
 
@@ -209,10 +179,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetUIBlock(bool blocked)
-    {
-        IsUIBlocked = blocked;
-    }
+    public void SetUIBlock(bool blocked) => IsUIBlocked = blocked;
 
     public void CompleteTutorial()
     {
@@ -221,7 +188,6 @@ public class GameManager : MonoBehaviour
             playerStat?.SaveToData(Data.CurrentData);
             Data.CurrentData.isTutorialClear = true;
             Data.Save();
-
             if (isMenuOpen) UpdateMenuButtons();
         }
     }
