@@ -180,8 +180,6 @@ public class PlayerWhirlwindSkill : MonoBehaviour
 
             dmg.ApplyAoeDamage(damage, transform);
         }
-
-        Debug.Log($"[Whirlwind] Overlap count = {count}");
     }
 
  

@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class ChestSpawnCoin : MonoBehaviour, IInteractable
 {
-    [Header("»óÀÚ¿¡¼­ ÁÙ ¾ÆÀÌÅÛ (Data_table key)")]
-    public int itemKey = 1001;      // ÀÓ½Ã·Î HP Potion °°Àº °Í
-    public int amount = 1;          // ÇÑ ¹ø¿¡ ÁÙ °³¼ö
+    [Header("ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (Data_table key)")]
+    public int itemKey = 1001;      // ï¿½Ó½Ã·ï¿½ HP Potion ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+    public int amount = 1;          // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    [Header("¿¬Ãâ¿ë ÄÚÀÎ ÇÁ¸®ÆÕ (¼±ÅÃ)")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½)")]
     public GameObject coinPrefab;
     public Transform spawnPoint;
 
-    [Header("»óÅÂ")]
+    [Header("ï¿½ï¿½ï¿½ï¿½")]
     public bool isOpened = false;
 
     private static Data_tableLoader loader;
@@ -18,15 +18,8 @@ public class ChestSpawnCoin : MonoBehaviour, IInteractable
     private static void EnsureLoader()
     {
         if (loader != null) return;
-
-        try
-        {
-            loader = new Data_tableLoader();;
-        }
-        catch (System.Exception e)
-        {
-            loader = null;
-        }
+        loader = new Data_tableLoader();;
+    
     }
 
     private void Awake()
@@ -77,6 +70,6 @@ public class ChestSpawnCoin : MonoBehaviour, IInteractable
 
     public string GetInteractPrompt()
     {
-        return isOpened ? "" : "F : »óÀÚ ¿­±â";
+        return isOpened ? "" : "F : ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½";
     }
 }

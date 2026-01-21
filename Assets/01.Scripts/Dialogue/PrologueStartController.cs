@@ -24,7 +24,6 @@ public class PrologueStartController : MonoBehaviour
             if (GameManager.Instance.Data.CurrentData.isTutorialClear)
             {
                 // 이미 깼다면 아무것도 안 하고 종료 (자유 이동 가능)
-                Debug.Log("[Prologue] 튜토리얼 완료 상태. 연출 스킵.");
                 yield break;
             }
         }

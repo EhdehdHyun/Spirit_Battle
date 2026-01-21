@@ -33,8 +33,7 @@ public class DataManager
 
         string json = JsonUtility.ToJson(CurrentData, true);
         File.WriteAllText(savePath, json);
-
-        Debug.Log($"[DataManager] 게임 저장 완료: {savePath}");
+        
     }
 
     public void LoadSaveFile()
@@ -43,12 +42,10 @@ public class DataManager
         {
             string json = File.ReadAllText(savePath);
             CurrentData = JsonUtility.FromJson<SaveData>(json);
-            Debug.Log("[DataManager] 저장된 파일 로드 성공");
         }
         else
         {
             CurrentData = new SaveData();
-            Debug.Log("[DataManager] 새 세이브 데이터 생성");
         }
     }
 }

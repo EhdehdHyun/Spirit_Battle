@@ -31,7 +31,6 @@ public class QuestTargetRegistry : MonoBehaviour
 
     public void Register(int id, Transform t)
     {
-        Debug.Log($"[Registry] Register id={id} name={t.name}");
         if (!targets.ContainsKey(id))
             targets[id] = new List<Transform>();
 
@@ -73,8 +72,6 @@ public class QuestTargetRegistry : MonoBehaviour
                 closest = t;
             }
         }
-
-        Debug.Log($"[Registry] closest={(closest ? closest.name : "NULL")}");
         return closest;
     }
 }

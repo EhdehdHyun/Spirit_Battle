@@ -88,8 +88,6 @@ public class QuestHUDUI : MonoBehaviour
         {
             distanceText.text = "";
         }
-
-        Debug.Log($"[HUD] trackedQuestId={trackedId}, TargetID={quest.TargetID}, Condition={quest.CompleteCondition}");
     }
     public void ClearCurrentTarget()
     {

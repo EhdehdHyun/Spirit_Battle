@@ -15,8 +15,10 @@ public class GameManager : MonoBehaviour
     public PlayerStat playerStat;
     public InventoryManager inventoryManager;
 
+    // ï¿½ï¿½ï¿½ï¿½ [ï¿½ï¿½ï¿½ï¿½] Æ©ï¿½ä¸®ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [Header("Audio")]
     public AudioClip mainBgm;
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     [Header("UI Objects")]
     public GameObject menuPanel;
@@ -31,7 +33,7 @@ public class GameManager : MonoBehaviour
     public Button saveButton;
     public Button exitButton;
 
-    [Header("ÀüÅõ °¨Áö ¼³Á¤")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     public float saveCheckRadius = 15f;
     public LayerMask enemyLayer;
 
@@ -126,9 +128,9 @@ public class GameManager : MonoBehaviour
             TextMeshProUGUI btnText = saveButton.GetComponentInChildren<TextMeshProUGUI>();
             if (btnText != null)
             {
-                if (enemiesNearby) btnText.text = "";
-                else if (!Data.CurrentData.isTutorialClear) btnText.text = "";
-                else btnText.text = "";
+                if (enemiesNearby) btnText.text = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½";
+                else if (!Data.CurrentData.isTutorialClear) btnText.text = "ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½";
+                else btnText.text = "ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½";
             }
         }
         if (exitButton != null) exitButton.interactable = canSave;

@@ -11,7 +11,6 @@ public class QuestNpcTarget : MonoBehaviour
         if (npcId > 0 && QuestTargetRegistry.Instance != null)
         {
             QuestTargetRegistry.Instance.Register(npcId, transform);
-            Debug.Log($"[Registry] NPC Target Register {npcId}");
         }
     }
 

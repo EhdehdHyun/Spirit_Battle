@@ -45,12 +45,10 @@ public class Reward_Data_Loader
 
         if (json == null)
         {
-            Debug.LogError($"Reward_Data_Table JSON not found : {path}");
             return;
         }
 
         ItemsList = JsonUtility.FromJson<Wrapper>(json.text).Items;
-        Debug.Log($"[RewardData] Loaded Count : {ItemsList.Count}");
 
         ItemsDict = new Dictionary<int, Reward_Data_Table>();
         foreach (var item in ItemsList)
