@@ -53,8 +53,6 @@ public class EquippedWeaponFrameUI : MonoBehaviour
             sp = ItemIconLoader.Load(item.data.Icon);
 
         if (sp == null && !string.IsNullOrEmpty(item.data.Icon))
-            Debug.LogWarning($"[EquippedWeaponFrameUI] 아이콘 로드 실패: Icon='{item.data.Icon}' " +
-                             $"Try: 'Resources/ItemIcons/{item.data.Icon}' OR 'Resources/ItemIcons/{item.data.Icon}/{item.data.Icon}'");
 
         if (iconImage != null)
         {
@@ -65,6 +63,5 @@ public class EquippedWeaponFrameUI : MonoBehaviour
         if (emptyIcon != null)
             emptyIcon.SetActive(sp == null);
 
-        Debug.Log($"[EquippedWeaponFrameUI] slot0={item.data.ItemName}, icon='{item.data.Icon}'");
     }
 }

@@ -196,6 +196,7 @@ public class QuestManager : MonoBehaviour
             case "Investigate":
             case "DestroyObject":
             case "CollectItem":
+            case "TalkToNPC":
                 return QuestTargetRegistry.Instance
                     .GetAnyTarget(quest.TargetID);
         }
