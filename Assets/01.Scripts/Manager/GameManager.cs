@@ -15,30 +15,30 @@ public class GameManager : MonoBehaviour
     public PlayerStat playerStat;
     public InventoryManager inventoryManager;
 
-    // ���� [����] Ʃ�丮��~������ �������� ���� ���� ����
     [Header("Audio")]
     public AudioClip mainBgm;
-    // ���������������������������������
 
     [Header("UI Objects")]
-    public GameObject menuPanel;
+    public GameObject menuPanel;       // 설정(메뉴) 창 (P키)
     public GameObject saveMessageText;
 
     [Header("Other UI Panels")]
     public GameObject inventoryPanel;
-    public GameObject mapPanel;
+    public GameObject mapPanel;        // 지도 (M키)
     public GameObject questPanel;
 
     [Header("Menu Buttons")]
     public Button saveButton;
     public Button exitButton;
 
-    [Header("���� ���� ����")]
+    [Header("전투 감지 설정")]
     public float saveCheckRadius = 15f;
     public LayerMask enemyLayer;
 
     public bool IsUIBlocked { get; private set; }
+
     private bool isMenuOpen = false;
+    private bool isMapOpen = false;
 
     public bool IsAnyPopupOpen
     {
@@ -62,6 +62,7 @@ public class GameManager : MonoBehaviour
         Data.Initialize();
 
         if (menuPanel != null) menuPanel.SetActive(false);
+        if (mapPanel != null) mapPanel.SetActive(false);
         if (saveMessageText != null) saveMessageText.SetActive(false);
     }
 
@@ -90,7 +91,52 @@ public class GameManager : MonoBehaviour
     {
         if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.P) && Input.GetKeyDown(KeyCode.P))
         {
-            if (isMenuOpen || !IsAnyPopupOpen) ToggleMenu();
+            if (isMenuOpen)
+            {
+                ToggleMenu();
+            }
+            else
+            {
+                CloseAllPopups();
+                ToggleMenu();
+            }
+        }
+        if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.M) && Input.GetKeyDown(KeyCode.M))
+        {
+            if (!isMenuOpen)
+            {
+                if (isMapOpen)
+                {
+                    ToggleMap();
+                }
+                else
+                {
+                    if (inventoryPanel != null && inventoryPanel.activeSelf)
+                    {
+                        inventoryManager.ToggleInventory();
+                    }
+                    if (questPanel != null && questPanel.activeSelf)
+                    {
+                        questPanel.SetActive(false);
+                    }
+                    ToggleMap();
+                }
+            }
+        }
+    }
+    public void CloseAllPopups()
+    {
+        if (inventoryManager != null && inventoryPanel != null && inventoryPanel.activeSelf)
+        {
+            inventoryManager.ToggleInventory();
+        }
+        if (isMapOpen)
+        {
+            ToggleMap();
+        }
+        if (questPanel != null && questPanel.activeSelf)
+        {
+            questPanel.SetActive(false);
         }
     }
 
@@ -113,6 +159,24 @@ public class GameManager : MonoBehaviour
             Cursor.visible = false;
         }
     }
+    public void ToggleMap()
+    {
+        isMapOpen = !isMapOpen;
+
+        if (mapPanel != null)
+            mapPanel.SetActive(isMapOpen);
+
+        if (isMapOpen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
 
     private void UpdateMenuButtons()
     {
@@ -128,9 +192,9 @@ public class GameManager : MonoBehaviour
             TextMeshProUGUI btnText = saveButton.GetComponentInChildren<TextMeshProUGUI>();
             if (btnText != null)
             {
-                if (enemiesNearby) btnText.text = "���� ��";
-                else if (!Data.CurrentData.isTutorialClear) btnText.text = "���� �ʿ�";
-                else btnText.text = "�����ϱ�";
+                if (enemiesNearby) btnText.text = "전투 중";
+                else if (!Data.CurrentData.isTutorialClear) btnText.text = "진행 필요";
+                else btnText.text = "저장하기";
             }
         }
         if (exitButton != null) exitButton.interactable = canSave;
