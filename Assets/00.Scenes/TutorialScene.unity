@@ -41322,8 +41322,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enable: 1
-  safeDropHeight: 3
-  damagePerMeter: 10
+  safeDropHeight: 10
+  damagePerMeter: 4
   lethalDropHeight: 25
   minDamage: 1
   maxDamage: 9999
@@ -41333,7 +41333,7 @@ MonoBehaviour:
   probeUpOffset: 0.2
   probeRadius: 0.25
   probeMaxDistance: 5
-  minAirTime: 0.12
+  minAirTime: 2
   minFallSpeed: 6
   ignoreIfDashedOnTakeoff: 1
   debugLog: 0
