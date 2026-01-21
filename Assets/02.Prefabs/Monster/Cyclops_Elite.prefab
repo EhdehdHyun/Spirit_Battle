@@ -2668,7 +2668,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 179bacb965940014189c8eecc8fb05b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 100
+  maxHp: 250
   currentHp: 0
   moveSpeed: 2.5
   heavyHit: 25
@@ -2711,7 +2711,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fdea22fc79e7fc4f8fdda9e65a75ac1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 20
   attackCooldown: 2.3
   hitOrigin: {fileID: 5183431160193498898}
   hitRadius: 2.07
