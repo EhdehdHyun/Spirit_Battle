@@ -47303,7 +47303,7 @@ PrefabInstance:
     - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
       propertyPath: mainBgm
       value: 
-      objectReference: {fileID: 8300000, guid: 3aa8f1d7601a19d4c88dcaaa262c2e06, type: 3}
+      objectReference: {fileID: 8300000, guid: c66da2e796dce4443a1ea34ca5bb5ab7, type: 3}
     - target: {fileID: 576813413933006129, guid: 342c8a19f168241a9893609cb8d36502, type: 3}
       propertyPath: mapPanel
       value: 
