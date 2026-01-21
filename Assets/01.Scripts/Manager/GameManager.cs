@@ -15,10 +15,8 @@ public class GameManager : MonoBehaviour
     public PlayerStat playerStat;
     public InventoryManager inventoryManager;
 
-    // ¡å¡å¡å [¼³Á¤] Æ©Åä¸®¾ó~º¸½ºÀü Á÷Àü±îÁö ³ª¿Ã À½¾Ç ¡å¡å¡å
     [Header("Audio")]
     public AudioClip mainBgm;
-    // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
 
     [Header("UI Objects")]
     public GameObject menuPanel;
@@ -81,7 +79,6 @@ public class GameManager : MonoBehaviour
 
         if (Data.CurrentData != null)
         {
-            Debug.Log("[GameManager] µ¥ÀÌÅÍ ·Îµå ¿Ï·á");
             if (playerStat != null) playerStat.LoadFromData(Data.CurrentData);
             if (inventoryManager != null) inventoryManager.LoadFromData(Data.CurrentData);
         }
@@ -129,9 +126,9 @@ public class GameManager : MonoBehaviour
             TextMeshProUGUI btnText = saveButton.GetComponentInChildren<TextMeshProUGUI>();
             if (btnText != null)
             {
-                if (enemiesNearby) btnText.text = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½";
-                else if (!Data.CurrentData.isTutorialClear) btnText.text = "ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½";
-                else btnText.text = "ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½";
+                if (enemiesNearby) btnText.text = "";
+                else if (!Data.CurrentData.isTutorialClear) btnText.text = "";
+                else btnText.text = "";
             }
         }
         if (exitButton != null) exitButton.interactable = canSave;

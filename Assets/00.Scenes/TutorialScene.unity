@@ -23699,7 +23699,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: 0.000084972984, y: 0.00011178767, z: 90.00016}
-  m_RotationOffset: {x: -12.135029, y: -0.6035441, z: -92.0192}
+  m_RotationOffset: {x: -12.13503, y: -0.6035441, z: -92.0192}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
@@ -27073,7 +27073,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: 0.00009463234, y: -179.99988, z: -90.000175}
-  m_RotationOffset: {x: 20.454054, y: 0.71809876, z: 107.00569}
+  m_RotationOffset: {x: 20.454054, y: 0.71809876, z: 107.0057}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
@@ -39982,7 +39982,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: 0, y: 0, z: 0}
-  m_RotationOffset: {x: 9.721516, y: -11.0373955, z: -16.780361}
+  m_RotationOffset: {x: 9.721517, y: -11.0373955, z: -16.780361}
   m_AffectRotationX: 0
   m_AffectRotationY: 1
   m_AffectRotationZ: 0
@@ -42825,7 +42825,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: 0, y: 0, z: 0}
-  m_RotationOffset: {x: 4.5058093, y: 6.914099, z: 10.563754}
+  m_RotationOffset: {x: 4.505807, y: 6.9141083, z: 10.563751}
   m_AffectRotationX: 0
   m_AffectRotationY: 1
   m_AffectRotationZ: 0
@@ -47489,7 +47489,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 787444770}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.3593998, y: 0.5867373, z: 0.22891432, w: 0.68859965}
+  m_LocalRotation: {x: 0.35939988, y: 0.5867372, z: 0.22891428, w: 0.6885997}
   m_LocalPosition: {x: -0.13574219, y: 0.97484684, z: 0.111328125}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -48194,8 +48194,8 @@ RotationConstraint:
   m_Enabled: 1
   serializedVersion: 2
   m_Weight: 0.5
-  m_RotationAtRest: {x: 51.758923, y: -177.55869, z: -178.0823}
-  m_RotationOffset: {x: -28.710575, y: -16.179054, z: 19.086481}
+  m_RotationAtRest: {x: 51.75892, y: -177.55869, z: -178.0823}
+  m_RotationOffset: {x: -28.710577, y: -16.179054, z: 19.086481}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
@@ -53831,7 +53831,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: -0.00018260824, y: 0.00014820445, z: 0}
-  m_RotationOffset: {x: 69.32242, y: 50.333904, z: 44.13089}
+  m_RotationOffset: {x: 69.322426, y: 50.333904, z: 44.13089}
   m_AffectRotationX: 0
   m_AffectRotationY: 1
   m_AffectRotationZ: 0
@@ -54444,8 +54444,8 @@ RotationConstraint:
   m_Enabled: 1
   serializedVersion: 2
   m_Weight: 0.5
-  m_RotationAtRest: {x: 37.19978, y: 167.80267, z: 141.17645}
-  m_RotationOffset: {x: -18.40642, y: -0.24157526, z: -17.717209}
+  m_RotationAtRest: {x: 37.199783, y: 167.80267, z: 141.17645}
+  m_RotationOffset: {x: -18.406424, y: -0.24157526, z: -17.717209}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
@@ -57272,7 +57272,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: 0, y: 0, z: 90.00016}
-  m_RotationOffset: {x: 0.16722757, y: 1.9478488, z: 87.49749}
+  m_RotationOffset: {x: 0.16722916, y: 1.9478489, z: 87.49749}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
@@ -61476,7 +61476,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: 51.758934, y: -2.4411008, z: 178.08229}
-  m_RotationOffset: {x: -63.698845, y: 6.3997045, z: -7.5351815}
+  m_RotationOffset: {x: -63.69885, y: 6.3997045, z: -7.5351815}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
@@ -68998,7 +68998,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bgmSource: {fileID: 1167612186}
   sfxSource: {fileID: 0}
-  masterVolume: 1
+  masterVolume: 0.2
 --- !u!4 &1167612185
 Transform:
   m_ObjectHideFlags: 0
@@ -87495,7 +87495,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: -0.00018046312, y: -0.00014734874, z: 0}
-  m_RotationOffset: {x: 71.18437, y: -44.05409, z: -41.888012}
+  m_RotationOffset: {x: 71.18441, y: -44.054077, z: -41.887997}
   m_AffectRotationX: 0
   m_AffectRotationY: 1
   m_AffectRotationZ: 0
@@ -90827,7 +90827,7 @@ ParentConstraint:
   m_TranslationOffsets:
   - {x: -0.0093688965, y: -0.007923126, z: 0.0010070801}
   m_RotationOffsets:
-  - {x: -0.20564643, y: 0.17038561, z: -4.221111}
+  - {x: -0.20564649, y: 0.17038561, z: -4.221111}
   m_AffectTranslationX: 1
   m_AffectTranslationY: 1
   m_AffectTranslationZ: 1
@@ -93113,8 +93113,8 @@ RotationConstraint:
   m_Enabled: 1
   serializedVersion: 2
   m_Weight: 0.5
-  m_RotationAtRest: {x: 37.199757, y: 12.197534, z: -141.17647}
-  m_RotationOffset: {x: -49.480045, y: -13.669592, z: 39.770897}
+  m_RotationAtRest: {x: 37.19976, y: 12.197534, z: -141.17647}
+  m_RotationOffset: {x: -49.48005, y: -13.669592, z: 39.770897}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
@@ -100460,7 +100460,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: -0.0013897638, y: 0.0013878958, z: -90.00001}
-  m_RotationOffset: {x: -8.377604, y: -10.798083, z: -115.164986}
+  m_RotationOffset: {x: -8.377602, y: -10.798085, z: -115.164986}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
@@ -124205,111 +124205,111 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 376464001914558922, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: -63.698845
+      value: -63.69885
       objectReference: {fileID: 0}
     - target: {fileID: 1436021754542049445, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: 4.5058093
+      value: 4.505807
       objectReference: {fileID: 0}
     - target: {fileID: 1436021754542049445, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.y
-      value: 6.914099
+      value: 6.9141083
       objectReference: {fileID: 0}
     - target: {fileID: 1436021754542049445, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.z
-      value: 10.563754
+      value: 10.563751
       objectReference: {fileID: 0}
     - target: {fileID: 1993906298883509759, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: -8.377604
+      value: -8.377602
       objectReference: {fileID: 0}
     - target: {fileID: 1993906298883509759, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.y
-      value: -10.798083
+      value: -10.798085
       objectReference: {fileID: 0}
     - target: {fileID: 3323618154120086866, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.z
-      value: 107.00569
+      value: 107.0057
       objectReference: {fileID: 0}
     - target: {fileID: 3704661911248780328, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationAtRest.x
-      value: 37.199757
+      value: 37.19976
       objectReference: {fileID: 0}
     - target: {fileID: 3704661911248780328, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: -49.480045
+      value: -49.48005
       objectReference: {fileID: 0}
     - target: {fileID: 4337862411066953474, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: 69.32242
+      value: 69.322426
       objectReference: {fileID: 0}
     - target: {fileID: 5058727357804144702, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.68859965
+      value: 0.6885997
       objectReference: {fileID: 0}
     - target: {fileID: 5058727357804144702, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.3593998
+      value: 0.35939988
       objectReference: {fileID: 0}
     - target: {fileID: 5058727357804144702, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.5867373
+      value: 0.5867372
       objectReference: {fileID: 0}
     - target: {fileID: 5058727357804144702, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.22891432
+      value: 0.22891428
       objectReference: {fileID: 0}
     - target: {fileID: 5075449716658707095, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: 9.721516
+      value: 9.721517
       objectReference: {fileID: 0}
     - target: {fileID: 7107764348618432769, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: 71.18437
+      value: 71.18441
       objectReference: {fileID: 0}
     - target: {fileID: 7107764348618432769, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.y
-      value: -44.05409
+      value: -44.054077
       objectReference: {fileID: 0}
     - target: {fileID: 7107764348618432769, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.z
-      value: -41.888012
+      value: -41.887997
       objectReference: {fileID: 0}
     - target: {fileID: 7198345495647104132, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationAtRest.x
-      value: 51.758923
+      value: 51.75892
       objectReference: {fileID: 0}
     - target: {fileID: 7198345495647104132, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: -28.710575
+      value: -28.710577
       objectReference: {fileID: 0}
     - target: {fileID: 7392293665159877412, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffsets.Array.data[0].x
-      value: -0.20564643
+      value: -0.20564649
       objectReference: {fileID: 0}
     - target: {fileID: 7621859317525164353, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: -9.85929
+      value: -9.859297
       objectReference: {fileID: 0}
     - target: {fileID: 7621859317525164353, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.y
-      value: 12.617802
+      value: 12.617807
       objectReference: {fileID: 0}
     - target: {fileID: 7621859317525164353, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.z
-      value: 112.84453
+      value: 112.844536
       objectReference: {fileID: 0}
     - target: {fileID: 7711479027767063396, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: 0.16722757
+      value: 0.16722916
       objectReference: {fileID: 0}
     - target: {fileID: 7711479027767063396, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.y
-      value: 1.9478488
+      value: 1.9478489
       objectReference: {fileID: 0}
     - target: {fileID: 7977589739072809582, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: -12.135029
+      value: -12.13503
       objectReference: {fileID: 0}
     - target: {fileID: 8447793771687719547, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_Name
@@ -124317,11 +124317,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8786828117391176484, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationAtRest.x
-      value: 37.19978
+      value: 37.199783
       objectReference: {fileID: 0}
     - target: {fileID: 8786828117391176484, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_RotationOffset.x
-      value: -18.40642
+      value: -18.406424
       objectReference: {fileID: 0}
     - target: {fileID: 9173680367139414260, guid: 70ffe1b6e4af742669627c8ae82581d1, type: 3}
       propertyPath: m_LocalPosition.x
@@ -132549,7 +132549,7 @@ RotationConstraint:
   serializedVersion: 2
   m_Weight: 0.5
   m_RotationAtRest: {x: -0.0013935957, y: -0.0013838805, z: 90.00001}
-  m_RotationOffset: {x: -9.85929, y: 12.617802, z: 112.84453}
+  m_RotationOffset: {x: -9.859297, y: 12.617807, z: 112.844536}
   m_AffectRotationX: 1
   m_AffectRotationY: 1
   m_AffectRotationZ: 1
