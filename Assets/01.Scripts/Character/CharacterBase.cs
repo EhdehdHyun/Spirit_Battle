@@ -97,7 +97,7 @@ public abstract class CharacterBase : MonoBehaviour, IDamageable, IAoeDamageable
 
     public void ForceKill(DamageInfo info)
     {
-        if (isDead) return; 
+        if (isDead) return;
 
         isDead = true;
         currentHp = 0;

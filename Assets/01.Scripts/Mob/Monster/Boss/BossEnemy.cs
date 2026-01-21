@@ -356,7 +356,6 @@ public class BossEnemy : EnemyBase
         // Nav Agent 정리
         if (ai != null)
             ai.enabled = true;
-
         var nav = GetComponent<UnityEngine.AI.NavMeshAgent>();
         if (nav != null && nav.isActiveAndEnabled)
         {
