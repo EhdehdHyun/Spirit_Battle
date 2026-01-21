@@ -15,25 +15,27 @@ public class GameManager : MonoBehaviour
     public PlayerStat playerStat;
     public InventoryManager inventoryManager;
 
+    // ¡å¡å¡å [¼³Á¤] Æ©Åä¸®¾ó~º¸½ºÀü Á÷Àü±îÁö ³ª¿Ã À½¾Ç ¡å¡å¡å
+    [Header("Audio")]
+    public AudioClip mainBgm;
+    // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
+
     [Header("UI Objects")]
     public GameObject menuPanel;
     public GameObject saveMessageText;
 
-    [Header("Other UI Panels (ï¿½ßºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¼ï¿½)")]
+    [Header("Other UI Panels")]
     public GameObject inventoryPanel;
     public GameObject mapPanel;
     public GameObject questPanel;
 
-    [Header("Menu Buttons (Inspector ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¼ï¿½)")]
+    [Header("Menu Buttons")]
     public Button saveButton;
     public Button exitButton;
 
-    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)")]
+    [Header("ÀüÅõ °¨Áö ¼³Á¤")]
     public float saveCheckRadius = 15f;
     public LayerMask enemyLayer;
-
-    
-
 
     public bool IsUIBlocked { get; private set; }
     private bool isMenuOpen = false;
@@ -50,19 +52,15 @@ public class GameManager : MonoBehaviour
             return isSaveMenuOpen || isInvOpen || isMapOpen || isQuestOpen;
         }
     }
+
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(Instance.gameObject);
-        }
-
+        if (Instance != null && Instance != this) Destroy(Instance.gameObject);
         Instance = this;
 
         Data = new DataManager();
         Data.Initialize();
 
-        // UI ï¿½Ê±ï¿½È­
         if (menuPanel != null) menuPanel.SetActive(false);
         if (saveMessageText != null) saveMessageText.SetActive(false);
     }
@@ -70,6 +68,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         StartCoroutine(LoadGameCo());
+        if (SoundManager.Instance != null && mainBgm != null)
+        {
+            SoundManager.Instance.PlayBGM(mainBgm);
+        }
     }
 
     IEnumerator LoadGameCo()
@@ -79,17 +81,9 @@ public class GameManager : MonoBehaviour
 
         if (Data.CurrentData != null)
         {
-            Debug.Log("[GameManager] ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½...");
-            if (playerStat != null)
-            {
-                playerStat.LoadFromData(Data.CurrentData);
-            }
-
-            // ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
-            if (inventoryManager != null)
-            {
-                inventoryManager.LoadFromData(Data.CurrentData);
-            }
+            Debug.Log("[GameManager] µ¥ÀÌÅÍ ·Îµå ¿Ï·á");
+            if (playerStat != null) playerStat.LoadFromData(Data.CurrentData);
+            if (inventoryManager != null) inventoryManager.LoadFromData(Data.CurrentData);
         }
     }
 
@@ -97,51 +91,14 @@ public class GameManager : MonoBehaviour
     {
         if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.P) && Input.GetKeyDown(KeyCode.P))
         {
-            if (isMenuOpen || !IsAnyPopupOpen)
-            {
-                ToggleMenu();
-            }
+            if (isMenuOpen || !IsAnyPopupOpen) ToggleMenu();
         }
-
-        // 2. F1 Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            ResetDataAndRestart();
-        }
-    }
-    private void ResetDataAndRestart()
-    {
-        Debug.Log("[GameManager] F1 ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½");
-
-        // 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
-        string path = Path.Combine(Application.persistentDataPath, "savefile.json");
-
-        // 2. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-        if (File.Exists(path))
-        {
-            File.Delete(path);
-            Debug.Log("ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
-        }
-
-        // 3. ï¿½Þ¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
-        if (Data != null)
-        {
-            Data.CurrentData = new SaveData();
-        }
-
-        // 4. ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-        Time.timeScale = 1f;
-
-        // 5. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void ToggleMenu()
     {
         isMenuOpen = !isMenuOpen;
-
-        if (menuPanel != null)
-            menuPanel.SetActive(isMenuOpen);
+        if (menuPanel != null) menuPanel.SetActive(isMenuOpen);
 
         if (isMenuOpen)
         {
@@ -158,31 +115,17 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ï¿½ï¿½Æ° È°ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void UpdateMenuButtons()
     {
         bool canSave = false;
+        if (Data != null && Data.CurrentData != null) canSave = Data.CurrentData.isTutorialClear;
 
-        // 1. Æ©ï¿½ä¸®ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
-        if (Data != null && Data.CurrentData != null)
-        {
-            canSave = Data.CurrentData.isTutorialClear;
-        }
-
-        // 2. ï¿½Öºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         bool enemiesNearby = CheckEnemiesNearby();
-        if (enemiesNearby)
-        {
-            canSave = false;
-            Debug.Log("ï¿½Öºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Ö¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
-        }
+        if (enemiesNearby) canSave = false;
 
-        // 3. ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (saveButton != null)
         {
             saveButton.interactable = canSave;
-
-            // (ï¿½É¼ï¿½) ï¿½ï¿½Æ° ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             TextMeshProUGUI btnText = saveButton.GetComponentInChildren<TextMeshProUGUI>();
             if (btnText != null)
             {
@@ -194,7 +137,6 @@ public class GameManager : MonoBehaviour
         if (exitButton != null) exitButton.interactable = canSave;
     }
 
-    // ï¿½Öºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private bool CheckEnemiesNearby()
     {
         if (playerStat == null) return false;
@@ -212,18 +154,9 @@ public class GameManager : MonoBehaviour
 
     public void OnSaveButtonClick()
     {
-        if (playerStat != null)
-        {
-            playerStat.SaveToData(Data.CurrentData);
-        }
-
-        if (inventoryManager != null)
-        {
-            inventoryManager.SaveToData(Data.CurrentData);
-        }
-
+        if (playerStat != null) playerStat.SaveToData(Data.CurrentData);
+        if (inventoryManager != null) inventoryManager.SaveToData(Data.CurrentData);
         Data.Save();
-
         StartCoroutine(ShowSaveMessageRoutine());
     }
 
@@ -246,10 +179,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetUIBlock(bool blocked)
-    {
-        IsUIBlocked = blocked;
-    }
+    public void SetUIBlock(bool blocked) => IsUIBlocked = blocked;
 
     public void CompleteTutorial()
     {
@@ -258,7 +188,6 @@ public class GameManager : MonoBehaviour
             playerStat?.SaveToData(Data.CurrentData);
             Data.CurrentData.isTutorialClear = true;
             Data.Save();
-
             if (isMenuOpen) UpdateMenuButtons();
         }
     }

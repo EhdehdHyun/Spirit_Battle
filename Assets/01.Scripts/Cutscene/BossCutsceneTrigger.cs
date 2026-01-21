@@ -41,7 +41,6 @@ public class BossCutsceneTrigger : MonoBehaviour
         if (!mainCamera) mainCamera = Camera.main;
         if (!mainCamera || !cutsceneCamera || !camStart || !camEnd)
         {
-            Debug.LogError("[BossCutsceneTrigger] camera refs missing");
             yield break;
         }
 

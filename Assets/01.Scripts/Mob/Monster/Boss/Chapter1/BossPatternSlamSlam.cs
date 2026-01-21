@@ -18,6 +18,7 @@ public class BossPatternSlamSlam : BossPatternBase
     [Header("Telegraph (Circle)")]
     public GameObject telegraphObject;
     public Transform centerOverride;
+    [SerializeField] private float telegraphYOffset = 0.02f;
 
     [Header("Slam#1")]
     public float slam1Damage = 20f;
@@ -153,9 +154,18 @@ public class BossPatternSlamSlam : BossPatternBase
         }
 
         Vector3 center = GetCenterPosition();
+        center.y += telegraphYOffset;
+
         telegraphObject.SetActive(true);
         telegraphObject.transform.position = center;
-        telegraphObject.transform.localScale = new Vector3(radius * 2f, 1f, radius * 2f);
+
+        float diameter = radius * 2f;
+
+        Vector3 s = telegraphObject.transform.localScale;
+        s.x = diameter;
+        s.y = diameter;
+        telegraphObject.transform.localScale = s;
+
     }
 
     private Vector3 GetCenterPosition()
