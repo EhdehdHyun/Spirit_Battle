@@ -23,6 +23,8 @@ public class BossPatternSlamTornado : BossPatternBase
     public Transform centerOverride;
     public float slamRadius = 8f;
 
+    [SerializeField] private float telegraphYOffset = 0.02f;
+
     [Header("Shockwave Damage")]
     public float slamDamage = 20f;
     public LayerMask slamHitMask;
@@ -104,7 +106,7 @@ public class BossPatternSlamTornado : BossPatternBase
         }
 
         if (uppercutCo != null) { StopCoroutine(uppercutCo); uppercutCo = null; }
-        SetTelegraph(false);
+        SetTelegraph(false, 1f);
 
         nextReadyTime = Time.time + Random.Range(cooldownMin, cooldownMax);
     }
@@ -117,15 +119,8 @@ public class BossPatternSlamTornado : BossPatternBase
         uppercutCo = null;
     }
 
-    public void Anim_SlamTornado_ShowTelegraph()
-    {
-        SetTelegraph(true);
-    }
-
-    public void Anim_SlamTornado_HideTelegraph()
-    {
-        SetTelegraph(false);
-    }
+    public void Anim_SlamTornado_ShowTelegraph() => SetTelegraph(true, slamRadius);
+    public void Anim_SlamTornado_HideTelegraph() => SetTelegraph(false, 1f);
 
     public void Anim_SlamTornado_DoShockwave()
     {
@@ -205,17 +200,29 @@ public class BossPatternSlamTornado : BossPatternBase
         return t.position;
     }
 
-    private void SetTelegraph(bool on)
+    private void SetTelegraph(bool on, float radius)
     {
         if (telegraphObject == null) return;
 
-        telegraphObject.SetActive(on);
-        if (!on) return;
+        if (!on)
+        {
+            telegraphObject.SetActive(false);
+            return;
+        }
 
         Vector3 center = GetCenterPosition();
+        center.y += telegraphYOffset;
+
+        telegraphObject.SetActive(true);
         telegraphObject.transform.position = center;
 
-        telegraphObject.transform.localScale = new Vector3(slamRadius * 2f, 1f, slamRadius * 2f);
+        float diameter = radius * 2f;
+
+        Vector3 s = telegraphObject.transform.localScale;
+        s.x = diameter;
+        s.y = diameter;
+        telegraphObject.transform.localScale = s;
+
     }
 
     private void Trigger(int hash)

@@ -36,6 +36,9 @@ public class BossPatternSlamPunchCombo : BossPatternBase
     [Tooltip("바닥 원형 텔레그래프 오브젝트(없으면 비워도 됨)")]
     public GameObject telegraphObject;
 
+    // 바닥 깜빡임 방지
+    [SerializeField] private float telegraphYOffset = 0.02f;
+
     [Tooltip("텔레그래프 중심 위치(없으면 보스 위치)")]
     public Transform slamCenterOverride;
 
@@ -248,21 +251,8 @@ public class BossPatternSlamPunchCombo : BossPatternBase
         }
     }
 
-    private void ShowTelegraph()
-    {
-        if (telegraphObject == null) return;
-
-        Vector3 center = GetSlamCenter();
-        telegraphObject.SetActive(true);
-        telegraphObject.transform.position = center;
-        telegraphObject.transform.localScale = new Vector3(slamRadius * 2f, 1f, slamRadius * 2f);
-    }
-
-    private void HideTelegraph()
-    {
-        if (telegraphObject == null) return;
-        telegraphObject.SetActive(false);
-    }
+    private void ShowTelegraph() => SetTelegraph(true, slamRadius);
+    private void HideTelegraph() => SetTelegraph(false, 1f);
 
     private Vector3 GetSlamCenter()
     {
@@ -284,6 +274,32 @@ public class BossPatternSlamPunchCombo : BossPatternBase
 
         animator.ResetTrigger(hash);
         animator.SetTrigger(hash);
+    }
+
+    private void SetTelegraph(bool on, float radius)
+    {
+        if (telegraphObject == null) return;
+
+        if (!on)
+        {
+            telegraphObject.SetActive(false);
+            return;
+        }
+
+        Vector3 center = GetSlamCenter();
+        center.y += telegraphYOffset;
+
+        telegraphObject.SetActive(true);
+        telegraphObject.transform.position = center;
+
+        float diameter = radius * 2f;
+
+        Vector3 s = telegraphObject.transform.localScale;
+        s.x = diameter;
+        s.y = diameter;
+        telegraphObject.transform.localScale = s;
+
+        telegraphObject.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
     }
 
 #if UNITY_EDITOR

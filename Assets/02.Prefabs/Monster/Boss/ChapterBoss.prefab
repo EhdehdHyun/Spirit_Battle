@@ -5559,7 +5559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5353177757156421738
 Transform:
   m_ObjectHideFlags: 0
@@ -5577,6 +5577,7 @@ Transform:
   - {fileID: 5139746172606967544}
   - {fileID: 7972419497969816777}
   - {fileID: 3677673169033778144}
+  - {fileID: 3433763517205800342}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &101523703184880867
@@ -5675,6 +5676,7 @@ MonoBehaviour:
   punchDelayAfterSlamImpact: 0.35
   waitSlamImpactBeforePunch: 1
   telegraphObject: {fileID: 0}
+  telegraphYOffset: 0.02
   slamCenterOverride: {fileID: 5353177757156421738}
   slamDamage: 20
   slamRadius: 25
@@ -31282,3 +31284,77 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &828954596952384359
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5353177757156421738}
+    m_Modifications:
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5731980025101358898, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_Name
+      value: TelegraphCircle
+      objectReference: {fileID: 0}
+    - target: {fileID: 5731980025101358898, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+--- !u!4 &3433763517205800342 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+  m_PrefabInstance: {fileID: 828954596952384359}
+  m_PrefabAsset: {fileID: 0}
