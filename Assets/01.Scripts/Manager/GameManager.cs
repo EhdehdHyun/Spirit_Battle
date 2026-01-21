@@ -15,10 +15,10 @@ public class GameManager : MonoBehaviour
     public PlayerStat playerStat;
     public InventoryManager inventoryManager;
 
-    // ¡å¡å¡å [¼³Á¤] Æ©Åä¸®¾ó~º¸½ºÀü Á÷Àü±îÁö ³ª¿Ã À½¾Ç ¡å¡å¡å
+    // ï¿½ï¿½ï¿½ï¿½ [ï¿½ï¿½ï¿½ï¿½] Æ©ï¿½ä¸®ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     [Header("Audio")]
     public AudioClip mainBgm;
-    // ¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã¡ã
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     [Header("UI Objects")]
     public GameObject menuPanel;
@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     public Button saveButton;
     public Button exitButton;
 
-    [Header("ÀüÅõ °¨Áö ¼³Á¤")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     public float saveCheckRadius = 15f;
     public LayerMask enemyLayer;
 
@@ -81,7 +81,6 @@ public class GameManager : MonoBehaviour
 
         if (Data.CurrentData != null)
         {
-            Debug.Log("[GameManager] µ¥ÀÌÅÍ ·Îµå ¿Ï·á");
             if (playerStat != null) playerStat.LoadFromData(Data.CurrentData);
             if (inventoryManager != null) inventoryManager.LoadFromData(Data.CurrentData);
         }

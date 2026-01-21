@@ -12,7 +12,6 @@ public class ShrineQuestTarget : MonoBehaviour
         if (shrineTargetId <= 0) return;
 
         QuestTargetRegistry.Instance?.Register(shrineTargetId, transform);
-        Debug.Log($"[Registry] Shrine Registered id={shrineTargetId} name={name}");
     }
 
     private void OnDisable()

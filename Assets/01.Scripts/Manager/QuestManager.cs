@@ -65,7 +65,6 @@ public class QuestManager : MonoBehaviour
         {
             if (quest.NPC != npcID)
             {
-                Debug.Log($"[Quest] NPC {npcID}는 퀘스트 {questId}를 줄 수 없음");
                 return;
             }
         }
@@ -82,11 +81,9 @@ public class QuestManager : MonoBehaviour
                 .ItemsDict[quest.DeliverItemID];
 
             InventoryManager.Instance.AddItem(itemData, quest.TargetCount);
-
-            Debug.Log($"[Quest] 전달 아이템 지급: {itemData.ItemName} x{quest.TargetCount}");
+            
         }
-
-        Debug.Log($"[Quest] Accepted: {quest.QuestName}");
+        
     }
 
 
@@ -96,7 +93,6 @@ public class QuestManager : MonoBehaviour
     {
         if (!questStates.ContainsKey(questId)) return;
         questStates[questId] = QuestState.Completed;
-        Debug.Log($"[Quest] Completed: {questTable[questId].QuestName}");
         
         var quest = questTable[questId];
 
@@ -124,9 +120,6 @@ public class QuestManager : MonoBehaviour
             .Data
             .Reward_Data_Loader
             .ItemsDict[quest.RewardGroupID];
-
-        // 임시 보상 처리 (로그)
-        Debug.Log($"보상 지급: EXP {reward.Exp}, GOLD {reward.Gold}");
 
         questStates[questId] = QuestState.RewardClaimed;
     }
@@ -170,7 +163,6 @@ public class QuestManager : MonoBehaviour
 
             // 퀘스트 완료
             CompleteQuest(questId);
-            Debug.Log($"[Quest] 전달 완료: {questId}");
             return true;
         }
 
@@ -272,14 +264,6 @@ public class QuestManager : MonoBehaviour
             var progress = questProgress[questId];
             progress.Current += amount;
             
-            Debug.Log(
-                $"[QuestProgress] questId={questId}, " +
-                $"questName={quest.QuestName}, " +
-                $"condition={quest.CompleteCondition}, " +
-                $"current={progress.Current}/{progress.Target}, " +
-                $"trackedQuestId={trackedQuestId}"
-            );
-            
             var trackedQuest = questTable[trackedQuestId];
             if (!TryGetCondition(trackedQuest.CompleteCondition, out var trackedCondition))
                 continue;
@@ -294,10 +278,6 @@ public class QuestManager : MonoBehaviour
                 if (!quest.RequireTurnIn)
                 {
                     CompleteQuest(questId);
-                }
-                else
-                {
-                    Debug.Log($"[Quest] 수집 완료, NPC에게 보고 필요");
                 }
             }
         }
@@ -323,8 +303,6 @@ public class QuestManager : MonoBehaviour
 
         var p = questProgress[questId];
         trackerUI.SetProgress(p.Current, p.Target);
-
-        Debug.Log($"[Quest] 퀘스트 Tracke변경-> {questId} ({quest.QuestName})");
     }
     public bool CanTurnIn(int questId, int npcID)
     {
@@ -381,13 +359,11 @@ public class QuestManager : MonoBehaviour
     {
         if (questTable == null)
         {
-            Debug.LogError("QuestTable이 초기화되지 않았습니다.");
             return null;
         }
 
         if (!questTable.TryGetValue(questId, out var quest))
         {
-            Debug.LogError($"Quest 데이터 없음: {questId}");
             return null;
         }
 

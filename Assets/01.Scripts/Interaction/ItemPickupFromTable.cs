@@ -18,15 +18,7 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
     private static void EnsureLoader()
     {
         if (loader != null) return;
-
-        try
-        {
             loader = new Data_tableLoader();
-        }
-        catch (System.Exception e)
-        {
-            loader = null;
-        }
     }
 
     private void Awake()

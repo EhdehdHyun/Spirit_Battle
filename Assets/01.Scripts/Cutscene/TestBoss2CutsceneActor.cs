@@ -6,16 +6,16 @@ public class TestBoss2CutsceneActor : MonoBehaviour
     [Header("Animator")]
     [SerializeField] private Animator animator;
 
-    [Header("State Names (Animator »óÅÂ ÀÌ¸§°ú µ¿ÀÏÇØ¾ß ÇÔ)")]
+    [Header("State Names (Animator ï¿½ï¿½ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ ï¿½ï¿½)")]
     [SerializeField] private string walkState = "walk";
     [SerializeField] private string phase2State = "3Phase_2";
 
-    [Header("Durations (ÃÊ)")]
+    [Header("Durations (ï¿½ï¿½)")]
     [SerializeField] private float walkTime = 3f;
     [SerializeField] private float phase2Time = 2f;
 
-    [Header("¿É¼Ç")]
-    [SerializeField] private bool useUnscaledTime = true; // ÄÆ¾À timeScale Á¶ÀýÇØµµ °íÁ¤ ½Ã°£À¸·Î Àç»ý
+    [Header("ï¿½É¼ï¿½")]
+    [SerializeField] private bool useUnscaledTime = true; // ï¿½Æ¾ï¿½ timeScale ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
 
     private Coroutine co;
 
@@ -35,19 +35,18 @@ public class TestBoss2CutsceneActor : MonoBehaviour
         if (!animator) animator = GetComponentInChildren<Animator>();
         if (!animator)
         {
-            Debug.LogError("[TestBoss2CutsceneActor] Animator°¡ ¾ø½À´Ï´Ù.");
             yield break;
         }
 
-        // 1) Walk 3ÃÊ
+        // 1) Walk 3ï¿½ï¿½
         animator.Play(walkState, 0, 0f);
         yield return Wait(walkTime);
 
-        // 2) 3Phase_2 2ÃÊ
+        // 2) 3Phase_2 2ï¿½ï¿½
         animator.Play(phase2State, 0, 0f);
         yield return Wait(phase2Time);
 
-        // 3) ÄÆ¾À¿ë º¸½º ºñÈ°¼ºÈ­
+        // 3) ï¿½Æ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È°ï¿½ï¿½È­
         gameObject.SetActive(false);
     }
 

@@ -18,7 +18,6 @@ public class BoxInteract : MonoBehaviour
 
     private void Interact()
     {
-        Debug.Log("상자 상호작용!");
         // 상자 열기 / 아이템 지급 등
         if (guideText != null)
             guideText.SetActive(false);

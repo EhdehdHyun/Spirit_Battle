@@ -42,12 +42,10 @@ public class Level_Data_Loader
 
         if (json == null)
         {
-            Debug.LogError($"Level_Data_Table JSON not found : {path}");
             return;
         }
 
         ItemsList = JsonUtility.FromJson<Wrapper>(json.text).Items;
-        Debug.Log($"[LevelData] Loaded Count : {ItemsList.Count}");
         ItemsDict = new Dictionary<int, level_Data_Table>();
 
         foreach (var item in ItemsList)

@@ -17,7 +17,6 @@ public class QuestUIController : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log($"[QuestUIController] Toggle isOpen={isOpen}, root={questCanvasRoot.name}, rootId={questCanvasRoot.GetInstanceID()}");
         Instance = this;
     }
 
@@ -59,13 +58,7 @@ public class QuestUIController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.I))
         {
-            bool amIOpen = (questCanvasRoot != null && questCanvasRoot.activeSelf);
-
-            if (amIOpen || !GameManager.Instance.IsAnyPopupOpen)
-            {
-                Debug.Log("[QuestUIController] 눌렀음");
-                Toggle();
-            }
+            Toggle();
         }
         if (Input.GetKeyDown(KeyCode.Escape) && isOpen)
         {

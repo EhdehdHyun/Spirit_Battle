@@ -4,8 +4,7 @@ public class CharacterPreviewRotator : MonoBehaviour
 {
     [SerializeField] private Transform target;
     [SerializeField] private float rotateSpeed = 10f;
-
-    private int directionIndex = 0;
+    
     private float targetAngle;
 
     public void RotateRight()
