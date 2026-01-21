@@ -16,6 +16,7 @@ public class NPCInteractable : MonoBehaviour, IInteractable
     
     [Header("Quest")]
     [SerializeField] private int giveQuestID = -1;
+    [SerializeField] private int completeQuestID = -1;
 
     private bool isTalking;
     public bool canInteract = true;
