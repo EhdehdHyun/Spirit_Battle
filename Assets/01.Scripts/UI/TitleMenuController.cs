@@ -29,7 +29,6 @@ public class TitleMenuController : MonoBehaviour
 
     public void OnClickNewGame()
     {
-        Debug.Log("New Game Clicked: 기존 데이터 삭제 및 인트로 시작");
         if (File.Exists(SavePath))
         {
             File.Delete(SavePath);
@@ -41,25 +40,21 @@ public class TitleMenuController : MonoBehaviour
     {
         if (File.Exists(SavePath))
         {
-            Debug.Log("Continue Clicked: 게임 씬으로 이동하여 로드 진행");
             SceneManager.LoadScene(gameSceneName);
         }
         else
         {
-            Debug.Log("세이브 파일이 없습니다.");
         }
     }
 
     // 옵션 (미구현)
     public void OnClickOptions()
     {
-        Debug.Log("Options Clicked (Not Implemented)");
     }
 
     // 게임 종료
     public void OnClickQuit()
     {
-        Debug.Log("Quit Game");
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
