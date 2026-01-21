@@ -19,16 +19,16 @@ public class GameManager : MonoBehaviour
     public GameObject menuPanel;
     public GameObject saveMessageText;
 
-    [Header("Other UI Panels (Áßº¹ ¹æÁö¿ë ¿¬°á ÇÊ¼ö)")]
+    [Header("Other UI Panels (ï¿½ßºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¼ï¿½)")]
     public GameObject inventoryPanel;
     public GameObject mapPanel;
     public GameObject questPanel;
 
-    [Header("Menu Buttons (Inspector ¿¬°á ÇÊ¼ö)")]
+    [Header("Menu Buttons (Inspector ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¼ï¿½)")]
     public Button saveButton;
     public Button exitButton;
 
-    [Header("ÀüÅõ °¨Áö ¼³Á¤ (ÀúÀå ±ÝÁö)")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½)")]
     public float saveCheckRadius = 15f;
     public LayerMask enemyLayer;
 
@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviour
         Data = new DataManager();
         Data.Initialize();
 
-        // UI ÃÊ±âÈ­
+        // UI ï¿½Ê±ï¿½È­
         if (menuPanel != null) menuPanel.SetActive(false);
         if (saveMessageText != null) saveMessageText.SetActive(false);
     }
@@ -79,13 +79,13 @@ public class GameManager : MonoBehaviour
 
         if (Data.CurrentData != null)
         {
-            Debug.Log("[GameManager] ÀúÀåµÈ µ¥ÀÌÅÍ ·Îµå ½ÃÀÛ...");
+            Debug.Log("[GameManager] ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½...");
             if (playerStat != null)
             {
                 playerStat.LoadFromData(Data.CurrentData);
             }
 
-            // ÀÎº¥Åä¸® ¾ÆÀÌÅÛ ·Îµå
+            // ï¿½Îºï¿½ï¿½ä¸® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½
             if (inventoryManager != null)
             {
                 inventoryManager.LoadFromData(Data.CurrentData);
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        // 2. F1 Å°·Î µ¥ÀÌÅÍ ÃÊ±âÈ­ ¹× Àç½ÃÀÛ
+        // 2. F1 Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
         if (Input.GetKeyDown(KeyCode.F1))
         {
             ResetDataAndRestart();
@@ -111,28 +111,28 @@ public class GameManager : MonoBehaviour
     }
     private void ResetDataAndRestart()
     {
-        Debug.Log("[GameManager] F1 ´­¸²: µ¥ÀÌÅÍ ÃÊ±âÈ­ ÁøÇà");
+        Debug.Log("[GameManager] F1 ï¿½ï¿½ï¿½ï¿½: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­ ï¿½ï¿½ï¿½ï¿½");
 
-        // 1. ÀúÀå ÆÄÀÏ °æ·Î
+        // 1. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
         string path = Path.Combine(Application.persistentDataPath, "savefile.json");
 
-        // 2. ÆÄÀÏ »èÁ¦
+        // 2. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (File.Exists(path))
         {
             File.Delete(path);
-            Debug.Log("¼¼ÀÌºê ÆÄÀÏÀÌ »èÁ¦µÇ¾ú½À´Ï´Ù.");
+            Debug.Log("ï¿½ï¿½ï¿½Ìºï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
         }
 
-        // 3. ¸Þ¸ð¸® »óÀÇ µ¥ÀÌÅÍ ÃÊ±âÈ­
+        // 3. ï¿½Þ¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ê±ï¿½È­
         if (Data != null)
         {
             Data.CurrentData = new SaveData();
         }
 
-        // 4. ½Ã°£ ½ºÄÉÀÏ º¹±¸
+        // 4. ï¿½Ã°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         Time.timeScale = 1f;
 
-        // 5. ÇöÀç ¾À Àç½ÃÀÛ
+        // 5. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
@@ -158,43 +158,43 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ¹öÆ° È°¼ºÈ­ ¿©ºÎ °áÁ¤
+    // ï¿½ï¿½Æ° È°ï¿½ï¿½È­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private void UpdateMenuButtons()
     {
         bool canSave = false;
 
-        // 1. Æ©Åä¸®¾ó ¿Ï·á ¿©ºÎ È®ÀÎ
+        // 1. Æ©ï¿½ä¸®ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
         if (Data != null && Data.CurrentData != null)
         {
             canSave = Data.CurrentData.isTutorialClear;
         }
 
-        // 2. ÁÖº¯ ¸ó½ºÅÍ °¨Áö
+        // 2. ï¿½Öºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         bool enemiesNearby = CheckEnemiesNearby();
         if (enemiesNearby)
         {
             canSave = false;
-            Debug.Log("ÁÖº¯¿¡ ¸ó½ºÅÍ°¡ ÀÖ¾î ÀúÀåÇÒ ¼ö ¾ø½À´Ï´Ù.");
+            Debug.Log("ï¿½Öºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Ö¾ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï´ï¿½.");
         }
 
-        // 3. ¹öÆ° »óÅÂ Àû¿ë
+        // 3. ï¿½ï¿½Æ° ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         if (saveButton != null)
         {
             saveButton.interactable = canSave;
 
-            // (¿É¼Ç) ¹öÆ° ÅØ½ºÆ® º¯°æ ±â´É
+            // (ï¿½É¼ï¿½) ï¿½ï¿½Æ° ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             TextMeshProUGUI btnText = saveButton.GetComponentInChildren<TextMeshProUGUI>();
             if (btnText != null)
             {
-                if (enemiesNearby) btnText.text = "ÀüÅõ Áß";
-                else if (!Data.CurrentData.isTutorialClear) btnText.text = "ÁøÇà ÇÊ¿ä";
-                else btnText.text = "ÀúÀåÇÏ±â";
+                if (enemiesNearby) btnText.text = "ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½";
+                else if (!Data.CurrentData.isTutorialClear) btnText.text = "ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½";
+                else btnText.text = "ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½";
             }
         }
         if (exitButton != null) exitButton.interactable = canSave;
     }
 
-    // ÁÖº¯ ¸ó½ºÅÍ °¨Áö ·ÎÁ÷
+    // ï¿½Öºï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     private bool CheckEnemiesNearby()
     {
         if (playerStat == null) return false;

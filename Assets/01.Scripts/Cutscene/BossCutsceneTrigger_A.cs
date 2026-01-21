@@ -148,6 +148,8 @@ public class BossCutsceneTrigger_A : MonoBehaviour
     {
         try
         {
+            UIVisibilityManager.Instance?.HideAllExceptGameOver();
+            QuestHUDUI.Instance?.gameObject.SetActive(false);
             // 0) 컷씬 딜레이(보스 생성 타이밍 맞추기)
             if (cutsceneDelay > 0f)
             {
@@ -297,6 +299,8 @@ public class BossCutsceneTrigger_A : MonoBehaviour
         finally
         {
             GlobalInputBlocker.SetKeyboardBlocked(false);
+            UIVisibilityManager.Instance?.RestoreAll();
+            QuestHUDUI.Instance?.gameObject.SetActive(true);
         }
     }
 

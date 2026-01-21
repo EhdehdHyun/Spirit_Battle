@@ -33,16 +33,17 @@ public class QuestHUDUI : MonoBehaviour
         int trackedId = QuestManager.Instance.GetTrackedQuestId();
         if (trackedId == -1)
         {
-            gameObject.SetActive(false);
-            currentTarget = null; //리셋
+            // 표시만 비움 (UI는 살아있음)
+            titleText.text = "";
+            progressText.text = "";
+            distanceText.text = "";
+            currentTarget = null;
             return;
         }
 
         var quest = QuestManager.Instance.GetQuestData(trackedId);
         if (quest == null)
             return;
-
-        gameObject.SetActive(true);
 
         // 제목
         titleText.text = quest.QuestName;
