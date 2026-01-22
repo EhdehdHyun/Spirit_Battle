@@ -11,6 +11,8 @@ public class RespawnManager : MonoBehaviour
 
     [Header("Tutorial Settings")]
     [SerializeField] private bool isFirstDeath = true;
+    
+    [SerializeField] private TutorialUI tutorialUI;
 
     public Transform CurrentRespawnPoint => respawnPoint;
 
@@ -83,6 +85,10 @@ public class RespawnManager : MonoBehaviour
                 Debug.Log("[RespawnManager] 첫 부활 성공! 저장 기능 해금.");
                 GameManager.Instance.CompleteTutorial();
             }
+            tutorialUI.Show(
+                "마을에서 NPC에게 말을 건 뒤 새로운 퀘스트를 받을 수 있습니다.",
+            3f
+            );
         }
 
         var animator = playerRoot.GetComponentInChildren<Animator>();
