@@ -35,6 +35,7 @@ public class GameOverUI : MonoBehaviour
 
     [Tooltip("죽는 프레임에 눌려있던 입력이 곧바로 처리되는 걸 방지(초)")]
     [SerializeField] private float inputBlockSeconds = 0.2f;
+    private string defaultTutorialBody;
 
     private enum Phase
     {
@@ -60,6 +61,8 @@ public class GameOverUI : MonoBehaviour
     {
         if (Instance != null && Instance != this) { Destroy(gameObject); return; }
         Instance = this;
+
+        defaultTutorialBody = (tutorialBodyText != null) ? tutorialBodyText.text : string.Empty;
 
         HideImmediate();
     }
@@ -100,8 +103,17 @@ public class GameOverUI : MonoBehaviour
         ShowInternal(title, useDialogue: false, lines: null);
     }
 
+    private static readonly string[] DefaultTutorialLines =
+    {
+        "당신 혼자로는 아직 무리입니다…!",
+        "이 힘을 사용하세요!"
+    };
+
     public void ShowTutorialDeath(string title, string[] lines)
     {
+        if (lines == null || lines.Length == 0)
+            lines = DefaultTutorialLines;
+
         ShowInternal(title, useDialogue: true, lines: lines);
     }
 
@@ -171,7 +183,7 @@ public class GameOverUI : MonoBehaviour
             Time.timeScale = 0f;
 
         // 이제 입력을 받음
-        if (dialogueMode && dialogueLines.Length > 0)
+        if (dialogueMode && dialogueLines != null && dialogueLines.Length > 0)
         {
             SetTutorialPanelVisible(true);
             RefreshDialogue();
@@ -180,6 +192,7 @@ public class GameOverUI : MonoBehaviour
         else
         {
             dialogueMode = false;
+            SetTutorialPanelVisible(false);
             phase = Phase.WaitFirstAnyKey;
         }
 
@@ -191,7 +204,10 @@ public class GameOverUI : MonoBehaviour
         if (!dialogueMode || dialogueLines == null || dialogueLines.Length == 0)
         {
             dialogueMode = false;
-            phase = Phase.WaitFirstAnyKey;
+            SetTutorialPanelVisible(false);
+
+            ShowRespawnHint();
+            phase = Phase.WaitRespawnAnyKey;
             return;
         }
 
