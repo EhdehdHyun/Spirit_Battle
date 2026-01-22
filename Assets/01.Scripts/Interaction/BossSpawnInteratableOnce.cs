@@ -301,6 +301,11 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
         CleanupBossInstance();
 
+        if (isTutorialBossPortal)
+        {
+            StartCoroutine(CoForceTutorialGameOver());
+        }
+
         // 튜토 보스는 포탈도 끝
         if (isTutorialBossPortal)
         {
@@ -311,6 +316,19 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         // 일반 보스는 재입장 가능 -> 포탈 다시 열기
         if (disableColliderDuringSession && _col != null)
             _col.enabled = true;
+    }
+
+    private IEnumerator CoForceTutorialGameOver()
+    {
+        var ui = GameOverUI.Instance;
+        if (ui != null)
+            ui.ShowTutorialDeath(null, null);
+
+        yield return null;
+
+        ui = GameOverUI.Instance;
+        if (ui != null)
+            ui.ShowTutorialDeath(null, null);
     }
 
     private void OnBossDied(DamageInfo info)
@@ -327,7 +345,6 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
         if (isTutorialBossPortal)
         {
-            // 튜토 보스는 그냥 종료(재입장 X는 usedTutorial로 막힘)
             CleanupBossInstance();
             return;
         }
