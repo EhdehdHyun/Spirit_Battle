@@ -47,9 +47,8 @@ public class GameManager : MonoBehaviour
             bool isSaveMenuOpen = (menuPanel != null && menuPanel.activeSelf);
             bool isInvOpen = (inventoryPanel != null && inventoryPanel.activeSelf);
             bool isMapOpen = (mapPanel != null && mapPanel.activeSelf);
-            bool isQuestOpen = (questPanel != null && questPanel.activeInHierarchy);
 
-            return isSaveMenuOpen || isInvOpen || isMapOpen || isQuestOpen;
+            return isSaveMenuOpen || isInvOpen || isMapOpen;
         }
     }
 
@@ -114,10 +113,6 @@ public class GameManager : MonoBehaviour
                     if (inventoryPanel != null && inventoryPanel.activeSelf)
                     {
                         inventoryManager.ToggleInventory();
-                    }
-                    if (questPanel != null && questPanel.activeSelf)
-                    {
-                        questPanel.SetActive(false);
                     }
                     ToggleMap();
                 }
