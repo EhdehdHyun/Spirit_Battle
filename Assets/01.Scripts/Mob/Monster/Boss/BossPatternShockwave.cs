@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.GameCenter;
-using UnityEngine.AI;
+// using UnityEngine.SocialPlatforms.GameCenter;
+// using UnityEngine.AI;
 
 public class BossPatternShockwave : BossPatternBase
 {
