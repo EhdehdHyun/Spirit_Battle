@@ -47,6 +47,9 @@ public class BossEnemy : EnemyBase
     [Header("퀘스트 / 데이터 ID")]
     [SerializeField] private int monsterId;
 
+    [SerializeField] private float tutorialBossDisableDelayAfterKill = 3f;
+    private Coroutine tutorialBossDisableCo;
+
     public event Action<int, int> bossOnBreakHitChanged;
     public event Action<bool> BossOnGroggyChanged;
 
@@ -69,7 +72,7 @@ public class BossEnemy : EnemyBase
         ai = GetComponent<BossAIController>();
         monsterAnim = GetComponent<MonsterAnimation>();
         meleeAttack = GetComponent<EnemyMeleeAttack>();
-        anim = GetComponentInChildren<Animator>(); // EnemyBase에 anim 있다고 가정(네 기존 코드와 동일)
+        anim = GetComponentInChildren<Animator>();
 
         if (damageFeedback == null)
             damageFeedback = GetComponentInChildren<DamageFeedback>(true);
@@ -85,9 +88,6 @@ public class BossEnemy : EnemyBase
             attackRange = meleeAttack.hitRadius;
     }
 
-    /// <summary>
-    /// 포탈에서 세션 시작 시 호출: 타겟/AI를 명시적으로 초기화
-    /// </summary>
     public void InitializeForSession(Transform player)
     {
         target = player; // EnemyBase의 target 사용
@@ -267,7 +267,6 @@ public class BossEnemy : EnemyBase
 
     public void Anim_DestroySelf() => Destroy(gameObject);
 
-    // 기존 ResetForRetry 유지: "재입장(재도전)"에 필요한 건 여기서 해결
     public void ResetForRetry()
     {
         if (phase3FinaleCo != null) { StopCoroutine(phase3FinaleCo); phase3FinaleCo = null; }
@@ -298,7 +297,7 @@ public class BossEnemy : EnemyBase
             anim.Update(0f);
         }
 
-        // AI도 깨끗하게 리셋(타겟은 세션 시작 시 InitializeForSession에서 다시 넣음)
+        // AI도 깨끗하게 리셋
         ai?.ResetForReuse(null);
 
         if (bossUI == null) bossUI = BossUIStatus.Instance;
@@ -311,5 +310,28 @@ public class BossEnemy : EnemyBase
             bossUI.UpdateBreak(breakHitCount, bossBreakHitThreshold);
             bossUI.SetBreakVisible(CurrentPhase >= breakEnableFromPhase);
         }
+    }
+
+    public void Anim_Phase3Finale_KillPlayer()
+    {
+        if (!isTutorialBoss) return;
+        if (!phase3FinaleStarted) return;
+        if (phase3FinaleKillDone) return;
+        phase3FinaleKillDone = true;
+
+        if (target == null) return;
+
+        var player = target.GetComponentInParent<CharacterBase>();
+        if (player == null) return;
+
+        var info = new DamageInfo(
+            amount: 999999f,
+            point: player.transform.position,
+            normal: Vector3.up,
+            reason: DamageReason.TutorialBossPhase3Finale
+        );
+
+        player.ForceKill(info);
+
     }
 }

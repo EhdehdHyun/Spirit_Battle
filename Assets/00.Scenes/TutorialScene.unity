@@ -15007,7 +15007,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00073737954
+      value: 0.00051383174
       objectReference: {fileID: 0}
     - target: {fileID: 4950689097301235468, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_Size
@@ -21897,17 +21897,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3602687304791287564, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
   m_PrefabInstance: {fileID: 340619993}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &340619995 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 101523703184880867, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
-  m_PrefabInstance: {fileID: 340619993}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 340619994}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcef1d1e20ef8f6438cad2c4335dbd7e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &340619996 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5139746172606967544, guid: 567deff0f52334c43a6c72cb77591132, type: 3}
@@ -86259,6 +86248,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossCutSceneCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 8572364757122331539, guid: 9612cd6a5e9d721499f4d1a9af2ca94d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2358565566828245466, guid: 9612cd6a5e9d721499f4d1a9af2ca94d, type: 3}
     m_RemovedGameObjects: []
@@ -129915,13 +129908,13 @@ MonoBehaviour:
   isTutorialBossPortal: 0
   prompt: Press [F]
   bossRoot: {fileID: 340619994}
-  boss: {fileID: 340619995}
+  bossSpawnOverride: {fileID: 0}
   spawnDelay: 4.5
   teleportPlayerOnUse: 1
   teleportTarget: {fileID: 496795618}
   matchRotation: 1
   linkBossUIOnSpawn: 1
-  disableColliderOnUse: 1
+  disableColliderDuringSession: 1
   shrineHudTargetId: 50002
   sfxObjectToDisable: {fileID: 2097077363}
   sfxAudioSourceToStop: {fileID: 0}
@@ -129931,9 +129924,9 @@ MonoBehaviour:
   bossRespawnPoint: {fileID: 106415178}
   respawnManager: {fileID: 1788110382}
   returnDelayAfterClear: 3
+  returnPlayerToPortal: 1
   inputController: {fileID: 0}
   playerInput: {fileID: 0}
-  returnPlayerToPortal: 1
 --- !u!114 &2097077365
 MonoBehaviour:
   m_ObjectHideFlags: 0

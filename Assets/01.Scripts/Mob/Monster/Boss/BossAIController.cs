@@ -78,8 +78,6 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
 
     private void OnEnable()
     {
-        // OnEnable에서 억지 복구하지 말고, 세션 시작 시 ResetForReuse로만 초기화
-        // (그 대신, 혹시 씬 배치 첫 활성화라면 타겟만 한번 잡아줌)
         if (boss == null) boss = GetComponent<BossEnemy>();
         if (agent == null) agent = GetComponent<NavMeshAgent>();
 
@@ -95,9 +93,6 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
         StopAllRuntime();
     }
 
-    /// <summary>
-    /// 세션 시작/리셋용: 포탈에서 BossEnemy.InitializeForSession -> 여기 호출
-    /// </summary>
     public void ResetForReuse(Transform newTarget)
     {
         StopAllRuntime();
@@ -170,7 +165,6 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
     {
         if (state == newState) return;
 
-        // 상태 전환 시 필요한 최소한만 처리
         state = newState;
 
         switch (state)
@@ -188,7 +182,6 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
                 break;
 
             case BossState.Pattern:
-                // ✅ 패턴 중에는 경로를 "삭제"하지 말고, 멈추기만
                 StopAgent(clearPath: false);
                 break;
 
@@ -225,7 +218,6 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
         MoveTowardsTarget_Nav(adjustedStop);
         RotateTowardsTarget(rotateSpeedChase);
 
-        // 패턴은 "세션 시작 직후" / "너무 멀리"면 금지
         if (Time.time - sessionStartTime < patternMinTimeAfterSessionStart) return;
         if (Time.time < nextPatternTime) return;
         if (distAtk > patternAllowedDistance) return;
@@ -298,7 +290,6 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
 
     private IEnumerator CoRunPattern(BossPatternBase p)
     {
-        // 패턴은 여기서 실행하고, 끝나면 UpdatePattern이 복귀함
         yield return p.Excute(target);
     }
 
