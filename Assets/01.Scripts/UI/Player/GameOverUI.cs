@@ -170,7 +170,7 @@ public class GameOverUI : MonoBehaviour
         if (pauseTimeAfterFade)
             Time.timeScale = 0f;
 
-        // 이제 입력을 받는다
+        // 이제 입력을 받음
         if (dialogueMode && dialogueLines.Length > 0)
         {
             SetTutorialPanelVisible(true);

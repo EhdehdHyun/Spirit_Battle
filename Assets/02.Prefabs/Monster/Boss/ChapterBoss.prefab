@@ -5559,7 +5559,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5353177757156421738
 Transform:
   m_ObjectHideFlags: 0
@@ -5599,9 +5599,9 @@ MonoBehaviour:
   detectRange: 16.9
   attackRange: 8.94
   useBreakSystem: 1
-  breakHitThreshold: 2
+  breakHitThreshold: 8
   breakGroggyDuration: 5
-  groggyExtraDamageRatio: 5
+  groggyExtraDamageRatio: 3
   breakGroggyTriggerName: BreakGroggy
   maxPhase: 3
   phase2HpRatio: 0.5
@@ -5637,18 +5637,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopDistance: 3
+  manualRotation: 1
   rotateSpeedChase: 2
   rotateSpeedAttack: 0
   rotateMultiplier: 1
-  manualRotation: 1
   repathInterval: 0.05
   patterns:
   - {fileID: 4012939175973782897}
   - {fileID: 1940796973434554225}
   - {fileID: 6604222195718906217}
   - {fileID: 1704864622966005654}
+  patternAllowedDistance: 12
+  patternMinTimeAfterSessionStart: 0.6
+  patternGlobalCooldown: 1
   loseTargetDistance: 20
   defaultParryGroggyTrigger: ParryGroggy
+  debugLog: 0
+  debugMoveLock: 0
 --- !u!114 &4012939175973782897
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5675,7 +5680,7 @@ MonoBehaviour:
   prepareDuration: 1.2
   punchDelayAfterSlamImpact: 0.35
   waitSlamImpactBeforePunch: 1
-  telegraphObject: {fileID: 0}
+  telegraphObject: {fileID: 4903607072753136725}
   telegraphYOffset: 0.02
   slamCenterOverride: {fileID: 5353177757156421738}
   slamDamage: 20
@@ -5749,9 +5754,10 @@ MonoBehaviour:
   slamTriggerName: SlamUppercut
   uppercutTriggerName: Uppercut
   uppercutDelay: 0
-  telegraphObject: {fileID: 0}
-  centerOverride: {fileID: 0}
-  slamRadius: 8
+  telegraphObject: {fileID: 4903607072753136725}
+  centerOverride: {fileID: 5353177757156421738}
+  slamRadius: 35
+  telegraphYOffset: 0.02
   slamDamage: 20
   slamHitMask:
     serializedVersion: 2
@@ -5786,8 +5792,9 @@ MonoBehaviour:
   cooldownMin: 12
   cooldownMax: 20
   slam2TriggerName: SlamX2
-  telegraphObject: {fileID: 0}
+  telegraphObject: {fileID: 4903607072753136725}
   centerOverride: {fileID: 5353177757156421738}
+  telegraphYOffset: 0.02
   slam1Damage: 20
   slam1Radius: 25
   slam1HitMask:
@@ -31356,5 +31363,10 @@ PrefabInstance:
 --- !u!4 &3433763517205800342 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2604809470084728561, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
+  m_PrefabInstance: {fileID: 828954596952384359}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4903607072753136725 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5731980025101358898, guid: 28445381a9073c14e98857ac78c6620b, type: 3}
   m_PrefabInstance: {fileID: 828954596952384359}
   m_PrefabAsset: {fileID: 0}

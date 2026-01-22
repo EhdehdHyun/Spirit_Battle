@@ -147,7 +147,6 @@ public class BossCutsceneTrigger_A : MonoBehaviour
         {
             UIVisibilityManager.Instance?.HideAllExceptGameOver();
             QuestHUDUI.Instance?.gameObject.SetActive(false);
-            // 0) 컷씬 딜레이(보스 생성 타이밍 맞추기)
             if (cutsceneDelay > 0f)
             {
                 float t0 = 0f;
@@ -165,7 +164,7 @@ public class BossCutsceneTrigger_A : MonoBehaviour
                 yield break;
             }
 
-            // 1) 보스 BGM 시작 (컷씬 시작부터)
+            // 보스 BGM 시작 
             if (bossBgmClip != null)
             {
                 yield return StartCoroutine(CoPlayBossBgm());
@@ -176,31 +175,31 @@ public class BossCutsceneTrigger_A : MonoBehaviour
                     bossEndWatchCo = StartCoroutine(CoWatchBossEndAndStopBgm());
             }
 
-            // 2) 입력 잠금(스크립트 비활성화)
+            // 입력 잠금
             if (disableWhileCutscene != null)
             {
                 foreach (var s in disableWhileCutscene)
                     if (s) s.enabled = false;
             }
 
-            // 3) UI 끄기
+            // UI 끄기
             if (uiToDisableWhileCutscene != null)
             {
                 foreach (var go in uiToDisableWhileCutscene)
                     if (go) go.SetActive(false);
             }
 
-            // 4) Letterbox ON
+            // etterbox ON
             if (letterboxPreRoll > 0f)
                 yield return WaitUnscaled(letterboxPreRoll);
 
             yield return AnimateLetterbox(true);
 
-            // 5) TimeScale 조절(0~1)
+            // TimeScale 조절
             prevTimeScale = Time.timeScale;
             Time.timeScale = Mathf.Clamp01(cutsceneTimeScale);
 
-            // 6) 컷씬 카메라 전환
+            // 컷씬 카메라 전환
             mainCamera.gameObject.SetActive(false);
             cutsceneCamera.gameObject.SetActive(true);
 
@@ -208,7 +207,7 @@ public class BossCutsceneTrigger_A : MonoBehaviour
             cutsceneCamera.transform.position = points[0].position;
             cutsceneCamera.transform.rotation = points[0].rotation;
 
-            // 7) 컷씬 보스 연출 시작(동시에 진행)
+            // 컷씬 보스 연출 시작
             Coroutine bossCo = null;
             if (cutsceneBossRoot != null)
                 bossCo = StartCoroutine(CoPlayCutsceneBoss());
@@ -216,7 +215,7 @@ public class BossCutsceneTrigger_A : MonoBehaviour
             // 시작 포인트 홀드
             yield return HoldAtPoint(0);
 
-            // 8) 카메라 경로 이동
+            // 카메라 경로 이동
             for (int seg = 0; seg < points.Length - 1; seg++)
             {
                 float dur = GetMoveDuration(seg);
@@ -260,23 +259,23 @@ public class BossCutsceneTrigger_A : MonoBehaviour
                 yield return HoldAtPoint(seg + 1);
             }
 
-            // 9) 컷씬 보스 코루틴이 아직 돌고 있으면 기다려줌(선택)
+            // 컷씬 보스 코루틴이 아직 돌고 있으면 기다려줌(선택)
             if (bossCo != null)
                 yield return bossCo;
 
-            // 10) 원복
+            // 원복
             cutsceneCamera.gameObject.SetActive(false);
             mainCamera.gameObject.SetActive(true);
 
             Time.timeScale = prevTimeScale;
 
-            // 11) Letterbox OFF
+            // Letterbox OFF
             if (letterboxPostRoll > 0f)
                 yield return WaitUnscaled(letterboxPostRoll);
 
             yield return AnimateLetterbox(false);
 
-            // 12) UI/입력 복구
+            // UI/입력 복구
             if (uiToDisableWhileCutscene != null)
             {
                 foreach (var go in uiToDisableWhileCutscene)

@@ -4,63 +4,61 @@ using UnityEngine.AI;
 
 public class BossAIController : MonoBehaviour, IParryGroggyController
 {
-    public enum BossState
-    {
-        Idle,
-        Chase,
-        BasicAttack,
-        Pattern,
-        Down,
-        Dead
-    }
+    public enum BossState { Idle, Chase, BasicAttack, Pattern, Down, Dead }
 
     [Header("이동 설정")]
-    public float stopDistance = 3f;
+    [SerializeField] private float stopDistance = 3f;
 
     [Header("회전 설정")]
-    [Tooltip("추적(Chase) 중 회전 속도")]
+    [SerializeField] private bool manualRotation = true;
     [SerializeField] private float rotateSpeedChase = 8f;
-
-    [Tooltip("공격(BasicAttack) 중 회전 속도 (0이면 공격 중 회전 안 함)")]
     [SerializeField] private float rotateSpeedAttack = 12f;
-
-    [Tooltip("Slerp에 곱해질 보정값(너무 빠르면 낮추기)")]
     [SerializeField] private float rotateMultiplier = 1f;
 
     [Header("NavMeshAgent 옵션")]
-    [SerializeField] private bool manualRotation = true;
-    [Tooltip("목표 지점을 얼마나 자주 갱신할지(초). 0이면 매 프레임 갱신")]
-    [SerializeField] private float repathInterval = 0.05f;
+    [SerializeField] private float repathInterval = 0.1f;
 
-    [Header("패턴 시스템 ")]
-    public BossPatternBase[] patterns;
+    [Header("패턴 시스템")]
+    [SerializeField] private BossPatternBase[] patterns;
+    [SerializeField] private float patternAllowedDistance = 12f;
+    [SerializeField] private float patternMinTimeAfterSessionStart = 0.6f;
+    [SerializeField] private float patternGlobalCooldown = 1.0f;
 
     [Header("Parry Groggy")]
     [SerializeField] private float loseTargetDistance = 20f;
     [SerializeField] private string defaultParryGroggyTrigger = "ParryGroggy";
     private Coroutine groggyCo;
 
-    public bool IsParryImmune =>
-        (boss != null && boss.IsDead) || state == BossState.Down || state == BossState.Dead;
+    [Header("Debug")]
+    [SerializeField] private bool debugLog = false;
 
-    private BossPatternBase currentPattern;
+    [SerializeField] private bool debugMoveLock = false;
+    private bool canMove = true;
+    public bool CanMove => canMove;
+
     private BossEnemy boss;
     private Transform target;
+
     private IEnemyAttack basicAttack;
     private EnemyMeleeAttack meleeAttack;
     private MonsterAnimation monsterAnim;
-
     private NavMeshAgent agent;
 
-    private bool canMove = true;
-    private bool uiLinked = false;
+    private BossPatternBase currentPattern;
+    private Coroutine patternCo;
 
     private BossState state = BossState.Idle;
-    private float stateTimer = 0f;
+
+    private float nextRepathTime;
+    private float sessionStartTime;
+    private float nextPatternTime;
+
+    public Transform DebugTarget => target;
+    public BossState DebugState => state;
+    public bool DebugHasTarget => HasTarget;
 
     public bool HasTarget => target != null && boss != null && !boss.IsDead;
-
-    private float nextRepathTime = 0f;
+    public bool IsParryImmune => (boss != null && boss.IsDead) || state == BossState.Down || state == BossState.Dead;
 
     private void Awake()
     {
@@ -68,40 +66,86 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
         basicAttack = GetComponent<IEnemyAttack>();
         meleeAttack = GetComponent<EnemyMeleeAttack>();
         monsterAnim = GetComponent<MonsterAnimation>() ?? GetComponentInChildren<MonsterAnimation>();
-
         agent = GetComponent<NavMeshAgent>();
 
-        if (boss == null)
-            Debug.LogError("BossEnemy 컴포넌트가 필요합니다");
-        if (basicAttack == null)
-            Debug.LogWarning("IEnemyAttack 구현체가 없습니다");
-
-        if (target == null)
-        {
-            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-            if (playerObj != null) target = playerObj.transform;
-        }
         if (agent != null)
         {
             agent.updateRotation = !manualRotation;
-            agent.speed = boss != null ? boss.moveSpeed : agent.speed;
-            agent.stoppingDistance = stopDistance;
             agent.autoBraking = true;
+            agent.stoppingDistance = stopDistance;
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (boss == null) boss = GetComponent<BossEnemy>();
+        if (agent == null) agent = GetComponent<NavMeshAgent>();
+
+        if (target == null)
+        {
+            var p = GameObject.FindGameObjectWithTag("Player");
+            if (p != null) target = p.transform;
+        }
+    }
+
+    private void OnDisable()
+    {
+        StopAllRuntime();
+    }
+
+    public void ResetForReuse(Transform newTarget)
+    {
+        StopAllRuntime();
+
+        target = newTarget;
+
+        sessionStartTime = Time.time;
+        nextRepathTime = 0f;
+        nextPatternTime = 0f;
+
+        if (agent != null)
+        {
+            EnsureOnNavMesh("ResetForReuse");
+            agent.isStopped = false;
+            agent.ResetPath();
+            agent.stoppingDistance = stopDistance;
         }
 
-        if (HasTarget)
-            ChangeState(BossState.Chase);
-        else
-            ChangeState(BossState.Idle);
+        if (HasTarget) ChangeState(BossState.Chase);
+        else ChangeState(BossState.Idle);
+
+        if (debugLog)
+            Debug.Log($"[BossAI] ResetForReuse target={(target ? target.name : "NULL")} state={state}", this);
+    }
+
+    private void StopAllRuntime()
+    {
+        if (groggyCo != null) { StopCoroutine(groggyCo); groggyCo = null; }
+
+        if (patternCo != null) { StopCoroutine(patternCo); patternCo = null; }
+        currentPattern = null;
+
+        if (patterns != null)
+        {
+            foreach (var p in patterns)
+                if (p) p.SendMessage("ForceStop", SendMessageOptions.DontRequireReceiver);
+        }
+
+        if (agent != null && agent.enabled)
+        {
+            agent.isStopped = true;
+            agent.ResetPath();
+        }
+
+        state = BossState.Idle;
     }
 
     private void Update()
     {
         if (boss == null) return;
+        if (boss.IsDead) { ChangeState(BossState.Dead); return; }
 
-        if (boss.IsDead) ChangeState(BossState.Dead);
-
-        if (agent != null && boss != null)
+        if (agent != null)
             agent.speed = boss.moveSpeed;
 
         switch (state)
@@ -117,79 +161,48 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
         UpdateAnimation();
     }
 
-    private float GetBasicAttackRange()
-    {
-        if (meleeAttack != null) return meleeAttack.hitRadius;
-        return boss != null ? boss.attackRange : 2f;
-    }
-
-    private Vector3 GetBasicAttackOrigin()
-    {
-        if (meleeAttack != null && meleeAttack.hitOrigin != null) return meleeAttack.hitOrigin.position;
-        return transform.position;
-    }
-
-    private float DistToTargetFromAttackOrigin()
-    {
-        if (!HasTarget) return Mathf.Infinity;
-        return Vector3.Distance(GetBasicAttackOrigin(), target.position);
-    }
-
     private void ChangeState(BossState newState)
     {
         if (state == newState) return;
 
         state = newState;
-        stateTimer = 0f;
-
-        if (state == BossState.Chase && !uiLinked)
-        {
-            var ui = BossUIStatus.Instance;
-            if (ui != null && boss != null)
-            {
-                ui.SetBoss(boss);
-                uiLinked = true;
-            }
-        }
 
         switch (state)
         {
             case BossState.Idle:
-            case BossState.BasicAttack:
-            case BossState.Pattern:
-                SetCanMove(false);
-                StopAgent();
-                break;
-            case BossState.Down:
-                SetCanMove(false);
-                StopAgent();
+                StopAgent(clearPath: true);
                 break;
 
             case BossState.Chase:
-                SetCanMove(true);
+                ResumeAgent();
+                break;
+
+            case BossState.BasicAttack:
+                StopAgent(clearPath: true);
+                break;
+
+            case BossState.Pattern:
+                StopAgent(clearPath: false);
+                break;
+
+            case BossState.Down:
+                StopAgent(clearPath: true);
+                break;
+
+            case BossState.Dead:
+                StopAgent(clearPath: true);
                 break;
         }
     }
 
     private void UpdateIdle()
     {
-        StopAgent();
-
-        if (HasTarget)
-            ChangeState(BossState.Chase);
+        if (HasTarget) ChangeState(BossState.Chase);
     }
 
     private void UpdateChase()
     {
-        if (!HasTarget)
-        {
-            ChangeState(BossState.Idle);
-            return;
-        }
-
-        stateTimer += Time.deltaTime;
-
-        if (TryUsePattern()) return;
+        if (!HasTarget) { ChangeState(BossState.Idle); return; }
 
         float atkRange = GetBasicAttackRange();
         float distAtk = DistToTargetFromAttackOrigin();
@@ -200,21 +213,25 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
             return;
         }
 
+        // 이동 먼저
         float adjustedStop = Mathf.Min(stopDistance, Mathf.Max(0.1f, atkRange * 0.9f));
         MoveTowardsTarget_Nav(adjustedStop);
-
         RotateTowardsTarget(rotateSpeedChase);
+
+        if (Time.time - sessionStartTime < patternMinTimeAfterSessionStart) return;
+        if (Time.time < nextPatternTime) return;
+        if (distAtk > patternAllowedDistance) return;
+
+        if (TryUsePattern())
+        {
+            nextPatternTime = Time.time + Mathf.Max(0.05f, patternGlobalCooldown);
+            return;
+        }
     }
 
     private void UpdateBasicAttack()
     {
-        if (!HasTarget)
-        {
-            ChangeState(BossState.Idle);
-            return;
-        }
-
-        StopAgent();
+        if (!HasTarget) { ChangeState(BossState.Idle); return; }
 
         float atkRange = GetBasicAttackRange();
         float distAtk = DistToTargetFromAttackOrigin();
@@ -227,24 +244,19 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
             return;
         }
 
-        if (!isAttacking && TryUsePattern()) return;
-
         RotateTowardsTarget(rotateSpeedAttack);
-
         basicAttack?.TryAttack(target);
     }
 
     private void UpdatePattern()
     {
+        // 패턴 코루틴이 끝나면 상태 복귀
         if (currentPattern != null && currentPattern.IsRunning) return;
 
         currentPattern = null;
+        patternCo = null;
 
-        if (!HasTarget)
-        {
-            ChangeState(BossState.Idle);
-            return;
-        }
+        if (!HasTarget) { ChangeState(BossState.Idle); return; }
 
         float atkRange = GetBasicAttackRange();
         float distAtk = DistToTargetFromAttackOrigin();
@@ -264,7 +276,11 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
             if (!p.CanExecute(target)) continue;
 
             currentPattern = p;
-            StartCoroutine(currentPattern.Excute(target));
+
+            // 패턴 실행
+            if (patternCo != null) StopCoroutine(patternCo);
+            patternCo = StartCoroutine(CoRunPattern(p));
+
             ChangeState(BossState.Pattern);
             return true;
         }
@@ -272,16 +288,17 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
         return false;
     }
 
-    // -----그로기 관련 메써드들 -----
+    private IEnumerator CoRunPattern(BossPatternBase p)
+    {
+        yield return p.Excute(target);
+    }
 
     private void UpdateDown()
     {
-        StopAgent();
+        // 멈춤 유지
     }
-    public void EnterBreakGroggy(float duration, string triggerName)
-    {
-        EnterParryGroggy(duration, triggerName);
-    }
+
+    public void EnterBreakGroggy(float duration, string triggerName) => EnterParryGroggy(duration, triggerName);
 
     public void EnterParryGroggy(float duration, string triggerName)
     {
@@ -307,62 +324,70 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
         yield return new WaitForSeconds(duration);
         groggyCo = null;
 
-        if (!HasTarget)
-        {
-            ChangeState(BossState.Idle);
-            yield break;
-        }
+        if (!HasTarget) { ChangeState(BossState.Idle); yield break; }
 
         float dist = Vector3.Distance(transform.position, target.position);
-        if (dist > loseTargetDistance)
-        {
-            ChangeState(BossState.Idle);
-            yield break;
-        }
+        if (dist > loseTargetDistance) { ChangeState(BossState.Idle); yield break; }
 
         float atkRange = GetBasicAttackRange();
         float distAtk = DistToTargetFromAttackOrigin();
 
-        if (distAtk <= atkRange)
-            ChangeState(BossState.BasicAttack);
-        else
-            ChangeState(BossState.Chase);
+        if (distAtk <= atkRange) ChangeState(BossState.BasicAttack);
+        else ChangeState(BossState.Chase);
+    }
+
+    private float GetBasicAttackRange()
+    {
+        if (meleeAttack != null) return meleeAttack.hitRadius;
+        return boss != null ? boss.attackRange : 2f;
+    }
+
+    private Vector3 GetBasicAttackOrigin()
+    {
+        if (meleeAttack != null && meleeAttack.hitOrigin != null) return meleeAttack.hitOrigin.position;
+        return transform.position;
+    }
+
+    private float DistToTargetFromAttackOrigin()
+    {
+        if (!HasTarget) return Mathf.Infinity;
+        return Vector3.Distance(GetBasicAttackOrigin(), target.position);
     }
 
     private void MoveTowardsTarget_Nav(float stopDist)
     {
         if (!HasTarget) return;
-        if (!canMove) return;
-        if (agent == null) return;
+        if (agent == null || !agent.enabled) return;
+        if (!EnsureOnNavMesh("MoveTowardsTarget_Nav")) return;
 
         agent.stoppingDistance = Mathf.Max(0f, stopDist);
+        agent.isStopped = false;
 
-        if (repathInterval > 0f && Time.time < nextRepathTime)
+        // repathInterval에 맞춰서만 갱신
+        if (repathInterval > 0f && Time.time < nextRepathTime && agent.hasPath)
             return;
 
-        nextRepathTime = Time.time + repathInterval;
-
-        if (!agent.enabled) return;
-
-        agent.isStopped = false;
+        nextRepathTime = Time.time + Mathf.Max(0f, repathInterval);
         agent.SetDestination(target.position);
     }
 
-    private void StopAgent()
+    private void StopAgent(bool clearPath)
     {
-        if (agent == null) return;
-        if (!agent.enabled) return;
+        if (agent == null || !agent.enabled) return;
 
         agent.isStopped = true;
-        agent.ResetPath();
+        if (clearPath) agent.ResetPath();
     }
 
     private void ResumeAgent()
     {
-        if (agent == null) return;
-        if (!agent.enabled) return;
+        if (agent == null || !agent.enabled) return;
+
+        if (!EnsureOnNavMesh("ResumeAgent")) return;
 
         agent.isStopped = false;
+        // Chase 복귀 시 목적지 한 번 갱신
+        if (HasTarget) agent.SetDestination(target.position);
     }
 
     private void RotateTowardsTarget(float speed)
@@ -384,7 +409,7 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
         if (monsterAnim == null || boss == null) return;
 
         float speed = 0f;
-        if (state == BossState.Chase && canMove) speed = boss.moveSpeed;
+        if (state == BossState.Chase) speed = boss.moveSpeed;
 
         bool isChasing = (state == BossState.Chase);
         bool isDead = boss.IsDead;
@@ -392,5 +417,54 @@ public class BossAIController : MonoBehaviour, IParryGroggyController
         monsterAnim.UpdateLocomotion(speed, isChasing, isDead);
     }
 
-    public void SetCanMove(bool value) => canMove = value;
+    private bool EnsureOnNavMesh(string ctx)
+    {
+        if (agent == null || !agent.enabled) return false;
+        if (agent.isOnNavMesh) return true;
+
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(transform.position, out hit, 5f, NavMesh.AllAreas))
+        {
+            bool warped = agent.Warp(hit.position);
+            if (debugLog)
+                Debug.Log($"[BossAI] {ctx}: off-mesh -> Warp({warped}) to {hit.position}", this);
+            return agent.isOnNavMesh;
+        }
+
+        if (debugLog)
+            Debug.LogWarning($"[BossAI] {ctx}: cannot find NavMesh near {transform.position}", this);
+
+        return false;
+    }
+
+    public void SetCanMove(bool value)
+    {
+        if (canMove == value) return;
+
+        canMove = value;
+
+        if (agent == null || !agent.enabled) return;
+
+        if (!canMove)
+        {
+            agent.isStopped = true;
+
+
+
+            if (debugMoveLock)
+                Debug.Log($"[BossAI] MoveLock ON  hasPath={agent.hasPath} remDist={agent.remainingDistance:F2}", this);
+        }
+        else
+        {
+            if (!EnsureOnNavMesh("SetCanMove(true)")) return;
+
+            agent.isStopped = false;
+
+            if (HasTarget)
+                agent.SetDestination(target.position);
+
+            if (debugMoveLock)
+                Debug.Log($"[BossAI] MoveLock OFF hasPath={agent.hasPath} remDist={agent.remainingDistance:F2}", this);
+        }
+    }
 }
