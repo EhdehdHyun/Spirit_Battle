@@ -18,6 +18,10 @@ public class MonsterAnimation : MonoBehaviour
     [SerializeField] private string attackTag = "Attack";
     [SerializeField] private string hitTag = "Hit";
 
+    //죽음 체크용
+    private CharacterBase owner;
+    private bool deathLocked = false;
+
     private int moveSpeedHash;
     private int isRunningHash;
     private int dieTriggerHash;
@@ -27,6 +31,8 @@ public class MonsterAnimation : MonoBehaviour
     {
         if (animator == null)
             animator = GetComponentInChildren<Animator>();
+
+        owner = GetComponentInParent<CharacterBase>();
 
         if (animator == null)
         {
@@ -38,6 +44,11 @@ public class MonsterAnimation : MonoBehaviour
         isRunningHash = Animator.StringToHash(isRunningParm);
         dieTriggerHash = Animator.StringToHash(dieTriggerParm);
         hitTriggerHash = Animator.StringToHash(hitTriggerParm);
+    }
+
+    private void OnEnable()
+    {
+        deathLocked = false;
     }
 
     private bool IsTagPlaying(string tag)
@@ -61,6 +72,10 @@ public class MonsterAnimation : MonoBehaviour
         if (IsInAttack) return false;
         if (IsInHit) return false;
 
+        //hp가 0이거나 죽었다고 한 번이라도 요청하면 Hit 못 하게
+        if (deathLocked) return false;
+        if (owner != null && !owner.IsAlive) return false;
+
         return true;
     }
 
@@ -81,6 +96,8 @@ public class MonsterAnimation : MonoBehaviour
 
         if (isDead)
         {
+            deathLocked = true;
+
             animator.SetFloat(moveSpeedHash, 0f);
             animator.SetBool(isRunningHash, false);
             return;
@@ -96,6 +113,10 @@ public class MonsterAnimation : MonoBehaviour
     public void PlayDie()
     {
         if (animator == null) return;
+
+        deathLocked = true;
+        animator.ResetTrigger(hitTriggerHash);
+
         if (!string.IsNullOrEmpty(dieTriggerParm))
         {
             animator.SetTrigger(dieTriggerHash);
