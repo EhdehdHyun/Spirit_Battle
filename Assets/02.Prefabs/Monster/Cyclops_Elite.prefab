@@ -1112,7 +1112,7 @@ MonoBehaviour:
   hpFill: {fileID: 1466593117358851}
   breakFill: {fileID: 3698312803428006017}
   target: {fileID: 0}
-  nameOverride: "\uC77C\uBC18 \uACE0\uBE14\uB9B0"
+  nameOverride: "\uC0AC\uC774\uD074\uB86D"
   hideWhenDead: 1
 --- !u!1 &2615440948738094027
 GameObject:
