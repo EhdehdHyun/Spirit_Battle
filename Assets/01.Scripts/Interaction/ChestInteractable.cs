@@ -80,7 +80,6 @@ public class ChestInteractable : MonoBehaviour, IInteractable
             return;
         }
 
-        // --- 상자 열기 로직 ---
         isOpened = true;
         if (animator != null) animator.SetTrigger(openTriggerName);
         GiveReward(player);
@@ -97,22 +96,18 @@ public class ChestInteractable : MonoBehaviour, IInteractable
 
         foreach (GameObject monster in guardMonsters)
         {
-            // 몬스터 오브젝트가 존재하고(Destroy 안됨), 활성화(Active) 상태라면 살아있는 것으로 간주
             if (monster != null && monster.activeInHierarchy)
             {
-                return true; // 하나라도 살아있으면 true
+                return true;
             }
         }
-        return false; // 모두 죽었거나 없으면 false
+        return false;
     }
 
-    // 주변 감지 함수 (기존)
     private bool CheckMonsterNearby()
     {
         return Physics.CheckSphere(transform.position, detectRadius, monsterLayer);
     }
-
-    // 경고 메시지 출력 (메시지 내용 커스텀 가능하게 변경)
     private void ShowWarningMessage(string message)
     {
         if (warningText == null) return;
@@ -130,7 +125,6 @@ public class ChestInteractable : MonoBehaviour, IInteractable
 
     private void OnDrawGizmosSelected()
     {
-        // 가디언이 설정되어 있다면 선으로 연결해서 보여줌 (디버깅용)
         if (guardMonsters != null && guardMonsters.Count > 0)
         {
             Gizmos.color = Color.yellow;
@@ -142,7 +136,6 @@ public class ChestInteractable : MonoBehaviour, IInteractable
         }
         else
         {
-            // 가디언이 없으면 범위 표시
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, detectRadius);
         }

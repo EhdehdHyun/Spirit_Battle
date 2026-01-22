@@ -15,7 +15,6 @@ public class ObjectTrigger : MonoBehaviour, IInteractable
         }
         else
         {
-            Debug.Log("이미 활성화된 축복입니다. (휴식)");
         }
 
         PlayerCharacter player = playerInteraction.GetComponent<PlayerCharacter>();
@@ -34,12 +33,10 @@ public class ObjectTrigger : MonoBehaviour, IInteractable
         {
             linkedMapIcon.UnlockIcon();
         }
-
-        Debug.Log("축복 발견! 지도 아이콘 해금됨.");
     }
 
     public string GetInteractPrompt()
     {
-        return "[F] 축복에서 휴식";
+        return "[F] 휴식";
     }
 }

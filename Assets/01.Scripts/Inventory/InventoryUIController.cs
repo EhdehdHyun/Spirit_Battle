@@ -69,7 +69,6 @@ public class InventoryUIController : MonoBehaviour
         var inv = InventoryManager.Instance;
         if (inv == null)
         {
-            Debug.LogWarning("[InventoryUIController] InventoryManager.Instance가 없습니다.");
             return;
         }
 

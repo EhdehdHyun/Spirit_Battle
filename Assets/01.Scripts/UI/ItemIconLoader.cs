@@ -9,7 +9,6 @@ public static class ItemIconLoader
     {
         if (string.IsNullOrEmpty(iconKey)) return null;
 
-        // 확장자 방어
         iconKey = iconKey.Replace(".png", "").Replace(".jpg", "").Replace(".jpeg", "");
 
         if (Cache.TryGetValue(iconKey, out var cached))
@@ -17,10 +16,8 @@ public static class ItemIconLoader
 
         Sprite sp = null;
 
-        // 1) Sprite 직로드: ItemIcons/iconKey
         sp = Resources.Load<Sprite>($"ItemIcons/{iconKey}");
 
-        // 2) 폴더 구조: ItemIcons/iconKey/iconKey
         if (sp == null)
             sp = Resources.Load<Sprite>($"ItemIcons/{iconKey}/{iconKey}");
 
@@ -60,6 +57,5 @@ public static class ItemIconLoader
         Cache[iconKey] = sp; // null도 캐시
         return sp;
     }
-
     public static void ClearCache() => Cache.Clear();
 }

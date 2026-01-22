@@ -35,8 +35,6 @@ public class ItemTooltipUI : MonoBehaviour
             // 툴팁이 마우스 클릭을 막지 않도록
             canvasGroup.blocksRaycasts = false;
         }
-
-        Debug.Log("[ItemTooltipUI] Awake 호출, Instance 설정 완료");
         Hide();
     }
 
@@ -44,8 +42,6 @@ public class ItemTooltipUI : MonoBehaviour
     {
         if (data == null)
             return;
-
-        Debug.Log($"[ItemTooltipUI] Show: {data.ItemName}, x{quantity}");
 
         if (root != null && !root.activeSelf)
             root.SetActive(true);

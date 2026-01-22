@@ -16,7 +16,6 @@ public class QuestItemUI : MonoBehaviour
     }
     public void OnClick()
     {
-        Debug.Log($"[QuestItemUI] OnClick: {questData.QuestName}");
         if (currentSelected != null)
             currentSelected.SetSelected(false);
 
@@ -32,7 +31,6 @@ public class QuestItemUI : MonoBehaviour
     }
     public static void ResetSelection()
     {
-        Debug.Log("[QuestItemUI] ResetSelection");
         currentSelected = null;
     }
 }

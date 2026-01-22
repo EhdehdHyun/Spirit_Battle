@@ -15,14 +15,11 @@ public class InventoryTabController : MonoBehaviour
 
     private void Awake()
     {
-        // 시작할 때 장비 탭이 기본으로 열리게
         ShowWeaponTab();
     }
 
     public void ShowWeaponTab()
     {
-        Debug.Log("[InventoryTabController] ShowWeaponTab");
-
         SetActiveSafe(weaponPanel, true);
         SetActiveSafe(itemPanel, false);
 
@@ -31,8 +28,6 @@ public class InventoryTabController : MonoBehaviour
 
     public void ShowItemTab()
     {
-        Debug.Log("[InventoryTabController] ShowItemTab");
-
         SetActiveSafe(weaponPanel, false);
         SetActiveSafe(itemPanel, true);
 

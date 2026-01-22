@@ -205,6 +205,8 @@ public class ShrineCutsceneManager : MonoBehaviour
      * ======================= */
     IEnumerator Co_PlayCutscene()
     {
+        UIVisibilityManager.Instance?.HideAllExceptGameOver(); 
+        
         if (isExiting)
             yield break;
 
@@ -440,6 +442,8 @@ public class ShrineCutsceneManager : MonoBehaviour
 
         GlobalInputBlocker.SetKeyboardBlocked(false);
 
+        UIVisibilityManager.Instance?.RestoreAll();
+        
         isCutscenePlaying = false;
         isExiting = false;
     }

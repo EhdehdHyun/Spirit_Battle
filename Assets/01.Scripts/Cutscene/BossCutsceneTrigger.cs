@@ -3,26 +3,26 @@ using UnityEngine;
 
 public class BossCutsceneTrigger : MonoBehaviour
 {
-    [Header("ÇÊ¼ö")]
-    [SerializeField] private Camera mainCamera;       // ±âÁ¸ ÇÃ·¹ÀÌ Ä«¸Þ¶ó
+    [Header("ï¿½Ê¼ï¿½")]
+    [SerializeField] private Camera mainCamera;       // ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ Ä«ï¿½Þ¶ï¿½
     [SerializeField] private Camera cutsceneCamera;   // CutsceneCamera
-    [SerializeField] private Transform lookTarget;    // º¸½º/¿Àº§¸®½ºÅ© µî ¹Ù¶óº¼ ´ë»ó
+    [SerializeField] private Transform lookTarget;    // ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å© ï¿½ï¿½ ï¿½Ù¶ï¿½ ï¿½ï¿½ï¿½
 
-    [Header("ÄÆ¾À Ä«¸Þ¶ó ½ÃÀÛ/³¡ Æ÷Áî")]
+    [Header("ï¿½Æ¾ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½")]
     [SerializeField] private Transform camStart;
     [SerializeField] private Transform camEnd;
 
-    [Header("¿¬Ãâ")]
-    [SerializeField] private float duration = 2.0f;   // ÀÌµ¿ ½Ã°£
+    [Header("ï¿½ï¿½ï¿½ï¿½")]
+    [SerializeField] private float duration = 2.0f;   // ï¿½Ìµï¿½ ï¿½Ã°ï¿½
     [SerializeField] private bool freezeTimeScale = true;
-    [SerializeField] private MonoBehaviour[] disableWhileCutscene; // ÇÃ·¹ÀÌ¾î ÀÔ·Â/ÀüÅõ ½ºÅ©¸³Æ® µî
+    [SerializeField] private MonoBehaviour[] disableWhileCutscene; // ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ô·ï¿½/ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ® ï¿½ï¿½
 
     private bool played;
     private float prevTimeScale = 1f;
 
     private void Reset()
     {
-        // Æ®¸®°Å·Î ¾²±â ÆíÇÏ°Ô
+        // Æ®ï¿½ï¿½ï¿½Å·ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï°ï¿½
         var col = GetComponent<Collider>();
         if (col) col.isTrigger = true;
     }
@@ -41,11 +41,10 @@ public class BossCutsceneTrigger : MonoBehaviour
         if (!mainCamera) mainCamera = Camera.main;
         if (!mainCamera || !cutsceneCamera || !camStart || !camEnd)
         {
-            Debug.LogError("[BossCutsceneTrigger] camera refs missing");
             yield break;
         }
 
-        // 1) ÀÔ·Â Àá±Ý + (¼±ÅÃ) ½Ã°£Á¤Áö
+        // 1) ï¿½Ô·ï¿½ ï¿½ï¿½ï¿½ + (ï¿½ï¿½ï¿½ï¿½) ï¿½Ã°ï¿½ï¿½ï¿½ï¿½ï¿½
         foreach (var s in disableWhileCutscene)
             if (s) s.enabled = false;
 
@@ -55,15 +54,15 @@ public class BossCutsceneTrigger : MonoBehaviour
             Time.timeScale = 0f;
         }
 
-        // 2) Ä«¸Þ¶ó ÀüÈ¯
+        // 2) Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½È¯
         mainCamera.gameObject.SetActive(false);
         cutsceneCamera.gameObject.SetActive(true);
 
-        // 3) ÄÆ¾À Ä«¸Þ¶ó Æ÷Áî ¼¼ÆÃ
+        // 3) ï¿½Æ¾ï¿½ Ä«ï¿½Þ¶ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
         cutsceneCamera.transform.position = camStart.position;
         cutsceneCamera.transform.rotation = camStart.rotation;
 
-        // TimeScale=0 ÀÌ¾îµµ ÁøÇàµÇ°Ô UnscaledTime »ç¿ë
+        // TimeScale=0 ï¿½Ì¾îµµ ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ UnscaledTime ï¿½ï¿½ï¿½
         float t = 0f;
         while (t < duration)
         {
@@ -90,7 +89,7 @@ public class BossCutsceneTrigger : MonoBehaviour
             yield return null;
         }
 
-        // 4) º¹±Í
+        // 4) ï¿½ï¿½ï¿½ï¿½
         cutsceneCamera.gameObject.SetActive(false);
         mainCamera.gameObject.SetActive(true);
 

@@ -158,6 +158,7 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         if (loadingOverlay != null)
         {
             loadingOverlay.SetActive(true);
+            UIVisibilityManager.Instance?.HideAllExceptGameOver();
             GlobalInputBlocker.SetKeyboardBlocked(true, allowEsc: false);
         }
 
@@ -173,6 +174,7 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         if (loadingOverlay != null)
         {
             loadingOverlay.SetActive(false);
+            UIVisibilityManager.Instance?.RestoreAll();
         }
 
         if (spawnDelay > 0f)
@@ -332,6 +334,9 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         if (loadingOverlay != null)
         {
             loadingOverlay.SetActive(true);
+            
+            UIVisibilityManager.Instance?.HideAllExceptGameOver();
+            
             GlobalInputBlocker.SetKeyboardBlocked(true, allowEsc: false);
         }
 
@@ -352,6 +357,7 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         if (loadingOverlay != null)
         {
             loadingOverlay.SetActive(false);
+            UIVisibilityManager.Instance?.RestoreAll(); 
         }
 
         // 포탈 닫기(일반 보스는 “클리어 후” 비활성화)

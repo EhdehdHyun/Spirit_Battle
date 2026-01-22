@@ -2,15 +2,15 @@ using UnityEngine;
 
 public class ChestSpawnCoin : MonoBehaviour, IInteractable
 {
-    [Header("»óÀÚ¿¡¼­ ÁÙ ¾ÆÀÌÅÛ (Data_table key)")]
-    public int itemKey = 1001;      // ÀÓ½Ã·Î HP Potion °°Àº °Í
-    public int amount = 1;          // ÇÑ ¹ø¿¡ ÁÙ °³¼ö
+    [Header("ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (Data_table key)")]
+    public int itemKey = 1001;      // ï¿½Ó½Ã·ï¿½ HP Potion ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
+    public int amount = 1;          // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
-    [Header("¿¬Ãâ¿ë ÄÚÀÎ ÇÁ¸®ÆÕ (¼±ÅÃ)")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (ï¿½ï¿½ï¿½ï¿½)")]
     public GameObject coinPrefab;
     public Transform spawnPoint;
 
-    [Header("»óÅÂ")]
+    [Header("ï¿½ï¿½ï¿½ï¿½")]
     public bool isOpened = false;
 
     private static Data_tableLoader loader;
@@ -18,17 +18,8 @@ public class ChestSpawnCoin : MonoBehaviour, IInteractable
     private static void EnsureLoader()
     {
         if (loader != null) return;
-
-        try
-        {
-            loader = new Data_tableLoader();   // "JSON/Data_table"
-            Debug.Log("[ChestSpawnCoin] Data_tableLoader »ý¼º ¿Ï·á");
-        }
-        catch (System.Exception e)
-        {
-            Debug.LogError($"[ChestSpawnCoin] Data_tableLoader »ý¼º Áß ¿¹¿Ü ¹ß»ý: {e.Message}");
-            loader = null;
-        }
+        loader = new Data_tableLoader();;
+    
     }
 
     private void Awake()
@@ -44,33 +35,26 @@ public class ChestSpawnCoin : MonoBehaviour, IInteractable
         EnsureLoader();
         if (loader == null)
         {
-            Debug.LogError("[ChestSpawnCoin] Data_tableLoader °¡ ¾øÀ½");
             return;
         }
 
-        // 1) Å×ÀÌºí¿¡¼­ µ¥ÀÌÅÍ °¡Á®¿À±â
         Data_table data = loader.GetByKey(itemKey);
         if (data == null)
         {
-            Debug.LogWarning($"[ChestSpawnCoin] itemKey [{itemKey}] ¿¡ ÇØ´çÇÏ´Â ¾ÆÀÌÅÛÀ» Ã£Áö ¸øÇß½À´Ï´Ù.");
         }
         else
         {
-            // 2) ItemInstance »ý¼º ÈÄ ÀÎº¥Åä¸®¿¡ Ãß°¡
             ItemInstance inst = new ItemInstance(data, amount);
 
             if (InventoryManager.Instance != null)
             {
                 InventoryManager.Instance.AddItem(inst);
-                Debug.Log($"[ChestSpawnCoin] {data.ItemName} x{amount} ÀÎº¥Åä¸®¿¡ Ãß°¡µÊ");
             }
             else
             {
-                Debug.LogWarning("[ChestSpawnCoin] InventoryManager.Instance °¡ ¾ø½À´Ï´Ù.");
             }
         }
 
-        // 3) ¿¬Ãâ¿ë ÄÚÀÎ ÇÁ¸®ÆÕ ½ºÆù (¼±ÅÃ)
         if (coinPrefab != null)
         {
             Vector3 pos = spawnPoint != null
@@ -80,15 +64,12 @@ public class ChestSpawnCoin : MonoBehaviour, IInteractable
             Instantiate(coinPrefab, pos, Quaternion.identity);
         }
 
-        // 4) ´Ù½Ã »óÈ£ÀÛ¿ë ¾È µÇ°Ô Collider ²ô±â
         Collider col = GetComponent<Collider>();
         if (col != null) col.enabled = false;
-
-        // ÇÊ¿äÇÏ¸é Destroy(gameObject); ·Î »óÀÚ¸¦ ¾ø¾Öµµ µÊ.
     }
 
     public string GetInteractPrompt()
     {
-        return isOpened ? "" : "F : »óÀÚ ¿­±â";
+        return isOpened ? "" : "F : ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½";
     }
 }

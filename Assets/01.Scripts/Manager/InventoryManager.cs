@@ -30,10 +30,8 @@ public class InventoryManager : MonoBehaviour
     [Tooltip("인벤토리 전체 UI 패널 또는 캔버스 (켜고 끄기용)")]
     public GameObject inventoryUI;
 
-    // ▼▼▼ [추가] 플레이어 입력(카메라/이동) 제어용 ▼▼▼
     [Header("Input Controller (필수 연결)")]
     public PlayerInputController playerInput;
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     [Header("Grid Size (기존 변수 유지용)")]
     public int rows = 5;
@@ -73,7 +71,6 @@ public class InventoryManager : MonoBehaviour
     private MethodInfo _healMethod;
     private bool _healParamIsInt;
 
-    // 인벤토리 열림/닫힘 상태 추적 변수
     private bool isOpen = false;
 
     private static readonly string[] HealMethodCandidates =

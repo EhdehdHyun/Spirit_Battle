@@ -61,8 +61,6 @@ public class DialogueManager : MonoBehaviour
     //실제 시작 로직
     private IEnumerator StartDialogueRoutine(string startID, Action onEnd, Transform npcTransform, bool autoStart)
     {
-        Debug.Log($"[DialogueManager] StartDialogue : {startID}");
-
         IsDialogueActive = true;
         currentDialogueID = startID;
         onDialogueEnd = onEnd;

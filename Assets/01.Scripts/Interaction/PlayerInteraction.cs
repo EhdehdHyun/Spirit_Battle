@@ -89,7 +89,6 @@ public class PlayerInteraction : MonoBehaviour
         currentTarget.Interact(this);
     }
 
-    // ================== Dialogue 연동 ==================
 
     public void LockInteract()
     {

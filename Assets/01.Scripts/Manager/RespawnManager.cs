@@ -41,7 +41,6 @@ public class RespawnManager : MonoBehaviour
     {
         if (newPoint == null)
         {
-            Debug.LogWarning("[RespawnManager] SetRespawnPoint: newPoint가 null입니다.");
             return;
         }
 
@@ -52,7 +51,6 @@ public class RespawnManager : MonoBehaviour
     {
         if (playerRoot == null || respawnPoint == null)
         {
-            Debug.LogWarning("[RespawnManager] playerRoot 또는 respawnPoint 없음");
             return;
         }
 

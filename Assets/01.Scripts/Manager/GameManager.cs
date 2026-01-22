@@ -15,25 +15,30 @@ public class GameManager : MonoBehaviour
     public PlayerStat playerStat;
     public InventoryManager inventoryManager;
 
+    [Header("Audio")]
+    public AudioClip mainBgm;
+
     [Header("UI Objects")]
-    public GameObject menuPanel;
+    public GameObject menuPanel;       // ÏÑ§Ï†ï(Î©îÎâ¥) Ï∞Ω (PÌÇ§)
     public GameObject saveMessageText;
 
-    [Header("Other UI Panels (¡ﬂ∫π πÊ¡ˆøÎ ø¨∞· « ºˆ)")]
+    [Header("Other UI Panels")]
     public GameObject inventoryPanel;
-    public GameObject mapPanel;
+    public GameObject mapPanel;        // ÏßÄÎèÑ (MÌÇ§)
     public GameObject questPanel;
 
-    [Header("Menu Buttons (Inspector ø¨∞· « ºˆ)")]
+    [Header("Menu Buttons")]
     public Button saveButton;
     public Button exitButton;
 
-    [Header("¿¸≈ı ∞®¡ˆ º≥¡§ (¿˙¿Â ±›¡ˆ)")]
+    [Header("Ï†ÑÌà¨ Í∞êÏßÄ ÏÑ§Ï†ï")]
     public float saveCheckRadius = 15f;
     public LayerMask enemyLayer;
 
     public bool IsUIBlocked { get; private set; }
+
     private bool isMenuOpen = false;
+    private bool isMapOpen = false;
 
     public bool IsAnyPopupOpen
     {
@@ -50,24 +55,24 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(Instance.gameObject);
-        }
-
+        if (Instance != null && Instance != this) Destroy(Instance.gameObject);
         Instance = this;
 
         Data = new DataManager();
         Data.Initialize();
 
-        // UI √ ±‚»≠
         if (menuPanel != null) menuPanel.SetActive(false);
+        if (mapPanel != null) mapPanel.SetActive(false);
         if (saveMessageText != null) saveMessageText.SetActive(false);
     }
 
     void Start()
     {
         StartCoroutine(LoadGameCo());
+        if (SoundManager.Instance != null && mainBgm != null)
+        {
+            SoundManager.Instance.PlayBGM(mainBgm);
+        }
     }
 
     IEnumerator LoadGameCo()
@@ -77,15 +82,8 @@ public class GameManager : MonoBehaviour
 
         if (Data.CurrentData != null)
         {
-            if (playerStat != null)
-            {
-                playerStat.LoadFromData(Data.CurrentData);
-            }
-
-            if (inventoryManager != null)
-            {
-                inventoryManager.LoadFromData(Data.CurrentData);
-            }
+            if (playerStat != null) playerStat.LoadFromData(Data.CurrentData);
+            if (inventoryManager != null) inventoryManager.LoadFromData(Data.CurrentData);
         }
     }
 
@@ -93,19 +91,59 @@ public class GameManager : MonoBehaviour
     {
         if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.P) && Input.GetKeyDown(KeyCode.P))
         {
-            if (isMenuOpen || !IsAnyPopupOpen)
+            if (isMenuOpen)
             {
                 ToggleMenu();
             }
+            else
+            {
+                CloseAllPopups();
+                ToggleMenu();
+            }
+        }
+        if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.M) && Input.GetKeyDown(KeyCode.M))
+        {
+            if (!isMenuOpen)
+            {
+                if (isMapOpen)
+                {
+                    ToggleMap();
+                }
+                else
+                {
+                    if (inventoryPanel != null && inventoryPanel.activeSelf)
+                    {
+                        inventoryManager.ToggleInventory();
+                    }
+                    if (questPanel != null && questPanel.activeSelf)
+                    {
+                        questPanel.SetActive(false);
+                    }
+                    ToggleMap();
+                }
+            }
+        }
+    }
+    public void CloseAllPopups()
+    {
+        if (inventoryManager != null && inventoryPanel != null && inventoryPanel.activeSelf)
+        {
+            inventoryManager.ToggleInventory();
+        }
+        if (isMapOpen)
+        {
+            ToggleMap();
+        }
+        if (questPanel != null && questPanel.activeSelf)
+        {
+            questPanel.SetActive(false);
         }
     }
 
     public void ToggleMenu()
     {
         isMenuOpen = !isMenuOpen;
-
-        if (menuPanel != null)
-            menuPanel.SetActive(isMenuOpen);
+        if (menuPanel != null) menuPanel.SetActive(isMenuOpen);
 
         if (isMenuOpen)
         {
@@ -121,43 +159,47 @@ public class GameManager : MonoBehaviour
             Cursor.visible = false;
         }
     }
+    public void ToggleMap()
+    {
+        isMapOpen = !isMapOpen;
 
-    // πˆ∆∞ »∞º∫»≠ ø©∫Œ ∞·¡§
+        if (mapPanel != null)
+            mapPanel.SetActive(isMapOpen);
+
+        if (isMapOpen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
     private void UpdateMenuButtons()
     {
         bool canSave = false;
+        if (Data != null && Data.CurrentData != null) canSave = Data.CurrentData.isTutorialClear;
 
-        // 1. ∆©≈‰∏ÆæÛ øœ∑· ø©∫Œ »Æ¿Œ
-        if (Data != null && Data.CurrentData != null)
-        {
-            canSave = Data.CurrentData.isTutorialClear;
-        }
-
-        // 2. ¡÷∫Ø ∏ÛΩ∫≈Õ ∞®¡ˆ
         bool enemiesNearby = CheckEnemiesNearby();
-        if (enemiesNearby)
-        {
-            canSave = false;
-        }
+        if (enemiesNearby) canSave = false;
 
-        // 3. πˆ∆∞ ªÛ≈¬ ¿˚øÎ
         if (saveButton != null)
         {
             saveButton.interactable = canSave;
-
-            // (ø…º«) πˆ∆∞ ≈ÿΩ∫∆Æ ∫Ø∞Ê ±‚¥…
             TextMeshProUGUI btnText = saveButton.GetComponentInChildren<TextMeshProUGUI>();
             if (btnText != null)
             {
-                if (enemiesNearby) btnText.text = "¿¸≈ı ¡ﬂ";
-                else if (!Data.CurrentData.isTutorialClear) btnText.text = "¡¯«‡ « ø‰";
-                else btnText.text = "¿˙¿Â«œ±‚";
+                if (enemiesNearby) btnText.text = "Ï†ÑÌà¨ Ï§ë";
+                else if (!Data.CurrentData.isTutorialClear) btnText.text = "ÏßÑÌñâ ÌïÑÏöî";
+                else btnText.text = "Ï†ÄÏû•ÌïòÍ∏∞";
             }
         }
         if (exitButton != null) exitButton.interactable = canSave;
     }
 
-    // ¡÷∫Ø ∏ÛΩ∫≈Õ ∞®¡ˆ ∑Œ¡˜
     private bool CheckEnemiesNearby()
     {
         if (playerStat == null) return false;
@@ -175,18 +217,9 @@ public class GameManager : MonoBehaviour
 
     public void OnSaveButtonClick()
     {
-        if (playerStat != null)
-        {
-            playerStat.SaveToData(Data.CurrentData);
-        }
-
-        if (inventoryManager != null)
-        {
-            inventoryManager.SaveToData(Data.CurrentData);
-        }
-
+        if (playerStat != null) playerStat.SaveToData(Data.CurrentData);
+        if (inventoryManager != null) inventoryManager.SaveToData(Data.CurrentData);
         Data.Save();
-
         StartCoroutine(ShowSaveMessageRoutine());
     }
 
@@ -209,10 +242,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void SetUIBlock(bool blocked)
-    {
-        IsUIBlocked = blocked;
-    }
+    public void SetUIBlock(bool blocked) => IsUIBlocked = blocked;
 
     public void CompleteTutorial()
     {
@@ -221,7 +251,6 @@ public class GameManager : MonoBehaviour
             playerStat?.SaveToData(Data.CurrentData);
             Data.CurrentData.isTutorialClear = true;
             Data.Save();
-
             if (isMenuOpen) UpdateMenuButtons();
         }
     }

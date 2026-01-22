@@ -79,7 +79,6 @@ public class BossCutsceneTrigger_A : MonoBehaviour
     [Header("Spawn Bridge (스킵 시 즉시 소환)")]
     [SerializeField] private BossSpawnInteratableOnce bossPortal;
 
-    // ===================== Letterbox(컷씬에서만 켜짐) =====================
     [Header("Letterbox UI (컷씬에서만 켜짐)")]
     [Tooltip("LetterBar 루트(부모 오브젝트). 없으면 Top/Bottom만으로도 동작함")]
     [SerializeField] private GameObject letterboxRoot;
@@ -104,8 +103,6 @@ public class BossCutsceneTrigger_A : MonoBehaviour
 
     private float topBaseH;
     private float bottomBaseH;
-
-    // ====================================================================
 
     private bool played;
     private float prevTimeScale = 1f;
@@ -148,6 +145,8 @@ public class BossCutsceneTrigger_A : MonoBehaviour
     {
         try
         {
+            UIVisibilityManager.Instance?.HideAllExceptGameOver();
+            QuestHUDUI.Instance?.gameObject.SetActive(false);
             // 0) 컷씬 딜레이(보스 생성 타이밍 맞추기)
             if (cutsceneDelay > 0f)
             {
@@ -163,7 +162,6 @@ public class BossCutsceneTrigger_A : MonoBehaviour
 
             if (!mainCamera || !cutsceneCamera || points == null || points.Length < 2)
             {
-                Debug.LogError("[BossCutsceneTrigger_A] 세팅 누락(mainCamera/cutsceneCamera/points>=2)");
                 yield break;
             }
 
@@ -290,13 +288,12 @@ public class BossCutsceneTrigger_A : MonoBehaviour
                 foreach (var s in disableWhileCutscene)
                     if (s) s.enabled = true;
             }
-
-            // BGM은 여기서 끄지 않음!
-            // “testBossRoot가 비활성화될 때” CoWatchBossEndAndStopBgm이 끈다.
         }
         finally
         {
             GlobalInputBlocker.SetKeyboardBlocked(false);
+            UIVisibilityManager.Instance?.RestoreAll();
+            QuestHUDUI.Instance?.gameObject.SetActive(true);
         }
     }
 
@@ -309,7 +306,6 @@ public class BossCutsceneTrigger_A : MonoBehaviour
 
         if (!cutsceneBossAnimator)
         {
-            Debug.LogWarning("[BossCutsceneTrigger_A] cutsceneBossAnimator를 찾지 못했음 (TestBoss2에 Animator 없음?)");
             yield break;
         }
 
@@ -333,7 +329,6 @@ public class BossCutsceneTrigger_A : MonoBehaviour
     {
         if (testBossRoot == null)
         {
-            Debug.LogWarning("[BossCutsceneTrigger_A] Test Boss Root가 비어있어서 BGM 종료 감지를 할 수 없습니다.");
             yield break;
         }
 
