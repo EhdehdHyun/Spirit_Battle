@@ -61,7 +61,6 @@ public class ItemPickupFromTable : MonoBehaviour, IInteractable
         isCollected = true;
 
         ItemInstance instance = new ItemInstance(data, quantity);
-        Debug.Log($"[ItemPickupFromTable] ItemInstance 생성: {instance.data.ItemName} x{instance.quantity}");
 
         if (InventoryManager.Instance != null)
         {
