@@ -1,19 +1,21 @@
 using System.Collections;
-using UnityEngine.InputSystem;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 {
     [Header("Boss Type")]
-    [Tooltip("체크하면 '튜토리얼 보스' 규칙 적용(재입장 X, 플레이어 사망 시 포탈+보스 OFF 등)")]
+    [Tooltip("체크하면 '튜토리얼 보스' 규칙 적용(재입장 X)")]
     [SerializeField] private bool isTutorialBossPortal = false;
 
     [Header("Prompt")]
     [SerializeField] private string prompt = "Press [F]";
 
-    [Header("Boss Root (비활성화로 씬에 배치)")]
+    [Header("Boss Template Root (비활성화로 씬에 배치, 일반 보스는 Instantiate 템플릿로 사용)")]
     [SerializeField] private GameObject bossRoot;
-    [SerializeField] private BossEnemy boss;
+
+    [Header("Optional: Spawn Override (비워두면 bossRoot의 초기 위치/회전 사용)")]
+    [SerializeField] private Transform bossSpawnOverride;
 
     [Header("등장 연출 시간")]
     [SerializeField] private float spawnDelay = 0f;
@@ -21,21 +23,17 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
     [Header("플레이어 텔레포트")]
     [SerializeField] private bool teleportPlayerOnUse = true;
     [SerializeField] private Transform teleportTarget;
-
-    [Tooltip("텔레포트 후 플레이어 회전도 맞출지")]
     [SerializeField] private bool matchRotation = true;
 
     [Header("옵션")]
     [SerializeField] private bool linkBossUIOnSpawn = true;
-    [SerializeField] private bool disableColliderOnUse = true;
+    [SerializeField] private bool disableColliderDuringSession = true;
 
     [Header("퀘스트 ID HUD")]
     [SerializeField] private int shrineHudTargetId = 50002;
 
     [Header("SFX (한 번 쓰면 끄기)")]
-    [Tooltip("이 오브젝트 자체를 꺼버림(가장 확실)")]
     [SerializeField] private GameObject sfxObjectToDisable;
-    [Tooltip("오브젝트는 못 끄는 경우 AudioSource만 Stop하고 disable")]
     [SerializeField] private AudioSource sfxAudioSourceToStop;
 
     [Header("Loading Overlay (텔포 순간 가리기)")]
@@ -44,35 +42,36 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
 
     [Header("Respawn Switch (보스맵 진입 시 리스폰 지점 변경)")]
     [SerializeField] private bool changeRespawnPointOnUse = true;
-    [Tooltip("보스맵에서 리스폰될 위치(=B). 비워두면 teleportTarget을 사용")]
     [SerializeField] private Transform bossRespawnPoint;
     [SerializeField] private RespawnManager respawnManager;
 
-    [Header("After Clear Return (일반 보스만)")]
-    [Tooltip("일반 보스 클리어 시, n초 후 로딩 오버레이 띄우고 포탈 위치로 복귀 텔포")]
+    [Header("After Clear Return (일반 보스)")]
     [SerializeField] private float returnDelayAfterClear = 3f;
-    [Tooltip("클리어 후 복귀 텔포를 포탈 오브젝트 위치로 할지")]
-
-    [SerializeField] private PlayerInputController inputController;
-    [SerializeField] private PlayerInput playerInput;
     [SerializeField] private bool returnPlayerToPortal = true;
 
-    private bool usedTutorial = false;
-    private bool inBossSession = false;
-    private Coroutine co;
-    private Collider col;
+    [Header("Player refs (optional)")]
+    [SerializeField] private PlayerInputController inputController;
+    [SerializeField] private PlayerInput playerInput;
 
-    private Vector3 bossInitPos;
-    private Quaternion bossInitRot;
+    private Collider _col;
+    private Coroutine _co;
 
-    private CharacterBase playerChar;
-    private Transform playerTf;
+    private bool _usedTutorial = false;
+    private bool _inBossSession = false;
+    private bool _bossDiedHandled = false;
 
-    private bool bossDiedHandled = false;
+    private Vector3 _bossTemplatePos;
+    private Quaternion _bossTemplateRot;
+
+    private Transform _playerTf;
+    private CharacterBase _playerChar;
+
+    private GameObject _bossInstance;
+    private BossEnemy _boss;
 
     private void Awake()
     {
-        col = GetComponent<Collider>();
+        _col = GetComponent<Collider>();
 
         if (loadingOverlay != null)
             loadingOverlay.SetActive(false);
@@ -80,18 +79,15 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         if (respawnManager == null)
             respawnManager = FindObjectOfType<RespawnManager>();
 
-        CacheBossRefs();
-
         if (bossRoot != null)
         {
-            bossInitPos = bossRoot.transform.position;
-            bossInitRot = bossRoot.transform.rotation;
-        }
-    }
+            _bossTemplatePos = bossRoot.transform.position;
+            _bossTemplateRot = bossRoot.transform.rotation;
 
-    private void OnEnable()
-    {
-        CacheBossRefs();
+            // 템플릿은 항상 비활성 유지(일반 보스는 Instantiate로만 사용)
+            if (!isTutorialBossPortal)
+                bossRoot.SetActive(false);
+        }
     }
 
     private void OnDisable()
@@ -100,49 +96,34 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         UnsubscribeBossDied();
     }
 
-    private void CacheBossRefs()
-    {
-        if (boss == null && bossRoot != null)
-            boss = bossRoot.GetComponentInChildren<BossEnemy>(true);
-    }
-
-
     public string GetInteractPrompt()
     {
-        if (isTutorialBossPortal && usedTutorial) return string.Empty;
+        if (isTutorialBossPortal && _usedTutorial) return string.Empty;
         return prompt;
     }
 
     public void Interact(PlayerInteraction player)
     {
-        if (co != null) return;
+        if (_co != null) return;
+        if (isTutorialBossPortal && _usedTutorial) return;
 
-        // 성소를 향하여 퀘스트 HUD거리 제거
+        // 성소 HUD 제거 (기존 유지)
         if (shrineHudTargetId > 0)
         {
             QuestTargetRegistry.Instance?.Unregister(shrineHudTargetId, transform);
-
             QuestHUDUI.Instance?.ClearCurrentTarget();
-
-            Debug.Log($"[Shrine] HUD target removed id={shrineHudTargetId}");
         }
 
-        if (isTutorialBossPortal && usedTutorial)
-            return;
-
-        if (disableColliderOnUse && col != null)
-            col.enabled = false;
-
-        co = StartCoroutine(UseRoutine(player));
+        _co = StartCoroutine(CoStartSession(player));
     }
 
-    private IEnumerator UseRoutine(PlayerInteraction player)
+    private IEnumerator CoStartSession(PlayerInteraction player)
     {
-        CacheBossRefs();
-
-        // 플레이어 캐싱 & 죽음 이벤트 구독
         CachePlayer(player);
         SubscribePlayerDied();
+
+        if (disableColliderDuringSession && _col != null)
+            _col.enabled = false;
 
         // 보스맵 리스폰 포인트로 교체
         if (changeRespawnPointOnUse && respawnManager != null)
@@ -152,9 +133,33 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
                 respawnManager.SetRespawnPoint(newRespawn);
         }
 
-        // SFX 끄기
         DisableSfx();
 
+        // 로딩/입력 블락 + 텔포
+        yield return StartCoroutine(CoTeleportIn());
+
+        if (spawnDelay > 0f)
+            yield return new WaitForSeconds(spawnDelay);
+
+        SpawnBoss();
+
+        SubscribeBossDied();
+
+        // UI 링크
+        if (linkBossUIOnSpawn && _boss != null && BossUIStatus.Instance != null)
+            BossUIStatus.Instance.SetBoss(_boss);
+
+        _inBossSession = true;
+        _bossDiedHandled = false;
+
+        if (isTutorialBossPortal)
+            _usedTutorial = true;
+
+        _co = null;
+    }
+
+    private IEnumerator CoTeleportIn()
+    {
         if (loadingOverlay != null)
         {
             loadingOverlay.SetActive(true);
@@ -162,9 +167,12 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
             GlobalInputBlocker.SetKeyboardBlocked(true, allowEsc: false);
         }
 
-        if (teleportPlayerOnUse && player != null && teleportTarget != null)
-            TeleportPlayer(player.transform, teleportTarget.position, teleportTarget.rotation);
+        if (teleportPlayerOnUse && _playerTf != null && teleportTarget != null)
+        {
+            TeleportPlayer(_playerTf, teleportTarget.position, teleportTarget.rotation);
+        }
 
+        // 프레임 2번 양보(텔포/물리 안정화)
         yield return null;
         yield return null;
 
@@ -175,42 +183,209 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         {
             loadingOverlay.SetActive(false);
             UIVisibilityManager.Instance?.RestoreAll();
+            GlobalInputBlocker.SetKeyboardBlocked(false, allowEsc: true);
         }
+    }
 
-        if (spawnDelay > 0f)
-            yield return new WaitForSeconds(spawnDelay);
+    private void SpawnBoss()
+    {
+        CleanupBossInstance(); // 혹시 남아있으면 정리
 
-        if (!isTutorialBossPortal)
-        {
-            ResetBossForRetry();
-        }
+        if (bossRoot == null) return;
 
-        // 보스 활성화
-        if (bossRoot != null)
-            bossRoot.SetActive(true);
-
-        CacheBossRefs();
-
-        SubscribeBossDied();
-
-        // UI 링크
-        if (linkBossUIOnSpawn && boss != null && BossUIStatus.Instance != null)
-            BossUIStatus.Instance.SetBoss(boss);
-
-        inBossSession = true;
-        bossDiedHandled = false;
+        Vector3 spawnPos = bossSpawnOverride ? bossSpawnOverride.position : _bossTemplatePos;
+        Quaternion spawnRot = bossSpawnOverride ? bossSpawnOverride.rotation : _bossTemplateRot;
 
         if (isTutorialBossPortal)
         {
-            usedTutorial = true;
-
-            if (disableColliderOnUse && col != null)
-                col.enabled = false;
-
-            //gameObject.SetActive(false);
+            // 튜토리얼 보스는 "재입장 X"이므로 템플릿 자체를 켜도 됨
+            _bossInstance = bossRoot;
+            _bossInstance.transform.SetPositionAndRotation(spawnPos, spawnRot);
+            _bossInstance.SetActive(true);
+        }
+        else
+        {
+            // 일반 보스는 매 세션 Instantiate(재입장/재시도 안정성 확보)
+            _bossInstance = Instantiate(bossRoot, spawnPos, spawnRot);
+            _bossInstance.name = bossRoot.name + "_Instance";
+            _bossInstance.SetActive(true);
         }
 
-        co = null;
+        _boss = _bossInstance.GetComponentInChildren<BossEnemy>(true);
+
+        if (_boss != null)
+        {
+            // 일반 보스는 재도전용 리셋
+            if (!isTutorialBossPortal)
+                _boss.ResetForRetry();
+
+            // 세션 타겟 명시 초기화
+            _boss.InitializeForSession(_playerTf);
+        }
+    }
+
+    private void CleanupBossInstance()
+    {
+        if (_boss != null)
+        {
+            UnsubscribeBossDied();
+            _boss = null;
+        }
+
+        if (_bossInstance != null)
+        {
+            if (isTutorialBossPortal)
+            {
+                // 튜토 보스는 템플릿 오브젝트라 Destroy 금지
+                _bossInstance.SetActive(false);
+            }
+            else
+            {
+                Destroy(_bossInstance);
+            }
+            _bossInstance = null;
+        }
+    }
+
+    private void CachePlayer(PlayerInteraction player)
+    {
+        if (player == null) return;
+
+        _playerTf = player.transform;
+        if (_playerChar == null)
+            _playerChar = _playerTf.GetComponentInParent<CharacterBase>();
+
+        if (inputController == null)
+            inputController = _playerTf.GetComponentInParent<PlayerInputController>();
+
+        if (playerInput == null)
+            playerInput = _playerTf.GetComponentInParent<PlayerInput>();
+    }
+
+    private void SubscribePlayerDied()
+    {
+        if (_playerChar == null) return;
+        UnsubscribePlayerDied();
+        _playerChar.OnDied += OnPlayerDied;
+    }
+
+    private void UnsubscribePlayerDied()
+    {
+        if (_playerChar == null) return;
+        _playerChar.OnDied -= OnPlayerDied;
+    }
+
+    private void SubscribeBossDied()
+    {
+        if (_boss == null) return;
+        UnsubscribeBossDied();
+        _boss.OnDied += OnBossDied;
+    }
+
+    private void UnsubscribeBossDied()
+    {
+        if (_boss == null) return;
+        _boss.OnDied -= OnBossDied;
+    }
+
+    private void OnPlayerDied(DamageInfo info)
+    {
+        if (!_inBossSession) return;
+
+        _inBossSession = false;
+
+        BossUIStatus.Instance?.SetVisible(false);
+
+        UnsubscribeBossDied();
+        UnsubscribePlayerDied();
+
+        CleanupBossInstance();
+
+        if (isTutorialBossPortal)
+        {
+            StartCoroutine(CoForceTutorialGameOver());
+        }
+
+        // 튜토 보스는 포탈도 끝
+        if (isTutorialBossPortal)
+        {
+            gameObject.SetActive(false);
+            return;
+        }
+
+        // 일반 보스는 재입장 가능 -> 포탈 다시 열기
+        if (disableColliderDuringSession && _col != null)
+            _col.enabled = true;
+    }
+
+    private IEnumerator CoForceTutorialGameOver()
+    {
+        var ui = GameOverUI.Instance;
+        if (ui != null)
+            ui.ShowTutorialDeath(null, null);
+
+        yield return null;
+
+        ui = GameOverUI.Instance;
+        if (ui != null)
+            ui.ShowTutorialDeath(null, null);
+    }
+
+    private void OnBossDied(DamageInfo info)
+    {
+        if (_bossDiedHandled) return;
+        _bossDiedHandled = true;
+
+        if (!_inBossSession) return;
+
+        _inBossSession = false;
+
+        UnsubscribeBossDied();
+        UnsubscribePlayerDied();
+
+        if (isTutorialBossPortal)
+        {
+            CleanupBossInstance();
+            return;
+        }
+
+        StartCoroutine(CoReturnAfterClear());
+    }
+
+    private IEnumerator CoReturnAfterClear()
+    {
+        yield return new WaitForSecondsRealtime(Mathf.Max(0f, returnDelayAfterClear));
+
+        if (loadingOverlay != null)
+        {
+            loadingOverlay.SetActive(true);
+            UIVisibilityManager.Instance?.HideAllExceptGameOver();
+            GlobalInputBlocker.SetKeyboardBlocked(true, allowEsc: false);
+        }
+
+        yield return null;
+        yield return null;
+
+        if (returnPlayerToPortal && _playerTf != null)
+        {
+            Quaternion rot = matchRotation ? transform.rotation : _playerTf.rotation;
+            TeleportPlayer(_playerTf, transform.position, rot);
+        }
+
+        if (loadingMinDuration > 0f)
+            yield return new WaitForSecondsRealtime(loadingMinDuration);
+
+        if (loadingOverlay != null)
+        {
+            loadingOverlay.SetActive(false);
+            UIVisibilityManager.Instance?.RestoreAll();
+            GlobalInputBlocker.SetKeyboardBlocked(false, allowEsc: true);
+        }
+
+        CleanupBossInstance();
+
+        // 일반 보스는 "클리어 후 포탈 닫기"
+        gameObject.SetActive(false);
     }
 
     private void DisableSfx()
@@ -226,145 +401,6 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
             sfxAudioSourceToStop.Stop();
             sfxAudioSourceToStop.enabled = false;
         }
-    }
-
-    private void ResetBossForRetry()
-    {
-        if (bossRoot == null) return;
-
-        if (bossRoot.activeSelf)
-            bossRoot.SetActive(false);
-
-        bossRoot.transform.SetPositionAndRotation(bossInitPos, bossInitRot);
-
-        CacheBossRefs();
-
-        if (boss != null)
-        {
-            boss.ResetForRetry();
-        }
-    }
-
-    private void CachePlayer(PlayerInteraction player)
-    {
-        if (player == null) return;
-        playerTf = player.transform;
-        if (playerChar == null)
-            playerChar = playerTf.GetComponentInParent<CharacterBase>();
-
-        if (inputController == null)
-            inputController = playerTf.GetComponentInParent<PlayerInputController>();
-
-        if (playerInput == null)
-            playerInput = playerTf.GetComponentInParent<PlayerInput>();
-    }
-
-    private void SubscribePlayerDied()
-    {
-        if (playerChar == null) return;
-        UnsubscribePlayerDied();
-        playerChar.OnDied += OnPlayerDied;
-    }
-
-    private void UnsubscribePlayerDied()
-    {
-        if (playerChar == null) return;
-        playerChar.OnDied -= OnPlayerDied;
-    }
-
-    private void SubscribeBossDied()
-    {
-        if (boss == null) return;
-        UnsubscribeBossDied();
-        boss.OnDied += OnBossDied;
-    }
-
-    private void UnsubscribeBossDied()
-    {
-        if (boss == null) return;
-        boss.OnDied -= OnBossDied;
-    }
-
-    private void OnPlayerDied(DamageInfo info)
-    {
-        if (!inBossSession) return;
-
-        if (bossRoot != null)
-            bossRoot.SetActive(false);
-
-        if (BossUIStatus.Instance != null)
-            BossUIStatus.Instance.SetVisible(false);
-
-        if (isTutorialBossPortal)
-        {
-            gameObject.SetActive(false);
-        }
-
-        inBossSession = false;
-
-        UnsubscribeBossDied();
-        UnsubscribePlayerDied();
-    }
-
-    private void OnBossDied(DamageInfo info)
-    {
-        if (bossDiedHandled) return;
-        bossDiedHandled = true;
-
-        if (!inBossSession) return;
-
-        if (isTutorialBossPortal)
-        {
-            inBossSession = false;
-            UnsubscribeBossDied();
-            UnsubscribePlayerDied();
-            return;
-        }
-
-        StartCoroutine(CoReturnAfterClear());
-    }
-
-    private IEnumerator CoReturnAfterClear()
-    {
-        // 세션 종료
-        inBossSession = false;
-
-        yield return new WaitForSecondsRealtime(Mathf.Max(0f, returnDelayAfterClear));
-
-        if (loadingOverlay != null)
-        {
-            loadingOverlay.SetActive(true);
-            
-            UIVisibilityManager.Instance?.HideAllExceptGameOver();
-            
-            GlobalInputBlocker.SetKeyboardBlocked(true, allowEsc: false);
-        }
-
-        // 프레임 양보
-        yield return null;
-        yield return null;
-
-        // 포탈 위치로 복귀
-        if (returnPlayerToPortal && playerTf != null)
-        {
-            Quaternion rot = matchRotation ? transform.rotation : playerTf.rotation;
-            TeleportPlayer(playerTf, transform.position, rot);
-        }
-
-        if (loadingMinDuration > 0f)
-            yield return new WaitForSecondsRealtime(loadingMinDuration);
-
-        if (loadingOverlay != null)
-        {
-            loadingOverlay.SetActive(false);
-            UIVisibilityManager.Instance?.RestoreAll(); 
-        }
-
-        // 포탈 닫기(일반 보스는 “클리어 후” 비활성화)
-        gameObject.SetActive(false);
-
-        UnsubscribeBossDied();
-        UnsubscribePlayerDied();
     }
 
     private void TeleportPlayer(Transform playerTf, Vector3 pos, Quaternion rot)
@@ -398,16 +434,5 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         if (matchRotation) playerTf.rotation = rot;
 
         playerTf.GetComponentInParent<PlayerFallDamage>()?.ResetTracking();
-    }
-
-}
-
-public static class BossEnemyRetryExtensions
-{
-    public static void ResetForRetry_IfExists(this BossEnemy boss)
-    {
-        if (boss == null) return;
-
-        boss.SendMessage("ResetForRetry", SendMessageOptions.DontRequireReceiver);
     }
 }
