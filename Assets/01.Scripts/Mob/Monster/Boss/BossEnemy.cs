@@ -296,6 +296,12 @@ public class BossEnemy : EnemyBase
         var player = playerObj.GetComponentInParent<CharacterBase>();
         if (player == null) return;
 
+        //보스가 꺼져도 러너에서 실행시켜 돌아갈 수 있게 함
+        if (isTutorialBoss && tutorialBossDestroyCo == null)
+        {
+            tutorialBossDestroyCo = CoroutineRunner.Run(CoDestroyTutorialBossAfterKill());
+        }
+
         var info = new DamageInfo(
             amount: 999999f,
             point: player.transform.position,
@@ -304,11 +310,6 @@ public class BossEnemy : EnemyBase
         );
 
         player.ForceKill(info);
-
-        if (isTutorialBoss && tutorialBossDestroyCo == null)
-        {
-            tutorialBossDestroyCo = StartCoroutine(CoDestroyTutorialBossAfterKill());
-        }
     }
 
     private IEnumerator CoDestroyTutorialBossAfterKill()
@@ -328,7 +329,7 @@ public class BossEnemy : EnemyBase
     {
         // 코루틴/연출 플래그 정리
         if (phase3FinaleCo != null) { StopCoroutine(phase3FinaleCo); phase3FinaleCo = null; }
-        if (tutorialBossDestroyCo != null) { StopCoroutine(tutorialBossDestroyCo); tutorialBossDestroyCo = null; }
+        if (tutorialBossDestroyCo != null) { CoroutineRunner.Stop(tutorialBossDestroyCo); tutorialBossDestroyCo = null; }
 
         phase3FinaleStarted = false;
         phase3FinaleKillDone = false;

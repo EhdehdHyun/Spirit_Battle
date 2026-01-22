@@ -19,8 +19,6 @@ public abstract class EnemyBase : CharacterBase
     [Tooltip("몬스터가 공격을 시도하는 기본 거리")]
     public float attackRange = 2f;
 
-    public bool IsDead => !IsAlive;
-
     // 이동/상태머신 담당
     protected Transform target;
 
