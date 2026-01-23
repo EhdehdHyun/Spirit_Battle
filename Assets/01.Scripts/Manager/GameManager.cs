@@ -192,7 +192,7 @@ public class GameManager : MonoBehaviour
                 else btnText.text = "저장하기";
             }
         }
-        if (exitButton != null) exitButton.interactable = canSave;
+        //if (exitButton != null) exitButton.interactable = canSave; // 종료 버튼 인터렉터블 비활성화 코드
     }
 
     private bool CheckEnemiesNearby()
