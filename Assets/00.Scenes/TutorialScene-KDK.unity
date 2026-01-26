@@ -37783,6 +37783,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3728202565177328362, guid: 301257378781c9440b658a128eccf9a4, type: 3}
+      propertyPath: requiredQuestId
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4284226751721798857, guid: 301257378781c9440b658a128eccf9a4, type: 3}
       propertyPath: m_Name
       value: SM_Stone_Obelisk
@@ -37822,13 +37826,13 @@ MonoBehaviour:
   isTutorialBossPortal: 0
   prompt: Press [F]
   bossRoot: {fileID: 0}
-  boss: {fileID: 0}
+  bossSpawnOverride: {fileID: 0}
   spawnDelay: 5
   teleportPlayerOnUse: 1
   teleportTarget: {fileID: 382009520}
   matchRotation: 1
   linkBossUIOnSpawn: 1
-  disableColliderOnUse: 1
+  disableColliderDuringSession: 1
   shrineHudTargetId: 0
   sfxObjectToDisable: {fileID: 641113052}
   sfxAudioSourceToStop: {fileID: 0}
@@ -37838,9 +37842,11 @@ MonoBehaviour:
   bossRespawnPoint: {fileID: 0}
   respawnManager: {fileID: 0}
   returnDelayAfterClear: 3
+  returnPlayerToPortal: 1
   inputController: {fileID: 0}
   playerInput: {fileID: 0}
-  returnPlayerToPortal: 1
+  requiredQuestId: 30006
+  requireQuestActive: 1
 --- !u!4 &641113059 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3476621839791957619, guid: 301257378781c9440b658a128eccf9a4, type: 3}
@@ -53234,13 +53240,13 @@ MonoBehaviour:
   isTutorialBossPortal: 0
   prompt: Press [F]
   bossRoot: {fileID: 1981114373}
-  boss: {fileID: 0}
+  bossSpawnOverride: {fileID: 0}
   spawnDelay: 4.5
   teleportPlayerOnUse: 1
   teleportTarget: {fileID: 1981114374}
   matchRotation: 1
   linkBossUIOnSpawn: 1
-  disableColliderOnUse: 1
+  disableColliderDuringSession: 1
   shrineHudTargetId: 50002
   sfxObjectToDisable: {fileID: 896751376}
   sfxAudioSourceToStop: {fileID: 0}
@@ -53250,9 +53256,11 @@ MonoBehaviour:
   bossRespawnPoint: {fileID: 0}
   respawnManager: {fileID: 0}
   returnDelayAfterClear: 3
+  returnPlayerToPortal: 1
   inputController: {fileID: 0}
   playerInput: {fileID: 0}
-  returnPlayerToPortal: 1
+  requiredQuestId: 30006
+  requireQuestActive: 1
 --- !u!114 &896751384
 MonoBehaviour:
   m_ObjectHideFlags: 0

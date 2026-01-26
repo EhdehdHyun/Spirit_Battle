@@ -15154,7 +15154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0006045627
+      value: 0.000015042884
       objectReference: {fileID: 0}
     - target: {fileID: 4950689097301235468, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_Size
@@ -39027,6 +39027,10 @@ PrefabInstance:
       propertyPath: teleportTarget
       value: 
       objectReference: {fileID: 382009520}
+    - target: {fileID: 3728202565177328362, guid: 301257378781c9440b658a128eccf9a4, type: 3}
+      propertyPath: requiredQuestId
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3728202565177328362, guid: 301257378781c9440b658a128eccf9a4, type: 3}
       propertyPath: bossRespawnPoint
       value: 
@@ -130464,6 +130468,8 @@ MonoBehaviour:
   returnPlayerToPortal: 1
   inputController: {fileID: 0}
   playerInput: {fileID: 0}
+  requiredQuestId: 30006
+  requireQuestActive: 1
 --- !u!114 &2097077365
 MonoBehaviour:
   m_ObjectHideFlags: 0
