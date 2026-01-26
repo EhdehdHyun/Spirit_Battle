@@ -107,4 +107,20 @@ public class MonsterParryHandler : MonoBehaviour, IParryable, IParryReceiver
     {
         telegraph?.TelegraphEnd();
     }
+
+    //브레이크 그로기 등으로 인해 패링원 강제로 없애는 메써드
+    public void ForceCancelParryTelegraph()
+    {
+        // 패링 윈도우 닫기
+        parryWindowOpen = false;
+
+        if (telegraph == null) return;
+
+        // 진행 중인 패링원 코루틴 중단
+        telegraph.StopAllCoroutines();
+
+        // 즉시 숨김
+        telegraph.ParrySuccessHide();
+        telegraph.TelegraphEnd();
+    }
 }

@@ -74,6 +74,8 @@ public abstract class EnemyBase : CharacterBase
     {
         if (isGroggy) yield break;
 
+        GetComponentInChildren<MonsterParryHandler>(true)?.ForceCancelParryTelegraph();
+
         isGroggy = true;
         OnGroggyChanged?.Invoke(true);
 
