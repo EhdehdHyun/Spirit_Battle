@@ -104,8 +104,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.10082771, y: 0.7516413, z: 0.033671606}
-  m_Center: {x: -0.0030320422, y: -0.23783198, z: 0.0005106839}
+  m_Size: {x: 0.5446056, y: 1.189479, z: 0.033671606}
+  m_Center: {x: 0.011698037, y: -0.2538246, z: 0.0005106833}
 --- !u!114 &-4632629936582059085
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,3 +120,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemKey: 3001
   quantity: 1
+  questTargetId: 0
