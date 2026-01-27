@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Teleport
   layers:
   - Default
   - TransparentFX
@@ -15,7 +16,7 @@ TagManager:
   - player
   - Monster
   - Boss
-  - 
+  - Teleport
   - 
   - Interactable
   - Telegraph
