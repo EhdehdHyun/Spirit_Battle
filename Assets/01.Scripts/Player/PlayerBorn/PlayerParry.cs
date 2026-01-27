@@ -63,7 +63,7 @@ public class PlayerParry : MonoBehaviour
             Debug.LogWarning("[Parry] attackerTransform is null");
             return;
         }
-        
+
         combat.OnParrySuccess(lastAttacker, lastHitPoint);
     }
 
@@ -183,4 +183,13 @@ public class PlayerParry : MonoBehaviour
         // 안전한 이후 처리
     }
 
+    public void ForceCancelParry()
+    {
+        tryWindowOpen = false;
+        isParryStance = false;
+        consumedThisStance = false;
+
+        lastAttacker = null;
+        lastHitPoint = Vector3.zero;
+    }
 }
