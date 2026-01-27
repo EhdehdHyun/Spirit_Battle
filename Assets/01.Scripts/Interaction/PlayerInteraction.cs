@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections; // 코루틴 사용을 위해 추가
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -12,11 +13,13 @@ public class PlayerInteraction : MonoBehaviour
     [Header("UI")]
     [SerializeField] private Image crosshair;
     [SerializeField] private TextMeshProUGUI interactText;
+    [SerializeField] private GameObject noticeUI;
 
     private IInteractable currentTarget;
 
     private bool isLocked;
     private bool waitForFRelease;
+    private bool isRegistered = false;
 
     public bool IsWaitingForRelease => waitForFRelease;
 
@@ -27,11 +30,13 @@ public class PlayerInteraction : MonoBehaviour
 
         if (interactText != null)
             interactText.gameObject.SetActive(false);
+
+        if (noticeUI != null)
+            noticeUI.SetActive(false);
     }
 
     private void Update()
     {
-        // 대화 종료 후 F 키 릴리즈 대기
         if (waitForFRelease)
         {
             if (Input.GetKeyUp(KeyCode.F))
@@ -42,7 +47,6 @@ public class PlayerInteraction : MonoBehaviour
 
         if (isLocked)
         {
-            // 대화 중엔 Next만 허용
             if (DialogueManager.Instance != null &&
                 DialogueManager.Instance.IsDialogueActive &&
                 Input.GetKeyDown(KeyCode.F))
@@ -57,7 +61,24 @@ public class PlayerInteraction : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             TryInteract();
+            HandleFirstNotice();
         }
+    }
+
+    private void HandleFirstNotice()
+    {
+        if (!isRegistered && currentTarget != null)
+        {
+            isRegistered = true;
+            StopAllCoroutines();
+            StartCoroutine(NoticeRoutine());
+        }
+    }
+    IEnumerator NoticeRoutine()
+    {
+        if (noticeUI != null) noticeUI.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        if (noticeUI != null) noticeUI.SetActive(false);
     }
 
     private void UpdateRaycast()
@@ -98,10 +119,9 @@ public class PlayerInteraction : MonoBehaviour
             interactText.gameObject.SetActive(false);
     }
 
-    //  대화 종료 시 호출
     public void OnDialogueEnded()
     {
         isLocked = false;
-        waitForFRelease = true; // 반드시 F를 떼야 재개 가능
+        waitForFRelease = true;
     }
 }
