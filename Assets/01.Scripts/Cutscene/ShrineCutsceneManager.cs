@@ -10,9 +10,6 @@ enum CutsceneCameraMode
 
 public class ShrineCutsceneManager : MonoBehaviour
 {
-    /* =======================
-     * Cutscene Actors
-     * ======================= */
     [Header("Cutscene Actor")]
     public GameObject cutscenePlayerPrefab;
     public Transform cutsceneSpawnPoint;
@@ -26,9 +23,6 @@ public class ShrineCutsceneManager : MonoBehaviour
     private Animator cutsceneAnimator;
     private Animator cutsceneNpcAnimator;
 
-    /* =======================
-     * UI
-     * ======================= */
     [Header("UI")]
     public GameObject playerUIRoot;
     public GameObject cutsceneUIRoot;
@@ -38,16 +32,13 @@ public class ShrineCutsceneManager : MonoBehaviour
     public RectTransform bottomBar;
     public float letterboxHeight = 120f;
     public float letterboxDuration = 0.4f;
-    
+
     [Header("Interaction UI")]
     [SerializeField] private GameObject interactionCross;
 
     [Header("Dialogue")]
     public TMPro.TMP_Text dialogueText;
 
-    /* =======================
-     * Player & Camera
-     * ======================= */
     [Header("Player & Camera")]
     public PlayerInputController realPlayer;
     public Camera playerCamera;
@@ -59,7 +50,7 @@ public class ShrineCutsceneManager : MonoBehaviour
     public Transform camShrineFocus;
 
     [Header("FaceToFace Camera Follow")]
-    public float faceToFaceFollowSpeed = 1.0f; // 플레이어 속도에 대한 비율
+    public float faceToFaceFollowSpeed = 1.0f;
 
     [Header("Shrine Target")]
     public Transform shrineTarget;
@@ -68,33 +59,24 @@ public class ShrineCutsceneManager : MonoBehaviour
 
     private Vector3 prevPlayerPos;
 
-    /* =======================
-     * Movement
-     * ======================= */
     [Header("Movement")]
     public Transform walkEndPoint;
     public float playerWalkSpeed = 1.0f;
     public float npcWalkSpeed = 0.6f;
 
-    /* =======================
-     * Cutscene State Flags
-     * ======================= */
     private bool dialogueFinished;
     bool isCutscenePlaying = false;
     bool isExiting = false;
     Coroutine cutsceneRoutine;
 
-    /* =======================
-     * Public Entry
-     * ======================= */
     public void PlayCutscene()
     {
         GlobalInputBlocker.SetKeyboardBlocked(true, allowEsc: true);
-        
+
         if (interactionCross != null)
             interactionCross.SetActive(false);
 
-        var fall = realPlayer.GetComponentInParent<PlayerFallDamage>(); //낙뎀 방지를 위해 끄기
+        var fall = realPlayer.GetComponentInParent<PlayerFallDamage>();
         if (fall != null) fall.enabled = false;
 
         TutorialManager.Instance?.EndTutorialUI();
@@ -105,12 +87,10 @@ public class ShrineCutsceneManager : MonoBehaviour
 
         Rigidbody rb = realPlayer.GetComponent<Rigidbody>();
 
-        //1. 먼저 물리 OFF
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = true;
 
-        //2. 그 다음 숨김
         realPlayer.transform.position = new Vector3(220, 9f, 346);
 
         cutsceneRoutine = StartCoroutine(Co_PlayCutscene());
@@ -125,9 +105,6 @@ public class ShrineCutsceneManager : MonoBehaviour
         }
     }
 
-    /* =======================
-     * Camera Control
-     * ======================= */
     void LateUpdate()
     {
         if (!cutsceneCamera.gameObject.activeSelf || cutscenePlayer == null) return;
@@ -162,15 +139,12 @@ public class ShrineCutsceneManager : MonoBehaviour
 
     void FollowFaceToFace()
     {
-        // 플레이어 이동량 계산
         Vector3 playerDelta = cutscenePlayer.transform.position - prevPlayerPos;
 
-        // 플레이어가 이동한 만큼 FaceToFace 오브젝트를 -X로 이동
         camFaceToFace.position += Vector3.left * playerDelta.magnitude * faceToFaceFollowSpeed;
 
         prevPlayerPos = cutscenePlayer.transform.position;
 
-        // 카메라는 FaceToFace 오브젝트만 따라감
         cutsceneCamera.transform.position =
             Vector3.Lerp(
                 cutsceneCamera.transform.position,
@@ -178,7 +152,6 @@ public class ShrineCutsceneManager : MonoBehaviour
                 Time.deltaTime * 3f
             );
 
-        // 항상 두 캐릭터 정면을 바라봄
         Vector3 mid =
             (cutscenePlayer.transform.position + cutsceneNpc.transform.position) * 0.5f;
 
@@ -200,44 +173,37 @@ public class ShrineCutsceneManager : MonoBehaviour
                 Time.deltaTime * 2f
             );
 
-        //  rotation 직접 건드리지 말고 LookAt으로 통일
         cutsceneCamera.transform.LookAt(
             shrineTarget.position + Vector3.up * 2.0f
         );
     }
 
-    /* =======================
-     * Main Cutscene Flow
-     * ======================= */
     IEnumerator Co_PlayCutscene()
     {
-        UIVisibilityManager.Instance?.HideAllExceptGameOver(); 
-        
+        UIVisibilityManager.Instance?.HideAllExceptGameOver();
+
         if (isExiting)
             yield break;
 
         isExiting = false;
         dialogueFinished = false;
 
-        // 실제 플레이어 숨김 (비활성화 X)
         realPlayer.ResetInputState();
-        realPlayer.Lock(); // 입력 잠금 
+        realPlayer.Lock();
 
 
         Rigidbody rb = realPlayer.GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.isKinematic = true; //컷씬 동안 물리 OFF
+        rb.isKinematic = true;
         yield return null;
 
-        // 카메라 / UI 전환
         playerCamera.gameObject.SetActive(false);
         playerUIRoot.SetActive(false);
 
         cutsceneUIRoot.SetActive(true);
         cutsceneCamera.gameObject.SetActive(true);
 
-        // 카메라 초기 스냅
         cutsceneCamera.transform.position = camStartCorner.position;
         cutsceneCamera.transform.rotation = camStartCorner.rotation;
 
@@ -245,10 +211,8 @@ public class ShrineCutsceneManager : MonoBehaviour
 
         cameraMode = CutsceneCameraMode.StartCorner;
 
-        // 대사 시작
         StartCoroutine(Co_PlayDialogue());
 
-        // 컷씬 캐릭터 생성
         cutscenePlayer = Instantiate(
             cutscenePlayerPrefab,
             cutsceneSpawnPoint.position,
@@ -260,7 +224,7 @@ public class ShrineCutsceneManager : MonoBehaviour
             npcSpawnPoint.position,
             npcSpawnPoint.rotation
         );
-        //Face To Face()에 카메라가 따라가기 위한 값 저장
+
         prevPlayerPos = cutscenePlayer.transform.position;
 
         cutsceneAnimator = cutscenePlayer.GetComponent<Animator>();
@@ -269,7 +233,6 @@ public class ShrineCutsceneManager : MonoBehaviour
         cutsceneAnimator.Play("CS_WalkToShrine");
         cutsceneNpcAnimator.Play("CS_Walk");
 
-        // 이동 루프
         while (Vector3.Distance(cutscenePlayer.transform.position, walkEndPoint.position) > 0.1f)
         {
             Vector3 moveDir =
@@ -294,7 +257,7 @@ public class ShrineCutsceneManager : MonoBehaviour
 
             yield return null;
         }
-        //대사 끝날 때까지 대기
+
         while (!dialogueFinished)
         {
             yield return null;
@@ -303,9 +266,6 @@ public class ShrineCutsceneManager : MonoBehaviour
         yield break;
     }
 
-    /* =======================
-     * Dialogue Timeline
-     * ======================= */
     IEnumerator Co_PlayDialogue()
     {
         dialogueText.gameObject.SetActive(true);
@@ -357,9 +317,6 @@ public class ShrineCutsceneManager : MonoBehaviour
         dialogueFinished = true;
     }
 
-    /* =======================
-     * Cutscene End
-     * ======================= */
     void OnCutsceneEnd()
     {
         if (isExiting) return;
@@ -373,7 +330,7 @@ public class ShrineCutsceneManager : MonoBehaviour
         StartCoroutine(Co_ExitCutscene());
     }
 
-    void SkipCutscene()
+    public void SkipCutscene()
     {
         if (isExiting) return;
         isExiting = true;
@@ -394,8 +351,6 @@ public class ShrineCutsceneManager : MonoBehaviour
 
     IEnumerator Co_ExitCutscene()
     {
-        Debug.Log("[EXIT] spawnPos = " + walkEndPoint.position);
-
         Vector3 spawnPos = walkEndPoint.position;
         Quaternion spawnRot =
             Quaternion.Euler(0, playerCamera.transform.eulerAngles.y, 0);
@@ -407,18 +362,15 @@ public class ShrineCutsceneManager : MonoBehaviour
         PhysicsCharacter phys = realPlayer.GetComponent<PhysicsCharacter>();
         Animator anim = realPlayer.GetComponent<Animator>();
 
-        //PhysicsCharacter 완전 중지
         phys.enabled = false;
 
         rb.isKinematic = true;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        //Physics 캐릭터는 rb.position으로 이동
         rb.position = spawnPos;
         rb.rotation = spawnRot;
 
-        // 한 프레임 안정화
         yield return null;
 
         rb.isKinematic = false;
@@ -426,7 +378,7 @@ public class ShrineCutsceneManager : MonoBehaviour
         phys.ResetMovementState();
         phys.enabled = true;
 
-        var fall = realPlayer.GetComponentInParent<PlayerFallDamage>(); //낙뎀 끈 거 다시 키기
+        var fall = realPlayer.GetComponentInParent<PlayerFallDamage>();
         if (fall != null)
         {
             fall.enabled = true;
@@ -449,18 +401,15 @@ public class ShrineCutsceneManager : MonoBehaviour
         GlobalInputBlocker.SetKeyboardBlocked(false);
 
         UIVisibilityManager.Instance?.RestoreAll();
-        
-        
+
+
         if (interactionCross != null)
             interactionCross.SetActive(true);
-        
+
         isCutscenePlaying = false;
         isExiting = false;
     }
 
-    /* =======================
-     * Letterbox
-     * ======================= */
     IEnumerator Co_OpenLetterbox()
     {
         float t = 0f;
