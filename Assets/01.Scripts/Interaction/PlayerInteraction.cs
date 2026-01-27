@@ -69,9 +69,14 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (!isRegistered && currentTarget != null)
         {
-            isRegistered = true;
-            StopAllCoroutines();
-            StartCoroutine(NoticeRoutine());
+            Component targetComp = currentTarget as Component;
+
+            if (targetComp != null && targetComp.CompareTag("Teleport"))
+            {
+                isRegistered = true;
+                StopAllCoroutines();
+                StartCoroutine(NoticeRoutine());
+            }
         }
     }
     IEnumerator NoticeRoutine()

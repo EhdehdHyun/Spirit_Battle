@@ -19996,7 +19996,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00029346286
+      value: 0.0002451186
       objectReference: {fileID: 0}
     - target: {fileID: 4950689097301235468, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_Size
@@ -37878,6 +37878,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 539152524218077282, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
+      propertyPath: m_TagString
+      value: Teleport
+      objectReference: {fileID: 0}
     - target: {fileID: 776430597512349571, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: playOnAwake
       value: 0
@@ -38024,15 +38028,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2035644770206660227, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: portalEffectColor.b
-      value: 0.9339623
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2035644770206660227, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: portalEffectColor.g
-      value: 0.010156848
+      value: 0.78039217
       objectReference: {fileID: 0}
     - target: {fileID: 2035644770206660227, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: portalEffectColor.r
-      value: 0.004405493
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 3005780801239697593, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: TriggerModule.enabled
@@ -66316,7 +66320,7 @@ Transform:
   m_GameObject: {fileID: 680367618}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 374.9, y: 5.85, z: 340.93}
+  m_LocalPosition: {x: 374.64, y: 5.85, z: 343.57}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -74713,6 +74717,10 @@ PrefabInstance:
     - target: {fileID: 539152524218077282, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: m_Layer
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 539152524218077282, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
+      propertyPath: m_TagString
+      value: Teleport
       objectReference: {fileID: 0}
     - target: {fileID: 3468674793562794399, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: m_Layer
@@ -131155,7 +131163,7 @@ ParentConstraint:
   m_TranslationAtRest: {x: 0, y: 0.016538288, z: 1.3612851}
   m_RotationAtRest: {x: -0.00011440561, y: 90, z: 89.999954}
   m_TranslationOffsets:
-  - {x: -0.0093688965, y: -0.007923126, z: 0.0010070801}
+  - {x: -0.0093688965, y: -0.007923126, z: 0.0009765625}
   m_RotationOffsets:
   - {x: -0.20564649, y: 0.17038561, z: -4.221111}
   m_AffectTranslationX: 1
@@ -134469,6 +134477,10 @@ PrefabInstance:
     - target: {fileID: 539152524218077282, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: m_Layer
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 539152524218077282, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
+      propertyPath: m_TagString
+      value: Teleport
       objectReference: {fileID: 0}
     - target: {fileID: 3468674793562794399, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: m_Layer
@@ -149144,6 +149156,10 @@ PrefabInstance:
     - target: {fileID: 539152524218077282, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: m_Layer
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 539152524218077282, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
+      propertyPath: m_TagString
+      value: Teleport
       objectReference: {fileID: 0}
     - target: {fileID: 3468674793562794399, guid: 2557b316da33b034986a4b68ca98a463, type: 3}
       propertyPath: m_Layer
