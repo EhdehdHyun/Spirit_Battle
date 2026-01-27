@@ -35,7 +35,7 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
     {
         base.OnDamaged(info);
         if (IsDead) return;
-        
+
         damageFeedback?.Play();
 
         TryAccumulateBreak();
@@ -50,7 +50,7 @@ public class NormalEnemy : EnemyBase, IAoeDamageable
 
         // 죽는 애니 트리거
         monsterAnim?.PlayDie();
-        
+
         if (monsterId > 0)
         {
             QuestManager.Instance.OnMonsterKilled(monsterId);

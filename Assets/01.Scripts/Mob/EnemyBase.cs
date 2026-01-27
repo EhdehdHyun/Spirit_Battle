@@ -45,6 +45,7 @@ public abstract class EnemyBase : CharacterBase
     protected Animator anim;
     private Coroutine groggyCo;
     protected EnemyAIController ai;
+    private bool _dieHandled = false; //중복 사망 처리 방지용
 
     protected override void Awake()
     {
@@ -73,6 +74,8 @@ public abstract class EnemyBase : CharacterBase
     private IEnumerator BreakGroggyRoutine()
     {
         if (isGroggy) yield break;
+
+        GetComponentInChildren<MonsterParryHandler>(true)?.ForceCancelParryTelegraph();
 
         isGroggy = true;
         OnGroggyChanged?.Invoke(true);
@@ -106,6 +109,9 @@ public abstract class EnemyBase : CharacterBase
 
     public override void OnDie(DamageInfo info)
     {
+        if (_dieHandled) return; //사망 중복 처리 방지
+        _dieHandled = true;
+
         base.OnDie(info);
 
         if (groggyCo != null)

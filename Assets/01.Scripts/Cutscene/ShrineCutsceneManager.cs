@@ -38,6 +38,9 @@ public class ShrineCutsceneManager : MonoBehaviour
     public RectTransform bottomBar;
     public float letterboxHeight = 120f;
     public float letterboxDuration = 0.4f;
+    
+    [Header("Interaction UI")]
+    [SerializeField] private GameObject interactionCross;
 
     [Header("Dialogue")]
     public TMPro.TMP_Text dialogueText;
@@ -87,6 +90,9 @@ public class ShrineCutsceneManager : MonoBehaviour
     public void PlayCutscene()
     {
         GlobalInputBlocker.SetKeyboardBlocked(true, allowEsc: true);
+        
+        if (interactionCross != null)
+            interactionCross.SetActive(false);
 
         var fall = realPlayer.GetComponentInParent<PlayerFallDamage>(); //낙뎀 방지를 위해 끄기
         if (fall != null) fall.enabled = false;
@@ -443,6 +449,10 @@ public class ShrineCutsceneManager : MonoBehaviour
         GlobalInputBlocker.SetKeyboardBlocked(false);
 
         UIVisibilityManager.Instance?.RestoreAll();
+        
+        
+        if (interactionCross != null)
+            interactionCross.SetActive(true);
         
         isCutscenePlaying = false;
         isExiting = false;

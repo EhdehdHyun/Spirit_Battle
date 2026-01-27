@@ -29,6 +29,7 @@ public class BossEnemy : EnemyBase
     public float bossBreakGroggyDuration = 5f;
     [Range(0f, 5f)] public float bossGroggyExtraDamageRatio = 0.2f;
     public string bossBreakGroggyTriggerName = "BreakGroggy";
+    private MonsterParryHandler _parryHandler;
 
     [Header("튜토보스 3페이즈 강제 종료")]
     [SerializeField] private bool isTutorialBoss = false;
@@ -86,6 +87,8 @@ public class BossEnemy : EnemyBase
         // 보스 attackRange 동기화
         if (meleeAttack != null)
             attackRange = meleeAttack.hitRadius;
+
+        _parryHandler = GetComponentInChildren<MonsterParryHandler>(true);
     }
 
     public void InitializeForSession(Transform player)
@@ -226,6 +229,11 @@ public class BossEnemy : EnemyBase
     private IEnumerator BreakGroggyRoutine()
     {
         if (isGroggy) yield break;
+
+        if (_parryHandler == null)
+            _parryHandler = GetComponentInChildren<MonsterParryHandler>(true);
+
+        _parryHandler?.ForceCancelParryTelegraph();
 
         isGroggy = true;
         BossOnGroggyChanged?.Invoke(true);
