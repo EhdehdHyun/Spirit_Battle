@@ -97,44 +97,50 @@ public class GameManager : MonoBehaviour
         {
             HandleEscInput();
         }
-
-        if (!GlobalInputBlocker.IsKeyBlocked(KeyCode.M) && Input.GetKeyDown(KeyCode.M))
+        else if (!GlobalInputBlocker.IsKeyBlocked(KeyCode.M) && Input.GetKeyDown(KeyCode.M))
         {
-            if (!isMenuOpen)
-            {
-                ToggleMap();
-            }
+            OpenMapAndCloseOthers();
         }
+        else if (!GlobalInputBlocker.IsKeyBlocked(KeyCode.Tab) && Input.GetKeyDown(KeyCode.Tab))
+        {
+            OpenInventoryAndCloseOthers();
+        }
+    }
+
+    private void OpenInventoryAndCloseOthers()
+    {
+        if (isMenuOpen) ToggleMenu();
+        if (isMapOpen) ToggleMap();
+        if (questPanel != null && questPanel.activeSelf) questPanel.SetActive(false);
+
+        if (inventoryManager != null)
+        {
+            inventoryManager.ToggleInventory();
+        }
+    }
+
+    private void OpenMapAndCloseOthers()
+    {
+        if (isMenuOpen) ToggleMenu();
+
+        if (inventoryManager != null && inventoryPanel.activeSelf)
+            inventoryManager.ToggleInventory();
+
+        if (questPanel != null && questPanel.activeSelf) questPanel.SetActive(false);
+
+        ToggleMap();
     }
 
     private void HandleEscInput()
     {
-        if (isMenuOpen)
+        if (IsAnyPopupOpen)
+        {
+            CloseAllPopups();
+        }
+        else
         {
             ToggleMenu();
-            return;
         }
-
-        if (isMapOpen)
-        {
-            ToggleMap();
-            return;
-        }
-
-        if (inventoryManager != null && inventoryPanel != null && inventoryPanel.activeSelf)
-        {
-            inventoryManager.ToggleInventory();
-            return;
-        }
-
-        if (questPanel != null && questPanel.activeSelf)
-        {
-            questPanel.SetActive(false);
-            if (CursorManager.Instance != null) CursorManager.Instance.SetUIActive(false);
-            return;
-        }
-
-        ToggleMenu();
     }
 
     public void CloseAllPopups()
@@ -150,6 +156,7 @@ public class GameManager : MonoBehaviour
         if (questPanel != null && questPanel.activeSelf)
         {
             questPanel.SetActive(false);
+            if (CursorManager.Instance != null) CursorManager.Instance.SetUIActive(false);
         }
         if (isMenuOpen)
         {
@@ -163,9 +170,7 @@ public class GameManager : MonoBehaviour
         if (menuPanel != null) menuPanel.SetActive(isMenuOpen);
 
         if (CursorManager.Instance != null)
-        {
             CursorManager.Instance.SetUIActive(isMenuOpen);
-        }
 
         if (isMenuOpen)
         {
@@ -186,9 +191,7 @@ public class GameManager : MonoBehaviour
             mapPanel.SetActive(isMapOpen);
 
         if (CursorManager.Instance != null)
-        {
             CursorManager.Instance.SetUIActive(isMapOpen);
-        }
     }
 
     private void UpdateMenuButtons()
