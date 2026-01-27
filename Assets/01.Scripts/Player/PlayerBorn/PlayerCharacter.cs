@@ -36,6 +36,11 @@ public class PlayerCharacter : CharacterBase
 
     public override void OnDie(DamageInfo info)
     {
+        base.OnDie(info);
+
+        // 죽음 전이로 EvParryEnd 못 타도 상태가 남지 않게 강제 정리
+        parry?.ForceCancelParry();
+
         //게임오버 됐을 때 게임오버 화면 제외 모든 UI 숨기는 기능
         UIVisibilityManager.Instance?.HideAllExceptGameOver();
 
