@@ -135,20 +135,6 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (GlobalInputBlocker.IsKeyBlocked(KeyCode.Tab)) return;
-
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            if (!isOpen && GameManager.Instance.IsAnyPopupOpen)
-            {
-                return;
-            }
-            ToggleInventory();
-        }
-    }
-
     private void InitSlots()
     {
         int total = TotalSlotCount;
