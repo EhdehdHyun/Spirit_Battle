@@ -114,11 +114,14 @@ public class MonsterAnimation : MonoBehaviour
     {
         if (animator == null) return;
 
+        if (deathLocked) return; //이미 사망 처리된 상태면 다시 쏘지 않게 막음
+
         deathLocked = true;
         animator.ResetTrigger(hitTriggerHash);
 
         if (!string.IsNullOrEmpty(dieTriggerParm))
         {
+            animator.ResetTrigger(dieTriggerHash); //혹시 몰라서 트리거 꼬이는 거 막을려고 
             animator.SetTrigger(dieTriggerHash);
         }
     }

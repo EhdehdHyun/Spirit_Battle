@@ -15154,7 +15154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.0001735589
+      value: 0.0000540011
       objectReference: {fileID: 0}
     - target: {fileID: 4950689097301235468, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_Size
@@ -41144,7 +41144,7 @@ MonoBehaviour:
   currentExp: 0
   maxStamina: 100
   currentStamina: 100
-  regenPerSecond: 15
+  regenPerSecond: 10
   maxDashCount: 2
   curDashCount: 0
   combatRunStaminaPerSec: 10
