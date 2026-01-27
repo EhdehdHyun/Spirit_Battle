@@ -13,7 +13,6 @@ public class ChestInteractable : MonoBehaviour, IInteractable
     [Header("일반 몬스터 감지 (가디언 없을 때)")]
     [SerializeField] private float detectRadius = 5.0f;
     [SerializeField] private LayerMask monsterLayer;
-    [SerializeField] private TextMeshProUGUI warningText;
 
     [Header("애니메이션 설정")]
     [SerializeField] private Animator animator;
@@ -55,7 +54,6 @@ public class ChestInteractable : MonoBehaviour, IInteractable
             catch (Exception e) { Debug.LogError($"Loader Error: {e.Message}"); }
         }
 
-        if (warningText != null) warningText.gameObject.SetActive(false);
     }
 
     public string GetInteractPrompt()
@@ -110,17 +108,7 @@ public class ChestInteractable : MonoBehaviour, IInteractable
     }
     private void ShowWarningMessage(string message)
     {
-        if (warningText == null) return;
-        if (warningCoroutine != null) StopCoroutine(warningCoroutine);
-        warningCoroutine = StartCoroutine(CoShowWarning(message));
-    }
-
-    private IEnumerator CoShowWarning(string message)
-    {
-        warningText.text = message;
-        warningText.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2.0f);
-        warningText.gameObject.SetActive(false);
+        TutorialManager.Instance?.ShowSimpleMessage(message, 2.0f);
     }
 
     private void OnDrawGizmosSelected()
