@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections; // 코루틴 사용을 위해 추가
+using System.Collections;
 
 public class PlayerInteraction : MonoBehaviour
 {
@@ -37,14 +37,6 @@ public class PlayerInteraction : MonoBehaviour
 
     private void Update()
     {
-        if (waitForFRelease)
-        {
-            if (Input.GetKeyUp(KeyCode.F))
-                waitForFRelease = false;
-
-            return;
-        }
-
         if (isLocked)
         {
             if (DialogueManager.Instance != null &&
@@ -56,7 +48,15 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
+        if (waitForFRelease)
+        {
+            if (Input.GetKeyUp(KeyCode.F) || !Input.GetKey(KeyCode.F))
+                waitForFRelease = false;
+        }
+
         UpdateRaycast();
+
+        if (waitForFRelease) return;
 
         if (Input.GetKeyDown(KeyCode.F))
         {
@@ -79,6 +79,7 @@ public class PlayerInteraction : MonoBehaviour
             }
         }
     }
+
     IEnumerator NoticeRoutine()
     {
         if (noticeUI != null) noticeUI.SetActive(true);
@@ -100,7 +101,14 @@ public class PlayerInteraction : MonoBehaviour
 
         if (interactText != null)
         {
-            interactText.gameObject.SetActive(currentTarget != null);
+            if (currentTarget != null)
+            {
+                interactText.gameObject.SetActive(true);
+            }
+            else
+            {
+                interactText.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -115,7 +123,6 @@ public class PlayerInteraction : MonoBehaviour
         currentTarget.Interact(this);
     }
 
-
     public void LockInteract()
     {
         isLocked = true;
@@ -127,6 +134,14 @@ public class PlayerInteraction : MonoBehaviour
     public void OnDialogueEnded()
     {
         isLocked = false;
-        waitForFRelease = true;
+        waitForFRelease = Input.GetKey(KeyCode.F);
+        RefreshInteraction();
+    }
+
+    public void RefreshInteraction()
+    {
+        currentTarget = null;
+        if (interactText != null) interactText.gameObject.SetActive(false);
+        UpdateRaycast();
     }
 }
