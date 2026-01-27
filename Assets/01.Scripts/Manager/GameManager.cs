@@ -2,7 +2,6 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.IO;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -19,12 +18,12 @@ public class GameManager : MonoBehaviour
     public AudioClip mainBgm;
 
     [Header("UI Objects")]
-    public GameObject menuPanel;       // 설정(메뉴) 창 (P키)
+    public GameObject menuPanel;
     public GameObject saveMessageText;
 
     [Header("Other UI Panels")]
     public GameObject inventoryPanel;
-    public GameObject mapPanel;        // 지도 (M키)
+    public GameObject mapPanel;
     public GameObject questPanel;
 
     [Header("Menu Buttons")]
@@ -47,8 +46,9 @@ public class GameManager : MonoBehaviour
             bool isSaveMenuOpen = (menuPanel != null && menuPanel.activeSelf);
             bool isInvOpen = (inventoryPanel != null && inventoryPanel.activeSelf);
             bool isMapOpen = (mapPanel != null && mapPanel.activeSelf);
+            bool isQuestOpen = (questPanel != null && questPanel.activeSelf);
 
-            return isSaveMenuOpen || isInvOpen || isMapOpen;
+            return isSaveMenuOpen || isInvOpen || isMapOpen || isQuestOpen;
         }
     }
 
@@ -72,6 +72,9 @@ public class GameManager : MonoBehaviour
         {
             SoundManager.Instance.PlayBGM(mainBgm);
         }
+
+        if (CursorManager.Instance != null)
+            CursorManager.Instance.SetUIActive(false);
     }
 
     IEnumerator LoadGameCo()
@@ -88,37 +91,52 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.P) && Input.GetKeyDown(KeyCode.P))
+        if (IsUIBlocked) return;
+
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isMenuOpen)
-            {
-                ToggleMenu();
-            }
-            else
-            {
-                CloseAllPopups();
-                ToggleMenu();
-            }
+            HandleEscInput();
         }
-        if (!IsUIBlocked && !GlobalInputBlocker.IsKeyBlocked(KeyCode.M) && Input.GetKeyDown(KeyCode.M))
+
+        if (!GlobalInputBlocker.IsKeyBlocked(KeyCode.M) && Input.GetKeyDown(KeyCode.M))
         {
             if (!isMenuOpen)
             {
-                if (isMapOpen)
-                {
-                    ToggleMap();
-                }
-                else
-                {
-                    if (inventoryPanel != null && inventoryPanel.activeSelf)
-                    {
-                        inventoryManager.ToggleInventory();
-                    }
-                    ToggleMap();
-                }
+                ToggleMap();
             }
         }
     }
+
+    private void HandleEscInput()
+    {
+        if (isMenuOpen)
+        {
+            ToggleMenu();
+            return;
+        }
+
+        if (isMapOpen)
+        {
+            ToggleMap();
+            return;
+        }
+
+        if (inventoryManager != null && inventoryPanel != null && inventoryPanel.activeSelf)
+        {
+            inventoryManager.ToggleInventory();
+            return;
+        }
+
+        if (questPanel != null && questPanel.activeSelf)
+        {
+            questPanel.SetActive(false);
+            if (CursorManager.Instance != null) CursorManager.Instance.SetUIActive(false);
+            return;
+        }
+
+        ToggleMenu();
+    }
+
     public void CloseAllPopups()
     {
         if (inventoryManager != null && inventoryPanel != null && inventoryPanel.activeSelf)
@@ -133,6 +151,10 @@ public class GameManager : MonoBehaviour
         {
             questPanel.SetActive(false);
         }
+        if (isMenuOpen)
+        {
+            ToggleMenu();
+        }
     }
 
     public void ToggleMenu()
@@ -140,20 +162,22 @@ public class GameManager : MonoBehaviour
         isMenuOpen = !isMenuOpen;
         if (menuPanel != null) menuPanel.SetActive(isMenuOpen);
 
+        if (CursorManager.Instance != null)
+        {
+            CursorManager.Instance.SetUIActive(isMenuOpen);
+        }
+
         if (isMenuOpen)
         {
             Time.timeScale = 0f;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
             UpdateMenuButtons();
         }
         else
         {
             Time.timeScale = 1f;
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
         }
     }
+
     public void ToggleMap()
     {
         isMapOpen = !isMapOpen;
@@ -161,15 +185,9 @@ public class GameManager : MonoBehaviour
         if (mapPanel != null)
             mapPanel.SetActive(isMapOpen);
 
-        if (isMapOpen)
+        if (CursorManager.Instance != null)
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            CursorManager.Instance.SetUIActive(isMapOpen);
         }
     }
 
@@ -192,7 +210,6 @@ public class GameManager : MonoBehaviour
                 else btnText.text = "저장하기";
             }
         }
-        //if (exitButton != null) exitButton.interactable = canSave; // 종료 버튼 인터렉터블 비활성화 코드
     }
 
     private bool CheckEnemiesNearby()

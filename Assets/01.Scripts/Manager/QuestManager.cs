@@ -377,4 +377,15 @@ public class QuestManager : MonoBehaviour
 
         return questProgress[questId];
     }
+    public bool IsQuestActive(int questId)
+    {
+        return questStates.TryGetValue(questId, out var state)
+               && state == QuestState.Active;
+    }
+
+    public bool IsQuestCompleted(int questId)
+    {
+        return questStates.TryGetValue(questId, out var state)
+               && (state == QuestState.Completed || state == QuestState.RewardClaimed);
+    }
 }

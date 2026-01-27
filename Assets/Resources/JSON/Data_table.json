@@ -5,11 +5,11 @@
       "ItemName": "체력 포션",
       "ItemType": 0,
       "Rarity": 0,
-      "HealAmount": 30,
+      "HealAmount": 20,
       "MaxStack": 999,
       "IsConsumable": true,
       "Icon": "hp_potion_icon",
-      "Description": "체력을 30 회복시켜주는 기본 포션입니다.",
+      "Description": "체력을 20 회복시켜주는 기본 포션입니다.",
       "ItemTypes": [ 0, 1, 2, 3 ],
       "Raritys": [ 0, 1, 2, 3, 4 ]
     },

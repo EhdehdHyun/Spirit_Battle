@@ -7,14 +7,15 @@ public class MapController : MonoBehaviour
     void Start()
     {
         if (worldMapPanel != null)
-            worldMapPanel.SetActive(false);   // 시작 시 꺼두기
+            worldMapPanel.SetActive(false);
 
-        // 게임 시작 시 마우스 잠금 (필요하다면)
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // [주석 처리] 커서 초기화는 이제 GameManager가 함
+        // Cursor.lockState = CursorLockMode.Locked;
+        // Cursor.visible = false;
     }
 
-    void Update()
+    // 이제 M키 입력은 GameManager가 받아서 처리합니다.
+    /* void Update()
     {
         if (GlobalInputBlocker.IsKeyBlocked(KeyCode.M)) return;
         if (Input.GetKeyDown(KeyCode.M))
@@ -22,23 +23,26 @@ public class MapController : MonoBehaviour
             ToggleMap();
         }
     }
+    */
 
-    private void ToggleMap()
+    public void ToggleMap()
     {
         bool isMapActive = !worldMapPanel.activeSelf;
         worldMapPanel.SetActive(isMapActive);
 
+        // [주석 처리] 커서 제어권은 CursorManager에게 넘어갔으므로 여기서 삭제
+        /*
         if (isMapActive)
         {
-            // 지도가 켜짐 -> 마우스 잠금 해제 및 보이기
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
         else
         {
-            // 지도가 꺼짐 -> 마우스 다시 잠금 및 숨기기
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+        */
+
     }
 }

@@ -53,6 +53,10 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
     [SerializeField] private PlayerInputController inputController;
     [SerializeField] private PlayerInput playerInput;
 
+    [Header("Quest Gate")]
+    [SerializeField] private int requiredQuestId = 30006;
+    [SerializeField] private bool requireQuestActive = true;
+    
     private Collider _col;
     private Coroutine _co;
 
@@ -95,15 +99,30 @@ public class BossSpawnInteratableOnce : MonoBehaviour, IInteractable
         UnsubscribePlayerDied();
         UnsubscribeBossDied();
     }
+    
+    private bool IsQuestGateOpen()
+    {
+        if (requiredQuestId <= 0) return true;
+
+        var qm = QuestManager.Instance;
+        if (qm == null) return true;
+
+        if (requireQuestActive)
+            return qm.IsQuestActive(requiredQuestId);
+
+        return qm.IsQuestCompleted(requiredQuestId);
+    }
 
     public string GetInteractPrompt()
     {
+        if (!IsQuestGateOpen()) return string.Empty;
         if (isTutorialBossPortal && _usedTutorial) return string.Empty;
         return prompt;
     }
 
     public void Interact(PlayerInteraction player)
     {
+        if (!IsQuestGateOpen()) return;
         if (_co != null) return;
         if (isTutorialBossPortal && _usedTutorial) return;
 
