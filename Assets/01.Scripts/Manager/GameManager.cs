@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     public GameObject mapPanel;
     public GameObject questPanel;
 
+    [Header("Keys")]
+    public KeyCode questKey = KeyCode.I;
+
     [Header("Menu Buttons")]
     public Button saveButton;
     public Button exitButton;
@@ -46,7 +49,9 @@ public class GameManager : MonoBehaviour
             bool isSaveMenuOpen = (menuPanel != null && menuPanel.activeSelf);
             bool isInvOpen = (inventoryPanel != null && inventoryPanel.activeSelf);
             bool isMapOpen = (mapPanel != null && mapPanel.activeSelf);
-            bool isQuestOpen = (questPanel != null && questPanel.activeSelf);
+
+            bool isQuestOpen = false;
+            if (questPanel != null) isQuestOpen = questPanel.activeSelf;
 
             return isSaveMenuOpen || isInvOpen || isMapOpen || isQuestOpen;
         }
@@ -59,14 +64,15 @@ public class GameManager : MonoBehaviour
 
         Data = new DataManager();
         Data.Initialize();
-
-        if (menuPanel != null) menuPanel.SetActive(false);
-        if (mapPanel != null) mapPanel.SetActive(false);
-        if (saveMessageText != null) saveMessageText.SetActive(false);
     }
 
     void Start()
     {
+        if (menuPanel != null) menuPanel.SetActive(false);
+        if (mapPanel != null) mapPanel.SetActive(false);
+        if (saveMessageText != null) saveMessageText.SetActive(false);
+        if (questPanel != null) questPanel.SetActive(false);
+
         StartCoroutine(LoadGameCo());
         if (SoundManager.Instance != null && mainBgm != null)
         {
@@ -105,13 +111,17 @@ public class GameManager : MonoBehaviour
         {
             OpenInventoryAndCloseOthers();
         }
+        else if (!GlobalInputBlocker.IsKeyBlocked(questKey) && Input.GetKeyDown(questKey))
+        {
+            OpenQuestAndCloseOthers();
+        }
     }
 
     private void OpenInventoryAndCloseOthers()
     {
         if (isMenuOpen) ToggleMenu();
         if (isMapOpen) ToggleMap();
-        if (questPanel != null && questPanel.activeSelf) questPanel.SetActive(false);
+        if (questPanel != null && questPanel.activeSelf) ToggleQuest();
 
         if (inventoryManager != null)
         {
@@ -122,13 +132,19 @@ public class GameManager : MonoBehaviour
     private void OpenMapAndCloseOthers()
     {
         if (isMenuOpen) ToggleMenu();
-
-        if (inventoryManager != null && inventoryPanel.activeSelf)
-            inventoryManager.ToggleInventory();
-
-        if (questPanel != null && questPanel.activeSelf) questPanel.SetActive(false);
+        if (inventoryManager != null && inventoryPanel.activeSelf) inventoryManager.ToggleInventory();
+        if (questPanel != null && questPanel.activeSelf) ToggleQuest();
 
         ToggleMap();
+    }
+
+    private void OpenQuestAndCloseOthers()
+    {
+        if (isMenuOpen) ToggleMenu();
+        if (inventoryManager != null && inventoryPanel.activeSelf) inventoryManager.ToggleInventory();
+        if (isMapOpen) ToggleMap();
+
+        ToggleQuest();
     }
 
     private void HandleEscInput()
@@ -155,8 +171,7 @@ public class GameManager : MonoBehaviour
         }
         if (questPanel != null && questPanel.activeSelf)
         {
-            questPanel.SetActive(false);
-            if (CursorManager.Instance != null) CursorManager.Instance.SetUIActive(false);
+            ToggleQuest();
         }
         if (isMenuOpen)
         {
@@ -192,6 +207,27 @@ public class GameManager : MonoBehaviour
 
         if (CursorManager.Instance != null)
             CursorManager.Instance.SetUIActive(isMapOpen);
+    }
+
+    public void ToggleQuest()
+    {
+        if (questPanel == null) return;
+
+        bool isActive = !questPanel.activeSelf;
+
+        if (QuestUIController.Instance != null)
+        {
+            QuestUIController.Instance.SetQuestUI(isActive);
+        }
+        else
+        {
+            questPanel.SetActive(isActive);
+            if (isActive) Time.timeScale = 0f;
+            else Time.timeScale = 1f;
+        }
+
+        if (CursorManager.Instance != null)
+            CursorManager.Instance.SetUIActive(isActive);
     }
 
     private void UpdateMenuButtons()
