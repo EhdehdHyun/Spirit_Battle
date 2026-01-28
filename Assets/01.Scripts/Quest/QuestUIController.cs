@@ -7,13 +7,9 @@ public class QuestUIController : MonoBehaviour
 
     [SerializeField] private GameObject questCanvasRoot;
     [SerializeField] private QuestCategoryUI mainCategoryUI;
-
     [SerializeField] private QuestCategoryUI[] categoryUIs;
     [SerializeField] private QuestDetailUI detailUI;
-
     [SerializeField] private PlayerInputController playerInput;
-
-    private bool isOpen = false;
 
     void Awake()
     {
@@ -22,8 +18,39 @@ public class QuestUIController : MonoBehaviour
 
     void Start()
     {
+        if (questCanvasRoot != null && questCanvasRoot.activeSelf)
+        {
+
+        }
+    }
+
+    public void SetQuestUI(bool active)
+    {
         if (questCanvasRoot != null)
-            questCanvasRoot.SetActive(false);
+            questCanvasRoot.SetActive(active);
+
+        if (active)
+        {
+            RefreshAll();
+
+            if (playerInput != null) playerInput.Lock();
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = 1f;
+
+            if (playerInput != null)
+            {
+                playerInput.Unlock();
+                playerInput.ResetInputState();
+            }
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     public void ShowQuestDetail(Quest_Data_Table quest)
@@ -43,56 +70,8 @@ public class QuestUIController : MonoBehaviour
             category.Refresh();
 
         QuestItemUI.ResetSelection();
-        StartCoroutine(SelectFirstQuestNextFrame());
-    }
 
-    private IEnumerator SelectFirstQuestNextFrame()
-    {
-        yield return null; // 다음 프레임
-        mainCategoryUI.SelectFirstQuest();
-    }
-
-    void Update()
-    {
-        if (GlobalInputBlocker.IsKeyBlocked(KeyCode.I)) return;
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            Toggle();
-        }
-        if (Input.GetKeyDown(KeyCode.Escape) && isOpen)
-        {
-            Toggle();
-        }
-    }
-
-    public void Toggle()
-    {
-        isOpen = !isOpen;
-
-        if (questCanvasRoot != null)
-            questCanvasRoot.SetActive(isOpen);
-
-        if (isOpen)
-        {
-            if (playerInput != null)
-                playerInput.Lock();
-
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-
-            RefreshAll(); // 여기서만 처리
-        }
-        else
-        {
-            if (playerInput != null)
-            {
-                playerInput.Unlock();
-                playerInput.ResetInputState();
-            }
-
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        if (mainCategoryUI != null)
+            mainCategoryUI.SelectFirstQuest();
     }
 }
