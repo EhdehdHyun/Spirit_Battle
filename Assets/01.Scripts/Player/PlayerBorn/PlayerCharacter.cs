@@ -72,8 +72,10 @@ public class PlayerCharacter : CharacterBase
     protected override void OnDamaged(DamageInfo info)
     {
         if (LastFinalDamage < 0f) return;
-
         if (physicsChar.IsDashing) return;
+
+        HitVignetteFx.Instance?.Play(1f);
+
         if (LastHeavyHit)
             anim.PlayHitMotion();
     }
