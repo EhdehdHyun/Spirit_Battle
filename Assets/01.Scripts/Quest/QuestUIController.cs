@@ -41,6 +41,9 @@ public class QuestUIController : MonoBehaviour
         }
         else
         {
+            detailUI.Clear();
+            detailUI.gameObject.SetActive(false);
+            
             Time.timeScale = 1f;
 
             if (playerInput != null)

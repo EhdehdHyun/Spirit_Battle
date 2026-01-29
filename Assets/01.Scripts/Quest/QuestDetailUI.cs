@@ -19,6 +19,8 @@ public class QuestDetailUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI claimButtonText;
     [SerializeField] private Color claimedColor = Color.gray;
     
+    [SerializeField] private GameObject rightPanelRoot;
+    
     private Quest_Data_Table currentQuest;
     public static event Action<int> OnQuestClaimed;
     
@@ -56,7 +58,7 @@ public class QuestDetailUI : MonoBehaviour
         QuestManager.Instance.ClaimReward(currentQuest.QuestID);
         UpdateClaimButton(); 
         OnQuestClaimed?.Invoke(currentQuest.QuestID);
-        Clear();  
+        rightPanelRoot.SetActive(false);
     }
     
     void CreateRewardItem(Sprite icon, int amount)
