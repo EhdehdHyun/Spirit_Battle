@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
         {
             if (playerStat != null) playerStat.LoadFromData(Data.CurrentData);
             if (inventoryManager != null) inventoryManager.LoadFromData(Data.CurrentData);
+            if (QuestManager.Instance != null) QuestManager.Instance.LoadFromData(Data.CurrentData);
         }
     }
 
@@ -270,6 +271,8 @@ public class GameManager : MonoBehaviour
     {
         if (playerStat != null) playerStat.SaveToData(Data.CurrentData);
         if (inventoryManager != null) inventoryManager.SaveToData(Data.CurrentData);
+        if (QuestManager.Instance != null) QuestManager.Instance.SaveToData(Data.CurrentData);
+
         Data.Save();
         StartCoroutine(ShowSaveMessageRoutine());
     }

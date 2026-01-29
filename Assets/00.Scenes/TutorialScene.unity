@@ -19996,7 +19996,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4815024309973239062, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000033618482
+      value: 0.0003014907
       objectReference: {fileID: 0}
     - target: {fileID: 4950689097301235468, guid: cad27d474dfb246ed9c6fb19a15581fb, type: 3}
       propertyPath: m_Size
@@ -46326,8 +46326,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "ESC : \uCEF7\uC52C \uC2A4\uD0B5\nP : \uC138\uC774\uBE0C \uBC0F \uAC8C\uC784
-    \uC885\uB8CC\nI : \uD018\uC2A4\uD2B8 \uBC84\uD2BC\nM : \uB9F5 \uBC84\uD2BC"
+  m_text: "ESC : \uC138\uC774\uBE0C \uBC0F \uAC8C\uC784 \uC885\uB8CC\nI : \uD018\uC2A4\uD2B8
+    \uBC84\uD2BC\nM : \uB9F5 \uBC84\uD2BC\nTab : \uC778\uBCA4\uD1A0\uB9AC\nAlt :
+    \uB9C8\uC6B0\uC2A4 \uC7A0\uAE08\uD574\uC81C"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d7cf8e9509bc3574cbaa252f25c35de3, type: 2}
   m_sharedMaterial: {fileID: 1822070519335439710, guid: d7cf8e9509bc3574cbaa252f25c35de3, type: 2}
