@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class QuestCategoryUI : MonoBehaviour
 {
@@ -13,7 +14,23 @@ public class QuestCategoryUI : MonoBehaviour
             Debug.LogWarning("QuestManager not ready yet");
             return;
         }
+        QuestDetailUI.OnQuestClaimed += OnQuestClaimed;
         Refresh();
+    }
+    private void OnDisable()
+    {
+        QuestDetailUI.OnQuestClaimed -= OnQuestClaimed;
+    }
+
+    private void OnQuestClaimed(int questId)
+    {
+        Refresh();
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(
+            questListParent as RectTransform
+        );
+
+        SelectFirstQuest();
     }
     public void Refresh()
     {
@@ -28,6 +45,7 @@ public class QuestCategoryUI : MonoBehaviour
             item.SetData(quest);
         }
     }
+
     public void SelectFirstQuest()
     {
         if (questListParent.childCount == 0)

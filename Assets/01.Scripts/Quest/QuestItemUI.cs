@@ -8,11 +8,32 @@ public class QuestItemUI : MonoBehaviour
 
     private static QuestItemUI currentSelected;
     private Quest_Data_Table questData;
+    public int QuestId { get; private set; }
 
     public void SetData(Quest_Data_Table quest)
     {
         questData = quest;
         questTitleText.text = quest.QuestName;
+    }
+    public void Init(int questId)
+    {
+        QuestId = questId;
+    }
+    private void OnEnable()
+    {
+        QuestDetailUI.OnQuestClaimed += OnQuestClaimed;
+    }
+
+    private void OnDisable()
+    {
+        QuestDetailUI.OnQuestClaimed -= OnQuestClaimed;
+    }
+
+    public void OnQuestClaimed(int claimedQuestId)
+    {
+        if (QuestId != claimedQuestId) return;
+
+        Destroy(gameObject);
     }
     public void OnClick()
     {

@@ -55,6 +55,7 @@ public class QuestUIController : MonoBehaviour
 
     public void ShowQuestDetail(Quest_Data_Table quest)
     {
+        detailUI.gameObject.SetActive(true);
         detailUI.SetQuest(quest);
     }
 
