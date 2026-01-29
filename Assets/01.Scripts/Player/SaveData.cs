@@ -10,6 +10,14 @@ public class ItemSaveData
 }
 
 [System.Serializable]
+public class QuestSaveData
+{
+    public int questId;
+    public QuestState state;
+    public int currentProgress;
+}
+
+[System.Serializable]
 public class SaveData
 {
     public int level;
@@ -18,7 +26,12 @@ public class SaveData
     public Vector3 playerPosition;
 
     public List<ItemSaveData> inventoryItems = new List<ItemSaveData>();
+
     public bool isTutorialClear = false;
+
+    public List<QuestSaveData> questDataList = new List<QuestSaveData>();
+    public int trackedQuestId = -1;
+
     public SaveData()
     {
         level = 1;
@@ -26,5 +39,7 @@ public class SaveData
         currentHp = 100;
         playerPosition = Vector3.zero;
         isTutorialClear = false;
+
+        trackedQuestId = -1;
     }
 }
