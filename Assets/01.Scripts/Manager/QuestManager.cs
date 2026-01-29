@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System;
 public enum QuestState
 {
     Active,           // 진행중 
@@ -29,6 +30,7 @@ public class QuestManager : MonoBehaviour
     [SerializeField] private QuestTrackerUI trackerUI;  
     
     private int trackedQuestId = -1;
+    public event Action<int, QuestState> OnQuestStateChanged;
     public Transform PlayerTransform { get; private set; }
     
     void Awake()
@@ -122,6 +124,11 @@ public class QuestManager : MonoBehaviour
             .ItemsDict[quest.RewardGroupID];
 
         questStates[questId] = QuestState.RewardClaimed;
+        
+        if (trackedQuestId == questId)
+            trackedQuestId = -1;
+        
+        OnQuestStateChanged?.Invoke(questId, QuestState.RewardClaimed);
     }
     
     // 퀘스트 완료 조건이 Talk To NPC인지 확인
