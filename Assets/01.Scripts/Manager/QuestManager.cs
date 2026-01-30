@@ -1,66 +1,134 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using System;
 public enum QuestState
 {
-    Active,           // 진행중 
-    Completed,        // 완료됨(보상 미수령)
-    RewardClaimed     // 보상 수령 완료
+    Active,
+    Completed,
+    RewardClaimed
 }
+
 public enum CompleteCondition
 {
-    Auto,          // 자동 완료
-    TalkToNPC,     // NPC 대화
-    KillMonster,   // 몬스터 처치
-    UseSkill,      // 스킬 사용 (튜토리얼 핵심)
-    Investigate,   // 조사/상호작용
-    CollectItem ,  //아이템 수집
-    DestroyObject  //오브젝트 파괴
+    Auto,
+    TalkToNPC,
+    KillMonster,
+    UseSkill,
+    Investigate,
+    CollectItem,
+    DestroyObject
 }
 
 public class QuestManager : MonoBehaviour
 {
     public static QuestManager Instance;
-    
+
     private Dictionary<int, QuestState> questStates = new();
     private Dictionary<int, Quest_Data_Table> questTable;
     private Dictionary<int, QuestProgress> questProgress = new();
-    
-    [SerializeField] private QuestTrackerUI trackerUI;  
-    
+
+    [SerializeField] private QuestTrackerUI trackerUI;
+
     private int trackedQuestId = -1;
+    public event Action<int, QuestState> OnQuestStateChanged;
     public Transform PlayerTransform { get; private set; }
-    
+
     void Awake()
     {
         Instance = this;
     }
+
     void Start()
     {
-        questTable = GameManager.Instance
-            .Data
-            .Quest_Data_Loader
-            .ItemsDict;
-        
+        if (GameManager.Instance != null && GameManager.Instance.Data != null)
+        {
+            questTable = GameManager.Instance.Data.Quest_Data_Loader.ItemsDict;
+        }
+
         PlayerTransform = GameObject.FindGameObjectWithTag("Player")?.transform;
-        AcceptQuest(30000); //Main 퀘스트 바로 시작
-        CompleteQuest(30000); // 즉시 완료
-        AcceptQuest(40000); //Tutorial 퀘스트 바로 시작
     }
+
+    public void SaveToData(SaveData data)
+    {
+        data.questDataList.Clear();
+
+        foreach (var kv in questStates)
+        {
+            int qId = kv.Key;
+            QuestState state = kv.Value;
+            int progress = 0;
+
+            if (questProgress.ContainsKey(qId))
+            {
+                progress = questProgress[qId].Current;
+            }
+
+            QuestSaveData qData = new QuestSaveData();
+            qData.questId = qId;
+            qData.state = state;
+            qData.currentProgress = progress;
+
+            data.questDataList.Add(qData);
+        }
+
+        data.trackedQuestId = trackedQuestId;
+    }
+
+    public void LoadFromData(SaveData data)
+    {
+        questStates.Clear();
+        questProgress.Clear();
+        trackedQuestId = -1;
+
+        if (data.questDataList == null || data.questDataList.Count == 0)
+        {
+            InitNewGameQuests();
+            return;
+        }
+
+        foreach (var qData in data.questDataList)
+        {
+            questStates.Add(qData.questId, qData.state);
+
+            if (questTable.TryGetValue(qData.questId, out var tableData))
+            {
+                QuestProgress prog = new QuestProgress(tableData.TargetCount);
+                prog.Current = qData.currentProgress;
+                questProgress.Add(qData.questId, prog);
+            }
+        }
+
+        if (data.trackedQuestId != -1 && questStates.ContainsKey(data.trackedQuestId))
+        {
+            if (questStates[data.trackedQuestId] == QuestState.Active)
+            {
+                SetTrackedQuest(data.trackedQuestId);
+            }
+        }
+    }
+
+    private void InitNewGameQuests()
+    {
+        AcceptQuest(30000);
+        CompleteQuest(30000);
+        AcceptQuest(40000);
+    }
+
     public int GetTrackedQuestId()
     {
         return trackedQuestId;
     }
-    
-    //카테고리별 퀘스트 가져오기 (UI용)
+
     public void AcceptQuest(int questId, int npcID = -1)
     {
         if (questStates.ContainsKey(questId))
             return;
 
+        if (!questTable.ContainsKey(questId)) return;
+
         var quest = questTable[questId];
 
-        // TalkToNPC 시작 조건 검사
         if (quest.StartCondition == "TalkToNPC" && npcID != -1)
         {
             if (quest.NPC != npcID)
@@ -71,8 +139,9 @@ public class QuestManager : MonoBehaviour
 
         questStates.Add(questId, QuestState.Active);
         questProgress.Add(questId, new QuestProgress(quest.TargetCount));
-        trackedQuestId = questId;
-        
+
+        SetTrackedQuest(questId);
+
         if (quest.DeliverItemID > 0 && quest.TargetCount > 0)
         {
             var itemData = GameManager.Instance
@@ -81,34 +150,33 @@ public class QuestManager : MonoBehaviour
                 .ItemsDict[quest.DeliverItemID];
 
             InventoryManager.Instance.AddItem(itemData, quest.TargetCount);
-            
         }
-        
     }
 
-
-    
-    //퀘스트 완료
     public void CompleteQuest(int questId)
     {
         if (!questStates.ContainsKey(questId)) return;
         questStates[questId] = QuestState.Completed;
-        
+
         var quest = questTable[questId];
 
-        // 다음 퀘스트 자동 시작
+        if (trackedQuestId == questId)
+        {
+            if (trackerUI != null) trackerUI.gameObject.SetActive(false);
+            trackedQuestId = -1;
+        }
+
         if (quest.NextQuest > 0 && !questStates.ContainsKey(quest.NextQuest))
         {
             var nextQuest = questTable[quest.NextQuest];
 
-            // Auto / TalkToNPC는 여기서 처리
             if (nextQuest.StartCondition == "Auto")
             {
                 AcceptQuest(nextQuest.QuestID);
-                SetTrackedQuest(nextQuest.QuestID);
             }
         }
     }
+
     public void ClaimReward(int questId)
     {
         if (!questStates.ContainsKey(questId)) return;
@@ -122,9 +190,13 @@ public class QuestManager : MonoBehaviour
             .ItemsDict[quest.RewardGroupID];
 
         questStates[questId] = QuestState.RewardClaimed;
+
+        if (trackedQuestId == questId)
+            trackedQuestId = -1;
+
+        OnQuestStateChanged?.Invoke(questId, QuestState.RewardClaimed);
     }
-    
-    // 퀘스트 완료 조건이 Talk To NPC인지 확인
+
     public bool TryCompleteTalkToNPCQuest(int npcID)
     {
         foreach (var kv in questStates)
@@ -136,22 +208,18 @@ public class QuestManager : MonoBehaviour
 
             var quest = questTable[questId];
 
-            // 완료 조건 검사
             if (quest.CompleteCondition != "TalkToNPC")
                 continue;
 
-            // 이 NPC가 대상 NPC인지
             if (quest.TargetID != npcID)
                 continue;
 
-            // 전달 아이템이 있다면 검사
             if (quest.DeliverItemID > 0)
             {
                 if (!InventoryManager.Instance.HasItem(
                         quest.DeliverItemID,
                         quest.TargetCount))
                 {
-                    Debug.Log("아이템이 부족합니다.");
                     return false;
                 }
 
@@ -161,13 +229,13 @@ public class QuestManager : MonoBehaviour
                 );
             }
 
-            // 퀘스트 완료
             CompleteQuest(questId);
             return true;
         }
 
         return false;
     }
+
     public Transform GetQuestTarget(int questId)
     {
         if (!questTable.ContainsKey(questId))
@@ -175,23 +243,22 @@ public class QuestManager : MonoBehaviour
 
         var quest = questTable[questId];
 
-        // HUDTargetID가 있으면 그걸 최우선으로 표시 (성소/포탈/지점)
         if (quest.HUDTargetID > 0)
         {
             return QuestTargetRegistry.Instance
                 ?.GetAnyTarget(quest.HUDTargetID);
         }
-        
+
         switch (quest.CompleteCondition)
         {
             case "KillMonster":
-            {
-                if (PlayerTransform == null)
-                    return null;
-                
-                return QuestTargetRegistry.Instance
-                    .GetClosestTarget(quest.TargetID, PlayerTransform.position);
-            }
+                {
+                    if (PlayerTransform == null)
+                        return null;
+
+                    return QuestTargetRegistry.Instance
+                        .GetClosestTarget(quest.TargetID, PlayerTransform.position);
+                }
 
             case "Investigate":
             case "DestroyObject":
@@ -203,8 +270,7 @@ public class QuestManager : MonoBehaviour
 
         return null;
     }
-    
-    
+
     public QuestState GetQuestState(int questId)
     {
         if (!questStates.ContainsKey(questId))
@@ -212,6 +278,7 @@ public class QuestManager : MonoBehaviour
 
         return questStates[questId];
     }
+
     public bool HasQuest(int questId)
     {
         return questStates.ContainsKey(questId);
@@ -226,16 +293,16 @@ public class QuestManager : MonoBehaviour
             .Select(kv => questTable[kv.Key])
             .Where(q => q.QuestType == type);
     }
+
     public void ReportProgress(
         CompleteCondition condition,
         int targetId,
         int amount = 1
     )
     {
-        // 진행도 HUD 대상이 아니면 아예 무시
         if (!ShouldShowProgress(condition))
             return;
-        
+
         if (trackedQuestId == -1)
             return;
 
@@ -264,14 +331,11 @@ public class QuestManager : MonoBehaviour
 
             var progress = questProgress[questId];
             progress.Current += amount;
-            
-            var trackedQuest = questTable[trackedQuestId];
-            if (!TryGetCondition(trackedQuest.CompleteCondition, out var trackedCondition))
-                continue;
 
-            if (questId == trackedQuestId && condition == trackedCondition)
+            if (questId == trackedQuestId)
             {
-                trackerUI.SetProgress(progress.Current, progress.Target);
+                if (trackerUI != null)
+                    trackerUI.SetProgress(progress.Current, progress.Target);
             }
 
             if (progress.IsComplete)
@@ -283,9 +347,11 @@ public class QuestManager : MonoBehaviour
             }
         }
     }
+
     public void SetTrackedQuest(int questId)
     {
         if (!questStates.ContainsKey(questId)) return;
+
         trackedQuestId = questId;
 
         var quest = questTable[questId];
@@ -305,6 +371,7 @@ public class QuestManager : MonoBehaviour
         var p = questProgress[questId];
         trackerUI.SetProgress(p.Current, p.Target);
     }
+
     public bool CanTurnIn(int questId, int npcID)
     {
         if (!questStates.ContainsKey(questId)) return false;
@@ -312,17 +379,17 @@ public class QuestManager : MonoBehaviour
 
         var quest = questTable[questId];
 
-        // 이 NPC가 보고 NPC인지 확인
         if (quest.NPC != npcID) return false;
 
-        // 진행도 완료 여부 확인
         if (!questProgress.TryGetValue(questId, out var progress)) return false;
         return progress.IsComplete;
     }
+
     public void OnMonsterKilled(int monsterId)
     {
         ReportProgress(CompleteCondition.KillMonster, monsterId, 1);
     }
+
     private void OnEnable()
     {
         MonsterKillEvent.OnMonsterKilled += OnMonsterKilled;
@@ -332,10 +399,12 @@ public class QuestManager : MonoBehaviour
     {
         MonsterKillEvent.OnMonsterKilled -= OnMonsterKilled;
     }
+
     public void OnInvestigate(int investigateID)
     {
         ReportProgress(CompleteCondition.Investigate, investigateID, 1);
     }
+
     private bool ShouldShowProgress(CompleteCondition condition)
     {
         return condition == CompleteCondition.KillMonster
@@ -343,8 +412,9 @@ public class QuestManager : MonoBehaviour
                || condition == CompleteCondition.UseSkill
                || condition == CompleteCondition.Investigate
                || condition == CompleteCondition.DestroyObject
-               || condition == CompleteCondition.TalkToNPC; 
+               || condition == CompleteCondition.TalkToNPC;
     }
+
     private bool TryGetCondition(string raw, out CompleteCondition condition)
     {
         condition = CompleteCondition.Auto;
@@ -356,6 +426,7 @@ public class QuestManager : MonoBehaviour
 
         return System.Enum.TryParse(normalized, out condition);
     }
+
     public Quest_Data_Table GetQuestData(int questId)
     {
         if (questTable == null)
@@ -370,6 +441,7 @@ public class QuestManager : MonoBehaviour
 
         return quest;
     }
+
     public QuestProgress GetProgress(int questId)
     {
         if (!questProgress.ContainsKey(questId))
@@ -377,6 +449,7 @@ public class QuestManager : MonoBehaviour
 
         return questProgress[questId];
     }
+
     public bool IsQuestActive(int questId)
     {
         return questStates.TryGetValue(questId, out var state)

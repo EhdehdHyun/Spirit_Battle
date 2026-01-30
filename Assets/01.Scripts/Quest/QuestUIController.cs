@@ -41,6 +41,9 @@ public class QuestUIController : MonoBehaviour
         }
         else
         {
+            detailUI.Clear();
+            detailUI.gameObject.SetActive(false);
+            
             Time.timeScale = 1f;
 
             if (playerInput != null)
@@ -55,6 +58,7 @@ public class QuestUIController : MonoBehaviour
 
     public void ShowQuestDetail(Quest_Data_Table quest)
     {
+        detailUI.gameObject.SetActive(true);
         detailUI.SetQuest(quest);
     }
 

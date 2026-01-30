@@ -27,17 +27,21 @@ public class QuestHUDUI : MonoBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
     }
+    private void ClearHUD()
+    {
+        titleText.text = "";
+        progressText.text = "";
+        distanceText.text = "";
+        currentTarget = null;
+        backgroundImage.color = normalColor;
+    }
 
     void Update()
     {
         int trackedId = QuestManager.Instance.GetTrackedQuestId();
         if (trackedId == -1)
         {
-            // 표시만 비움 (UI는 살아있음)
-            titleText.text = "";
-            progressText.text = "";
-            distanceText.text = "";
-            currentTarget = null;
+            ClearHUD(); 
             return;
         }
 
@@ -50,10 +54,14 @@ public class QuestHUDUI : MonoBehaviour
 
         // 진행도
         var state = QuestManager.Instance.GetQuestState(trackedId);
-        bool isCompleted =
-            state == QuestState.Completed ||
-            state == QuestState.RewardClaimed;
-        if (isCompleted)
+        
+        if (state == QuestState.RewardClaimed)
+        {
+            ClearHUD(); 
+            return;
+        }
+
+        if (state == QuestState.Completed)
         {
             backgroundImage.color = completedColor;
             progressText.text = "보상 수령 가능";
@@ -93,5 +101,21 @@ public class QuestHUDUI : MonoBehaviour
     {
         currentTarget = null;
         distanceText.text = "";
+    }
+    private void OnEnable()
+    {
+        QuestManager.Instance.OnQuestStateChanged += OnQuestStateChanged;
+    }
+    private void OnDisable()
+    {
+        QuestManager.Instance.OnQuestStateChanged -= OnQuestStateChanged;
+    }
+    private void OnQuestStateChanged(int questId, QuestState state)
+    {
+        // 수령 완료면 HUD에서 제거
+        if (state == QuestState.RewardClaimed)
+        {
+  
+        }
     }
 }

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System;
 public class QuestDetailUI : MonoBehaviour
 {
 
@@ -19,7 +19,10 @@ public class QuestDetailUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI claimButtonText;
     [SerializeField] private Color claimedColor = Color.gray;
     
+    [SerializeField] private GameObject rightPanelRoot;
+    
     private Quest_Data_Table currentQuest;
+    public static event Action<int> OnQuestClaimed;
     
     public void SetQuest(Quest_Data_Table quest)
     {
@@ -53,7 +56,9 @@ public class QuestDetailUI : MonoBehaviour
             return;
 
         QuestManager.Instance.ClaimReward(currentQuest.QuestID);
-        UpdateClaimButton();
+        UpdateClaimButton(); 
+        OnQuestClaimed?.Invoke(currentQuest.QuestID);
+        rightPanelRoot.SetActive(false);
     }
     
     void CreateRewardItem(Sprite icon, int amount)

@@ -44,11 +44,11 @@
       "ItemName": "사과",
       "ItemType": 1,
       "Rarity": 0,
-      "HealAmount": 30,
+      "HealAmount": 20,
       "MaxStack": 999,
       "IsConsumable": true,
       "Icon": "Apple_icon",
-      "Description": "싱싱한 사과. 사용 시 체력 30 회복.",
+      "Description": "싱싱한 사과. 사용 시 체력 20 회복.",
       "ItemTypes": [ 0, 1, 2, 3 ],
       "Raritys": [ 0, 1, 2, 3, 4 ]
     },
