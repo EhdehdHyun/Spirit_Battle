@@ -1,5 +1,6 @@
 # ⚔️✨SpiritBound⚔️✨(개발 중)
-![SpiritTitleDesert](https://github.com/user-attachments/assets/339d7b4f-ae37-4989-bb57-be196b572cfc)
+<img width="1344" height="768" alt="대표이밎" src="https://github.com/user-attachments/assets/8f95e5f0-a3f7-4af3-9615-7bfc9d95e742" />
+
 
 
 ---
@@ -14,11 +15,32 @@
 
 ---
 ## 💁‍♂️ 프로젝트 팀원 및 역할
-|**팀원**| <img width="48" height="48" alt="최호석" src="https://github.com/user-attachments/assets/7b75e5b8-025c-446e-8ec1-181e93d843e6" /> <br> (기획팀장) <br> 최호석  |<img width="48" height="48" alt="강동현" src="https://github.com/user-attachments/assets/7e5f2e42-6e36-43a2-92b3-6e35616af1aa" /><br> **(개발팀장) <br> 강동현**| <img width="48" height="48" alt="송정민" src="https://github.com/user-attachments/assets/c4f3e473-b795-4d6d-84ab-e3bd74032e77" /> <br> **송정민** | <img width="48" height="48" alt="김동관" src="https://github.com/user-attachments/assets/78a4d5f4-3578-4ff6-88e0-c0ed27782769" /> <br> 김동관 | <img width="48" height="48" alt="정성재" src="https://github.com/user-attachments/assets/4b5515cf-6839-47ed-9f7c-3e2457aea66f" /> <br>  정성재  |
-|:---:|:---:|:---:|:---:|:---:|:---:|
-|**역할**| 기획 담당 | 몬스터 | UI 및 기타 연출 | 맵디자인 및 기타 연출 | 플레이어 로 |
+|**팀원**| <img width="48" height="48" alt="최호석" src="https://github.com/user-attachments/assets/7b75e5b8-025c-446e-8ec1-181e93d843e6" /> <br> (기획팀장) <br> 최호석  |<img width="48" height="48" alt="강동현" src="https://github.com/user-attachments/assets/7e5f2e42-6e36-43a2-92b3-6e35616af1aa" /><br> **(개발팀장) <br> 강동현**| <img width="48" height="48" alt="송정민" src="https://github.com/user-attachments/assets/c4f3e473-b795-4d6d-84ab-e3bd74032e77" /> <br> **송정민** | <img width="48" height="48" alt="김동관" src="https://github.com/user-attachments/assets/78a4d5f4-3578-4ff6-88e0-c0ed27782769" /> <br> 김동관 |
+|:---:|:---:|:---:|:---:|:---:|
+|**역할**| 기획 담당 | 몬스터 | UI <br> 기타 연출 | 맵디자인 <br> 기타 연출 | 
 <br>
 
+---
+## 🎯 프로젝트 기본 정보
+- 장르 : 오픈월드 액션RPG
+- 플랫폼 : PC(싱글 플레이)
+<br>
+
+---
+## 🛠️ 초기 목표
+- 오픈월드 구조 안에서 '저투 재미'를 명확히 체감할 수 있는 게임
+- 단순 수치 싸움이 아닌
+  패링, 회피 등 플레이 숙련도 반영되는 저투 설계
+- 튜토리얼 -> 보스 -> 성장 구조가 자연스럽게 이어지는 플레이 흐름 구축
+<br>
+
+---
+## 🏁 최종 달성 성과
+- 초반 튜토리얼부터 보스전까지 이어지는 완결된 플레이 루프 설계
+- 보스 패턴, 퀘스트 흐름, UI 제약 등
+  실제 플레이를 고려한 기획 디테일 확보
+- 유저 테스트를 통해 문제점을 발견하고 기획 수정 경험 축적
+<br>
 
 ---
 ## 🔧주요기능
@@ -29,7 +51,7 @@
 
 |콤보공격|
 |:---:|
-|(콤보공격 gif 들어올 자리)|
+| ![20260130-0104-52 5897451](https://github.com/user-attachments/assets/10273592-0b3b-471d-a0c2-683dd157256b) |
 
 
 <br>
@@ -40,7 +62,7 @@
 
 |패링|
 |:---:|
-| (패링 gif 들어올 자리) |
+| ![20260130-0111-30 3530042](https://github.com/user-attachments/assets/2c18210f-41ea-495e-9753-ac712370a40e) |
 
 <br>
 
@@ -48,9 +70,9 @@
 - 쉬프트를 누르면 짧은 대쉬 후 달리기를 진행
 - 대쉬 시도 후 짧게 무적 시간을 가짐
   
-|대쉬 및 달리기|
-|:---:|
-| (대쉬 및 달리기 gif 들어올 자리) |
+|대쉬 | 달리기|
+|:---:|:---:|
+| ![대쉬](https://github.com/user-attachments/assets/8c3e8a54-f5c9-4c1a-a061-a384819a7ae7) | ![달리기](https://github.com/user-attachments/assets/f7ffc101-fd4b-4be2-adab-6bce5910ada7) |
 
 
 <br>
@@ -61,7 +83,7 @@
   
 |인벤토리 및 장착|
 |:---:|
-| (인벤토리 및 장착 이미지 들어올 자리) |
+| ![20260130-0124-59 3667462](https://github.com/user-attachments/assets/4cf65ad8-4c9a-4440-97a3-f2351142e978) |
 
 
 <br>
@@ -71,18 +93,113 @@
   
 |맵|
 |:---:|
-|(맵 gif 들어올 자리)|
+| ![맵](https://github.com/user-attachments/assets/ef28b541-efa2-4cf7-892d-f3c845d2832c) |
 
 
 
 -------
 
-## ⚙️추후 개발 목표
+## 🧪 사용자 피드백 기반 개선 사항
 
- 따른 마을 및 지형지물
-- 추가적인 플레이어 스킬들
-- 장비 아이템
-- 플레이어 성장 단계
+### 전투 피드백 부족
+- 패링 시 타이밍이 불명확하여 조작이 어렵다는 지적이 나옴
+- 피격 시 피드백이 없어 피격 판단이 어렵다는 의견이 나옴
+### 👉 개선 방향
+- 패링 타이밍 조정
+- 포스트 프로세싱 추가로 피격 피드백 추가
+<br>
+### 조작 & UI 인터페이스:---:|
+| ![20260130-0104-52 5897451](https://github.com/user-attachments/assets/10273592-0b3b-471d-a0c2-683dd157256b) |
+
+
+<br>
+
+### 패링
+- Q를 누르면 약 0.1초 후 패링을 시도
+- 몬스터의 일반 평타 때 나오는 원에 맞추면 몬스터들은 넉백을 당함
+
+|패링|
+|:---:|
+| ![20260130-0111-30 3530042](https://github.com/user-attachments/assets/2c18210f-41ea-495e-9753-ac712370a40e) |
+
+<br>
+
+### 대쉬 및 달리기
+- 쉬프트를 누르면 짧은 대쉬 후 달리기를 진행
+- 대쉬 시도 후 짧게 무적 시간을 가짐
+  
+|대쉬 | 달리기|
+|:---:|:---:|
+| ![대쉬](https://github.com/user-attachments/assets/8c3e8a54-f5c9-4c1a-a061-a384819a7ae7) | ![달리기](https://github.com/user-attachments/assets/f7ffc101-fd4b-4be2-adab-6bce5910ada7) |
+
+
+<br>
+
+### 인벤토리 및 장착
+- Tab키를 누르면 인벤토리가 나옴
+- 우측 상단에 칼 모양을 누르면 장비 아이템만 그 옆 다이아몬스 버튼을 누르면 소비 및 기타 아이템들이 나옴
+  
+|인벤토리 및 장착|
+|:---:|
+| ![20260130-0124-59 3667462](https://github.com/user-attachments/assets/4cf65ad8-4c9a-4440-97a3-f2351142e978) |
+
+
+<br>
+
+### 맵
+- M키를 누르면 지도가 나옴
+  
+|맵|
+|:---:|
+| ![맵](https://github.com/user-attachments/assets/ef28b541-efa2-4cf7-892d-f3c845d2832c) |
+
+
+
+-------
+
+## 🧪 사용자 피드백 기반 개선 사항
+
+### 전투 피드백 부족
+- 패링 시 타이밍이 불명확하여 조작이 어렵다는 지적이 나옴
+- 피격 시 피드백이 없어 피격 판단이 어렵다는 의견이 나옴
+### 👉 개선 방향
+- 패링 타이밍 조정
+- 포스트 프로세싱 추가로 피격 피드백 추가
+<br>
+### 조작 & UI 인터페이스
+- 메뉴 및 퀘스트 UI 조작이 혼란스럽다는 의견 다수
+  - esc(스킵) / P(일시정지) zl ghsehd
+  - UI 닫힘 규칙 불일치
+  - 클릭 시 피드백 부족
+- 퀘스트 정보가 명확히 보이지 않아 진행 흐름 파악이 어려움
+- 상호작용 판정(상자, 아이템 회득 등)이 불편하다는 피드백
+### 👉 개선 방향
+- 버튼 입력 규칙 통일 및 클릭 피드백 강화
+- 퀘스트 목표 정보 가시성 개선
+- 상호작용 판정 범위 및 조건 보완
+<br>
+
+### 퀘스트 & 탐구 구성
+- 필드 탐험의 목적과 동선이 명확하지 않아 혼란스럽다는 의견
+- 맵 탐색 요소가 단조롭게 느껴진다는 응답 다수
+- 퀘스트 목표 위치 표시 등 내비게이션 개선 요청
+### 👉 개선 방향
+- 퀘스트 목표 안내 방식 개선
+- 탐험 동기를 부여하는 요소 추가
+- 맵 내비게이션 정보 보강
+<br>
+
+### 버그 및 시스템적 불편
+유저 테스트 과정에서 다음과 같은 문제들이 보고 됨
+- 저장 / 리스폰 관련 오류
+- UI 창 중첩 문제
+- 특정 행동 중 입력 불가 현상
+- 인벤토리 아이템 표시 오류
+- 맵 및 이동 관련 버그
+### 👉 개선 방향
+- 핵심 시스템 안정성 강화
+- 반복 테스트를 통ㅎ산 버그 수정 및 재발 방지
+<br>
 
 ---
 ## 🔍아직 해결하지 못 한 버그들
