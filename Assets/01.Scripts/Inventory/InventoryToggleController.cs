@@ -66,7 +66,7 @@ public class InventoryToggleController : MonoBehaviour
         if (inventoryRoot != null)
             inventoryRoot.SetActive(false);
 
-        Time.timeScale = previousTimeScale;
+        Time.timeScale = 1f;
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
