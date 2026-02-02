@@ -35,7 +35,7 @@ public class EnemyMeleeAttack : MonoBehaviour, IEnemyAttack
             Debug.LogWarning("Animator를 찾지 못했습니다.");
 
         if (hitOrigin == null)
-            hitOrigin = transform; // fallback
+            hitOrigin = transform;
     }
 
     public void TryAttack(Transform target)

@@ -221,7 +221,7 @@ public class EnemyAIController : MonoBehaviour, IParryGroggyController
 
         bool isAttacking = (attack != null && attack.IsAttacking);
 
-        // “hitOrigin 기준으로 사거리 밖”이면 다시 추적으로 돌아가서 자리 잡기
+        // 'hitOrigin 기준으로 사거리 밖'이면 다시 추적으로 돌아가서 자리 잡기
         if (!isAttacking && distAtk > atkRange * 1.2f)
         {
             ChangeState(AIState.Chase);
@@ -271,7 +271,7 @@ public class EnemyAIController : MonoBehaviour, IParryGroggyController
 
     private void OnDrawGizmosSelected()
     {
-        //“공격 원”도 hitOrigin/hitRadius 기준으로 보여주기
+        //'공격 원'도 hitOrigin/hitRadius 기준으로 보여주기
         if (meleeAttack == null) meleeAttack = GetComponent<EnemyMeleeAttack>();
         if (enemy == null) enemy = GetComponent<EnemyBase>();
 

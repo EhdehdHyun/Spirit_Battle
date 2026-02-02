@@ -1,9 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-// 지면강타 -> 지면강타
-// - 1타: 텔레그래프(원) -> 충격파
-// - 2타: 텔레그래프(원) -> 충격파
 public class BossPatternSlamSlam : BossPatternBase
 {
     [Header("Cooldown")]
@@ -12,7 +9,7 @@ public class BossPatternSlamSlam : BossPatternBase
     private float nextReadyTime = 0f;
 
     [Header("Animator Triggers")]
-    [Tooltip("패턴 시작 트리거(한 클립이면 이 트리거만 써도 됨)")]
+    [Tooltip("패턴 시작 트리거")]
     public string slam2TriggerName = "SlamX2";
 
     [Header("Telegraph (Circle)")]
@@ -93,7 +90,6 @@ public class BossPatternSlamSlam : BossPatternBase
         nextReadyTime = Time.time + Random.Range(cooldownMin, cooldownMax);
     }
 
-    // ===== Animation Events (유니크 네이밍 추천) =====
     // 1타 텔레그래프
     public void Anim_SlamSlam_ShowTelegraph1() => SetTelegraph(true, slam1Radius);
     public void Anim_SlamSlam_HideTelegraph1() => SetTelegraph(false, 1f);
@@ -124,7 +120,6 @@ public class BossPatternSlamSlam : BossPatternBase
 
         foreach (Collider col in cols)
         {
-            // 점프 회피 판정(너가 쓰던 방식 그대로)
             PhysicsCharacter pc = col.GetComponentInParent<PhysicsCharacter>();
             if (pc != null)
             {

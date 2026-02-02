@@ -17,8 +17,6 @@ public class BossParryGroggyAdapter : MonoBehaviour, IParryGroggyController
         {
             if (bossEnemy != null && bossEnemy.IsDead) return true;
 
-            // if (bossAI != null && bossAI.IsDownState) return true;
-
             return false;
         }
     }

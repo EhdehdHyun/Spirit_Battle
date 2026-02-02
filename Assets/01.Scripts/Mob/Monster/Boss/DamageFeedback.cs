@@ -34,7 +34,7 @@ public class DamageFeedback : MonoBehaviour
     {
         public Renderer renderer;
         public int materialIndex;
-        public int colorPropId;     // _BaseColor or _Color
+        public int colorPropId;
         public Color originalColor;
         public bool valid;
     }
@@ -68,7 +68,6 @@ public class DamageFeedback : MonoBehaviour
         var renderers = root.GetComponentsInChildren<Renderer>(true);
         foreach (var r in renderers)
         {
-            // SkinnedMeshRenderer / MeshRenderer 모두 Renderer라 OK
             var mats = r.sharedMaterials;
             for (int i = 0; i < mats.Length; i++)
             {

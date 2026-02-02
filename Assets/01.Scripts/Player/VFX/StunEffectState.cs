@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class StunEffectState : StateMachineBehaviour
 {
-    [Tooltip("Hierarchy¿¡ ÀÖ´Â ÆÄÆ¼Å¬ ¿ÀºêÁ§Æ®ÀÇ Á¤È®ÇÑ ÀÌ¸§À» ÀûÀ¸¼¼¿ä")]
+    [Tooltip("Hierarchyï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½Æ¼Å¬ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½È®ï¿½ï¿½ ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public string particleName = "StunEffect";
 
     private ParticleSystem stunParticle;

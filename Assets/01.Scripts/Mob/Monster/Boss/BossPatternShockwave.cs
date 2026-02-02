@@ -60,7 +60,7 @@ public class BossPatternShockwave : BossPatternBase
         if (animator != null && slamTriggerHash != 0)
             animator.SetTrigger(slamTriggerHash);
 
-        // 애니 마지막 프레임(또는 종료 시점)에 Anim_EndWave() 이벤트를 넣어서 끝내기
+        // 애니 마지막 프레임에 이벤트를 넣어서 끝내기
         while (!currentWaveFinished)
             yield return null;
 
@@ -120,7 +120,7 @@ public class BossPatternShockwave : BossPatternBase
         {
             PhysicsCharacter pc = col.GetComponentInParent<PhysicsCharacter>();
 
-            // 공중 회피 "진짜 공중"일 때만 스킵 (그라운드 체크가 순간 튀는 프레임 방지)
+            // 공중 회피 
             if (pc != null)
             {
                 bool airborne = !pc.IsGrounded && (pc.IsFalling || pc.Velocity.y > 0.1f);
@@ -135,8 +135,6 @@ public class BossPatternShockwave : BossPatternBase
 
             DamageInfo info = new DamageInfo(damage, hitPoint, hitNormal);
             damageable.TakeDamage(info);
-
-            // TODO: 슬로우 적용
         }
     }
 

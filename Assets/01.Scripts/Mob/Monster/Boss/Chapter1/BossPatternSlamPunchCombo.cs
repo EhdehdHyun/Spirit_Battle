@@ -1,12 +1,6 @@
 using System.Collections;
 using UnityEngine;
 
-// 지면강타 -> 정권 콤보 패턴
-// - Prepare 트리거 -> (prepareDuration) 후 Slam 트리거
-// - Slam 임팩트 프레임에 Anim_DoSlamShockwave() 이벤트로 충격파 데미지(점프중이면 회피)
-// - Slam 임팩트 이후 punchDelayAfterSlamImpact 만큼 대기 후 Punch 트리거
-// - Punch 타격 프레임에 Anim_DoPunchDamage() 이벤트
-// - Punch 애니 끝 프레임에 Anim_EndPattern() 이벤트로 패턴 종료
 public class BossPatternSlamPunchCombo : BossPatternBase
 {
     [Header("랜덤 쿨타임")]
@@ -22,7 +16,7 @@ public class BossPatternSlamPunchCombo : BossPatternBase
     [Tooltip("정권 트리거")]
     public string punchTriggerName = "Punch";
 
-    [Header("Timing (코드로 2타 타이밍 조절)")]
+    [Header("Timing")]
     [Tooltip("준비 모션 시작 후 이 시간 뒤 Slam 트리거 발동")]
     public float prepareDuration = 1.2f;
 
@@ -33,7 +27,7 @@ public class BossPatternSlamPunchCombo : BossPatternBase
     public bool waitSlamImpactBeforePunch = true;
 
     [Header("Telegraph (원형)")]
-    [Tooltip("바닥 원형 텔레그래프 오브젝트(없으면 비워도 됨)")]
+    [Tooltip("바닥 원형 텔레그래프 오브젝트")]
     public GameObject telegraphObject;
 
     // 바닥 깜빡임 방지

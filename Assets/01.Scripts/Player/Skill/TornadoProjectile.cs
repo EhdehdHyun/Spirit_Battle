@@ -4,7 +4,7 @@ using UnityEngine;
 public class TornadoProjectile : MonoBehaviour
 {
     [Header("Visual (Pivot at ground)")]
-    [Tooltip("바닥 피벗(VisualRoot). 이 Transform만 스케일 줄이면 밑이 붙은 채로 줄어듦.")]
+    [Tooltip("바닥 피벗. 이 Transform만 스케일 줄이면 밑이 붙은 채로 줄어듦.")]
     [SerializeField] private Transform visualRoot;
 
     [Header("Move")]
@@ -21,7 +21,7 @@ public class TornadoProjectile : MonoBehaviour
     [SerializeField] private float basePullRadius = 4f;
     [SerializeField] private float baseDamageRadius = 3f;
 
-    [Tooltip("끌어당김 최대 속도(먼 거리에서는 약하게, 가까울수록 강하게)")]
+    [Tooltip("끌어당김 최대 속도로 먼 거리에서는 약하게, 가까울수록 강하게 해줌")]
     [SerializeField] private float pullMaxSpeed = 6f;
 
     [Tooltip("가속도(ForceMode.Acceleration)")]
@@ -143,9 +143,9 @@ public class TornadoProjectile : MonoBehaviour
             targetMask,
             QueryTriggerInteraction.Collide
         );
-        
+
         Debug.Log($"[Whirlwind] count = {count}");
-        
+
         float now = Time.time;
 
         for (int i = 0; i < count; i++)

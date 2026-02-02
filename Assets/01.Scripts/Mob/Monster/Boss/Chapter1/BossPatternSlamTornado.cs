@@ -9,13 +9,13 @@ public class BossPatternSlamTornado : BossPatternBase
     private float nextReadyTime = 0f;
 
     [Header("Animator Triggers")]
-    [Tooltip("지면강타 트리거(혹은 패턴 시작 트리거)")]
+    [Tooltip("지면강타 트리거(패턴 시작 트리거)")]
     public string slamTriggerName = "Slam";
 
     [Tooltip("어퍼컷 트리거(한 클립이면 비워도 됨)")]
     public string uppercutTriggerName = "Uppercut";
 
-    [Tooltip("스크립트 타이머로 어퍼컷을 쏘고 싶으면 사용(0이면 사용 안 함)")]
+    [Tooltip("어퍼컷 애니메이션 타이밍(0이면 사용 안 함)")]
     public float uppercutDelay = 0f;
 
     [Header("Telegraph (Circle)")]

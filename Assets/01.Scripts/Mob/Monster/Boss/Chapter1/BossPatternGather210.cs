@@ -2,10 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// 보스 전방 210도 집결 공격
-// - Open(양팔 벌림) -> (openDuration) 후 Close(모으기)
-// - Close 애니의 타격 프레임에 Anim_DoGatherHit() 이벤트
-// - 애니 끝 프레임에 Anim_EndPattern() 이벤트
 public class BossPatternGather210 : BossPatternBase
 {
     [Header("랜덤 쿨타임")]
@@ -14,7 +10,7 @@ public class BossPatternGather210 : BossPatternBase
     private float nextReadyTime = 0f;
 
     [Header("Animator Triggers")]
-    [Tooltip("양팔 벌리는 준비 모션 트리거(한 클립이면 이 트리거만 써도 됨)")]
+    [Tooltip("양팔 벌리는 준비 모션 트리거(한 클립이면 이 트리거만 쓰기)")]
     public string openTriggerName = "GatherOpen";
 
     [Tooltip("전방으로 모으는 모션 트리거(한 클립이면 비워도 됨)")]
